@@ -502,8 +502,14 @@
     "battleye_date": "release",
     "performs_warzone": false,
     "warzonesperday": 0,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "21:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Ignibra",
@@ -596,7 +602,7 @@
         "warzone_sequence": ""
       },
       {
-        "execution_id": 2,
+        "execution_id": 1,
         "schedule_time": "21:30",
         "warzone_sequence": ""
       }
@@ -716,12 +722,12 @@
       {
         "execution_id": 1,
         "schedule_time": "19:30",
-        "warzone_sequence": ""
+        "warzone_sequence": "1-2-3"
       },
       {
         "execution_id": 2,
         "schedule_time": "20:00",
-        "warzone_sequence": ""
+        "warzone_sequence": "1-2-3"
       }
     ],
     "timezone": "America/Sao_Paulo"
@@ -765,8 +771,14 @@
     "battleye_date": "2017-09-05",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "21:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Monstera",
@@ -917,11 +929,11 @@
     "warzone_executions": [
       {
         "execution_id": 1,
-        "schedule_time": "21:00",
+        "schedule_time": "20:40",
         "warzone_sequence": ""
       },
       {
-        "execution_id": 2,
+        "execution_id": 1,
         "schedule_time": "22:00",
         "warzone_sequence": ""
       }
@@ -938,6 +950,11 @@
     "performs_warzone": true,
     "warzonesperday": 1,
     "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "20:00",
+        "warzone_sequence": ""
+      },
       {
         "execution_id": 1,
         "schedule_time": "23:00",
@@ -1004,7 +1021,7 @@
         "warzone_sequence": ""
       },
       {
-        "execution_id": 2,
+        "execution_id": 1,
         "schedule_time": "23:00",
         "warzone_sequence": ""
       }
@@ -1038,8 +1055,14 @@
     "battleye_date": "2017-10-19",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "20:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Rasteibra",
@@ -1130,6 +1153,11 @@
       {
         "execution_id": 1,
         "schedule_time": "17:30",
+        "warzone_sequence": ""
+      },
+      {
+        "execution_id": 2,
+        "schedule_time": "20:30",
         "warzone_sequence": ""
       }
     ],
@@ -1356,12 +1384,12 @@
     "warzone_executions": [
       {
         "execution_id": 1,
-        "schedule_time": "21:00",
+        "schedule_time": "01:00",
         "warzone_sequence": ""
       },
       {
         "execution_id": 2,
-        "schedule_time": "01:00",
+        "schedule_time": "21:00",
         "warzone_sequence": ""
       }
     ],
@@ -1418,8 +1446,14 @@
     "battleye_date": "2020-05-27",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "21:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Yovera",

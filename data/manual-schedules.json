@@ -1,23 +1,31 @@
 {
-  "Celesta": {
+  "Antica": {
     "timezone": "America/Sao_Paulo",
     "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "07:00", "warzone_sequence": "" },
-      { "execution_id": 2, "schedule_time": "16:00", "warzone_sequence": "" }
+      { "execution_id": 1, "schedule_time": "14:20", "warzone_sequence": "" },
+      { "execution_id": 2, "schedule_time": "15:00", "warzone_sequence": "" }
     ]
   },
-  "Secura": {
+  "Astera": {
     "timezone": "America/Sao_Paulo",
     "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "12:55", "warzone_sequence": "" },
-      { "execution_id": 2, "schedule_time": "13:30", "warzone_sequence": "" }
+      { "execution_id": 1, "schedule_time": "21:30", "warzone_sequence": "" },
+      { "execution_id": 2, "schedule_time": "22:00", "warzone_sequence": "" }
     ]
   },
-  "Lobera": {
+  "Belobra": {
     "timezone": "America/Sao_Paulo",
     "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "13:00", "warzone_sequence": "" },
-      { "execution_id": 2, "schedule_time": "13:20", "warzone_sequence": "" }
+      {
+        "execution_id": 1,
+        "schedule_time": "18:10",
+        "warzone_sequence": "1-3-2"
+      },
+      {
+        "execution_id": 2,
+        "schedule_time": "22:10",
+        "warzone_sequence": "1-3-2"
+      }
     ]
   },
   "Bona": {
@@ -26,53 +34,56 @@
       { "execution_id": 1, "schedule_time": "14:00", "warzone_sequence": "" }
     ]
   },
-  "Antica": {
+  "Calmera": {
     "timezone": "America/Sao_Paulo",
     "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "14:20", "warzone_sequence": "" },
-      { "execution_id": 2, "schedule_time": "15:00", "warzone_sequence": "" }
+      { "execution_id": 1, "schedule_time": "21:30", "warzone_sequence": "" }
     ]
   },
-  "Nevia": {
+  "Celebra": {
     "timezone": "America/Sao_Paulo",
     "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "15:00", "warzone_sequence": "" }
+      { "execution_id": 1, "schedule_time": "18:30", "warzone_sequence": "" },
+      { "execution_id": 2, "schedule_time": "19:00", "warzone_sequence": "" }
     ]
   },
-  "Vunira": {
+  "Celesta": {
     "timezone": "America/Sao_Paulo",
     "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "15:00", "warzone_sequence": "" }
+      { "execution_id": 1, "schedule_time": "07:00", "warzone_sequence": "" },
+      { "execution_id": 2, "schedule_time": "16:00", "warzone_sequence": "" }
     ]
   },
-  "Monza": {
+  "Collabra": {
     "timezone": "America/Sao_Paulo",
     "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "15:25", "warzone_sequence": "" }
+      { "execution_id": 1, "schedule_time": "20:30", "warzone_sequence": "" }
     ]
   },
-  "Karmeya": {
+  "Descubra": {
     "timezone": "America/Sao_Paulo",
     "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "16:00", "warzone_sequence": "" }
+      { "execution_id": 1, "schedule_time": "19:00", "warzone_sequence": "" },
+      { "execution_id": 2, "schedule_time": "22:00", "warzone_sequence": "" }
     ]
   },
-  "Peloria": {
+  "Dracobra": {
     "timezone": "America/Sao_Paulo",
     "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "16:30", "warzone_sequence": "" }
+      { "execution_id": 1, "schedule_time": "21:00", "warzone_sequence": "" }
     ]
   },
-  "Thyria": {
+  "Etebra": {
     "timezone": "America/Sao_Paulo",
     "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "16:40", "warzone_sequence": "" }
+      { "execution_id": 1, "schedule_time": "21:30", "warzone_sequence": "" }
     ]
   },
-  "Harmonia": {
+  "Ferobra": {
     "timezone": "America/Sao_Paulo",
     "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "16:50", "warzone_sequence": "" }
+      { "execution_id": 1, "schedule_time": "18:00", "warzone_sequence": "" },
+      { "execution_id": 2, "schedule_time": "22:00", "warzone_sequence": "" }
     ]
   },
   "Gentebra": {
@@ -95,81 +106,16 @@
       }
     ]
   },
-  "Inabra": {
+  "Harmonia": {
     "timezone": "America/Sao_Paulo",
     "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "17:00", "warzone_sequence": "" },
-      { "execution_id": 2, "schedule_time": "17:30", "warzone_sequence": "" },
-      { "execution_id": 3, "schedule_time": "19:00", "warzone_sequence": "" },
-      { "execution_id": 4, "schedule_time": "21:00", "warzone_sequence": "" }
-    ]
-  },
-  "Refugia": {
-    "timezone": "America/Sao_Paulo",
-    "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "17:25", "warzone_sequence": "" }
-    ]
-  },
-  "Serdebra": {
-    "timezone": "America/Sao_Paulo",
-    "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "17:30", "warzone_sequence": "" }
-    ]
-  },
-  "Ferobra": {
-    "timezone": "America/Sao_Paulo",
-    "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "18:00", "warzone_sequence": "" },
-      { "execution_id": 2, "schedule_time": "22:00", "warzone_sequence": "" }
+      { "execution_id": 1, "schedule_time": "16:50", "warzone_sequence": "" }
     ]
   },
   "Havera": {
     "timezone": "America/Sao_Paulo",
     "warzone_executions": [
       { "execution_id": 1, "schedule_time": "18:00", "warzone_sequence": "" }
-    ]
-  },
-  "Quelibra": {
-    "timezone": "America/Sao_Paulo",
-    "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "18:00", "warzone_sequence": "" },
-      { "execution_id": 2, "schedule_time": "23:00", "warzone_sequence": "" }
-    ]
-  },
-  "Belobra": {
-    "timezone": "America/Sao_Paulo",
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "18:10",
-        "warzone_sequence": "1-3-2"
-      },
-      {
-        "execution_id": 2,
-        "schedule_time": "22:10",
-        "warzone_sequence": "1-3-2"
-      }
-    ]
-  },
-  "Celebra": {
-    "timezone": "America/Sao_Paulo",
-    "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "18:30", "warzone_sequence": "" },
-      { "execution_id": 2, "schedule_time": "19:00", "warzone_sequence": "" }
-    ]
-  },
-  "Nefera": {
-    "timezone": "America/Sao_Paulo",
-    "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "18:30", "warzone_sequence": "" },
-      { "execution_id": 2, "schedule_time": "19:00", "warzone_sequence": "" }
-    ]
-  },
-  "Descubra": {
-    "timezone": "America/Sao_Paulo",
-    "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "19:00", "warzone_sequence": "" },
-      { "execution_id": 2, "schedule_time": "22:00", "warzone_sequence": "" }
     ]
   },
   "Honbra": {
@@ -179,11 +125,32 @@
       { "execution_id": 2, "schedule_time": "20:00", "warzone_sequence": "" }
     ]
   },
+  "Idyllia": {
+    "timezone": "America/Sao_Paulo",
+    "warzone_executions": [
+      { "execution_id": 1, "schedule_time": "21:00", "warzone_sequence": "" }
+    ]
+  },
+  "Inabra": {
+    "timezone": "America/Sao_Paulo",
+    "warzone_executions": [
+      { "execution_id": 1, "schedule_time": "17:00", "warzone_sequence": "" },
+      { "execution_id": 2, "schedule_time": "17:30", "warzone_sequence": "" },
+      { "execution_id": 3, "schedule_time": "19:00", "warzone_sequence": "" },
+      { "execution_id": 4, "schedule_time": "21:00", "warzone_sequence": "" }
+    ]
+  },
+  "Issobra": {
+    "timezone": "America/Sao_Paulo",
+    "warzone_executions": [
+      { "execution_id": 1, "schedule_time": "22:00", "warzone_sequence": "" }
+    ]
+  },
   "Jadebra": {
     "timezone": "America/Sao_Paulo",
     "warzone_executions": [
       { "execution_id": 1, "schedule_time": "19:00", "warzone_sequence": "" },
-      { "execution_id": 2, "schedule_time": "21:30", "warzone_sequence": "" }
+      { "execution_id": 1, "schedule_time": "21:30", "warzone_sequence": "" }
     ]
   },
   "Kalibra": {
@@ -191,6 +158,110 @@
     "warzone_executions": [
       { "execution_id": 1, "schedule_time": "19:00", "warzone_sequence": "" },
       { "execution_id": 2, "schedule_time": "21:00", "warzone_sequence": "" }
+    ]
+  },
+  "Karmeya": {
+    "timezone": "America/Sao_Paulo",
+    "warzone_executions": [
+      { "execution_id": 1, "schedule_time": "16:00", "warzone_sequence": "" }
+    ]
+  },
+  "Lobera": {
+    "timezone": "America/Sao_Paulo",
+    "warzone_executions": [
+      { "execution_id": 1, "schedule_time": "13:00", "warzone_sequence": "" },
+      { "execution_id": 2, "schedule_time": "13:20", "warzone_sequence": "" }
+    ]
+  },
+  "Luminera": {
+    "timezone": "America/Sao_Paulo",
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "19:30",
+        "warzone_sequence": "1-2-3"
+      },
+      {
+        "execution_id": 2,
+        "schedule_time": "20:00",
+        "warzone_sequence": "1-2-3"
+      }
+    ]
+  },
+  "Luzibra": {
+    "timezone": "America/Sao_Paulo",
+    "warzone_executions": [
+      { "execution_id": 1, "schedule_time": "21:00", "warzone_sequence": "" }
+    ]
+  },
+  "Menera": {
+    "timezone": "America/Sao_Paulo",
+    "warzone_executions": [
+      { "execution_id": 1, "schedule_time": "21:00", "warzone_sequence": "" }
+    ]
+  },
+  "Monza": {
+    "timezone": "America/Sao_Paulo",
+    "warzone_executions": [
+      { "execution_id": 1, "schedule_time": "15:25", "warzone_sequence": "" }
+    ]
+  },
+  "Nefera": {
+    "timezone": "America/Sao_Paulo",
+    "warzone_executions": [
+      { "execution_id": 1, "schedule_time": "18:30", "warzone_sequence": "" },
+      { "execution_id": 2, "schedule_time": "19:00", "warzone_sequence": "" }
+    ]
+  },
+  "Nevia": {
+    "timezone": "America/Sao_Paulo",
+    "warzone_executions": [
+      { "execution_id": 1, "schedule_time": "15:00", "warzone_sequence": "" }
+    ]
+  },
+  "Ombra": {
+    "timezone": "America/Sao_Paulo",
+    "warzone_executions": [
+      { "execution_id": 1, "schedule_time": "21:00", "warzone_sequence": "" }
+    ]
+  },
+  "Ourobra": {
+    "timezone": "America/Sao_Paulo",
+    "warzone_executions": [
+      { "execution_id": 1, "schedule_time": "20:40", "warzone_sequence": "" },
+      { "execution_id": 1, "schedule_time": "22:00", "warzone_sequence": "" }
+    ]
+  },
+  "Pacera": {
+    "timezone": "America/Sao_Paulo",
+    "warzone_executions": [
+      { "execution_id": 1, "schedule_time": "20:00", "warzone_sequence": "" },
+      { "execution_id": 1, "schedule_time": "23:00", "warzone_sequence": "" }
+    ]
+  },
+  "Peloria": {
+    "timezone": "America/Sao_Paulo",
+    "warzone_executions": [
+      { "execution_id": 1, "schedule_time": "16:30", "warzone_sequence": "" }
+    ]
+  },
+  "Quelibra": {
+    "timezone": "America/Sao_Paulo",
+    "warzone_executions": [
+      { "execution_id": 1, "schedule_time": "18:00", "warzone_sequence": "" },
+      { "execution_id": 1, "schedule_time": "23:00", "warzone_sequence": "" }
+    ]
+  },
+  "Quidera": {
+    "timezone": "America/Sao_Paulo",
+    "warzone_executions": [
+      { "execution_id": 1, "schedule_time": "00:00", "warzone_sequence": "" }
+    ]
+  },
+  "Quintera": {
+    "timezone": "America/Sao_Paulo",
+    "warzone_executions": [
+      { "execution_id": 1, "schedule_time": "20:00", "warzone_sequence": "" }
     ]
   },
   "Rasteibra": {
@@ -208,17 +279,42 @@
       }
     ]
   },
-  "Luminera": {
+  "Refugia": {
     "timezone": "America/Sao_Paulo",
     "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "19:30", "warzone_sequence": "" },
-      { "execution_id": 2, "schedule_time": "20:00", "warzone_sequence": "" }
+      { "execution_id": 1, "schedule_time": "17:25", "warzone_sequence": "" }
+    ]
+  },
+  "Secura": {
+    "timezone": "America/Sao_Paulo",
+    "warzone_executions": [
+      { "execution_id": 1, "schedule_time": "12:55", "warzone_sequence": "" },
+      { "execution_id": 2, "schedule_time": "13:30", "warzone_sequence": "" }
+    ]
+  },
+  "Serdebra": {
+    "timezone": "America/Sao_Paulo",
+    "warzone_executions": [
+      { "execution_id": 1, "schedule_time": "17:30", "warzone_sequence": "" },
+      { "execution_id": 2, "schedule_time": "20:30", "warzone_sequence": "" }
     ]
   },
   "Solidera": {
     "timezone": "America/Sao_Paulo",
     "warzone_executions": [
       { "execution_id": 1, "schedule_time": "19:50", "warzone_sequence": "" }
+    ]
+  },
+  "Thyria": {
+    "timezone": "America/Sao_Paulo",
+    "warzone_executions": [
+      { "execution_id": 1, "schedule_time": "16:40", "warzone_sequence": "" }
+    ]
+  },
+  "Tornabra": {
+    "timezone": "America/Sao_Paulo",
+    "warzone_executions": [
+      { "execution_id": 1, "schedule_time": "22:00", "warzone_sequence": "" }
     ]
   },
   "Ustebra": {
@@ -236,73 +332,35 @@
       }
     ]
   },
+  "Venebra": {
+    "timezone": "America/Sao_Paulo",
+    "warzone_executions": [
+      { "execution_id": 1, "schedule_time": "22:00", "warzone_sequence": "" }
+    ]
+  },
+  "Vunira": {
+    "timezone": "America/Sao_Paulo",
+    "warzone_executions": [
+      { "execution_id": 1, "schedule_time": "15:00", "warzone_sequence": "" }
+    ]
+  },
+  "Wintera": {
+    "timezone": "America/Sao_Paulo",
+    "warzone_executions": [
+      { "execution_id": 1, "schedule_time": "01:00", "warzone_sequence": "" },
+      { "execution_id": 2, "schedule_time": "21:00", "warzone_sequence": "" }
+    ]
+  },
   "Xybra": {
     "timezone": "America/Sao_Paulo",
     "warzone_executions": [
       { "execution_id": 1, "schedule_time": "20:00", "warzone_sequence": "" }
     ]
   },
-  "Yubra": {
-    "timezone": "America/Sao_Paulo",
-    "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "20:00", "warzone_sequence": "" }
-    ]
-  },
-  "Collabra": {
-    "timezone": "America/Sao_Paulo",
-    "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "20:30", "warzone_sequence": "" }
-    ]
-  },
-  "Dracobra": {
+  "Yonabra": {
     "timezone": "America/Sao_Paulo",
     "warzone_executions": [
       { "execution_id": 1, "schedule_time": "21:00", "warzone_sequence": "" }
-    ]
-  },
-  "Luzibra": {
-    "timezone": "America/Sao_Paulo",
-    "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "21:00", "warzone_sequence": "" }
-    ]
-  },
-  "Ombra": {
-    "timezone": "America/Sao_Paulo",
-    "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "21:00", "warzone_sequence": "" }
-    ]
-  },
-  "Ourobra": {
-    "timezone": "America/Sao_Paulo",
-    "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "21:00", "warzone_sequence": "" },
-      { "execution_id": 2, "schedule_time": "22:00", "warzone_sequence": "" }
-    ]
-  },
-  "Wintera": {
-    "timezone": "America/Sao_Paulo",
-    "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "21:00", "warzone_sequence": "" },
-      { "execution_id": 2, "schedule_time": "01:00", "warzone_sequence": "" }
-    ]
-  },
-  "Astera": {
-    "timezone": "America/Sao_Paulo",
-    "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "21:30", "warzone_sequence": "" },
-      { "execution_id": 2, "schedule_time": "22:00", "warzone_sequence": "" }
-    ]
-  },
-  "Calmera": {
-    "timezone": "America/Sao_Paulo",
-    "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "21:30", "warzone_sequence": "" }
-    ]
-  },
-  "Etebra": {
-    "timezone": "America/Sao_Paulo",
-    "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "21:30", "warzone_sequence": "" }
     ]
   },
   "Yovera": {
@@ -311,34 +369,10 @@
       { "execution_id": 1, "schedule_time": "21:30", "warzone_sequence": "" }
     ]
   },
-  "Issobra": {
+  "Yubra": {
     "timezone": "America/Sao_Paulo",
     "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "22:00", "warzone_sequence": "" }
-    ]
-  },
-  "Tornabra": {
-    "timezone": "America/Sao_Paulo",
-    "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "22:00", "warzone_sequence": "" }
-    ]
-  },
-  "Venebra": {
-    "timezone": "America/Sao_Paulo",
-    "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "22:00", "warzone_sequence": "" }
-    ]
-  },
-  "Pacera": {
-    "timezone": "America/Sao_Paulo",
-    "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "23:00", "warzone_sequence": "" }
-    ]
-  },
-  "Quidera": {
-    "timezone": "America/Sao_Paulo",
-    "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "00:00", "warzone_sequence": "" }
+      { "execution_id": 1, "schedule_time": "20:00", "warzone_sequence": "" }
     ]
   }
 }
