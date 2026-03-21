@@ -506,9 +506,9 @@ function render() {
         .includes(query)
     )
     .sort((a, b) => {
-      const diff =
-        (Number(b.warzonesperday) || 0) - (Number(a.warzonesperday) || 0);
-      if (diff !== 0) return diff;
+      const aHas = Array.isArray(a.warzone_executions) && a.warzone_executions.length > 0 ? 1 : 0;
+      const bHas = Array.isArray(b.warzone_executions) && b.warzone_executions.length > 0 ? 1 : 0;
+      if (bHas !== aHas) return bHas - aHas;
       return String(a.name || "").localeCompare(String(b.name || ""), lang);
     });
 
