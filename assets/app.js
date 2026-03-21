@@ -15,7 +15,7 @@ const SUPPORTED_TIMEZONES = [
   { value: "America/Tijuana", label: "Tijuana" },
   { value: "America/Caracas", label: "Caracas" },
 
-  { value: "Europe/Warsaw", label: "Polônia" },
+  { value: "Europe/Warsaw", label: "Warsaw" },
   { value: "Europe/Berlin", label: "Regensburg" },
   { value: "Europe/London", label: "London" },
 ];
@@ -31,17 +31,15 @@ const I18N = {
     timezone: "Show times in",
     summary: (total, withSchedules, tzLabel) =>
       `${total} servers. ${withSchedules} with services. Timezone: ${tzLabel}`,
-    warzones: "Warzones/day",
+    warzones: "Warzones",
     region: "Region",
     pvp: "PvP",
     transfer: "Transfer",
     battleye: "BattlEye",
     services: "Services",
-    service: "Service",
-    order: "Order",
-    noSchedules: "No services",
-    notAvailable: "N/A",
+    noSchedules: "No services registered yet",
     noServersFound: "No servers found",
+    notAvailable: "N/A",
     loadError: "Failed to load worlds.json",
   },
   "pt-BR": {
@@ -54,17 +52,15 @@ const I18N = {
     timezone: "Exibir horários em",
     summary: (total, withSchedules, tzLabel) =>
       `${total} servidores. ${withSchedules} com services. Timezone: ${tzLabel}`,
-    warzones: "Warzones/dia",
+    warzones: "Warzones",
     region: "Região",
     pvp: "PvP",
     transfer: "Transferência",
     battleye: "BattlEye",
     services: "Services",
-    service: "Service",
-    order: "Ordem",
-    noSchedules: "Sem services",
-    notAvailable: "N/D",
+    noSchedules: "Ainda não há nenhum service cadastrado",
     noServersFound: "Nenhum servidor encontrado",
+    notAvailable: "N/D",
     loadError: "Falha ao carregar worlds.json",
   },
   "es-419": {
@@ -77,17 +73,15 @@ const I18N = {
     timezone: "Mostrar horarios en",
     summary: (total, withSchedules, tzLabel) =>
       `${total} servidores. ${withSchedules} con services. Zona: ${tzLabel}`,
-    warzones: "Warzones/día",
+    warzones: "Warzones",
     region: "Región",
     pvp: "PvP",
     transfer: "Transferencia",
     battleye: "BattlEye",
     services: "Services",
-    service: "Service",
-    order: "Orden",
-    noSchedules: "Sin services",
-    notAvailable: "N/D",
+    noSchedules: "Aún no hay ningún service registrado",
     noServersFound: "No se encontraron servidores",
+    notAvailable: "N/D",
     loadError: "Error al cargar worlds.json",
   },
   pl: {
@@ -100,17 +94,15 @@ const I18N = {
     timezone: "Pokaż godziny w",
     summary: (total, withSchedules, tzLabel) =>
       `${total} serwerów. ${withSchedules} z services. Strefa: ${tzLabel}`,
-    warzones: "Warzones/dzień",
+    warzones: "Warzones",
     region: "Region",
     pvp: "PvP",
     transfer: "Transfer",
     battleye: "BattlEye",
     services: "Services",
-    service: "Service",
-    order: "Kolejność",
-    noSchedules: "Brak services",
-    notAvailable: "Brak",
+    noSchedules: "Nie ma jeszcze żadnego zarejestrowanego service",
     noServersFound: "Nie znaleziono serwerów",
+    notAvailable: "Brak",
     loadError: "Nie udało się wczytać worlds.json",
   },
 };
@@ -249,7 +241,7 @@ function populateTimezoneSelect() {
   options.sort((a, b) => {
     const offsetDiff = offsetMinutes(a.value) - offsetMinutes(b.value);
     if (offsetDiff !== 0) return offsetDiff;
-    return a.label.localeCompare(b.label, lang);
+    return a.label.localeCompare(b.label, "en");
   });
 
   select.innerHTML = options
@@ -443,19 +435,22 @@ function renderExecutions(world) {
         timezone
       );
 
-      const orderText = execution.warzone_sequence
-        ? ` | ${escapeHtml(dictionary.order)} ${escapeHtml(
+      const orderHtml = execution.warzone_sequence
+        ? `<span class="execution-order">(${escapeHtml(
             execution.warzone_sequence
-          )}`
-        : "";
+          )})</span>`
+        : `<span class="execution-order"></span>`;
 
-      return `<li>${escapeHtml(dictionary.service)} ${escapeHtml(
-        execution.execution_id
-      )}: ${escapeHtml(shownTime)}${orderText}</li>`;
+      return `
+        <li class="execution-item">
+          <span class="execution-time">${escapeHtml(shownTime)}</span>
+          ${orderHtml}
+        </li>
+      `;
     })
     .join("");
 
-  return `<ul>${items}</ul>`;
+  return `<ul class="executions-list">${items}</ul>`;
 }
 
 function renderWorld(world) {
