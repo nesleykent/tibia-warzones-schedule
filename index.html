@@ -5,14 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tibia Warzones Schedule</title>
     <link rel="stylesheet" href="./assets/styles.css" />
+
+    <!-- Apply saved theme before first paint to avoid flash -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('theme');
+          if (saved === 'light' || saved === 'dark') {
+            document.documentElement.setAttribute('data-theme', saved);
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
+    <!-- Background artwork layer — image picked randomly by JS below -->
+    <div id="bg-layer" aria-hidden="true"></div>
+
     <div class="topbar" role="navigation" aria-label="Site navigation">
       <div class="container topbar-inner">
         <div class="topbar-links">
-          <span id="questLinksLabel" class="topbar-label"
-            >Bigfoot's Burden Quest:</span
-          >
+          <span id="questLinksLabel" class="topbar-label">Bigfoot's Burden</span>
           <a
             href="https://tibia.fandom.com/wiki/Bigfoot's_Burden_Quest"
             target="_blank"
@@ -35,46 +48,58 @@
           >
         </div>
 
-        <div
-          class="topbar-languages"
-          aria-label="Language selector"
-          role="group"
-        >
+        <!-- Right side: lang dropdown + theme toggle -->
+        <div class="topbar-right">
+
+          <!-- Language dropdown -->
+          <div class="lang-dropdown" id="langDropdown">
+            <button
+              type="button"
+              class="lang-menu-btn"
+              id="langMenuBtn"
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-label="Select language"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="3" y1="6"  x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
+              </svg>
+            </button>
+            <div class="lang-menu" id="langMenu" role="menu" aria-label="Language selector">
+              <button type="button" class="lang-flag" data-lang="en"    role="menuitem" aria-label="English">🇺🇸 <span>English</span></button>
+              <button type="button" class="lang-flag" data-lang="pt-BR" role="menuitem" aria-label="Português">🇧🇷 <span>Português</span></button>
+              <button type="button" class="lang-flag" data-lang="es-419" role="menuitem" aria-label="Español">🇦🇷 <span>Español</span></button>
+              <button type="button" class="lang-flag" data-lang="pl"    role="menuitem" aria-label="Polski">🇵🇱 <span>Polski</span></button>
+            </div>
+          </div>
+
+          <div class="topbar-vsep" aria-hidden="true"></div>
+
           <button
             type="button"
-            class="lang-flag"
-            data-lang="en"
-            title="English"
-            aria-label="Switch to English"
+            id="themeToggle"
+            class="theme-toggle"
+            title="Toggle light/dark mode"
+            aria-label="Toggle light/dark mode"
           >
-            🇺🇸
-          </button>
-          <button
-            type="button"
-            class="lang-flag"
-            data-lang="pt-BR"
-            title="Português (Brasil)"
-            aria-label="Mudar para Português (Brasil)"
-          >
-            🇧🇷
-          </button>
-          <button
-            type="button"
-            class="lang-flag"
-            data-lang="es-419"
-            title="Español (LatAm)"
-            aria-label="Cambiar a Español (LatAm)"
-          >
-            🇦🇷
-          </button>
-          <button
-            type="button"
-            class="lang-flag"
-            data-lang="pl"
-            title="Polski"
-            aria-label="Przełącz na Polski"
-          >
-            🇵🇱
+            <!-- Moon icon (shown in dark mode) -->
+            <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+            <!-- Sun icon (shown in light mode) -->
+            <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="5"/>
+              <line x1="12" y1="1" x2="12" y2="3"/>
+              <line x1="12" y1="21" x2="12" y2="23"/>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+              <line x1="1" y1="12" x2="3" y2="12"/>
+              <line x1="21" y1="12" x2="23" y2="12"/>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
           </button>
         </div>
       </div>
@@ -99,26 +124,9 @@
           <label for="searchInput">Buscar servidor</label>
           <div class="input-wrapper">
             <span class="input-icon" aria-hidden="true">
-              <svg
-                width="15"
-                height="15"
-                viewBox="0 0 16 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <circle
-                  cx="6.5"
-                  cy="6.5"
-                  r="5"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                />
-                <path
-                  d="M10.5 10.5L14 14"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                />
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
               </svg>
             </span>
             <input
@@ -134,25 +142,10 @@
         <div class="control-group">
           <label for="timezoneSelect">Fuso horário</label>
           <div class="select-wrapper">
-            <select
-              id="timezoneSelect"
-              aria-label="Selecionar fuso horário"
-            ></select>
+            <select id="timezoneSelect" aria-label="Selecionar fuso horário"></select>
             <span class="select-chevron" aria-hidden="true">
-              <svg
-                width="12"
-                height="8"
-                viewBox="0 0 12 8"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M1 1.5L6 6.5L11 1.5"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
+              <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </span>
           </div>
@@ -172,6 +165,103 @@
         aria-label="Lista de servidores"
       ></section>
     </main>
+
+    <!-- Theme toggle logic -->
+    <script>
+      (function () {
+        var html = document.documentElement;
+        var btn  = document.getElementById('themeToggle');
+        if (!btn) return;
+
+        function getActiveTheme() {
+          var manual = html.getAttribute('data-theme');
+          if (manual) return manual;
+          // Fall back to system preference
+          return window.matchMedia('(prefers-color-scheme: light)').matches
+            ? 'light'
+            : 'dark';
+        }
+
+        btn.addEventListener('click', function () {
+          var current = getActiveTheme();
+          var next    = current === 'dark' ? 'light' : 'dark';
+          html.setAttribute('data-theme', next);
+          try { localStorage.setItem('theme', next); } catch (e) {}
+        });
+
+        // Sync with system changes when no manual override is saved
+        window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function () {
+          try {
+            if (!localStorage.getItem('theme')) {
+              html.removeAttribute('data-theme');
+            }
+          } catch (e) {}
+        });
+      })();
+    </script>
+
+    <!-- Random Tibia artwork background -->
+    <script>
+      (function () {
+        // Add your artwork filenames inside assets/background/
+        // The list below is auto-picked randomly on each load.
+        var artworks = [
+          'bg1.jpg',
+          'bg2.jpg',
+          'bg3.jpg',
+          'bg4.jpg',
+          'bg5.jpg',
+        ];
+
+        var layer = document.getElementById('bg-layer');
+        if (!layer) return;
+
+        var pick = artworks[Math.floor(Math.random() * artworks.length)];
+        var img  = new Image();
+
+        img.onload = function () {
+          layer.style.backgroundImage = 'url(assets/background/' + pick + ')';
+          layer.style.opacity = '1';
+        };
+
+        img.onerror = function () {
+          // Try next random if one fails, or leave fallback color
+          var remaining = artworks.filter(function (a) { return a !== pick; });
+          if (remaining.length) {
+            var fallback = remaining[Math.floor(Math.random() * remaining.length)];
+            layer.style.backgroundImage = 'url(assets/background/' + fallback + ')';
+            layer.style.opacity = '1';
+          }
+        };
+
+        // Start hidden, fade in once loaded
+        layer.style.opacity = '0';
+        img.src = 'assets/background/' + pick;
+      })();
+    </script>
+
+    <!-- Language dropdown logic -->
+    <script>
+      (function () {
+        var btn  = document.getElementById('langMenuBtn');
+        var menu = document.getElementById('langMenu');
+        var wrap = document.getElementById('langDropdown');
+        if (!btn || !menu) return;
+
+        function open()  { menu.classList.add('is-open');  btn.setAttribute('aria-expanded','true'); }
+        function close() { menu.classList.remove('is-open'); btn.setAttribute('aria-expanded','false'); }
+        function toggle(){ menu.classList.contains('is-open') ? close() : open(); }
+
+        btn.addEventListener('click', function(e){ e.stopPropagation(); toggle(); });
+
+        document.addEventListener('click', function(e){
+          if (!wrap.contains(e.target)) close();
+        });
+        document.addEventListener('keydown', function(e){
+          if (e.key === 'Escape') close();
+        });
+      })();
+    </script>
 
     <script src="./assets/app.js"></script>
   </body>

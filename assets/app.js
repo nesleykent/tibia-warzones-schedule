@@ -26,7 +26,7 @@ const I18N = {
     heroTitle: "Tibia Warzones Schedule",
     heroSubtitle:
       "Servers with Warzones activity based on Gnomevil boss kills.",
-    questLinksLabel: "Bigfoot's Burden Quest:",
+    questLinksLabel: "Bigfoot's Burden:",
     search: "Search server",
     timezone: "Show times in",
     summary: (total, withSchedules, tzLabel) =>
@@ -47,7 +47,7 @@ const I18N = {
     heroTitle: "Tibia Warzones Schedule",
     heroSubtitle:
       "Servidores com atividade de Warzones baseada nas kills do boss Gnomevil.",
-    questLinksLabel: "Bigfoot's Burden Quest:",
+    questLinksLabel: "Bigfoot's Burden:",
     search: "Buscar servidor",
     timezone: "Exibir horários em",
     summary: (total, withSchedules, tzLabel) =>
@@ -68,7 +68,7 @@ const I18N = {
     heroTitle: "Tibia Warzones Schedule",
     heroSubtitle:
       "Servidores con actividad de Warzones basada en las muertes del boss Gnomevil.",
-    questLinksLabel: "Bigfoot's Burden Quest:",
+    questLinksLabel: "Bigfoot's Burden:",
     search: "Buscar servidor",
     timezone: "Mostrar horarios en",
     summary: (total, withSchedules, tzLabel) =>
@@ -89,7 +89,7 @@ const I18N = {
     heroTitle: "Tibia Warzones Schedule",
     heroSubtitle:
       "Serwery z aktywnością Warzones na podstawie liczby zabójstw bossa Gnomevil.",
-    questLinksLabel: "Bigfoot's Burden Quest:",
+    questLinksLabel: "Bigfoot's Burden:",
     search: "Szukaj serwera",
     timezone: "Pokaż godziny w",
     summary: (total, withSchedules, tzLabel) =>
@@ -464,12 +464,14 @@ function renderWorld(world) {
 
   return `
     <div class="world-card">
-      <h2>${escapeHtml(world.name || "")}</h2>
-
-      <div class="world-meta">
+      <h2>
+        <span class="world-name">${escapeHtml(world.name || "")}</span>
         <span class="badge">${escapeHtml(dictionary.warzones)}: ${escapeHtml(
     warzonesText
   )}</span>
+      </h2>
+
+      <div class="world-meta">
         <span>${escapeHtml(dictionary.region)}: ${escapeHtml(regionText)}</span>
         <span>${escapeHtml(dictionary.pvp)}: ${escapeHtml(pvpText)}</span>
         <span>${escapeHtml(dictionary.transfer)}: ${escapeHtml(
