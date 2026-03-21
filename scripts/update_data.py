@@ -96,9 +96,11 @@ def build_world_record(
 
     return {
         "name": world_name,
-        "status": world.get("status"),
         "location": world.get("location"),
         "pvp_type": world.get("pvp_type"),
+        "transfer_type": world.get("transfer_type"),
+        "battleye_protected": world.get("battleye_protected"),
+        "battleye_date": world.get("battleye_date"),
         "performs_warzone": abyssador_kills > 0,
         "warzonesperday": abyssador_kills,
         "warzone_executions": warzone_executions,
@@ -174,16 +176,18 @@ def main() -> int:
         except Exception as exc:
             print(f"ERRO {world_name}: {exc}", file=sys.stderr)
             output.append({
-                "name": world_name,
-                "status": world.get("status"),
-                "location": world.get("location"),
-                "pvp_type": world.get("pvp_type"),
-                "performs_warzone": False,
-                "warzonesperday": 0,
-                "warzone_executions": [],
-                "timezone": None,
-                "error": str(exc),
-            })
+    "name": world_name,
+    "location": world.get("location"),
+    "pvp_type": world.get("pvp_type"),
+    "transfer_type": world.get("transfer_type"),
+    "battleye_protected": world.get("battleye_protected"),
+    "battleye_date": world.get("battleye_date"),
+    "performs_warzone": False,
+    "warzonesperday": 0,
+    "warzone_executions": [],
+    "timezone": None,
+    "error": str(exc),
+})
 
     output.sort(key=lambda item: str(item.get("name", "")).lower())
 

@@ -7,6 +7,76 @@
     <link rel="stylesheet" href="./assets/styles.css" />
   </head>
   <body>
+    <div class="topbar">
+      <div class="container topbar-inner">
+        <div class="topbar-links">
+          <span id="questLinksLabel">Bigfoot's Burden Quest:</span>
+          <a
+            href="https://tibia.fandom.com/wiki/Bigfoot's_Burden_Quest"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            TibiaWiki
+          </a>
+          <span>|</span>
+          <a
+            href="https://www.tibiawiki.com.br/wiki/Bigfoot%27s_Burden_Quest"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Tibia Wiki BR
+          </a>
+          <span>|</span>
+          <a
+            href="https://tibiopedia.pl/quests/Bigfoots_Burden_Quest"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Tibiopedia.pl
+          </a>
+        </div>
+
+        <div class="topbar-languages" aria-label="Language selector">
+          <button
+            type="button"
+            class="lang-flag"
+            data-lang="en"
+            title="English"
+            aria-label="English"
+          >
+            🇺🇸🇬🇧
+          </button>
+          <button
+            type="button"
+            class="lang-flag"
+            data-lang="pt-BR"
+            title="Português (Brasil)"
+            aria-label="Português (Brasil)"
+          >
+            🇧🇷
+          </button>
+          <button
+            type="button"
+            class="lang-flag"
+            data-lang="es-419"
+            title="Español (LatAm)"
+            aria-label="Español (LatAm)"
+          >
+            🇦🇷
+          </button>
+          <button
+            type="button"
+            class="lang-flag"
+            data-lang="pl"
+            title="Polski"
+            aria-label="Polski"
+          >
+            🇵🇱
+          </button>
+        </div>
+      </div>
+    </div>
+
     <header class="site-header">
       <div class="container">
         <h1>Tibia Warzones Schedule</h1>
@@ -19,12 +89,20 @@
 
     <main class="container">
       <section class="controls">
-        <input
-          type="text"
-          id="searchInput"
-          placeholder="Buscar servidor"
-          autocomplete="off"
-        />
+        <div class="control-group">
+          <label for="searchInput">Buscar servidor</label>
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Buscar servidor"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="control-group">
+          <label for="timezoneSelect">Exibir horários em</label>
+          <select id="timezoneSelect"></select>
+        </div>
       </section>
 
       <section class="summary" id="summary"></section>
