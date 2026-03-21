@@ -1,9 +1,11 @@
 [
   {
     "name": "Aethera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Open PvP",
+    "transfer_type": "blocked",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -11,39 +13,80 @@
   },
   {
     "name": "Antica",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2017-08-29",
     "performs_warzone": true,
     "warzonesperday": 3,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "14:20",
+        "warzone_sequence": ""
+      },
+      {
+        "execution_id": 2,
+        "schedule_time": "15:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Astera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2017-09-12",
     "performs_warzone": true,
     "warzonesperday": 4,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "21:30",
+        "warzone_sequence": ""
+      },
+      {
+        "execution_id": 2,
+        "schedule_time": "22:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Belobra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2017-06-22",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "18:10",
+        "warzone_sequence": ""
+      },
+      {
+        "execution_id": 2,
+        "schedule_time": "22:10",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Blumera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
     "warzone_executions": [],
@@ -51,19 +94,29 @@
   },
   {
     "name": "Bona",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2018-04-19",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "14:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Bravoria",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Optional PvP",
+    "transfer_type": "blocked",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -71,19 +124,29 @@
   },
   {
     "name": "Calmera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2017-09-12",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "21:30",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Cantabra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Open PvP",
+    "transfer_type": "blocked",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -91,29 +154,57 @@
   },
   {
     "name": "Celebra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2018-10-29",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "18:30",
+        "warzone_sequence": ""
+      },
+      {
+        "execution_id": 2,
+        "schedule_time": "19:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Celesta",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2017-09-05",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "07:00",
+        "warzone_sequence": ""
+      },
+      {
+        "execution_id": 2,
+        "schedule_time": "16:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Citra",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -121,29 +212,52 @@
   },
   {
     "name": "Collabra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "20:30",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Descubra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "19:00",
+        "warzone_sequence": ""
+      },
+      {
+        "execution_id": 2,
+        "schedule_time": "22:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Dia",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
     "warzone_executions": [],
@@ -151,19 +265,29 @@
   },
   {
     "name": "Dracobra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Open PvP",
+    "transfer_type": "blocked",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "21:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Eclipta",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Retro Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -171,9 +295,11 @@
   },
   {
     "name": "Epoca",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Retro Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2018-04-19",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -181,9 +307,11 @@
   },
   {
     "name": "Escura",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Retro Open PvP",
+    "transfer_type": "blocked",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -191,29 +319,52 @@
   },
   {
     "name": "Etebra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "21:30",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Ferobra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2017-07-04",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "18:00",
+        "warzone_sequence": ""
+      },
+      {
+        "execution_id": 2,
+        "schedule_time": "22:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Firmera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Retro Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2018-04-19",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -221,9 +372,11 @@
   },
   {
     "name": "Gentebra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2017-12-12",
     "performs_warzone": true,
     "warzonesperday": 2,
     "warzone_executions": [
@@ -247,9 +400,11 @@
   },
   {
     "name": "Gladera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2018-04-19",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -257,9 +412,11 @@
   },
   {
     "name": "Gladibra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Retro Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -267,39 +424,70 @@
   },
   {
     "name": "Harmonia",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2017-09-05",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "16:50",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Havera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2021-12-06",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "18:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Honbra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "19:00",
+        "warzone_sequence": ""
+      },
+      {
+        "execution_id": 2,
+        "schedule_time": "20:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Hostera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Open PvP",
+    "transfer_type": "blocked",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
     "warzone_executions": [],
@@ -307,9 +495,11 @@
   },
   {
     "name": "Idyllia",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Optional PvP",
+    "transfer_type": "blocked",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -317,9 +507,11 @@
   },
   {
     "name": "Ignibra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Retro Open PvP",
+    "transfer_type": "blocked",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -327,9 +519,11 @@
   },
   {
     "name": "Ignitera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Open PvP",
+    "transfer_type": "blocked",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -337,39 +531,85 @@
   },
   {
     "name": "Inabra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2017-12-12",
     "performs_warzone": true,
     "warzonesperday": 4,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "17:00",
+        "warzone_sequence": ""
+      },
+      {
+        "execution_id": 2,
+        "schedule_time": "17:30",
+        "warzone_sequence": ""
+      },
+      {
+        "execution_id": 3,
+        "schedule_time": "19:00",
+        "warzone_sequence": ""
+      },
+      {
+        "execution_id": 4,
+        "schedule_time": "21:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Issobra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "22:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Jadebra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 3,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "19:00",
+        "warzone_sequence": ""
+      },
+      {
+        "execution_id": 2,
+        "schedule_time": "21:30",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Kalanta",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
     "warzone_executions": [],
@@ -377,19 +617,34 @@
   },
   {
     "name": "Kalibra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2017-12-12",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "19:00",
+        "warzone_sequence": ""
+      },
+      {
+        "execution_id": 2,
+        "schedule_time": "21:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Kalimera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Optional PvP",
+    "transfer_type": "blocked",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -397,9 +652,11 @@
   },
   {
     "name": "Kanda",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Optional PvP",
+    "transfer_type": "blocked",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
     "warzone_executions": [],
@@ -407,39 +664,75 @@
   },
   {
     "name": "Karmeya",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "16:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Lobera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2018-04-19",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "13:00",
+        "warzone_sequence": ""
+      },
+      {
+        "execution_id": 2,
+        "schedule_time": "13:20",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Luminera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2017-09-05",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "19:30",
+        "warzone_sequence": ""
+      },
+      {
+        "execution_id": 2,
+        "schedule_time": "20:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Lutabra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Retro Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2017-12-12",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -447,19 +740,29 @@
   },
   {
     "name": "Luzibra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Optional PvP",
+    "transfer_type": "blocked",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "21:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Menera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2017-09-05",
     "performs_warzone": true,
     "warzonesperday": 1,
     "warzone_executions": [],
@@ -467,9 +770,11 @@
   },
   {
     "name": "Monstera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Retro Hardcore PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -477,19 +782,29 @@
   },
   {
     "name": "Monza",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2018-04-19",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "15:25",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Mystera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Retro Open PvP",
+    "transfer_type": "blocked",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -497,29 +812,52 @@
   },
   {
     "name": "Nefera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2018-04-19",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "18:30",
+        "warzone_sequence": ""
+      },
+      {
+        "execution_id": 2,
+        "schedule_time": "19:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Nevia",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "15:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Noctalia",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Open PvP",
+    "transfer_type": "blocked",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
     "warzone_executions": [],
@@ -527,9 +865,11 @@
   },
   {
     "name": "Oceanis",
-    "status": "online",
     "location": "Oceania",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2024-04-10",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -537,19 +877,29 @@
   },
   {
     "name": "Ombra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "21:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Opulera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Open PvP",
+    "transfer_type": "blocked",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -557,39 +907,70 @@
   },
   {
     "name": "Ourobra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "21:00",
+        "warzone_sequence": ""
+      },
+      {
+        "execution_id": 2,
+        "schedule_time": "22:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Pacera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2017-09-12",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "23:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Peloria",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2017-10-19",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "16:30",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Penumbra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Retro Open PvP",
+    "transfer_type": "blocked",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -597,9 +978,11 @@
   },
   {
     "name": "Premia",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2017-09-05",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -607,29 +990,52 @@
   },
   {
     "name": "Quelibra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2017-12-12",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "18:00",
+        "warzone_sequence": ""
+      },
+      {
+        "execution_id": 2,
+        "schedule_time": "23:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Quidera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "00:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Quintera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2017-10-19",
     "performs_warzone": true,
     "warzonesperday": 2,
     "warzone_executions": [],
@@ -637,29 +1043,52 @@
   },
   {
     "name": "Rasteibra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "19:00",
+        "warzone_sequence": "1-2-3"
+      },
+      {
+        "execution_id": 2,
+        "schedule_time": "21:30",
+        "warzone_sequence": "1-2-3"
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Refugia",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2017-09-12",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "17:25",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Retalia",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Retro Hardcore PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -667,39 +1096,70 @@
   },
   {
     "name": "Secura",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2017-09-05",
     "performs_warzone": true,
     "warzonesperday": 3,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "12:55",
+        "warzone_sequence": ""
+      },
+      {
+        "execution_id": 2,
+        "schedule_time": "13:30",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Serdebra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2017-05-17",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "17:30",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Solidera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2018-04-19",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "19:50",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Sombra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Retro Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -707,9 +1167,11 @@
   },
   {
     "name": "Sonira",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Optional PvP",
+    "transfer_type": "blocked",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
     "warzone_executions": [],
@@ -717,9 +1179,11 @@
   },
   {
     "name": "Stralis",
-    "status": "online",
     "location": "Oceania",
     "pvp_type": "Optional PvP",
+    "transfer_type": "blocked",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -727,9 +1191,11 @@
   },
   {
     "name": "Talera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2018-04-19",
     "performs_warzone": true,
     "warzonesperday": 4,
     "warzone_executions": [],
@@ -737,9 +1203,11 @@
   },
   {
     "name": "Tempestera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Retro Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -747,9 +1215,11 @@
   },
   {
     "name": "Terribra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Retro Hardcore PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
     "warzone_executions": [],
@@ -757,29 +1227,47 @@
   },
   {
     "name": "Thyria",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2021-12-06",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "16:40",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Tornabra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "22:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Unebra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
     "warzone_executions": [],
@@ -787,29 +1275,52 @@
   },
   {
     "name": "Ustebra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "19:50",
+        "warzone_sequence": "1-3-2"
+      },
+      {
+        "execution_id": 2,
+        "schedule_time": "22:50",
+        "warzone_sequence": "1-2-3"
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Venebra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "22:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Victoris",
-    "status": "online",
     "location": "Oceania",
     "pvp_type": "Open PvP",
+    "transfer_type": "blocked",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -817,39 +1328,70 @@
   },
   {
     "name": "Vunira",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2017-10-19",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "15:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Wintera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2018-04-19",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "21:00",
+        "warzone_sequence": ""
+      },
+      {
+        "execution_id": 2,
+        "schedule_time": "01:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Xybra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Open PvP",
+    "transfer_type": "blocked",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": false,
     "warzonesperday": 0,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "20:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Xyla",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
     "warzone_executions": [],
@@ -857,9 +1399,11 @@
   },
   {
     "name": "Xymera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Open PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
     "warzone_executions": [],
@@ -867,9 +1411,11 @@
   },
   {
     "name": "Yonabra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "2020-05-27",
     "performs_warzone": true,
     "warzonesperday": 1,
     "warzone_executions": [],
@@ -877,29 +1423,47 @@
   },
   {
     "name": "Yovera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "21:30",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Yubra",
-    "status": "online",
     "location": "South America",
     "pvp_type": "Optional PvP",
+    "transfer_type": "regular",
+    "battleye_protected": true,
+    "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "20:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Zuna",
-    "status": "online",
     "location": "Europe",
     "pvp_type": "Hardcore PvP",
+    "transfer_type": "locked",
+    "battleye_protected": true,
+    "battleye_date": "2025-02-18",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],
@@ -907,9 +1471,11 @@
   },
   {
     "name": "Zunera",
-    "status": "online",
     "location": "North America",
     "pvp_type": "Hardcore PvP",
+    "transfer_type": "locked",
+    "battleye_protected": true,
+    "battleye_date": "2025-02-18",
     "performs_warzone": false,
     "warzonesperday": 0,
     "warzone_executions": [],

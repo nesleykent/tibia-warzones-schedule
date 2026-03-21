@@ -1,3 +1,184 @@
+const SUPPORTED_TIMEZONES = [
+  { value: "UTC", label: "UTC" },
+
+  { value: "America/Noronha", label: "Fernando de Noronha" },
+  { value: "America/Sao_Paulo", label: "Curitiba" },
+  { value: "America/Manaus", label: "Manaus" },
+  { value: "America/Cuiaba", label: "Cuiabá" },
+  { value: "America/Porto_Velho", label: "Porto Velho" },
+  { value: "America/Rio_Branco", label: "Rio Branco" },
+
+  { value: "America/Argentina/Buenos_Aires", label: "Buenos Aires" },
+  { value: "America/Santiago", label: "Santiago" },
+  { value: "America/Mexico_City", label: "Mexico City" },
+  { value: "America/Cancun", label: "Cancún" },
+  { value: "America/Tijuana", label: "Tijuana" },
+  { value: "America/Caracas", label: "Caracas" },
+
+  { value: "Europe/Warsaw", label: "Polônia" },
+  { value: "Europe/Berlin", label: "Regensburg" },
+  { value: "Europe/London", label: "London" },
+];
+
+const I18N = {
+  en: {
+    pageTitle: "Tibia Warzones Schedule",
+    heroTitle: "Tibia Warzones Schedule",
+    heroSubtitle:
+      "Servers with Warzones activity based on Abyssador boss kills.",
+    questLinksLabel: "Bigfoot's Burden Quest:",
+    search: "Search server",
+    timezone: "Show times in",
+    summary: (total, withSchedules, tzLabel) =>
+      `${total} servers. ${withSchedules} with services. Timezone: ${tzLabel}`,
+    warzones: "Warzones/day",
+    region: "Region",
+    pvp: "PvP",
+    transfer: "Transfer",
+    battleye: "BattlEye",
+    services: "Services",
+    service: "Service",
+    order: "Order",
+    noSchedules: "No services",
+    notAvailable: "N/A",
+    noServersFound: "No servers found",
+    loadError: "Failed to load worlds.json",
+  },
+  "pt-BR": {
+    pageTitle: "Tibia Warzones Schedule",
+    heroTitle: "Tibia Warzones Schedule",
+    heroSubtitle:
+      "Servidores com atividade de Warzones baseada nas kills do boss Abyssador.",
+    questLinksLabel: "Bigfoot's Burden Quest:",
+    search: "Buscar servidor",
+    timezone: "Exibir horários em",
+    summary: (total, withSchedules, tzLabel) =>
+      `${total} servidores. ${withSchedules} com services. Timezone: ${tzLabel}`,
+    warzones: "Warzones/dia",
+    region: "Região",
+    pvp: "PvP",
+    transfer: "Transferência",
+    battleye: "BattlEye",
+    services: "Services",
+    service: "Service",
+    order: "Ordem",
+    noSchedules: "Sem services",
+    notAvailable: "N/D",
+    noServersFound: "Nenhum servidor encontrado",
+    loadError: "Falha ao carregar worlds.json",
+  },
+  "es-419": {
+    pageTitle: "Tibia Warzones Schedule",
+    heroTitle: "Tibia Warzones Schedule",
+    heroSubtitle:
+      "Servidores con actividad de Warzones basada en las muertes del boss Abyssador.",
+    questLinksLabel: "Bigfoot's Burden Quest:",
+    search: "Buscar servidor",
+    timezone: "Mostrar horarios en",
+    summary: (total, withSchedules, tzLabel) =>
+      `${total} servidores. ${withSchedules} con services. Zona: ${tzLabel}`,
+    warzones: "Warzones/día",
+    region: "Región",
+    pvp: "PvP",
+    transfer: "Transferencia",
+    battleye: "BattlEye",
+    services: "Services",
+    service: "Service",
+    order: "Orden",
+    noSchedules: "Sin services",
+    notAvailable: "N/D",
+    noServersFound: "No se encontraron servidores",
+    loadError: "Error al cargar worlds.json",
+  },
+  pl: {
+    pageTitle: "Tibia Warzones Schedule",
+    heroTitle: "Tibia Warzones Schedule",
+    heroSubtitle:
+      "Serwery z aktywnością Warzones na podstawie liczby zabójstw bossa Abyssador.",
+    questLinksLabel: "Bigfoot's Burden Quest:",
+    search: "Szukaj serwera",
+    timezone: "Pokaż godziny w",
+    summary: (total, withSchedules, tzLabel) =>
+      `${total} serwerów. ${withSchedules} z services. Strefa: ${tzLabel}`,
+    warzones: "Warzones/dzień",
+    region: "Region",
+    pvp: "PvP",
+    transfer: "Transfer",
+    battleye: "BattlEye",
+    services: "Services",
+    service: "Service",
+    order: "Kolejność",
+    noSchedules: "Brak services",
+    notAvailable: "Brak",
+    noServersFound: "Nie znaleziono serwerów",
+    loadError: "Nie udało się wczytać worlds.json",
+  },
+};
+
+let worlds = [];
+let timezone = "UTC";
+let lang = "pt-BR";
+
+function getBrowserTimezone() {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+  } catch {
+    return "UTC";
+  }
+}
+
+function getInitialLanguage() {
+  try {
+    const saved = localStorage.getItem("lang");
+    if (saved && I18N[saved]) {
+      return saved;
+    }
+
+    const browser = navigator.language || "pt-BR";
+    if (browser.startsWith("pt")) return "pt-BR";
+    if (browser.startsWith("es")) return "es-419";
+    if (browser.startsWith("pl")) return "pl";
+    return "en";
+  } catch {
+    return "pt-BR";
+  }
+}
+
+function t() {
+  return I18N[lang] || I18N["pt-BR"];
+}
+
+function saveLang(value) {
+  lang = value;
+  try {
+    localStorage.setItem("lang", value);
+  } catch {}
+  applyStaticLabels();
+  updateLanguageButtons();
+  populateTimezoneSelect();
+  render();
+}
+
+function saveTZ(value) {
+  timezone = value;
+  try {
+    localStorage.setItem("tz", value);
+  } catch {}
+  populateTimezoneSelect();
+  render();
+}
+
+function loadSettings() {
+  lang = getInitialLanguage();
+
+  try {
+    const savedTZ = localStorage.getItem("tz");
+    timezone = savedTZ || getBrowserTimezone();
+  } catch {
+    timezone = getBrowserTimezone();
+  }
+}
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -7,119 +188,390 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
-function renderExecutions(executions) {
-  if (!Array.isArray(executions) || executions.length === 0) {
-    return "<p>Horários ainda não cadastrados.</p>";
+function getTimezoneShortName(tz) {
+  try {
+    const parts = new Intl.DateTimeFormat("en", {
+      timeZone: tz,
+      timeZoneName: "short",
+    }).formatToParts(new Date());
+
+    return parts.find((part) => part.type === "timeZoneName")?.value || tz;
+  } catch {
+    return tz;
+  }
+}
+
+function getTimezoneOffsetLabel(tz) {
+  try {
+    const parts = new Intl.DateTimeFormat("en", {
+      timeZone: tz,
+      timeZoneName: "longOffset",
+    }).formatToParts(new Date());
+
+    const value =
+      parts.find((part) => part.type === "timeZoneName")?.value || "GMT";
+    return value.replace("GMT", "UTC");
+  } catch {
+    return "UTC";
+  }
+}
+
+function getTimezoneDisplayLabel(tz) {
+  const entry = SUPPORTED_TIMEZONES.find((item) => item.value === tz);
+  const label = entry ? entry.label : tz;
+  const shortName = getTimezoneShortName(tz);
+  const offset = getTimezoneOffsetLabel(tz);
+
+  return `${label} (${shortName}, ${offset})`;
+}
+
+function offsetMinutes(tz) {
+  try {
+    const now = new Date();
+    const localeString = now.toLocaleString("en-US", { timeZone: tz });
+    const zoned = new Date(localeString);
+    return Math.round((zoned.getTime() - now.getTime()) / 60000);
+  } catch {
+    return 0;
+  }
+}
+
+function populateTimezoneSelect() {
+  const select = document.getElementById("timezoneSelect");
+  if (!select) return;
+
+  const options = [...SUPPORTED_TIMEZONES];
+
+  if (!options.some((item) => item.value === timezone)) {
+    options.push({ value: timezone, label: timezone });
   }
 
+  options.sort((a, b) => {
+    const offsetDiff = offsetMinutes(a.value) - offsetMinutes(b.value);
+    if (offsetDiff !== 0) return offsetDiff;
+    return a.label.localeCompare(b.label, lang);
+  });
+
+  select.innerHTML = options
+    .map((item) => {
+      const selected = item.value === timezone ? "selected" : "";
+      const label = getTimezoneDisplayLabel(item.value);
+      return `<option value="${escapeHtml(
+        item.value
+      )}" ${selected}>${escapeHtml(label)}</option>`;
+    })
+    .join("");
+
+  select.onchange = (event) => saveTZ(event.target.value);
+}
+
+function updateLanguageButtons() {
+  const buttons = document.querySelectorAll(".lang-flag");
+  buttons.forEach((button) => {
+    const isActive = button.dataset.lang === lang;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", isActive ? "true" : "false");
+  });
+}
+
+function bindLanguageButtons() {
+  const buttons = document.querySelectorAll(".lang-flag");
+  buttons.forEach((button) => {
+    button.onclick = () => {
+      const selectedLang = button.dataset.lang;
+      if (selectedLang) {
+        saveLang(selectedLang);
+      }
+    };
+  });
+}
+
+function applyStaticLabels() {
+  const dictionary = t();
+
+  document.title = dictionary.pageTitle;
+
+  const heroTitle = document.querySelector(".site-header h1");
+  const heroSubtitle = document.querySelector(".site-header p");
+  const questLinksLabel = document.getElementById("questLinksLabel");
+  const searchLabel = document.querySelector('label[for="searchInput"]');
+  const timezoneLabel = document.querySelector('label[for="timezoneSelect"]');
+  const searchInput = document.getElementById("searchInput");
+
+  if (heroTitle) heroTitle.textContent = dictionary.heroTitle;
+  if (heroSubtitle) heroSubtitle.textContent = dictionary.heroSubtitle;
+  if (questLinksLabel) questLinksLabel.textContent = dictionary.questLinksLabel;
+  if (searchLabel) searchLabel.textContent = dictionary.search;
+  if (timezoneLabel) timezoneLabel.textContent = dictionary.timezone;
+  if (searchInput) {
+    searchInput.placeholder = dictionary.search;
+  }
+}
+
+function convertTimeBetweenTimezones(
+  scheduleTime,
+  sourceTimezone,
+  targetTimezone
+) {
+  if (!scheduleTime) return "";
+  if (!sourceTimezone || !targetTimezone) return scheduleTime;
+
+  const parts = String(scheduleTime).split(":");
+  if (parts.length !== 2) return scheduleTime;
+
+  const hour = Number(parts[0]);
+  const minute = Number(parts[1]);
+
+  if (Number.isNaN(hour) || Number.isNaN(minute)) {
+    return scheduleTime;
+  }
+
+  try {
+    const referenceUtcDate = new Date(Date.UTC(2025, 0, 15, 12, 0, 0));
+
+    const sourceParts = new Intl.DateTimeFormat("en-CA", {
+      timeZone: sourceTimezone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hourCycle: "h23",
+    }).formatToParts(referenceUtcDate);
+
+    const map = {};
+    for (const part of sourceParts) {
+      if (part.type !== "literal") {
+        map[part.type] = part.value;
+      }
+    }
+
+    const wallClockUtc = Date.UTC(
+      Number(map.year),
+      Number(map.month) - 1,
+      Number(map.day),
+      hour,
+      minute,
+      0
+    );
+
+    const probeDate = new Date(wallClockUtc);
+
+    const offsetParts = new Intl.DateTimeFormat("en", {
+      timeZone: sourceTimezone,
+      timeZoneName: "longOffset",
+    }).formatToParts(probeDate);
+
+    const offsetText =
+      offsetParts.find((part) => part.type === "timeZoneName")?.value ||
+      "GMT+00:00";
+    const normalized = offsetText.replace("GMT", "");
+    const match = normalized.match(/^([+-])(\d{2}):(\d{2})$/);
+
+    let offsetMinutesValue = 0;
+    if (match) {
+      const sign = match[1] === "-" ? -1 : 1;
+      const hh = Number(match[2]);
+      const mm = Number(match[3]);
+      offsetMinutesValue = sign * (hh * 60 + mm);
+    }
+
+    const actualUtcTimestamp = wallClockUtc - offsetMinutesValue * 60 * 1000;
+    const actualDate = new Date(actualUtcTimestamp);
+
+    return new Intl.DateTimeFormat(lang, {
+      timeZone: targetTimezone,
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23",
+    }).format(actualDate);
+  } catch {
+    return scheduleTime;
+  }
+}
+
+function getBattleyeLabel(world) {
+  const value = world.battleye_date;
+
+  if (value === "release") {
+    return "GBE";
+  }
+
+  if (value) {
+    return "YBE";
+  }
+
+  return t().notAvailable;
+}
+
+function getTransferLabel(world) {
+  const value = String(world.transfer_type || "").trim();
+
+  if (!value) {
+    return t().notAvailable;
+  }
+
+  if (value.toLowerCase() === "regular") {
+    return "Regular";
+  }
+
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function renderExecutions(world) {
+  const dictionary = t();
+  const executions = Array.isArray(world.warzone_executions)
+    ? [...world.warzone_executions]
+    : [];
+
+  if (executions.length === 0) {
+    return `<p>${escapeHtml(dictionary.noSchedules)}</p>`;
+  }
+
+  executions.sort((a, b) => {
+    const idA = Number(a.execution_id) || 0;
+    const idB = Number(b.execution_id) || 0;
+    return idA - idB;
+  });
+
   const items = executions
-    .slice()
-    .sort((a, b) => a.execution_id - b.execution_id)
     .map((execution) => {
-      const time = escapeHtml(execution.schedule_time ?? "");
-      const sequence = escapeHtml(execution.warzone_sequence ?? "");
-      const id = escapeHtml(execution.execution_id ?? "");
-      return `<li>Execução ${id}: ${time} | sequência ${sequence}</li>`;
+      const shownTime = convertTimeBetweenTimezones(
+        execution.schedule_time,
+        world.timezone,
+        timezone
+      );
+
+      const orderText = execution.warzone_sequence
+        ? ` | ${escapeHtml(dictionary.order)} ${escapeHtml(
+            execution.warzone_sequence
+          )}`
+        : "";
+
+      return `<li>${escapeHtml(dictionary.service)} ${escapeHtml(
+        execution.execution_id
+      )}: ${escapeHtml(shownTime)}${orderText}</li>`;
     })
     .join("");
 
   return `<ul>${items}</ul>`;
 }
 
-function renderWorldCard(world) {
-  const name = escapeHtml(world.name ?? "");
-  const status = escapeHtml(world.status ?? "");
-  const location = escapeHtml(world.location ?? "");
-  const pvpType = escapeHtml(world.pvp_type ?? "");
-  const timezone = escapeHtml(world.timezone ?? "Não definido");
-  const warzonesPerDay = escapeHtml(world.warzonesperday ?? 0);
+function renderWorld(world) {
+  const dictionary = t();
+
+  const regionText = world.location || dictionary.notAvailable;
+  const pvpText = world.pvp_type || dictionary.notAvailable;
+  const transferText = getTransferLabel(world);
+  const battleyeText = getBattleyeLabel(world);
+  const warzonesText = world.warzonesperday ?? 0;
 
   return `
-    <article class="world-card">
-      <h2>${name}</h2>
+    <div class="world-card">
+      <h2>${escapeHtml(world.name || "")}</h2>
 
       <div class="world-meta">
-        <span class="badge">Warzones/dia: ${warzonesPerDay}</span>
-        <span>Status: ${status}</span>
-        <span>Região: ${location}</span>
-        <span>PvP: ${pvpType}</span>
-        <span>Timezone: ${timezone}</span>
+        <span class="badge">${escapeHtml(dictionary.warzones)}: ${escapeHtml(
+    warzonesText
+  )}</span>
+        <span>${escapeHtml(dictionary.region)}: ${escapeHtml(regionText)}</span>
+        <span>${escapeHtml(dictionary.pvp)}: ${escapeHtml(pvpText)}</span>
+        <span>${escapeHtml(dictionary.transfer)}: ${escapeHtml(
+    transferText
+  )}</span>
+        <span>${escapeHtml(dictionary.battleye)}: ${escapeHtml(
+    battleyeText
+  )}</span>
       </div>
 
       <div class="executions">
-        <h3>Execuções</h3>
-        ${renderExecutions(world.warzone_executions)}
+        <h3>${escapeHtml(dictionary.services)}</h3>
+        ${renderExecutions(world)}
       </div>
-    </article>
+    </div>
   `;
 }
 
-function updateSummary(worlds) {
+function render() {
+  const dictionary = t();
+  const searchInput = document.getElementById("searchInput");
   const summary = document.getElementById("summary");
-  const total = worlds.length;
-  const withSchedules = worlds.filter(
+  const worldsList = document.getElementById("worldsList");
+
+  if (!summary || !worldsList) return;
+
+  const query = (searchInput?.value || "").trim().toLowerCase();
+
+  const filtered = worlds
+    .filter((world) => world && world.performs_warzone)
+    .filter((world) =>
+      String(world.name || "")
+        .toLowerCase()
+        .includes(query)
+    )
+    .sort((a, b) => {
+      const diff =
+        (Number(b.warzonesperday) || 0) - (Number(a.warzonesperday) || 0);
+      if (diff !== 0) return diff;
+      return String(a.name || "").localeCompare(String(b.name || ""), lang);
+    });
+
+  const withSchedules = filtered.filter(
     (world) =>
       Array.isArray(world.warzone_executions) &&
       world.warzone_executions.length > 0
   ).length;
 
-  summary.textContent = `${total} servidores com Warzone ativa. ${withSchedules} com horários cadastrados.`;
-}
+  summary.textContent = dictionary.summary(
+    filtered.length,
+    withSchedules,
+    getTimezoneDisplayLabel(timezone)
+  );
 
-function renderWorlds(worlds) {
-  const container = document.getElementById("worldsList");
-
-  if (worlds.length === 0) {
-    container.innerHTML = `<div class="empty-state">Nenhum servidor encontrado.</div>`;
-    updateSummary([]);
+  if (filtered.length === 0) {
+    worldsList.innerHTML = `<div class="empty-state">${escapeHtml(
+      dictionary.noServersFound
+    )}</div>`;
     return;
   }
 
-  container.innerHTML = worlds.map(renderWorldCard).join("");
-  updateSummary(worlds);
-}
-
-async function loadWorlds() {
-  const response = await fetch("./data/worlds.json");
-
-  if (!response.ok) {
-    throw new Error(`Falha ao carregar worlds.json: ${response.status}`);
-  }
-
-  const worlds = await response.json();
-
-  return worlds
-    .filter((world) => world.performs_warzone)
-    .sort((a, b) => {
-      if (b.warzonesperday !== a.warzonesperday) {
-        return b.warzonesperday - a.warzonesperday;
-      }
-      return a.name.localeCompare(b.name);
-    });
+  worldsList.innerHTML = filtered.map(renderWorld).join("");
 }
 
 async function init() {
+  loadSettings();
+  applyStaticLabels();
+  bindLanguageButtons();
+  updateLanguageButtons();
+  populateTimezoneSelect();
+
   const searchInput = document.getElementById("searchInput");
+  if (searchInput) {
+    searchInput.oninput = render;
+  }
 
   try {
-    const worlds = await loadWorlds();
-    renderWorlds(worlds);
+    const response = await fetch("./data/worlds.json");
+    if (!response.ok) {
+      throw new Error(`${t().loadError}: ${response.status}`);
+    }
 
-    searchInput.addEventListener("input", () => {
-      const query = searchInput.value.trim().toLowerCase();
-
-      const filtered = worlds.filter((world) =>
-        world.name.toLowerCase().includes(query)
-      );
-
-      renderWorlds(filtered);
-    });
+    worlds = await response.json();
+    render();
   } catch (error) {
-    const container = document.getElementById("worldsList");
-    container.innerHTML = `<div class="empty-state">${escapeHtml(
-      error.message
-    )}</div>`;
-    updateSummary([]);
+    const summary = document.getElementById("summary");
+    const worldsList = document.getElementById("worldsList");
+
+    if (summary) {
+      summary.textContent = "";
+    }
+
+    if (worldsList) {
+      worldsList.innerHTML = `<div class="empty-state">${escapeHtml(
+        error.message
+      )}</div>`;
+    }
   }
 }
 
