@@ -57,8 +57,10 @@ Each world is stored in `data/worlds.json`:
 
 1. Fetch all worlds from TibiaData
 2. For each world:
+
    - Fetch kill statistics
    - Count Abyssador kills
+
 3. Infer Warzone activity level
 4. Merge with manual schedules
 5. Generate `data/worlds.json`
@@ -83,13 +85,17 @@ These entries are merged into the generated dataset.
 - Compact and readable services layout
 - Timezone conversion for all schedule times
 - Multiple languages:
+
   - English
   - Portuguese (Brazil)
   - Spanish (LATAM)
   - Polish
+
 - BattlEye classification:
+
   - GBE, Green BattlEye
   - YBE, Yellow BattlEye
+
 - Search by world name
 
 ## Timezone Handling
@@ -100,38 +106,46 @@ These entries are merged into the generated dataset.
 
 ## Project Structure
 
+```
 assets/
-app.js
-styles.css
+  app.js
+  styles.css
 
 data/
-worlds.json
-manual-schedules.json
+  worlds.json
+  manual-schedules.json
 
 scripts/
-update_data.py
+  update_data.py
 
 index.html
+```
 
 ## Local Development
 
 Create environment:
 
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
 pip install requests
+```
 
 Run data update:
 
+```bash
 python scripts/update_data.py
+```
 
 Run local server:
 
+```bash
 python -m http.server 8000
+```
 
 Open:
 
-http://localhost:8000
+[http://localhost:8000](http://localhost:8000)
 
 ## Deployment
 
@@ -139,18 +153,19 @@ The project runs entirely on GitHub Pages.
 
 Steps:
 
-1. Push to main
+1. Push to `main`
 2. Open repository Settings
 3. Go to Pages
 4. Select:
-   - Branch: main
-   - Folder: / (root)
+
+   - Branch: `main`
+   - Folder: `/ (root)`
 
 ## Future Improvements
 
 - Global timeline view across all worlds
 - Improved schedule editing workflow
-- Filtering by region and PvP type
+- Filtering by region, PvP type and time
 - Better validation of manual schedule data
 
 ## Purpose
