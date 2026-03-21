@@ -224,3 +224,30 @@ p {
     align-self: flex-end;
   }
 }
+
+.executions-list {
+  list-style: disc;
+  padding-left: 18px;
+  margin: 0;
+}
+
+.executions-list li + li {
+  margin-top: 8px;
+}
+
+.execution-item {
+  display: grid;
+  grid-template-columns: 72px auto;
+  column-gap: 18px;
+  align-items: baseline;
+}
+
+.execution-time {
+  display: inline-block;
+  min-width: 72px;
+}
+
+.execution-order {
+  display: inline-block;
+  color: #c7cedb;
+}
