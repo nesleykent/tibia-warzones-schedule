@@ -531,7 +531,67 @@ function render() {
     return;
   }
 
-  worldsList.innerHTML = filtered.map(renderWorld).join("");
+  // Distribui os cards em colunas para evitar espaços vazios (masonry JS)
+  const html = filtered.map(renderWorld).join("");
+  worldsList.innerHTML = html;
+  // Aguarda o browser pintar os cards antes de medir alturas
+  requestAnimationFrame(() => applyMasonry(worldsList));
+}
+
+function getColumnCount(container) {
+  const width = container.offsetWidth;
+  if (width >= 1020) return 3;
+  if (width >= 680)  return 2;
+  return 1;
+}
+
+function applyMasonry(container) {
+  const cols = getColumnCount(container);
+
+  // Coleta todos os cards (podem estar em .masonry-col de render anterior)
+  const cards = [];
+  container.querySelectorAll(".world-card, .empty-state").forEach((c) => cards.push(c));
+
+  // Limpa o container
+  container.innerHTML = "";
+
+  if (cols === 1) {
+    // Mobile: empilha direto sem colunas
+    container.style.cssText = "display:flex;flex-direction:column;";
+    cards.forEach((card) => container.appendChild(card));
+    return;
+  }
+
+  const gap = cols === 3 ? 16 : 14;
+
+  // Cria as colunas
+  const columns = Array.from({ length: cols }, () => {
+    const col = document.createElement("div");
+    col.className = "masonry-col";
+    col.style.cssText = `display:flex;flex-direction:column;gap:${gap}px;flex:1;min-width:0;`;
+    container.appendChild(col);
+    return col;
+  });
+
+  container.style.cssText = `display:flex;align-items:flex-start;gap:${gap}px;`;
+
+  // Distribui round-robin primeiro para que todos os cards estejam no DOM e mensuráveis
+  cards.forEach((card, i) => columns[i % cols].appendChild(card));
+
+  // Segunda passagem: re-distribui pela altura real
+  requestAnimationFrame(() => {
+    // Remove dos containers atuais
+    cards.forEach((card) => card.remove());
+    columns.forEach((col) => (col.innerHTML = ""));
+
+    const heights = new Array(cols).fill(0);
+    cards.forEach((card) => {
+      const shortest = heights.indexOf(Math.min(...heights));
+      columns[shortest].appendChild(card);
+      // Força leitura de layout para obter altura real
+      heights[shortest] += card.getBoundingClientRect().height + gap;
+    });
+  });
 }
 
 async function init() {
@@ -554,6 +614,13 @@ async function init() {
 
     worlds = await response.json();
     render();
+
+    // Re-aplica masonry ao redimensionar janela
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(render, 120);
+    });
   } catch (error) {
     const summary = document.getElementById("summary");
     const worldsList = document.getElementById("worldsList");
