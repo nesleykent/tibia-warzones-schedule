@@ -7,107 +7,73 @@
     <link rel="stylesheet" href="./assets/styles.css" />
   </head>
   <body>
-    <div class="topbar">
+    <div class="topbar" role="navigation" aria-label="Site navigation">
       <div class="container topbar-inner">
         <div class="topbar-links">
-          <span id="questLinksLabel">Bigfoot's Burden Quest:</span>
-          <a
-            href="https://tibia.fandom.com/wiki/Bigfoot's_Burden_Quest"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            TibiaWiki
-          </a>
-          <span>|</span>
-          <a
-            href="https://www.tibiawiki.com.br/wiki/Bigfoot%27s_Burden_Quest"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Tibia Wiki BR
-          </a>
-          <span>|</span>
-          <a
-            href="https://tibiopedia.pl/quests/Bigfoots_Burden_Quest"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Tibiopedia.pl
-          </a>
+          <span id="questLinksLabel" class="topbar-label">Bigfoot's Burden Quest:</span>
+          <a href="https://tibia.fandom.com/wiki/Bigfoot's_Burden_Quest" target="_blank" rel="noopener noreferrer">TibiaWiki</a>
+          <span class="topbar-divider" aria-hidden="true"></span>
+          <a href="https://www.tibiawiki.com.br/wiki/Bigfoot%27s_Burden_Quest" target="_blank" rel="noopener noreferrer">Tibia Wiki BR</a>
+          <span class="topbar-divider" aria-hidden="true"></span>
+          <a href="https://tibiopedia.pl/quests/Bigfoots_Burden_Quest" target="_blank" rel="noopener noreferrer">Tibiopedia.pl</a>
         </div>
 
-        <div class="topbar-languages" aria-label="Language selector">
-          <button
-            type="button"
-            class="lang-flag"
-            data-lang="en"
-            title="English"
-            aria-label="English"
-          >
-            🇺🇸🇬🇧
-          </button>
-          <button
-            type="button"
-            class="lang-flag"
-            data-lang="pt-BR"
-            title="Português (Brasil)"
-            aria-label="Português (Brasil)"
-          >
-            🇧🇷
-          </button>
-          <button
-            type="button"
-            class="lang-flag"
-            data-lang="es-419"
-            title="Español (LatAm)"
-            aria-label="Español (LatAm)"
-          >
-            🇦🇷
-          </button>
-          <button
-            type="button"
-            class="lang-flag"
-            data-lang="pl"
-            title="Polski"
-            aria-label="Polski"
-          >
-            🇵🇱
-          </button>
+        <div class="topbar-languages" aria-label="Language selector" role="group">
+          <button type="button" class="lang-flag" data-lang="en" title="English" aria-label="Switch to English">🇺🇸</button>
+          <button type="button" class="lang-flag" data-lang="pt-BR" title="Português (Brasil)" aria-label="Mudar para Português (Brasil)">🇧🇷</button>
+          <button type="button" class="lang-flag" data-lang="es-419" title="Español (LatAm)" aria-label="Cambiar a Español (LatAm)">🇦🇷</button>
+          <button type="button" class="lang-flag" data-lang="pl" title="Polski" aria-label="Przełącz na Polski">🇵🇱</button>
         </div>
       </div>
     </div>
 
-    <header class="site-header">
-      <div class="container">
-        <h1>Tibia Warzones Schedule</h1>
-        <p>
-          Servidores com atividade de Warzones baseada nas kills do boss
-          Abyssador.
-        </p>
+    <header class="site-header" role="banner">
+      <div class="container site-header-inner">
+        <div class="header-icon" aria-hidden="true">⚔️</div>
+        <div class="header-text">
+          <h1>Tibia Warzones</h1>
+          <p class="header-subtitle">Servidores com atividade de Warzones baseada nas kills do boss Abyssador.</p>
+        </div>
       </div>
     </header>
 
-    <main class="container">
-      <section class="controls">
+    <main class="container" id="main-content">
+      <section class="controls" aria-label="Filtros e opções">
         <div class="control-group">
           <label for="searchInput">Buscar servidor</label>
-          <input
-            type="text"
-            id="searchInput"
-            placeholder="Buscar servidor"
-            autocomplete="off"
-          />
+          <div class="input-wrapper">
+            <span class="input-icon" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <input
+              type="search"
+              id="searchInput"
+              placeholder="Nome do servidor…"
+              autocomplete="off"
+              aria-label="Buscar servidor"
+            />
+          </div>
         </div>
 
         <div class="control-group">
-          <label for="timezoneSelect">Exibir horários em</label>
-          <select id="timezoneSelect"></select>
+          <label for="timezoneSelect">Fuso horário</label>
+          <div class="select-wrapper">
+            <select id="timezoneSelect" aria-label="Selecionar fuso horário"></select>
+            <span class="select-chevron" aria-hidden="true">
+              <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
         </div>
       </section>
 
-      <section class="summary" id="summary"></section>
+      <section class="summary" id="summary" aria-live="polite" aria-label="Resumo dos servidores"></section>
 
-      <section id="worldsList" class="worlds-list"></section>
+      <section id="worldsList" class="worlds-list" aria-label="Lista de servidores"></section>
     </main>
 
     <script src="./assets/app.js"></script>
