@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tibia Warzones Schedule</title>
+    <link rel="stylesheet" href="./assets/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <h1>Tibia Warzones Schedule</h1>
+        <p>
+          Servidores com atividade de Warzones baseada nas kills do boss
+          Abyssador.
+        </p>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="controls">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Buscar servidor"
+          autocomplete="off"
+        />
+      </section>
+
+      <section class="summary" id="summary"></section>
+
+      <section id="worldsList" class="worlds-list"></section>
+    </main>
+
+    <script src="./assets/app.js"></script>
+  </body>
+</html>
