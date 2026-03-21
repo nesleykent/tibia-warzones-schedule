@@ -18,7 +18,7 @@ Since the API does not provide exact execution times, schedules are manually cur
 
 ## Data Sources
 
-- Worlds list: https://api.tibiadata.com/v4/worlds  
+- Worlds list: https://api.tibiadata.com/v4/worlds
 - Kill statistics: https://api.tibiadata.com/v4/killstatistics/{world}
 
 ## Data Model
@@ -32,7 +32,7 @@ Each world is stored in `data/worlds.json`:
   "pvp_type": "Optional PvP",
   "transfer_type": "regular",
   "battleye_protected": true,
-  "battleye_date": "release",
+  "battleye_date": "2017-12-12",
   "performs_warzone": true,
   "warzonesperday": 2,
   "timezone": "America/Sao_Paulo",
@@ -48,21 +48,21 @@ Each world is stored in `data/worlds.json`:
 
 ## Key Fields
 
-- `performs_warzone`: Indicates detected Warzone activity  
-- `warzonesperday`: Estimated number of Warzones per day  
-- `warzone_executions`: Manually curated schedule entries  
-- `timezone`: Reference timezone for the Warzone schedule  
+- `performs_warzone`: Indicates detected Warzone activity
+- `warzonesperday`: Estimated number of Warzones per day
+- `warzone_executions`: Manually curated schedule entries
+- `timezone`: Reference timezone for the Warzone schedule
 
 ## How It Works
 
-1. Fetch all worlds from TibiaData  
+1. Fetch all worlds from TibiaData
 2. For each world:
-   - Fetch kill statistics  
-   - Count Abyssador kills  
-3. Infer Warzone activity level  
-4. Merge with manual schedules  
-5. Generate `data/worlds.json`  
-6. Render the static frontend  
+   - Fetch kill statistics
+   - Count Abyssador kills
+3. Infer Warzone activity level
+4. Merge with manual schedules
+5. Generate `data/worlds.json`
+6. Render the static frontend
 
 ## Manual Schedules
 
@@ -72,44 +72,44 @@ Schedules are defined in:
 
 This file contains:
 
-- Execution times  
-- Warzone sequence order  
-- Reference timezone for each schedule  
+- Execution times
+- Warzone sequence order
+- Reference timezone for each schedule
 
 These entries are merged into the generated dataset.
 
 ## Frontend Features
 
-- Compact and readable services layout  
-- Timezone conversion for all schedule times  
+- Compact and readable services layout
+- Timezone conversion for all schedule times
 - Multiple languages:
-  - English  
-  - Portuguese (Brazil)  
-  - Spanish (LATAM)  
-  - Polish  
+  - English
+  - Portuguese (Brazil)
+  - Spanish (LATAM)
+  - Polish
 - BattlEye classification:
-  - GBE, Green BattlEye  
-  - YBE, Yellow BattlEye  
-- Search by world name  
+  - GBE, Green BattlEye
+  - YBE, Yellow BattlEye
+- Search by world name
 
 ## Timezone Handling
 
-- Each schedule uses a reference timezone  
-- Users can select their own display timezone  
-- All times are converted dynamically in the browser  
+- Each schedule uses a reference timezone
+- Users can select their own display timezone
+- All times are converted dynamically in the browser
 
 ## Project Structure
 
 assets/
-  app.js
-  styles.css
+app.js
+styles.css
 
 data/
-  worlds.json
-  manual-schedules.json
+worlds.json
+manual-schedules.json
 
 scripts/
-  update_data.py
+update_data.py
 
 index.html
 
@@ -139,19 +139,19 @@ The project runs entirely on GitHub Pages.
 
 Steps:
 
-1. Push to main  
-2. Open repository Settings  
-3. Go to Pages  
+1. Push to main
+2. Open repository Settings
+3. Go to Pages
 4. Select:
-   - Branch: main  
-   - Folder: / (root)  
+   - Branch: main
+   - Folder: / (root)
 
 ## Future Improvements
 
-- Global timeline view across all worlds  
-- Improved schedule editing workflow  
-- Filtering by region and PvP type  
-- Better validation of manual schedule data  
+- Global timeline view across all worlds
+- Improved schedule editing workflow
+- Filtering by region and PvP type
+- Better validation of manual schedule data
 
 ## Purpose
 
