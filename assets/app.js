@@ -25,7 +25,7 @@ const I18N = {
     pageTitle: "Tibia Warzones Schedule",
     heroTitle: "Tibia Warzones Schedule",
     heroSubtitle:
-      "Servers with Warzones activity based on Abyssador boss kills.",
+      "Servers with Warzones activity based on Gnomevil boss kills.",
     questLinksLabel: "Bigfoot's Burden Quest:",
     search: "Search server",
     timezone: "Show times in",
@@ -46,7 +46,7 @@ const I18N = {
     pageTitle: "Tibia Warzones Schedule",
     heroTitle: "Tibia Warzones Schedule",
     heroSubtitle:
-      "Servidores com atividade de Warzones baseada nas kills do boss Abyssador.",
+      "Servidores com atividade de Warzones baseada nas kills do boss Gnomevil.",
     questLinksLabel: "Bigfoot's Burden Quest:",
     search: "Buscar servidor",
     timezone: "Exibir horários em",
@@ -67,7 +67,7 @@ const I18N = {
     pageTitle: "Tibia Warzones Schedule",
     heroTitle: "Tibia Warzones Schedule",
     heroSubtitle:
-      "Servidores con actividad de Warzones basada en las muertes del boss Abyssador.",
+      "Servidores con actividad de Warzones basada en las muertes del boss Gnomevil.",
     questLinksLabel: "Bigfoot's Burden Quest:",
     search: "Buscar servidor",
     timezone: "Mostrar horarios en",
@@ -88,7 +88,7 @@ const I18N = {
     pageTitle: "Tibia Warzones Schedule",
     heroTitle: "Tibia Warzones Schedule",
     heroSubtitle:
-      "Serwery z aktywnością Warzones na podstawie liczby zabójstw bossa Abyssador.",
+      "Serwery z aktywnością Warzones na podstawie liczby zabójstw bossa Gnomevil.",
     questLinksLabel: "Bigfoot's Burden Quest:",
     search: "Szukaj serwera",
     timezone: "Pokaż godziny w",
@@ -506,8 +506,14 @@ function render() {
         .includes(query)
     )
     .sort((a, b) => {
-      const aHas = Array.isArray(a.warzone_executions) && a.warzone_executions.length > 0 ? 1 : 0;
-      const bHas = Array.isArray(b.warzone_executions) && b.warzone_executions.length > 0 ? 1 : 0;
+      const aHas =
+        Array.isArray(a.warzone_executions) && a.warzone_executions.length > 0
+          ? 1
+          : 0;
+      const bHas =
+        Array.isArray(b.warzone_executions) && b.warzone_executions.length > 0
+          ? 1
+          : 0;
       if (bHas !== aHas) return bHas - aHas;
       return String(a.name || "").localeCompare(String(b.name || ""), lang);
     });
@@ -541,7 +547,7 @@ function render() {
 function getColumnCount(container) {
   const width = container.offsetWidth;
   if (width >= 1020) return 3;
-  if (width >= 680)  return 2;
+  if (width >= 680) return 2;
   return 1;
 }
 
@@ -550,7 +556,9 @@ function applyMasonry(container) {
 
   // Coleta todos os cards (podem estar em .masonry-col de render anterior)
   const cards = [];
-  container.querySelectorAll(".world-card, .empty-state").forEach((c) => cards.push(c));
+  container
+    .querySelectorAll(".world-card, .empty-state")
+    .forEach((c) => cards.push(c));
 
   // Limpa o container
   container.innerHTML = "";

@@ -64,7 +64,7 @@ def to_int(value: Any) -> int:
     return 0
 
 
-def extract_abyssador_kills(payload: dict[str, Any]) -> int:
+def extract_Gnomevil_kills(payload: dict[str, Any]) -> int:
     killstatistics = payload.get("killstatistics", {})
     entries = killstatistics.get("entries", [])
 
@@ -75,7 +75,7 @@ def extract_abyssador_kills(payload: dict[str, Any]) -> int:
         if not isinstance(entry, dict):
             continue
 
-        if entry.get("race") == "Abyssador":
+        if entry.get("race") == "Gnomevil":
             return to_int(entry.get("last_day_killed", 0))
 
     return 0
@@ -88,7 +88,7 @@ def build_world_record(
     world_name = str(world.get("name", "")).strip()
 
     kill_statistics = get_kill_statistics(world_name)
-    abyssador_kills = extract_abyssador_kills(kill_statistics)
+    Gnomevil_kills = extract_Gnomevil_kills(kill_statistics)
 
     manual_entry = manual_schedules.get(world_name, {})
     timezone = manual_entry.get("timezone")
@@ -101,8 +101,8 @@ def build_world_record(
         "transfer_type": world.get("transfer_type"),
         "battleye_protected": world.get("battleye_protected"),
         "battleye_date": world.get("battleye_date"),
-        "performs_warzone": abyssador_kills > 0,
-        "warzonesperday": abyssador_kills,
+        "performs_warzone": Gnomevil_kills > 0,
+        "warzonesperday": Gnomevil_kills,
         "warzone_executions": warzone_executions,
         "timezone": timezone,
     }

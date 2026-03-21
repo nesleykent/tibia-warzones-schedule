@@ -8,9 +8,9 @@ It combines automated data from the TibiaData API with manually curated schedule
 
 Warzones in Tibia are player-organized events. There is no official schedule exposed by the game. However, Warzone activity can be inferred by tracking boss kills.
 
-This project uses the boss Abyssador as a proxy signal:
+This project uses the boss Gnomevil as a proxy signal:
 
-- Each kill of Abyssador indicates one Warzone execution
+- Each kill of Gnomevil indicates one Warzone execution
 - Kill statistics are fetched per world
 - The system estimates how many Warzones occur per day
 
@@ -59,7 +59,7 @@ Each world is stored in `data/worlds.json`:
 2. For each world:
 
    - Fetch kill statistics
-   - Count Abyssador kills
+   - Count Gnomevil kills
 
 3. Infer Warzone activity level
 4. Merge with manual schedules
