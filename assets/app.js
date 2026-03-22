@@ -3,22 +3,61 @@
 // ─────────────────────────────────────────────
 
 const SUPPORTED_TIMEZONES = [
-  { value: "UTC", label: "UTC" },
-  { value: "America/Noronha", label: "Fernando de Noronha" },
-  { value: "America/Sao_Paulo", label: "Curitiba" },
-  { value: "America/Manaus", label: "Manaus" },
-  { value: "America/Cuiaba", label: "Cuiabá" },
-  { value: "America/Porto_Velho", label: "Porto Velho" },
-  { value: "America/Rio_Branco", label: "Rio Branco" },
-  { value: "America/Argentina/Buenos_Aires", label: "Buenos Aires" },
-  { value: "America/Santiago", label: "Santiago" },
-  { value: "America/Mexico_City", label: "Mexico City" },
-  { value: "America/Cancun", label: "Cancún" },
-  { value: "America/Tijuana", label: "Tijuana" },
-  { value: "America/Caracas", label: "Caracas" },
-  { value: "Europe/Warsaw", label: "Warsaw" },
-  { value: "Europe/Berlin", label: "Regensburg" },
-  { value: "Europe/London", label: "London" },
+  {
+    value: "America/Noronha",
+    label: "Fernando de Noronha",
+    short: "FNT",
+    offset: "GMT-2",
+  },
+  {
+    value: "America/Sao_Paulo",
+    label: "Curitiba",
+    short: "BRT",
+    offset: "GMT-3",
+  },
+  {
+    value: "America/Argentina/Buenos_Aires",
+    label: "Buenos Aires",
+    short: "ART",
+    offset: "GMT-3",
+  },
+  {
+    value: "America/Santiago",
+    label: "Santiago",
+    short: "CLT",
+    offset: "GMT-3",
+  },
+  { value: "America/Manaus", label: "Manaus", short: "AMT", offset: "GMT-4" },
+  { value: "America/Cuiaba", label: "Cuiabá", short: "AMT", offset: "GMT-4" },
+  {
+    value: "America/Porto_Velho",
+    label: "Porto Velho",
+    short: "AMT",
+    offset: "GMT-4",
+  },
+  { value: "America/Caracas", label: "Caracas", short: "VET", offset: "GMT-4" },
+  {
+    value: "America/Rio_Branco",
+    label: "Rio Branco",
+    short: "ACT",
+    offset: "GMT-5",
+  },
+  { value: "America/Cancun", label: "Cancún", short: "EST", offset: "GMT-5" },
+  {
+    value: "America/Mexico_City",
+    label: "Mexico City",
+    short: "CST",
+    offset: "GMT-6",
+  },
+  { value: "America/Tijuana", label: "Tijuana", short: "PST", offset: "GMT-7" },
+  { value: "Europe/London", label: "London", short: "GMT", offset: "GMT+0" },
+  {
+    value: "Europe/Berlin",
+    label: "Regensburg",
+    short: "CET",
+    offset: "GMT+1",
+  },
+  { value: "Europe/Warsaw", label: "Warsaw", short: "CET", offset: "GMT+1" },
 ];
 
 const I18N = {
@@ -209,8 +248,8 @@ function execKey(worldName, execId) {
 }
 let notificationsEnabled = false;
 let alertOffsetMinutes = 5;
-let selectedSound = "globalevent";
-let masterVolume = 1.0; // 0.0–1.0
+let selectedSound = "serversave";
+let masterVolume = 0.5; // 0.0–1.0
 
 const SOUNDS = [
   { id: "achievements", label: "Achievements" },
@@ -800,6 +839,7 @@ function toggleExecutionSelection(worldName, execId) {
   renderSchedulePanel();
   updateCountdownPanel();
   renderSelectedBadges();
+  checkScheduleConflicts();
 }
 
 function renderSelectedBadges() {
@@ -823,6 +863,52 @@ function renderSelectedBadges() {
     );
     card.classList.toggle("world-card--selected", hasAny);
   });
+}
+
+// ─── Schedule conflict warning ───────────────────────
+
+function checkScheduleConflicts() {
+  const existing = document.getElementById("scheduleConflictWarn");
+
+  const entries = buildScheduleEntries();
+  if (entries.length < 2) {
+    if (existing) existing.remove();
+    return;
+  }
+
+  // Find any pair with gap < 20 min (including exact same time)
+  let hasConflict = false;
+  for (let i = 0; i < entries.length - 1; i++) {
+    const gap = entries[i + 1].totalMin - entries[i].totalMin;
+    if (gap < 20) {
+      hasConflict = true;
+      break;
+    }
+  }
+
+  if (!hasConflict) {
+    if (existing) existing.remove();
+    return;
+  }
+
+  if (existing) return; // already showing
+
+  const warn = document.createElement("div");
+  warn.id = "scheduleConflictWarn";
+  warn.className = "conflict-warn";
+  warn.innerHTML = `
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <span>Some warzones are &lt;20 min apart — tight but possible!</span>
+    <button type="button" class="conflict-close" aria-label="Dismiss">✕</button>
+  `;
+  warn.querySelector(".conflict-close").onclick = () => warn.remove();
+
+  // Insert after schedulePanel
+  const panel = document.getElementById("schedulePanel");
+  if (panel?.parentNode) panel.parentNode.insertBefore(warn, panel.nextSibling);
+
+  // Auto-dismiss after 8s
+  setTimeout(() => warn?.remove(), 8000);
 }
 
 // ─── Persistence ─────────────────────────────────────
@@ -971,10 +1057,16 @@ function getTimezoneOffsetLabel(tz) {
 
 function getTimezoneDisplayLabel(tz) {
   const entry = SUPPORTED_TIMEZONES.find((item) => item.value === tz);
-  const label = entry ? entry.label : tz;
-  return `${label} (${getTimezoneShortName(tz)}, ${getTimezoneOffsetLabel(
-    tz
-  )})`;
+  if (entry) {
+    return `${entry.label} (${entry.short}, ${entry.offset})`;
+  }
+  // Fallback for unknown timezones (e.g. browser-detected zone not in list)
+  const offsetRaw = getTimezoneOffsetLabel(tz);
+  const offsetCompact = offsetRaw
+    .replace("UTC", "GMT")
+    .replace(/:00$/, "")
+    .replace(/([+-])0(\d)$/, "$1$2");
+  return `${tz} (${offsetCompact})`;
 }
 
 function offsetMinutes(tz) {
