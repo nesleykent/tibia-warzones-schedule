@@ -103,6 +103,16 @@ const I18N = {
     pastLabel: "done",
     testSound: "Test",
     volume: "Volume",
+    filterRegion: "Region",
+    filterPvp: "PvP Type",
+    filterBattleye: "BattlEye",
+    filterTransfer: "Transfer",
+    filterAll: "All",
+    filterLabel: "Filters",
+    clearFilters: "Clear filters",
+    bgeLabel: "Green BattlEye",
+    ybeLabel: "Yellow BattlEye",
+    noneLabel: "None",
   },
   "pt-BR": {
     pageTitle: "Tibia Warzones Schedule",
@@ -146,6 +156,16 @@ const I18N = {
     pastLabel: "feito",
     testSound: "Testar",
     volume: "Volume",
+    filterRegion: "Região",
+    filterPvp: "Tipo PvP",
+    filterBattleye: "BattlEye",
+    filterTransfer: "Transferência",
+    filterAll: "Todos",
+    filterLabel: "Filtros",
+    clearFilters: "Limpar filtros",
+    bgeLabel: "Green BattlEye",
+    ybeLabel: "Yellow BattlEye",
+    noneLabel: "Nenhum",
   },
   "es-419": {
     pageTitle: "Tibia Warzones Schedule",
@@ -189,6 +209,16 @@ const I18N = {
     pastLabel: "listo",
     testSound: "Probar",
     volume: "Volumen",
+    filterRegion: "Región",
+    filterPvp: "Tipo PvP",
+    filterBattleye: "BattlEye",
+    filterTransfer: "Transferencia",
+    filterAll: "Todos",
+    filterLabel: "Filtros",
+    clearFilters: "Limpiar filtros",
+    bgeLabel: "Green BattlEye",
+    ybeLabel: "Yellow BattlEye",
+    noneLabel: "Ninguno",
   },
   pl: {
     pageTitle: "Tibia Warzones Schedule",
@@ -232,6 +262,16 @@ const I18N = {
     pastLabel: "gotowe",
     testSound: "Testuj",
     volume: "Głośność",
+    filterRegion: "Region",
+    filterPvp: "Typ PvP",
+    filterBattleye: "BattlEye",
+    filterTransfer: "Transfer",
+    filterAll: "Wszystkie",
+    filterLabel: "Filtry",
+    clearFilters: "Wyczyść filtry",
+    bgeLabel: "Green BattlEye",
+    ybeLabel: "Yellow BattlEye",
+    noneLabel: "Brak",
   },
 };
 
@@ -242,6 +282,14 @@ let lang = "pt-BR";
 
 // Keys: "worldName|executionId"
 let selectedExecutions = new Set();
+
+// ─── Filter state ─────────────────────────────────
+let activeFilters = {
+  region:   new Set(), // e.g. "South America", "Europe", "North America"
+  pvp:      new Set(), // e.g. "Open PvP", "Optional PvP", "Retro Open PvP", "Retro Hardcore PvP", "Hardcore PvP"
+  battleye: new Set(), // "GBE", "YBE", "none"
+  transfer: new Set(), // "Regular", "Blocked", "Locked"
+};
 
 function execKey(worldName, execId) {
   return worldName + "|" + execId;
@@ -617,11 +665,14 @@ function renderSchedulePanel() {
   panel.innerHTML = `
     <div class="schedule-header">
       <span class="schedule-title">WARZONE PLANNER</span>
-      <button type="button" class="schedule-btn schedule-icon-btn schedule-copy-btn" id="scheduleCopyBtn" title="${escapeHtml(
-        dict.copySchedule
-      )}">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-      </button>
+      <div class="schedule-header-actions">
+        <button type="button" class="schedule-btn schedule-icon-btn schedule-clear-btn" id="scheduleClearBtn" title="Limpar planner">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+        </button>
+        <button type="button" class="schedule-btn schedule-icon-btn schedule-copy-btn" id="scheduleCopyBtn" title="${escapeHtml(dict.copySchedule)}">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        </button>
+      </div>
     </div>
     <div class="schedule-rows" id="scheduleRows">${rows}</div>
     <div class="schedule-toolbar">
@@ -663,6 +714,15 @@ function renderSchedulePanel() {
   document
     .getElementById("scheduleCopyBtn")
     ?.addEventListener("click", copyScheduleToClipboard);
+  document
+    .getElementById("scheduleClearBtn")
+    ?.addEventListener("click", () => {
+      selectedExecutions.clear();
+      try { localStorage.setItem("selectedExecutions", JSON.stringify([])); } catch {}
+      renderSchedulePanel();
+      updateCountdownPanel();
+      renderSelectedBadges();
+    });
   document
     .getElementById("offsetMinus")
     ?.addEventListener("click", () => changeAlertOffset(-1));
@@ -1130,6 +1190,8 @@ function applyStaticLabels() {
   if (tl) tl.textContent = d.timezone;
   const si = document.getElementById("searchInput");
   if (si) si.placeholder = d.search;
+  const fl = document.getElementById("filtersLabel");
+  if (fl) fl.textContent = d.filterLabel || "Filtros";
 }
 
 function convertTimeBetweenTimezones(
@@ -1203,8 +1265,10 @@ function getBattleyeLabel(world) {
 function getTransferLabel(world) {
   const v = String(world.transfer_type || "").trim();
   if (!v) return t().notAvailable;
-  if (v.toLowerCase() === "regular") return "Regular";
-  return v.charAt(0).toUpperCase() + v.slice(1);
+  if (v.toLowerCase() === "regular") return "Regular Transfer";
+  if (v.toLowerCase() === "blocked") return "Blocked Transfer";
+  if (v.toLowerCase() === "locked")  return "Locked Transfer";
+  return v.charAt(0).toUpperCase() + v.slice(1) + " Transfer";
 }
 
 function renderExecutions(world) {
@@ -1286,12 +1350,8 @@ function renderWorld(world) {
         <span class="meta-plain meta-right">${escapeHtml(
           world.pvp_type || dict.notAvailable
         )}</span>
-        <span class="meta-left">${escapeHtml(dict.transfer)}: ${escapeHtml(
-    getTransferLabel(world)
-  )}</span>
-        <span class="meta-right">${escapeHtml(dict.battleye)}: ${escapeHtml(
-    getBattleyeLabel(world)
-  )}</span>
+        <span class="meta-left">${escapeHtml(getTransferLabel(world))}</span>
+        <span class="meta-right">${escapeHtml(getBattleyeDisplayLabel(getBattleyeKey(world)))}</span>
       </div>
       <div class="executions">
         <div class="executions-header">
@@ -1307,6 +1367,157 @@ function bindSelectButtons() {
   // No-op: handled via event delegation set up once in init()
 }
 
+// ─── Filter helpers ───────────────────────────────
+
+function getBattleyeKey(world) {
+  if (world.battleye_date === "release") return "GBE";
+  if (world.battleye_date) return "YBE";
+  return "none";
+}
+
+function getTransferKey(world) {
+  const v = String(world.transfer_type || "").trim().toLowerCase();
+  if (!v) return "locked";
+  if (v === "regular") return "regular";
+  if (v === "blocked") return "blocked";
+  return v;
+}
+
+function getRegionKey(world) {
+  return String(world.location || "").trim() || "unknown";
+}
+
+function getPvpKey(world) {
+  return String(world.pvp_type || "").trim() || "unknown";
+}
+
+function hasActiveFilters() {
+  return (
+    activeFilters.region.size > 0 ||
+    activeFilters.pvp.size > 0 ||
+    activeFilters.battleye.size > 0 ||
+    activeFilters.transfer.size > 0
+  );
+}
+
+function worldPassesFilters(world) {
+  if (activeFilters.region.size > 0 && !activeFilters.region.has(getRegionKey(world))) return false;
+  if (activeFilters.pvp.size > 0 && !activeFilters.pvp.has(getPvpKey(world))) return false;
+  if (activeFilters.battleye.size > 0 && !activeFilters.battleye.has(getBattleyeKey(world))) return false;
+  if (activeFilters.transfer.size > 0 && !activeFilters.transfer.has(getTransferKey(world))) return false;
+  return true;
+}
+
+function getFilterOptions(warzone_worlds) {
+  const regions   = new Set();
+  const pvpTypes  = new Set();
+  const battleyeSet = new Set();
+  const transferSet = new Set();
+  for (const w of warzone_worlds) {
+    regions.add(getRegionKey(w));
+    pvpTypes.add(getPvpKey(w));
+    battleyeSet.add(getBattleyeKey(w));
+    transferSet.add(getTransferKey(w));
+  }
+  return { regions, pvpTypes, battleyeSet, transferSet };
+}
+
+function toggleFilter(group, value) {
+  if (activeFilters[group].has(value)) {
+    activeFilters[group].delete(value);
+  } else {
+    activeFilters[group].add(value);
+  }
+  saveFilters();
+  render();
+}
+
+function clearAllFilters() {
+  activeFilters.region.clear();
+  activeFilters.pvp.clear();
+  activeFilters.battleye.clear();
+  activeFilters.transfer.clear();
+  saveFilters();
+  render();
+}
+
+function saveFilters() {
+  try {
+    localStorage.setItem("activeFilters", JSON.stringify({
+      region:   [...activeFilters.region],
+      pvp:      [...activeFilters.pvp],
+      battleye: [...activeFilters.battleye],
+      transfer: [...activeFilters.transfer],
+    }));
+  } catch {}
+}
+
+function loadFilters() {
+  try {
+    const saved = localStorage.getItem("activeFilters");
+    if (saved) {
+      const obj = JSON.parse(saved);
+      if (obj.region)   activeFilters.region   = new Set(obj.region);
+      if (obj.pvp)      activeFilters.pvp      = new Set(obj.pvp);
+      if (obj.battleye) activeFilters.battleye = new Set(obj.battleye);
+      if (obj.transfer) activeFilters.transfer = new Set(obj.transfer);
+    }
+  } catch {}
+}
+
+function getBattleyeDisplayLabel(key) {
+  const dict = t();
+  if (key === "GBE") return dict.bgeLabel;
+  if (key === "YBE") return dict.ybeLabel;
+  return dict.noneLabel;
+}
+
+function getTransferDisplayLabel(key) {
+  if (key === "regular") return "Regular Transfer";
+  if (key === "blocked") return "Blocked Transfer";
+  if (key === "locked")  return "Locked Transfer";
+  return key.charAt(0).toUpperCase() + key.slice(1) + " Transfer";
+}
+
+function renderFilters(warzone_worlds) {
+  const el = document.getElementById("filtersBar");
+  if (!el) return;
+  if (warzone_worlds.length === 0) { el.innerHTML = ""; return; }
+
+  const dict = t();
+  const { regions, pvpTypes, battleyeSet, transferSet } = getFilterOptions(warzone_worlds);
+  const isAllActive = !hasActiveFilters();
+
+  function pills(group, values, labelFn) {
+    return [...values].sort().map(v => {
+      const active = activeFilters[group].has(v);
+      return `<button type="button" class="filter-pill${active ? " is-active" : ""}" data-filter-group="${escapeHtml(group)}" data-filter-value="${escapeHtml(v)}">${escapeHtml(labelFn(v))}</button>`;
+    }).join("");
+  }
+
+  const allPill = `<button type="button" class="filter-pill filter-pill--all${isAllActive ? " is-active" : ""}" data-filter-group="__all__" data-filter-value="__all__">${escapeHtml(dict.filterAll)}</button>`;
+
+  const rest =
+    pills("region",   regions,      v => v) +
+    pills("pvp",      pvpTypes,     v => v) +
+    pills("battleye", battleyeSet,  getBattleyeDisplayLabel) +
+    pills("transfer", transferSet,  getTransferDisplayLabel);
+
+  el.innerHTML = `<div class="filter-pills-row">${allPill}${rest}</div>`;
+
+  el.querySelectorAll(".filter-pill").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const group = btn.dataset.filterGroup;
+      const value = btn.dataset.filterValue;
+      if (group === "__all__") {
+        clearAllFilters();
+      } else {
+        toggleFilter(group, value);
+      }
+    });
+  });
+}
+
 // ─── Main render ─────────────────────────────────────
 
 function render() {
@@ -1317,8 +1528,15 @@ function render() {
   if (!summary || !worldsList) return;
 
   const query = (searchInput?.value || "").trim().toLowerCase();
-  const filtered = worlds
-    .filter((w) => w && w.performs_warzone)
+
+  // All worlds that perform warzones (base pool for filter options)
+  const warzoneWorlds = worlds.filter((w) => w && w.performs_warzone);
+
+  // Render filter bar based on full pool (not search-narrowed)
+  renderFilters(warzoneWorlds);
+
+  const filtered = warzoneWorlds
+    .filter((w) => worldPassesFilters(w))
     .filter((w) =>
       String(w.name || "")
         .toLowerCase()
@@ -1424,6 +1642,7 @@ async function init() {
   loadNotificationsPref();
   loadAlertOffset();
   loadSelectedSound();
+  loadFilters();
   applyStaticLabels();
   bindLanguageButtons();
   updateLanguageButtons();
