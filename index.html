@@ -90,9 +90,9 @@
     </header>
 
     <main class="container" id="main-content">
-      <section class="controls" aria-label="Filtros e opções">
+      <section class="controls" aria-label="Filters and options">
         <div class="control-group">
-          <label for="searchInput">Buscar servidor</label>
+          <label for="searchInput">Search server</label>
           <div class="input-wrapper">
             <span class="input-icon" aria-hidden="true">
               <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -103,17 +103,17 @@
             <input
               type="search"
               id="searchInput"
-              placeholder="Nome do servidor…"
+              placeholder="Server name…"
               autocomplete="off"
-              aria-label="Buscar servidor"
+              aria-label="Search server"
             />
           </div>
         </div>
 
         <div class="control-group">
-          <label for="timezoneSelect">Fuso horário</label>
+          <label for="timezoneSelect">Timezone</label>
           <div class="select-wrapper">
-            <select id="timezoneSelect" aria-label="Selecionar fuso horário"></select>
+            <select id="timezoneSelect" aria-label="Select timezone"></select>
             <span class="select-chevron" aria-hidden="true">
               <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -123,17 +123,18 @@
         </div>
 
         <div class="control-group control-group--filters" id="filtersControlGroup">
-          <label id="filtersLabel">Filtros</label>
-          <div id="filtersBar" aria-label="Filtros"></div>
+          <label id="filtersLabel">Filters</label>
+          <div id="filtersBar" aria-label="Filters"></div>
         </div>
       </section>
 
-      <div id="nextWarzoneBar" style="display:none" aria-live="polite" aria-label="Próxima warzone"></div>
+      <label class="section-label" id="warzonePlannerLabel">Warzone Planner</label>
+      <div id="nextWarzoneBar" style="display:none" aria-live="polite" aria-label="Next warzone"></div>
 
       <section
         id="schedulePanel"
         class="schedule-panel"
-        aria-label="Resumo de services selecionados"
+        aria-label="Selected schedule"
         aria-live="polite"
       ></section>
 
@@ -141,13 +142,13 @@
         class="summary"
         id="summary"
         aria-live="polite"
-        aria-label="Resumo dos servidores"
+        aria-label="Server summary"
       ></section>
 
       <section
         id="worldsList"
         class="worlds-list"
-        aria-label="Lista de servidores"
+        aria-label="Server list"
       ></section>
     </main>
 
