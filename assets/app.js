@@ -109,10 +109,22 @@ const I18N = {
     filterTransfer: "Transfer",
     filterAll: "All",
     filterLabel: "Filters",
+    warzonePlannerLabel: "Warzone Planner",
     clearFilters: "Clear filters",
     bgeLabel: "Green BattlEye",
     ybeLabel: "Yellow BattlEye",
     noneLabel: "None",
+    tooltipClose: "Close",
+    tooltipRemove: "Remove",
+    tooltipAddExec: "Add to schedule",
+    tooltipRemoveExec: "Remove from schedule",
+    tooltipClearPlanner: "Clear planner",
+    tooltipPickSound: "Choose sound",
+    tooltipAlertMinus: "Decrease",
+    tooltipAlertPlus: "Increase",
+    conflictWarn: "Some warzones are <20 min apart — tight but possible!",
+    noAudio: "No audio",
+    searchPlaceholder: "Server name…",
   },
   "pt-BR": {
     pageTitle: "Tibia Warzones Schedule",
@@ -162,10 +174,22 @@ const I18N = {
     filterTransfer: "Transferência",
     filterAll: "Todos",
     filterLabel: "Filtros",
+    warzonePlannerLabel: "Warzone Planner",
     clearFilters: "Limpar filtros",
     bgeLabel: "Green BattlEye",
     ybeLabel: "Yellow BattlEye",
     noneLabel: "Nenhum",
+    tooltipClose: "Close",
+    tooltipRemove: "Remove",
+    tooltipAddExec: "Add to schedule",
+    tooltipRemoveExec: "Remove from schedule",
+    tooltipClearPlanner: "Clear planner",
+    tooltipPickSound: "Choose sound",
+    tooltipAlertMinus: "Decrease",
+    tooltipAlertPlus: "Increase",
+    conflictWarn: "Some warzones are <20 min apart — tight but possible!",
+    noAudio: "No audio",
+    searchPlaceholder: "Server name…",
   },
   "es-419": {
     pageTitle: "Tibia Warzones Schedule",
@@ -215,10 +239,21 @@ const I18N = {
     filterTransfer: "Transferencia",
     filterAll: "Todos",
     filterLabel: "Filtros",
-    clearFilters: "Limpiar filtros",
+    warzonePlannerLabel: "Warzone Planner",
     bgeLabel: "Green BattlEye",
     ybeLabel: "Yellow BattlEye",
     noneLabel: "Ninguno",
+    tooltipClose: "Close",
+    tooltipRemove: "Remove",
+    tooltipAddExec: "Add to schedule",
+    tooltipRemoveExec: "Remove from schedule",
+    tooltipClearPlanner: "Clear planner",
+    tooltipPickSound: "Choose sound",
+    tooltipAlertMinus: "Decrease",
+    tooltipAlertPlus: "Increase",
+    conflictWarn: "Some warzones are <20 min apart — tight but possible!",
+    noAudio: "No audio",
+    searchPlaceholder: "Server name…",
   },
   pl: {
     pageTitle: "Tibia Warzones Schedule",
@@ -268,10 +303,22 @@ const I18N = {
     filterTransfer: "Transfer",
     filterAll: "Wszystkie",
     filterLabel: "Filtry",
+    warzonePlannerLabel: "Warzone Planner",
     clearFilters: "Wyczyść filtry",
     bgeLabel: "Green BattlEye",
     ybeLabel: "Yellow BattlEye",
     noneLabel: "Brak",
+    tooltipClose: "Close",
+    tooltipRemove: "Remove",
+    tooltipAddExec: "Add to schedule",
+    tooltipRemoveExec: "Remove from schedule",
+    tooltipClearPlanner: "Clear planner",
+    tooltipPickSound: "Choose sound",
+    tooltipAlertMinus: "Decrease",
+    tooltipAlertPlus: "Increase",
+    conflictWarn: "Some warzones are <20 min apart — tight but possible!",
+    noAudio: "No audio",
+    searchPlaceholder: "Server name…",
   },
 };
 
@@ -314,6 +361,8 @@ let firedDay = "";
 
 let tickInterval = null;
 let lastTickMin = -1;
+
+let _soundPickerCloseHandler = null;
 
 // ─── Audio ───────────────────────────────────────────
 let audioCtx = null;
@@ -486,7 +535,7 @@ function showToast(entry, offsetMin) {
   toast.innerHTML = `
     <span class="toast-icon">⚔️</span>
     <span class="toast-text">${escapeHtml(msg)}</span>
-    <button type="button" class="toast-close" aria-label="Fechar">✕</button>
+    <button type="button" class="toast-close" aria-label="${escapeHtml(dict.tooltipClose)}">✕</button>
   `;
   toast.querySelector(".toast-close").onclick = () => toast.remove();
   document.body.appendChild(toast);
@@ -600,8 +649,129 @@ function updateCountdownPanel() {
     </div>`;
   }
 
+  // If panel was previously hidden, clear stale content so toolbar gets built fresh
+  if (panel.style.display === "none") {
+    panel.innerHTML = "";
+  }
+
   panel.style.display = "";
-  panel.innerHTML = html;
+
+  // Build or reuse stable sub-elements — toolbar must NOT be re-rendered every tick
+  let contentEl = panel.querySelector(".next-wz-content");
+
+  if (!contentEl) {
+    // First render — build full structure once
+    panel.innerHTML = `
+      <div class="next-wz-content"></div>
+      <div class="next-wz-sep"></div>
+      ${buildNotifyToolbarHtml()}
+    `;
+    bindNotifyToolbarEvents(panel);
+    contentEl = panel.querySelector(".next-wz-content");
+  }
+
+  // Only update the countdown portion each tick
+  contentEl.innerHTML = html;
+}
+
+function refreshNotifyToolbar() {
+  const panel = document.getElementById("nextWarzoneBar");
+  if (!panel) return;
+  const toolbarEl = panel.querySelector(".schedule-toolbar");
+  if (!toolbarEl) return;
+  toolbarEl.outerHTML = buildNotifyToolbarHtml();
+  bindNotifyToolbarEvents(panel);
+}
+
+function buildNotifyToolbarHtml() {
+  const dict = t();
+  const notifyIcon = notificationsEnabled
+    ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>`
+    : `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/><line x1="2" y1="2" x2="22" y2="22"/></svg>`;
+  const notifyLabel = notificationsEnabled ? dict.notifyOn : dict.notifyOff;
+  const notifyActive = notificationsEnabled ? "is-active" : "";
+  const offsetLabel = alertOffsetMinutes > 0 ? alertOffsetMinutes + "m" : "off";
+  const soundOptions = SOUNDS.map(
+    (s) => `<button type="button" class="sound-option${s.id === selectedSound ? " is-active" : ""}" data-sound="${s.id}">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+      ${escapeHtml(s.label)}
+    </button>`
+  ).join("");
+
+  return `
+    <div class="schedule-toolbar">
+      <button type="button" class="schedule-btn schedule-icon-btn schedule-notify-btn ${notifyActive}" id="scheduleNotifyBtn" title="${escapeHtml(notifyLabel)}">
+        ${notifyIcon}
+      </button>
+      <div class="alert-offset-group" id="alertOffsetGroup"${notificationsEnabled ? "" : ' style="display:none"'}>
+        <button type="button" class="stepper-btn" id="offsetMinus" aria-label="${escapeHtml(dict.tooltipAlertMinus)}">−</button>
+        <span class="stepper-val" id="offsetDisplay">${alertOffsetMinutes}</span>
+        <button type="button" class="stepper-btn" id="offsetPlus" aria-label="${escapeHtml(dict.tooltipAlertPlus)}">+</button>
+        <span class="stepper-unit" id="alertOffsetUnit">${offsetLabel}</span>
+      </div>
+      <button type="button" class="schedule-btn schedule-icon-btn schedule-test-btn" id="scheduleTestBtn" title="${escapeHtml(dict.testSound)}">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+      </button>
+      <div class="volume-ctrl" title="${escapeHtml(dict.volume)}">
+        <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" step="1" value="${Math.round(masterVolume * 100)}" aria-label="${escapeHtml(dict.volume)}">
+      </div>
+      <div class="sound-picker-wrap" id="soundPickerWrap">
+        <button type="button" class="schedule-btn schedule-icon-btn sound-picker-btn" id="soundPickerBtn" title="${escapeHtml(dict.tooltipPickSound)}">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="sound-picker-menu" id="soundPickerMenu">${soundOptions}</div>
+      </div>
+    </div>
+  `;
+}
+
+function bindNotifyToolbarEvents(container) {
+  container.querySelector("#scheduleNotifyBtn")?.addEventListener("click", toggleNotifications);
+  container.querySelector("#offsetMinus")?.addEventListener("click", () => changeAlertOffset(-1));
+  container.querySelector("#offsetPlus")?.addEventListener("click", () => changeAlertOffset(1));
+  container.querySelector("#volumeSlider")?.addEventListener("input", (e) => {
+    masterVolume = parseInt(e.target.value, 10) / 100;
+    try { localStorage.setItem("masterVolume", String(masterVolume)); } catch {}
+  });
+  container.querySelector("#scheduleTestBtn")?.addEventListener("click", () => {
+    const ctx = getAudioContext();
+    if (ctx?.state === "suspended") ctx.resume();
+    loadAudio(false).then(() => {
+      if (!audioBuffer) return;
+      playSound();
+    });
+  });
+  const pickerBtn  = container.querySelector("#soundPickerBtn");
+  const pickerMenu = container.querySelector("#soundPickerMenu");
+  const pickerWrap = container.querySelector("#soundPickerWrap");
+  if (pickerBtn && pickerMenu) {
+    pickerBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isOpen = pickerMenu.classList.toggle("is-open");
+      pickerBtn.setAttribute("aria-expanded", isOpen);
+    });
+    pickerMenu.addEventListener("click", (e) => {
+      const opt = e.target.closest(".sound-option");
+      if (opt?.dataset.sound) {
+        saveSelectedSound(opt.dataset.sound);
+        pickerMenu.classList.remove("is-open");
+        setTimeout(() => {
+          const ctx = getAudioContext();
+          if (ctx?.state === "suspended") ctx.resume();
+          loadAudio(false).then(() => { if (audioBuffer) playSound(); });
+        }, 150);
+      }
+    });
+    if (_soundPickerCloseHandler) {
+      document.removeEventListener("click", _soundPickerCloseHandler);
+    }
+    _soundPickerCloseHandler = (e) => {
+      if (pickerWrap && !pickerWrap.contains(e.target)) {
+        pickerMenu.classList.remove("is-open");
+      }
+    };
+    document.addEventListener("click", _soundPickerCloseHandler);
+  }
 }
 
 // ─── Schedule panel ───────────────────────────────────
@@ -622,13 +792,6 @@ function renderSchedulePanel() {
 
   const nowMin = nowMinutesInTZ(timezone);
 
-  const notifyIcon = notificationsEnabled
-    ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>`
-    : `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/><line x1="2" y1="2" x2="22" y2="22"/></svg>`;
-
-  const notifyLabel = notificationsEnabled ? dict.notifyOn : dict.notifyOff;
-  const notifyActive = notificationsEnabled ? "is-active" : "";
-
   const rows = entries
     .map((entry) => {
       const isPast = entry.totalMin < nowMin;
@@ -643,30 +806,18 @@ function renderSchedulePanel() {
       ${statusDot}
       <span class="schedule-time">${escapeHtml(entry.timeStr)}</span>
       <span class="schedule-name">${escapeHtml(entry.name)}${seq}</span>
-      <button type="button" class="schedule-remove-btn" data-exec-key="${removeKey}" title="Remover">
+      <button type="button" class="schedule-remove-btn" data-exec-key="${removeKey}" title="${escapeHtml(dict.tooltipRemove)}">
         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>`;
     })
     .join("");
 
-  // Build sound options for picker
-  const soundOptions = SOUNDS.map(
-    (s) =>
-      `<button type="button" class="sound-option${
-        s.id === selectedSound ? " is-active" : ""
-      }" data-sound="${s.id}">
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-      ${escapeHtml(s.label)}
-    </button>`
-  ).join("");
-
-  const offsetLabel = alertOffsetMinutes > 0 ? alertOffsetMinutes + "m" : "off";
   panel.innerHTML = `
     <div class="schedule-header">
-      <span class="schedule-title">WARZONE PLANNER</span>
+      <span class="schedule-title">WARZONE DRAFTS</span>
       <div class="schedule-header-actions">
-        <button type="button" class="schedule-btn schedule-icon-btn schedule-clear-btn" id="scheduleClearBtn" title="Limpar planner">
+        <button type="button" class="schedule-btn schedule-icon-btn schedule-clear-btn" id="scheduleClearBtn" title="${escapeHtml(dict.tooltipClearPlanner)}">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
         </button>
         <button type="button" class="schedule-btn schedule-icon-btn schedule-copy-btn" id="scheduleCopyBtn" title="${escapeHtml(dict.copySchedule)}">
@@ -675,42 +826,8 @@ function renderSchedulePanel() {
       </div>
     </div>
     <div class="schedule-rows" id="scheduleRows">${rows}</div>
-    <div class="schedule-toolbar">
-      <button type="button" class="schedule-btn schedule-icon-btn schedule-notify-btn ${notifyActive}" id="scheduleNotifyBtn" title="${escapeHtml(
-    notifyLabel
-  )}">
-        ${notifyIcon}
-      </button>
-      <div class="alert-offset-group" id="alertOffsetGroup"${
-        notificationsEnabled ? "" : ' style="display:none"'
-      }>
-        <button type="button" class="stepper-btn" id="offsetMinus" aria-label="Diminuir">−</button>
-        <span class="stepper-val" id="offsetDisplay">${alertOffsetMinutes}</span>
-        <button type="button" class="stepper-btn" id="offsetPlus" aria-label="Aumentar">+</button>
-        <span class="stepper-unit" id="alertOffsetUnit">${offsetLabel}</span>
-      </div>
-      <button type="button" class="schedule-btn schedule-icon-btn schedule-test-btn" id="scheduleTestBtn" title="${escapeHtml(
-        dict.testSound
-      )}">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-      </button>
-      <div class="volume-ctrl" title="${escapeHtml(dict.volume)}">
-        <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" step="1" value="${Math.round(
-          masterVolume * 100
-        )}" aria-label="${escapeHtml(dict.volume)}">
-      </div>
-      <div class="sound-picker-wrap" id="soundPickerWrap">
-        <button type="button" class="schedule-btn schedule-icon-btn sound-picker-btn" id="soundPickerBtn" title="Escolher som">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-        </button>
-        <div class="sound-picker-menu" id="soundPickerMenu">${soundOptions}</div>
-      </div>
-    </div>
   `;
 
-  document
-    .getElementById("scheduleNotifyBtn")
-    ?.addEventListener("click", toggleNotifications);
   document
     .getElementById("scheduleCopyBtn")
     ?.addEventListener("click", copyScheduleToClipboard);
@@ -723,35 +840,6 @@ function renderSchedulePanel() {
       updateCountdownPanel();
       renderSelectedBadges();
     });
-  document
-    .getElementById("offsetMinus")
-    ?.addEventListener("click", () => changeAlertOffset(-1));
-  document
-    .getElementById("offsetPlus")
-    ?.addEventListener("click", () => changeAlertOffset(1));
-  document.getElementById("volumeSlider")?.addEventListener("input", (e) => {
-    masterVolume = parseInt(e.target.value, 10) / 100;
-    try {
-      localStorage.setItem("masterVolume", String(masterVolume));
-    } catch {}
-  });
-  document.getElementById("scheduleTestBtn")?.addEventListener("click", () => {
-    const ctx = getAudioContext();
-    if (ctx?.state === "suspended") ctx.resume();
-    loadAudio(false).then(() => {
-      if (audioBuffer) {
-        playSound();
-      } else {
-        const btn = document.getElementById("scheduleTestBtn");
-        const span = btn?.querySelector("span");
-        if (span) {
-          const o = span.textContent;
-          span.textContent = "Sem áudio";
-          setTimeout(() => (span.textContent = o), 2000);
-        }
-      }
-    });
-  });
   document.getElementById("scheduleRows")?.addEventListener("click", (e) => {
     const btn = e.target.closest(".schedule-remove-btn");
     if (btn) {
@@ -762,45 +850,6 @@ function renderSchedulePanel() {
       }
     }
   });
-  // Sound picker hamburger
-  const pickerBtn = document.getElementById("soundPickerBtn");
-  const pickerMenu = document.getElementById("soundPickerMenu");
-  const pickerWrap = document.getElementById("soundPickerWrap");
-  if (pickerBtn && pickerMenu) {
-    pickerBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const isOpen = pickerMenu.classList.toggle("is-open");
-      pickerBtn.setAttribute("aria-expanded", isOpen);
-    });
-    pickerMenu.addEventListener("click", (e) => {
-      const opt = e.target.closest(".sound-option");
-      if (opt) {
-        const id = opt.dataset.sound;
-        if (id) {
-          saveSelectedSound(id);
-          pickerMenu.classList.remove("is-open");
-          // Play preview
-          setTimeout(() => {
-            const ctx = getAudioContext();
-            if (ctx?.state === "suspended") ctx.resume();
-            loadAudio(false).then(() => {
-              if (audioBuffer) playSound();
-            });
-          }, 150);
-        }
-      }
-    });
-    // Close on outside click
-    document.addEventListener(
-      "click",
-      (e) => {
-        if (pickerWrap && !pickerWrap.contains(e.target)) {
-          pickerMenu.classList.remove("is-open");
-        }
-      },
-      { capture: false }
-    );
-  }
 }
 
 function refreshScheduleRowStates() {
@@ -841,6 +890,7 @@ function toggleNotifications() {
     if (ctx?.state === "suspended") ctx.resume();
   }
   renderSchedulePanel();
+  refreshNotifyToolbar();
 }
 
 function copyScheduleToClipboard() {
@@ -909,7 +959,7 @@ function renderSelectedBadges() {
     const isSel = selectedExecutions.has(key);
     btn.classList.toggle("is-selected", isSel);
     btn.setAttribute("aria-pressed", String(isSel));
-    btn.setAttribute("title", isSel ? "Remover" : "Adicionar ao resumo");
+    btn.setAttribute("title", isSel ? t().tooltipRemoveExec : t().tooltipAddExec);
     btn.innerHTML = isSel
       ? '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
       : '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
@@ -953,13 +1003,14 @@ function checkScheduleConflicts() {
 
   if (existing) return; // already showing
 
+  const dict = t();
   const warn = document.createElement("div");
   warn.id = "scheduleConflictWarn";
   warn.className = "conflict-warn";
   warn.innerHTML = `
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-    <span>Some warzones are &lt;20 min apart — tight but possible!</span>
-    <button type="button" class="conflict-close" aria-label="Dismiss">✕</button>
+    <span>${escapeHtml(dict.conflictWarn)}</span>
+    <button type="button" class="conflict-close" aria-label="${escapeHtml(dict.tooltipClose)}">✕</button>
   `;
   warn.querySelector(".conflict-close").onclick = () => warn.remove();
 
@@ -1189,9 +1240,11 @@ function applyStaticLabels() {
   const tl = qs('label[for="timezoneSelect"]');
   if (tl) tl.textContent = d.timezone;
   const si = document.getElementById("searchInput");
-  if (si) si.placeholder = d.search;
+  if (si) si.placeholder = d.searchPlaceholder || d.search;
   const fl = document.getElementById("filtersLabel");
   if (fl) fl.textContent = d.filterLabel || "Filtros";
+  const wpl = document.getElementById("warzonePlannerLabel");
+  if (wpl) wpl.textContent = d.warzonePlannerLabel || "Warzone Planner";
 }
 
 function convertTimeBetweenTimezones(
@@ -1317,7 +1370,7 @@ function renderExecutions(world) {
         isSel +
         '"' +
         ' title="' +
-        (isSel ? "Remover do resumo" : "Adicionar ao resumo") +
+        escapeHtml(isSel ? dict.tooltipRemoveExec : dict.tooltipAddExec) +
         '">' +
         (isSel ? checkSvg : plusSvg) +
         "</button>" +
