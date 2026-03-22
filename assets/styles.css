@@ -772,18 +772,11 @@ body::after {
   padding: 10px 16px 12px;
   margin-bottom: 8px;
   transition: background var(--t-theme) var(--ease-out);
-}
-
-/* Header row: toolbar left, copy right */
-.schedule-header {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 10px;
-  flex-wrap: nowrap;
+  flex-direction: column;
 }
 
+/* Title sits flush at top, identical to .next-wz-label */
 .schedule-title {
   font-size: 9px;
   font-weight: 700;
@@ -791,6 +784,17 @@ body::after {
   text-transform: uppercase;
   color: var(--text-quaternary);
   white-space: nowrap;
+  padding-top: 1px; /* optical alignment with next-wz-label */
+}
+
+/* Header: title top-left, copy top-right — both flush to top */
+.schedule-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: nowrap;
 }
 
 /* Rows */
@@ -1198,3 +1202,45 @@ body::after {
 @media (max-width: 480px) {
   .warzone-toast { bottom: 14px; right: 10px; left: 10px; max-width: 100%; }
 }
+
+/* ══════════════════════════════════════════════
+   SCHEDULE CONFLICT WARNING
+══════════════════════════════════════════════ */
+.conflict-warn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  background: rgba(252,175,69,0.10);
+  border: 1px solid rgba(252,175,69,0.30);
+  border-radius: var(--r-md);
+  font-size: 12px;
+  color: #FCAF45;
+  animation: fadeSlideIn 220ms var(--ease-out) both;
+}
+[data-theme="light"] .conflict-warn {
+  background: rgba(193,53,132,0.08);
+  border-color: rgba(193,53,132,0.25);
+  color: #C13584;
+}
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.conflict-warn svg { flex-shrink: 0; opacity: 0.85; }
+.conflict-warn span { flex: 1; line-height: 1.4; }
+.conflict-close {
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  color: currentColor;
+  opacity: 0.6;
+  cursor: pointer;
+  font-size: 11px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: opacity var(--t-fast) var(--ease-out);
+  -webkit-user-select: none; user-select: none;
+}
+.conflict-close:hover { opacity: 1; }
