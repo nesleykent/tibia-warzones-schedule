@@ -42,7 +42,7 @@
     "battleye_protected": true,
     "battleye_date": "2017-09-12",
     "performs_warzone": true,
-    "warzonesperday": 3,
+    "warzonesperday": 4,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -65,7 +65,7 @@
     "battleye_protected": true,
     "battleye_date": "2017-06-22",
     "performs_warzone": true,
-    "warzonesperday": 1,
+    "warzonesperday": 2,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -147,8 +147,8 @@
     "transfer_type": "blocked",
     "battleye_protected": true,
     "battleye_date": "release",
-    "performs_warzone": false,
-    "warzonesperday": 0,
+    "performs_warzone": true,
+    "warzonesperday": 1,
     "warzone_executions": [],
     "timezone": null
   },
@@ -183,7 +183,7 @@
     "battleye_protected": true,
     "battleye_date": "2017-09-05",
     "performs_warzone": true,
-    "warzonesperday": 2,
+    "warzonesperday": 1,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -218,12 +218,12 @@
     "battleye_protected": true,
     "battleye_date": "release",
     "performs_warzone": true,
-    "warzonesperday": 1,
+    "warzonesperday": 2,
     "warzone_executions": [
       {
         "execution_id": 1,
         "schedule_time": "20:30",
-        "warzone_sequence": ""
+        "warzone_sequence": "1-3-2"
       }
     ],
     "timezone": "America/Sao_Paulo"
@@ -300,8 +300,8 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "2018-04-19",
-    "performs_warzone": false,
-    "warzonesperday": 0,
+    "performs_warzone": true,
+    "warzonesperday": 1,
     "warzone_executions": [],
     "timezone": null
   },
@@ -378,7 +378,7 @@
     "battleye_protected": true,
     "battleye_date": "2017-12-12",
     "performs_warzone": true,
-    "warzonesperday": 2,
+    "warzonesperday": 5,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -429,8 +429,8 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "2017-09-05",
-    "performs_warzone": false,
-    "warzonesperday": 0,
+    "performs_warzone": true,
+    "warzonesperday": 1,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -488,8 +488,8 @@
     "transfer_type": "blocked",
     "battleye_protected": true,
     "battleye_date": "release",
-    "performs_warzone": false,
-    "warzonesperday": 0,
+    "performs_warzone": true,
+    "warzonesperday": 1,
     "warzone_executions": [],
     "timezone": null
   },
@@ -594,7 +594,7 @@
     "battleye_protected": true,
     "battleye_date": "release",
     "performs_warzone": true,
-    "warzonesperday": 4,
+    "warzonesperday": 3,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -787,8 +787,8 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "release",
-    "performs_warzone": false,
-    "warzonesperday": 0,
+    "performs_warzone": true,
+    "warzonesperday": 1,
     "warzone_executions": [],
     "timezone": null
   },
@@ -882,8 +882,8 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "2024-04-10",
-    "performs_warzone": false,
-    "warzonesperday": 0,
+    "performs_warzone": true,
+    "warzonesperday": 1,
     "warzone_executions": [],
     "timezone": null
   },
@@ -1000,8 +1000,8 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "2017-09-05",
-    "performs_warzone": false,
-    "warzonesperday": 0,
+    "performs_warzone": true,
+    "warzonesperday": 1,
     "warzone_executions": [],
     "timezone": null
   },
@@ -1054,7 +1054,7 @@
     "battleye_protected": true,
     "battleye_date": "2017-10-19",
     "performs_warzone": true,
-    "warzonesperday": 2,
+    "warzonesperday": 3,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1225,7 +1225,7 @@
     "battleye_protected": true,
     "battleye_date": "2018-04-19",
     "performs_warzone": true,
-    "warzonesperday": 5,
+    "warzonesperday": 3,
     "warzone_executions": [],
     "timezone": null
   },
@@ -1248,8 +1248,8 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "release",
-    "performs_warzone": true,
-    "warzonesperday": 1,
+    "performs_warzone": false,
+    "warzonesperday": 0,
     "warzone_executions": [],
     "timezone": null
   },
@@ -1298,8 +1298,14 @@
     "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [],
-    "timezone": null
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "21:00",
+        "warzone_sequence": ""
+      }
+    ],
+    "timezone": "America/Sao_Paulo"
   },
   {
     "name": "Ustebra",
@@ -1349,8 +1355,8 @@
     "transfer_type": "blocked",
     "battleye_protected": true,
     "battleye_date": "release",
-    "performs_warzone": false,
-    "warzonesperday": 0,
+    "performs_warzone": true,
+    "warzonesperday": 1,
     "warzone_executions": [],
     "timezone": null
   },
@@ -1402,8 +1408,8 @@
     "transfer_type": "blocked",
     "battleye_protected": true,
     "battleye_date": "release",
-    "performs_warzone": false,
-    "warzonesperday": 0,
+    "performs_warzone": true,
+    "warzonesperday": 1,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1432,8 +1438,8 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "release",
-    "performs_warzone": false,
-    "warzonesperday": 0,
+    "performs_warzone": true,
+    "warzonesperday": 1,
     "warzone_executions": [],
     "timezone": null
   },
