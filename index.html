@@ -10,9 +10,9 @@
     <script>
       (function () {
         try {
-          var saved = localStorage.getItem('theme');
-          if (saved === 'light' || saved === 'dark') {
-            document.documentElement.setAttribute('data-theme', saved);
+          var saved = localStorage.getItem("theme");
+          if (saved === "light" || saved === "dark") {
+            document.documentElement.setAttribute("data-theme", saved);
           }
         } catch (e) {}
       })();
@@ -26,16 +26,31 @@
       <div class="container topbar-inner">
         <div class="topbar-links">
           <span class="topbar-label">BIGFOOT'S BURDEN</span>
-          <a href="https://tibia.fandom.com/wiki/Bigfoot's_Burden_Quest" target="_blank" rel="noopener noreferrer">
-            <span class="link-full">TibiaWiki</span><span class="link-short">TW</span>
+          <a
+            href="https://tibia.fandom.com/wiki/Bigfoot's_Burden_Quest"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="link-full">TibiaWiki</span
+            ><span class="link-short">TW</span>
           </a>
           <span class="topbar-divider" aria-hidden="true"></span>
-          <a href="https://www.tibiawiki.com.br/wiki/Bigfoot%27s_Burden_Quest" target="_blank" rel="noopener noreferrer">
-            <span class="link-full">Tibia Wiki BR</span><span class="link-short">TWBR</span>
+          <a
+            href="https://www.tibiawiki.com.br/wiki/Bigfoot%27s_Burden_Quest"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="link-full">Tibia Wiki BR</span
+            ><span class="link-short">TWBR</span>
           </a>
           <span class="topbar-divider" aria-hidden="true"></span>
-          <a href="https://tibiopedia.pl/quests/Bigfoots_Burden_Quest" target="_blank" rel="noopener noreferrer">
-            <span class="link-full">Tibiopedia.pl</span><span class="link-short">TBP</span>
+          <a
+            href="https://tibiopedia.pl/quests/Bigfoots_Burden_Quest"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="link-full">Tibiopedia.pl</span
+            ><span class="link-short">TBP</span>
           </a>
         </div>
       </div>
@@ -47,44 +62,125 @@
         <div class="header-text">
           <h1>Tibia Warzones</h1>
           <p class="header-subtitle">
-            Servidores com atividade de Warzones baseada nas kills do boss Gnomevil.
+            Servidores com atividade de Warzones baseada nas kills do boss
+            Gnomevil.
           </p>
         </div>
 
         <!-- Controls: lang dropdown + theme toggle -->
         <div class="header-controls">
-
-          <button type="button" id="themeToggle" class="theme-toggle"
-            title="Toggle light/dark mode" aria-label="Toggle light/dark mode">
-            <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          <button
+            type="button"
+            id="themeToggle"
+            class="theme-toggle"
+            title="Toggle light/dark mode"
+            aria-label="Toggle light/dark mode"
+          >
+            <svg
+              class="icon-moon"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
             </svg>
-            <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="5"/>
-              <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-              <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            <svg
+              class="icon-sun"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="5" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
             </svg>
           </button>
 
           <div class="lang-dropdown" id="langDropdown">
-            <button type="button" class="lang-menu-btn" id="langMenuBtn"
-              aria-haspopup="true" aria-expanded="false" aria-label="Select language">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <circle cx="12" cy="12" r="10"/>
-                <line x1="2" y1="12" x2="22" y2="12"/>
-                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            <button
+              type="button"
+              class="lang-menu-btn"
+              id="langMenuBtn"
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-label="Select language"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="2" y1="12" x2="22" y2="12" />
+                <path
+                  d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+                />
               </svg>
             </button>
-            <div class="lang-menu" id="langMenu" role="menu" aria-label="Language selector">
-              <button type="button" class="lang-flag" data-lang="en"     role="menuitem">🇺🇸 <span>English</span></button>
-              <button type="button" class="lang-flag" data-lang="pt-BR"  role="menuitem">🇧🇷 <span>Português</span></button>
-              <button type="button" class="lang-flag" data-lang="es-419" role="menuitem">🇦🇷 <span>Español</span></button>
-              <button type="button" class="lang-flag" data-lang="pl"     role="menuitem">🇵🇱 <span>Polski</span></button>
+            <div
+              class="lang-menu"
+              id="langMenu"
+              role="menu"
+              aria-label="Language selector"
+            >
+              <button
+                type="button"
+                class="lang-flag"
+                data-lang="en"
+                role="menuitem"
+              >
+                🇺🇸 <span>English</span>
+              </button>
+              <button
+                type="button"
+                class="lang-flag"
+                data-lang="pt-BR"
+                role="menuitem"
+              >
+                🇧🇷 <span>Português</span>
+              </button>
+              <button
+                type="button"
+                class="lang-flag"
+                data-lang="es-419"
+                role="menuitem"
+              >
+                🇦🇷 <span>Español</span>
+              </button>
+              <button
+                type="button"
+                class="lang-flag"
+                data-lang="pl"
+                role="menuitem"
+              >
+                🇵🇱 <span>Polski</span>
+              </button>
             </div>
           </div>
-
         </div>
       </div>
     </header>
@@ -95,9 +191,26 @@
           <label for="searchInput">Search server</label>
           <div class="input-wrapper">
             <span class="input-icon" aria-hidden="true">
-              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="6.5"
+                  cy="6.5"
+                  r="5"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                />
+                <path
+                  d="M10.5 10.5L14 14"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
               </svg>
             </span>
             <input
@@ -115,21 +228,43 @@
           <div class="select-wrapper">
             <select id="timezoneSelect" aria-label="Select timezone"></select>
             <span class="select-chevron" aria-hidden="true">
-              <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <svg
+                width="12"
+                height="8"
+                viewBox="0 0 12 8"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M1 1.5L6 6.5L11 1.5"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
               </svg>
             </span>
           </div>
         </div>
 
-        <div class="control-group control-group--filters" id="filtersControlGroup">
+        <div
+          class="control-group control-group--filters"
+          id="filtersControlGroup"
+        >
           <label id="filtersLabel">Filters</label>
           <div id="filtersBar" aria-label="Filters"></div>
         </div>
       </section>
 
-      <label class="section-label" id="warzonePlannerLabel">Warzone Planner</label>
-      <div id="nextWarzoneBar" style="display:none" aria-live="polite" aria-label="Next warzone"></div>
+      <label class="section-label" id="warzonePlannerLabel"
+        >Warzone Planner</label
+      >
+      <div
+        id="nextWarzoneBar"
+        style="display: none"
+        aria-live="polite"
+        aria-label="Next warzone"
+      ></div>
 
       <section
         id="schedulePanel"
@@ -154,7 +289,6 @@
 
     <footer class="site-footer" role="contentinfo">
       <div class="container site-footer-inner">
-
         <div class="footer-top">
           <div class="footer-brand">
             <span class="footer-icon" aria-hidden="true">⚔️</span>
@@ -164,33 +298,54 @@
           <div class="footer-sep-v" aria-hidden="true"></div>
 
           <p class="footer-notice">
-            Community driven schedule for Warzone services across multiple servers, based on
-            Gnomevil kill statistics and player reports. Times can vary due to delays, in‑game
-            events, disruptive behavior, or server activity changes. Service availability depends
-            on in‑game conditions and server rules. Report times via
-            <a href="https://github.com/nesleykent/tibia-warzones-schedule/issues"
-               target="_blank" rel="noopener noreferrer" class="footer-link">GitHub Issues</a>
+            Community driven schedule for Warzone services across multiple
+            servers, based on Gnomevil kill statistics and player reports. Times
+            can vary due to delays, in‑game events, disruptive behavior, or
+            server activity changes. Service availability depends on in‑game
+            conditions and server rules. Report times via
+            <a
+              href="https://github.com/nesleykent/tibia-warzones-schedule/issues"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="footer-link"
+              >GitHub Issues</a
+            >
             — community contributions keep the schedule accurate.
           </p>
 
-          <a href="https://github.com/nesleykent/tibia-warzones-schedule/issues"
-             target="_blank" rel="noopener noreferrer"
-             class="footer-gh-btn" aria-label="Report on GitHub Issues">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+          <a
+            href="https://github.com/nesleykent/tibia-warzones-schedule/issues"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="footer-gh-btn"
+            aria-label="Report on GitHub Issues"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"
+              />
             </svg>
             Report on GitHub
           </a>
         </div>
 
         <div class="footer-bottom">
-          <span class="footer-copy">© 2026 Tibia Warzone Planner contributors</span>
+          <span class="footer-copy"
+            >© 2026 Tibia Warzone Planner contributors</span
+          >
           <span class="footer-disclaimer">
-            Tibia is a registered trademark of CipSoft GmbH. All related assets belong to CipSoft GmbH.
-            This project is independent and has no affiliation, support, or endorsement from CipSoft GmbH.
+            Tibia is a registered trademark of CipSoft GmbH. All related assets
+            belong to CipSoft GmbH.
+            <br />This project is independent and has no affiliation, support,
+            or endorsement from CipSoft GmbH.
           </span>
         </div>
-
       </div>
     </footer>
 
@@ -198,33 +353,37 @@
     <script>
       (function () {
         var html = document.documentElement;
-        var btn  = document.getElementById('themeToggle');
+        var btn = document.getElementById("themeToggle");
         if (!btn) return;
 
         function getActiveTheme() {
-          var manual = html.getAttribute('data-theme');
+          var manual = html.getAttribute("data-theme");
           if (manual) return manual;
           // Fall back to system preference
-          return window.matchMedia('(prefers-color-scheme: light)').matches
-            ? 'light'
-            : 'dark';
+          return window.matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark";
         }
 
-        btn.addEventListener('click', function () {
+        btn.addEventListener("click", function () {
           var current = getActiveTheme();
-          var next    = current === 'dark' ? 'light' : 'dark';
-          html.setAttribute('data-theme', next);
-          try { localStorage.setItem('theme', next); } catch (e) {}
+          var next = current === "dark" ? "light" : "dark";
+          html.setAttribute("data-theme", next);
+          try {
+            localStorage.setItem("theme", next);
+          } catch (e) {}
         });
 
         // Sync with system changes when no manual override is saved
-        window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function () {
-          try {
-            if (!localStorage.getItem('theme')) {
-              html.removeAttribute('data-theme');
-            }
-          } catch (e) {}
-        });
+        window
+          .matchMedia("(prefers-color-scheme: light)")
+          .addEventListener("change", function () {
+            try {
+              if (!localStorage.getItem("theme")) {
+                html.removeAttribute("data-theme");
+              }
+            } catch (e) {}
+          });
       })();
     </script>
 
@@ -233,60 +392,69 @@
       (function () {
         // Add your artwork filenames inside assets/background/
         // The list below is auto-picked randomly on each load.
-        var artworks = [
-          'bg1.jpg',
-          'bg2.jpg',
-          'bg3.jpg',
-          'bg4.jpg',
-          'bg5.jpg',
-        ];
+        var artworks = ["bg1.jpg", "bg2.jpg", "bg3.jpg", "bg4.jpg", "bg5.jpg"];
 
-        var layer = document.getElementById('bg-layer');
+        var layer = document.getElementById("bg-layer");
         if (!layer) return;
 
         var pick = artworks[Math.floor(Math.random() * artworks.length)];
-        var img  = new Image();
+        var img = new Image();
 
         img.onload = function () {
-          layer.style.backgroundImage = 'url(assets/background/' + pick + ')';
-          layer.style.opacity = '1';
+          layer.style.backgroundImage = "url(assets/background/" + pick + ")";
+          layer.style.opacity = "1";
         };
 
         img.onerror = function () {
           // Try next random if one fails, or leave fallback color
-          var remaining = artworks.filter(function (a) { return a !== pick; });
+          var remaining = artworks.filter(function (a) {
+            return a !== pick;
+          });
           if (remaining.length) {
-            var fallback = remaining[Math.floor(Math.random() * remaining.length)];
-            layer.style.backgroundImage = 'url(assets/background/' + fallback + ')';
-            layer.style.opacity = '1';
+            var fallback =
+              remaining[Math.floor(Math.random() * remaining.length)];
+            layer.style.backgroundImage =
+              "url(assets/background/" + fallback + ")";
+            layer.style.opacity = "1";
           }
         };
 
         // Start hidden, fade in once loaded
-        layer.style.opacity = '0';
-        img.src = 'assets/background/' + pick;
+        layer.style.opacity = "0";
+        img.src = "assets/background/" + pick;
       })();
     </script>
 
     <!-- Language dropdown logic -->
     <script>
       (function () {
-        var btn  = document.getElementById('langMenuBtn');
-        var menu = document.getElementById('langMenu');
-        var wrap = document.getElementById('langDropdown');
+        var btn = document.getElementById("langMenuBtn");
+        var menu = document.getElementById("langMenu");
+        var wrap = document.getElementById("langDropdown");
         if (!btn || !menu) return;
 
-        function open()  { menu.classList.add('is-open');  btn.setAttribute('aria-expanded','true'); }
-        function close() { menu.classList.remove('is-open'); btn.setAttribute('aria-expanded','false'); }
-        function toggle(){ menu.classList.contains('is-open') ? close() : open(); }
+        function open() {
+          menu.classList.add("is-open");
+          btn.setAttribute("aria-expanded", "true");
+        }
+        function close() {
+          menu.classList.remove("is-open");
+          btn.setAttribute("aria-expanded", "false");
+        }
+        function toggle() {
+          menu.classList.contains("is-open") ? close() : open();
+        }
 
-        btn.addEventListener('click', function(e){ e.stopPropagation(); toggle(); });
+        btn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          toggle();
+        });
 
-        document.addEventListener('click', function(e){
+        document.addEventListener("click", function (e) {
           if (!wrap.contains(e.target)) close();
         });
-        document.addEventListener('keydown', function(e){
-          if (e.key === 'Escape') close();
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") close();
         });
       })();
     </script>
