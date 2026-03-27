@@ -19,20 +19,9 @@
     "battleye_protected": true,
     "battleye_date": "2017-08-29",
     "performs_warzone": true,
-    "warzonesperday": 3,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "14:20",
-        "warzone_sequence": ""
-      },
-      {
-        "execution_id": 2,
-        "schedule_time": "15:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzonesperday": 4,
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Astera",
@@ -42,20 +31,9 @@
     "battleye_protected": true,
     "battleye_date": "2017-09-12",
     "performs_warzone": true,
-    "warzonesperday": 4,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "21:30",
-        "warzone_sequence": ""
-      },
-      {
-        "execution_id": 2,
-        "schedule_time": "22:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzonesperday": 3,
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Belobra",
@@ -66,19 +44,8 @@
     "battleye_date": "2017-06-22",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "18:10",
-        "warzone_sequence": "1-3-2"
-      },
-      {
-        "execution_id": 2,
-        "schedule_time": "22:10",
-        "warzone_sequence": "1-3-2"
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Blumera",
@@ -87,8 +54,8 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "release",
-    "performs_warzone": false,
-    "warzonesperday": 0,
+    "performs_warzone": true,
+    "warzonesperday": 1,
     "warzone_executions": [],
     "timezone": null
   },
@@ -101,14 +68,8 @@
     "battleye_date": "2018-04-19",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "14:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Bravoria",
@@ -131,14 +92,8 @@
     "battleye_date": "2017-09-12",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "21:30",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Cantabra",
@@ -161,19 +116,8 @@
     "battleye_date": "2018-10-29",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "18:30",
-        "warzone_sequence": ""
-      },
-      {
-        "execution_id": 2,
-        "schedule_time": "19:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Celesta",
@@ -184,14 +128,8 @@
     "battleye_date": "2017-09-05",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "16:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Citra",
@@ -214,14 +152,8 @@
     "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "20:30",
-        "warzone_sequence": "1-3-2"
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Descubra",
@@ -232,19 +164,8 @@
     "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "19:00",
-        "warzone_sequence": ""
-      },
-      {
-        "execution_id": 2,
-        "schedule_time": "22:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Dia",
@@ -267,14 +188,8 @@
     "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "21:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Eclipta",
@@ -321,14 +236,8 @@
     "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "21:30",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Ferobra",
@@ -339,19 +248,8 @@
     "battleye_date": "2017-07-04",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "18:00",
-        "warzone_sequence": ""
-      },
-      {
-        "execution_id": 2,
-        "schedule_time": "22:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Firmera",
@@ -374,24 +272,8 @@
     "battleye_date": "2017-12-12",
     "performs_warzone": true,
     "warzonesperday": 3,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "17:00",
-        "warzone_sequence": "1-3-2"
-      },
-      {
-        "execution_id": 2,
-        "schedule_time": "18:00",
-        "warzone_sequence": "1-3-2"
-      },
-      {
-        "execution_id": 3,
-        "schedule_time": "20:30",
-        "warzone_sequence": "1-3-2"
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Gladera",
@@ -426,14 +308,8 @@
     "battleye_date": "2017-09-05",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "16:50",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Havera",
@@ -444,14 +320,8 @@
     "battleye_date": "2021-12-06",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "18:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Honbra",
@@ -462,19 +332,8 @@
     "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "19:00",
-        "warzone_sequence": ""
-      },
-      {
-        "execution_id": 2,
-        "schedule_time": "20:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Hostera",
@@ -483,8 +342,8 @@
     "transfer_type": "blocked",
     "battleye_protected": true,
     "battleye_date": "release",
-    "performs_warzone": true,
-    "warzonesperday": 1,
+    "performs_warzone": false,
+    "warzonesperday": 0,
     "warzone_executions": [],
     "timezone": null
   },
@@ -497,14 +356,8 @@
     "battleye_date": "release",
     "performs_warzone": false,
     "warzonesperday": 0,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "21:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Ignibra",
@@ -539,29 +392,8 @@
     "battleye_date": "2017-12-12",
     "performs_warzone": true,
     "warzonesperday": 4,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "17:00",
-        "warzone_sequence": ""
-      },
-      {
-        "execution_id": 2,
-        "schedule_time": "17:30",
-        "warzone_sequence": ""
-      },
-      {
-        "execution_id": 3,
-        "schedule_time": "19:00",
-        "warzone_sequence": ""
-      },
-      {
-        "execution_id": 4,
-        "schedule_time": "21:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Issobra",
@@ -572,14 +404,8 @@
     "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "22:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Jadebra",
@@ -590,19 +416,8 @@
     "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 3,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "19:00",
-        "warzone_sequence": ""
-      },
-      {
-        "execution_id": 1,
-        "schedule_time": "21:30",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Kalanta",
@@ -625,19 +440,8 @@
     "battleye_date": "2017-12-12",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "19:00",
-        "warzone_sequence": "1-2-3"
-      },
-      {
-        "execution_id": 2,
-        "schedule_time": "21:00",
-        "warzone_sequence": "1-2-3"
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Kalimera",
@@ -672,14 +476,8 @@
     "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "16:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Lobera",
@@ -690,19 +488,8 @@
     "battleye_date": "2018-04-19",
     "performs_warzone": true,
     "warzonesperday": 3,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "12:55",
-        "warzone_sequence": "1-2-3"
-      },
-      {
-        "execution_id": 2,
-        "schedule_time": "13:20",
-        "warzone_sequence": "1-2-3"
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Luminera",
@@ -713,19 +500,8 @@
     "battleye_date": "2017-09-05",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "19:30",
-        "warzone_sequence": "1-2-3"
-      },
-      {
-        "execution_id": 2,
-        "schedule_time": "20:00",
-        "warzone_sequence": "1-2-3"
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Lutabra",
@@ -748,14 +524,8 @@
     "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "21:00",
-        "warzone_sequence": "1-2-3"
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Menera",
@@ -766,14 +536,8 @@
     "battleye_date": "2017-09-05",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "21:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Monstera",
@@ -796,14 +560,8 @@
     "battleye_date": "2018-04-19",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "15:25",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Mystera",
@@ -826,19 +584,8 @@
     "battleye_date": "2018-04-19",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "18:30",
-        "warzone_sequence": ""
-      },
-      {
-        "execution_id": 2,
-        "schedule_time": "19:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Nevia",
@@ -849,14 +596,8 @@
     "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "15:00",
-        "warzone_sequence": "1-2-3"
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Noctalia",
@@ -865,8 +606,8 @@
     "transfer_type": "blocked",
     "battleye_protected": true,
     "battleye_date": "release",
-    "performs_warzone": false,
-    "warzonesperday": 0,
+    "performs_warzone": true,
+    "warzonesperday": 1,
     "warzone_executions": [],
     "timezone": null
   },
@@ -877,8 +618,8 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "2024-04-10",
-    "performs_warzone": true,
-    "warzonesperday": 1,
+    "performs_warzone": false,
+    "warzonesperday": 0,
     "warzone_executions": [],
     "timezone": null
   },
@@ -891,14 +632,8 @@
     "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "21:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Opulera",
@@ -921,19 +656,8 @@
     "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "20:40",
-        "warzone_sequence": ""
-      },
-      {
-        "execution_id": 1,
-        "schedule_time": "22:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Pacera",
@@ -944,19 +668,8 @@
     "battleye_date": "2017-09-12",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "20:00",
-        "warzone_sequence": ""
-      },
-      {
-        "execution_id": 1,
-        "schedule_time": "23:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Peloria",
@@ -967,14 +680,8 @@
     "battleye_date": "2017-10-19",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "16:30",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Penumbra",
@@ -1009,19 +716,8 @@
     "battleye_date": "2017-12-12",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "18:00",
-        "warzone_sequence": ""
-      },
-      {
-        "execution_id": 1,
-        "schedule_time": "23:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Quidera",
@@ -1032,14 +728,8 @@
     "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "00:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Quintera",
@@ -1049,15 +739,9 @@
     "battleye_protected": true,
     "battleye_date": "2017-10-19",
     "performs_warzone": true,
-    "warzonesperday": 2,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "20:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzonesperday": 3,
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Rasteibra",
@@ -1068,19 +752,8 @@
     "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "19:00",
-        "warzone_sequence": "1-2-3"
-      },
-      {
-        "execution_id": 2,
-        "schedule_time": "21:30",
-        "warzone_sequence": "1-2-3"
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Refugia",
@@ -1091,14 +764,8 @@
     "battleye_date": "2017-09-12",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "17:25",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Retalia",
@@ -1121,19 +788,8 @@
     "battleye_date": "2017-09-05",
     "performs_warzone": true,
     "warzonesperday": 3,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "12:55",
-        "warzone_sequence": ""
-      },
-      {
-        "execution_id": 2,
-        "schedule_time": "13:30",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Serdebra",
@@ -1144,19 +800,8 @@
     "battleye_date": "2017-05-17",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "17:30",
-        "warzone_sequence": ""
-      },
-      {
-        "execution_id": 2,
-        "schedule_time": "20:30",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Solidera",
@@ -1167,14 +812,8 @@
     "battleye_date": "2018-04-19",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "19:50",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Sombra",
@@ -1244,7 +883,7 @@
     "battleye_protected": true,
     "battleye_date": "release",
     "performs_warzone": true,
-    "warzonesperday": 2,
+    "warzonesperday": 1,
     "warzone_executions": [],
     "timezone": null
   },
@@ -1257,14 +896,8 @@
     "battleye_date": "2021-12-06",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "16:40",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Tornabra",
@@ -1275,14 +908,8 @@
     "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "22:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Unebra",
@@ -1293,14 +920,8 @@
     "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "21:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Ustebra",
@@ -1311,19 +932,8 @@
     "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 2,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "19:55",
-        "warzone_sequence": "1-3-2"
-      },
-      {
-        "execution_id": 2,
-        "schedule_time": "22:55",
-        "warzone_sequence": "1-2-3"
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Venebra",
@@ -1334,14 +944,8 @@
     "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "22:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Victoris",
@@ -1364,14 +968,8 @@
     "battleye_date": "2017-10-19",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "15:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Wintera",
@@ -1381,20 +979,9 @@
     "battleye_protected": true,
     "battleye_date": "2018-04-19",
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "01:00",
-        "warzone_sequence": ""
-      },
-      {
-        "execution_id": 2,
-        "schedule_time": "21:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzonesperday": 2,
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Xybra",
@@ -1405,14 +992,8 @@
     "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "20:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Xyla",
@@ -1447,14 +1028,8 @@
     "battleye_date": "2020-05-27",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "21:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Yovera",
@@ -1465,14 +1040,8 @@
     "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "21:30",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Yubra",
@@ -1483,14 +1052,8 @@
     "battleye_date": "release",
     "performs_warzone": true,
     "warzonesperday": 1,
-    "warzone_executions": [
-      {
-        "execution_id": 1,
-        "schedule_time": "20:00",
-        "warzone_sequence": ""
-      }
-    ],
-    "timezone": "America/Sao_Paulo"
+    "warzone_executions": [],
+    "timezone": null
   },
   {
     "name": "Zuna",

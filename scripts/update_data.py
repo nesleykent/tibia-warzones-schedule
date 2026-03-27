@@ -10,7 +10,6 @@ import requests
 BASE_URL = "https://api.tibiadata.com/v4"
 ROOT_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT_DIR / "data"
-MANUAL_SCHEDULES_FILE = DATA_DIR / "manual-schedules.json"
 OUTPUT_FILE = DATA_DIR / "worlds.json"
 
 
@@ -18,13 +17,6 @@ def fetch_json(url: str) -> dict[str, Any]:
     response = requests.get(url, timeout=30)
     response.raise_for_status()
     return response.json()
-
-
-def load_manual_schedules() -> dict[str, Any]:
-    if MANUAL_SCHEDULES_FILE.exists():
-        with MANUAL_SCHEDULES_FILE.open("r", encoding="utf-8") as file:
-            return json.load(file)
-    return {}
 
 
 def save_worlds(worlds: list[dict[str, Any]]) -> None:
@@ -83,16 +75,11 @@ def extract_Gnomevil_kills(payload: dict[str, Any]) -> int:
 
 def build_world_record(
     world: dict[str, Any],
-    manual_schedules: dict[str, Any],
 ) -> dict[str, Any]:
     world_name = str(world.get("name", "")).strip()
 
     kill_statistics = get_kill_statistics(world_name)
     Gnomevil_kills = extract_Gnomevil_kills(kill_statistics)
-
-    manual_entry = manual_schedules.get(world_name, {})
-    timezone = manual_entry.get("timezone")
-    warzone_executions = manual_entry.get("warzone_executions", [])
 
     return {
         "name": world_name,
@@ -103,8 +90,8 @@ def build_world_record(
         "battleye_date": world.get("battleye_date"),
         "performs_warzone": Gnomevil_kills > 0,
         "warzonesperday": Gnomevil_kills,
-        "warzone_executions": warzone_executions,
-        "timezone": timezone,
+        "warzone_executions": [],
+        "timezone": None,
     }
 
 
@@ -157,7 +144,6 @@ def validate_worlds(worlds: list[dict[str, Any]]) -> None:
 
 
 def main() -> int:
-    manual_schedules = load_manual_schedules()
     worlds = get_worlds()
 
     if not worlds:
@@ -170,24 +156,26 @@ def main() -> int:
         world_name = str(world.get("name", "")).strip()
 
         try:
-            record = build_world_record(world, manual_schedules)
+            record = build_world_record(world)
             output.append(record)
             print(f"OK   {world_name}")
         except Exception as exc:
             print(f"ERRO {world_name}: {exc}", file=sys.stderr)
-            output.append({
-    "name": world_name,
-    "location": world.get("location"),
-    "pvp_type": world.get("pvp_type"),
-    "transfer_type": world.get("transfer_type"),
-    "battleye_protected": world.get("battleye_protected"),
-    "battleye_date": world.get("battleye_date"),
-    "performs_warzone": False,
-    "warzonesperday": 0,
-    "warzone_executions": [],
-    "timezone": None,
-    "error": str(exc),
-})
+            output.append(
+                {
+                    "name": world_name,
+                    "location": world.get("location"),
+                    "pvp_type": world.get("pvp_type"),
+                    "transfer_type": world.get("transfer_type"),
+                    "battleye_protected": world.get("battleye_protected"),
+                    "battleye_date": world.get("battleye_date"),
+                    "performs_warzone": False,
+                    "warzonesperday": 0,
+                    "warzone_executions": [],
+                    "timezone": None,
+                    "error": str(exc),
+                }
+            )
 
     output.sort(key=lambda item: str(item.get("name", "")).lower())
 
