@@ -489,6 +489,25 @@ function buildScheduleEntries() {
   return entries;
 }
 
+function mergeManualSchedules(worldsData, manualSchedulesData) {
+  const manualByWorld =
+    manualSchedulesData && typeof manualSchedulesData === "object"
+      ? manualSchedulesData
+      : {};
+
+  return worldsData.map((world) => {
+    const manual = manualByWorld[world.name];
+    const warzoneExecutions = Array.isArray(manual?.warzone_executions)
+      ? manual.warzone_executions
+      : [];
+
+    return {
+      ...world,
+      warzone_executions: warzoneExecutions,
+    };
+  });
+}
+
 // ─── Notifications ───────────────────────────────────
 
 function checkNotifications() {
@@ -1726,9 +1745,20 @@ async function init() {
   if (searchInput) searchInput.oninput = render;
 
   try {
-    const response = await fetch("./data/worlds.json");
-    if (!response.ok) throw new Error(`${t().loadError}: ${response.status}`);
-    worlds = await response.json();
+    const [worldsResponse, manualResponse] = await Promise.all([
+      fetch("./data/worlds.json"),
+      fetch("./data/manual-schedules.json"),
+    ]);
+    if (!worldsResponse.ok)
+      throw new Error(`${t().loadError}: ${worldsResponse.status}`);
+    if (!manualResponse.ok)
+      throw new Error(`${t().loadError}: ${manualResponse.status}`);
+
+    const [worldsData, manualSchedulesData] = await Promise.all([
+      worldsResponse.json(),
+      manualResponse.json(),
+    ]);
+    worlds = mergeManualSchedules(worldsData, manualSchedulesData);
     render();
     let resizeTimer;
     window.addEventListener("resize", () => {
@@ -1747,4 +1777,3 @@ async function init() {
 }
 
 init();
-ENDOFFILE;
