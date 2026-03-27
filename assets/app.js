@@ -500,10 +500,15 @@ function mergeManualSchedules(worldsData, manualSchedulesData) {
     const warzoneExecutions = Array.isArray(manual?.warzone_executions)
       ? manual.warzone_executions
       : [];
+    const timezone =
+      typeof manual?.timezone === "string" && manual.timezone.trim()
+        ? manual.timezone.trim()
+        : world.timezone;
 
     return {
       ...world,
       warzone_executions: warzoneExecutions,
+      timezone: timezone,
     };
   });
 }
