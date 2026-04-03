@@ -106,6 +106,7 @@ const WORLD_I18N = {
 };
 
 let worldLang = "pt-BR";
+let pageTimezone = "UTC";
 
 function getInitialLanguage() {
   try {
@@ -147,6 +148,102 @@ function getMarkLabel(mark) {
   if (mark === "healthy") return dict.healthy;
   if (mark === "trolls") return dict.trolls;
   return dict.inconclusive;
+}
+
+function getBrowserTimezone() {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+  } catch {
+    return "UTC";
+  }
+}
+
+function loadSavedTimezone() {
+  try {
+    return localStorage.getItem("tz") || getBrowserTimezone();
+  } catch {
+    return getBrowserTimezone();
+  }
+}
+
+function getTimezoneOffsetLabel(tz) {
+  try {
+    const parts = new Intl.DateTimeFormat("en", {
+      timeZone: tz,
+      timeZoneName: "longOffset",
+    }).formatToParts(new Date());
+    const value = parts.find((p) => p.type === "timeZoneName")?.value || "GMT";
+    return value.replace("GMT", "UTC");
+  } catch {
+    return "UTC";
+  }
+}
+
+function getTimezoneDisplayLabel(tz) {
+  const offsetRaw = getTimezoneOffsetLabel(tz);
+  const offsetCompact = offsetRaw
+    .replace("UTC", "GMT")
+    .replace(/:00$/, "")
+    .replace(/([+-])0(\d)$/, "$1$2");
+  return `${tz} (${offsetCompact})`;
+}
+
+function convertTimeBetweenTimezones(scheduleTime, sourceTimezone, targetTimezone) {
+  if (!scheduleTime || !sourceTimezone || !targetTimezone) return scheduleTime || "";
+  const parts = String(scheduleTime).split(":");
+  if (parts.length !== 2) return scheduleTime;
+  const hour = Number(parts[0]);
+  const minute = Number(parts[1]);
+  if (Number.isNaN(hour) || Number.isNaN(minute)) return scheduleTime;
+
+  try {
+    const ref = new Date(Date.UTC(2025, 0, 15, 12, 0, 0));
+    const srcParts = new Intl.DateTimeFormat("en-CA", {
+      timeZone: sourceTimezone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hourCycle: "h23",
+    }).formatToParts(ref);
+    const map = {};
+    for (const part of srcParts) {
+      if (part.type !== "literal") map[part.type] = part.value;
+    }
+    const wallClockUtc = Date.UTC(
+      Number(map.year),
+      Number(map.month) - 1,
+      Number(map.day),
+      hour,
+      minute,
+      0
+    );
+    const probeDate = new Date(wallClockUtc);
+    const offParts = new Intl.DateTimeFormat("en", {
+      timeZone: sourceTimezone,
+      timeZoneName: "longOffset",
+    }).formatToParts(probeDate);
+    const offsetText =
+      offParts.find((part) => part.type === "timeZoneName")?.value || "GMT+00:00";
+    const normalized = offsetText.replace("GMT", "");
+    const match = normalized.match(/^([+-])(\d{2}):(\d{2})$/);
+    let offMin = 0;
+    if (match) {
+      const sign = match[1] === "-" ? -1 : 1;
+      offMin = sign * (Number(match[2]) * 60 + Number(match[3]));
+    }
+    const actualDate = new Date(wallClockUtc - offMin * 60 * 1000);
+    return new Intl.DateTimeFormat(worldLang, {
+      timeZone: targetTimezone,
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23",
+    }).format(actualDate);
+  } catch {
+    return scheduleTime;
+  }
 }
 
 function getTransferLabel(world) {
@@ -227,20 +324,27 @@ function renderSchedules(world) {
   const items = executions
     .slice()
     .sort((a, b) => Number(a.execution_id || 0) - Number(b.execution_id || 0))
-    .map(
-      (execution) => `
+    .map((execution) => {
+      const shownTime = convertTimeBetweenTimezones(
+        execution.schedule_time,
+        world.timezone,
+        pageTimezone
+      );
+      return `
         <li class="world-schedule-item">
-          <span class="world-schedule-time">${escapeHtml(execution.schedule_time || "N/A")}</span>
+          <span class="world-schedule-time">${escapeHtml(shownTime || "N/A")}</span>
           <span class="world-schedule-seq">${escapeHtml(execution.warzone_sequence || "-")}</span>
         </li>
       `
-    )
+    })
     .join("");
 
   return `
     <div class="world-detail-card-header">
       <h2>${escapeHtml(dict.schedules)}</h2>
-      <span class="world-detail-inline-note">${escapeHtml(world.timezone || "N/A")}</span>
+      <span class="world-detail-inline-note">${escapeHtml(
+        getTimezoneDisplayLabel(pageTimezone)
+      )}</span>
     </div>
     <ul class="world-schedule-list">${items}</ul>
   `;
@@ -355,6 +459,7 @@ function bindLanguageButtons() {
 
 function initWorldPage() {
   worldLang = getInitialLanguage();
+  pageTimezone = loadSavedTimezone();
   applyStaticLabels();
   updateLanguageButtons();
   bindLanguageButtons();
