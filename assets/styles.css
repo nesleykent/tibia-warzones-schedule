@@ -880,14 +880,14 @@ body::after {
 }
 
 .service-mark-icon {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  font-size: 11px;
-  font-weight: 800;
+  font-size: 12px;
+  font-weight: 900;
   background: rgba(255, 255, 255, 0.14);
 }
 
