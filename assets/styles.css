@@ -654,13 +654,15 @@ body::after {
 }
 
 .service-mark-icon {
-  width: auto;
-  height: auto;
+  width: 14px;
+  height: 14px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
+  border-radius: 999px;
+  font-size: 9px;
   font-weight: 800;
+  background: rgba(255,255,255,0.14);
 }
 
 .service-mark--healthy {
