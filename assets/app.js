@@ -65,7 +65,7 @@ const I18N = {
     pageTitle: "Tibia Warzones Schedule",
     heroTitle: "Tibia Warzones Schedule",
     heroSubtitle:
-      "Servers with Warzones activity based on Gnomevil boss kills.",
+      "Warzone services inferred from Deathstrike, Gnomevil, and Abyssador kill statistics.",
     questLinksLabel: "Bigfoot's Burden:",
     search: "Search server",
     timezone: "Show times in",
@@ -77,6 +77,7 @@ const I18N = {
     transfer: "Transfer",
     battleye: "BattlEye",
     services: "Services",
+    servicesCompleted: "Services completed",
     noSchedules: "No services registered yet",
     noServersFound: "No servers found",
     notAvailable: "N/A",
@@ -125,12 +126,24 @@ const I18N = {
     conflictWarn: "Some warzones are <20 min apart — tight but possible!",
     noAudio: "No audio",
     searchPlaceholder: "Server name…",
+    deathstrike: "Deathstrike",
+    gnomevil: "Gnomevil",
+    abyssador: "Abyssador",
+    mark: "Mark",
+    healthy: "Healthy",
+    inconclusive: "Inconclusive",
+    trolls: "Trolls",
+    history: "History",
+    viewHistory: "View history",
+    servicesTooltip: (d, g, a) =>
+      `Deathstrike kills: ${d}\nGnomevil kills: ${g}\nAbyssador kills: ${a}`,
+    scheduleCount: (count) => `${count} schedules`,
   },
   "pt-BR": {
     pageTitle: "Tibia Warzones Schedule",
     heroTitle: "Tibia Warzones Schedule",
     heroSubtitle:
-      "Servidores com atividade de Warzones baseada nas kills do boss Gnomevil.",
+      "Services de Warzone inferidos pelas kills de Deathstrike, Gnomevil e Abyssador.",
     questLinksLabel: "Bigfoot's Burden:",
     search: "Buscar servidor",
     timezone: "Exibir horários em",
@@ -142,6 +155,7 @@ const I18N = {
     transfer: "Transferência",
     battleye: "BattlEye",
     services: "Services",
+    servicesCompleted: "Services concluídos",
     noSchedules: "Ainda não há nenhum service cadastrado",
     noServersFound: "Nenhum servidor encontrado",
     notAvailable: "N/D",
@@ -190,12 +204,24 @@ const I18N = {
     conflictWarn: "Some warzones are <20 min apart — tight but possible!",
     noAudio: "No audio",
     searchPlaceholder: "Server name…",
+    deathstrike: "Deathstrike",
+    gnomevil: "Gnomevil",
+    abyssador: "Abyssador",
+    mark: "Marca",
+    healthy: "Healthy",
+    inconclusive: "Inconclusivo",
+    trolls: "Trolls",
+    history: "Histórico",
+    viewHistory: "Ver histórico",
+    servicesTooltip: (d, g, a) =>
+      `Kills de Deathstrike: ${d}\nKills de Gnomevil: ${g}\nKills de Abyssador: ${a}`,
+    scheduleCount: (count) => `${count} horários`,
   },
   "es-419": {
     pageTitle: "Tibia Warzones Schedule",
     heroTitle: "Tibia Warzones Schedule",
     heroSubtitle:
-      "Servidores con actividad de Warzones basada en las muertes del boss Gnomevil.",
+      "Servicios de Warzone inferidos por las muertes de Deathstrike, Gnomevil y Abyssador.",
     questLinksLabel: "Bigfoot's Burden:",
     search: "Buscar servidor",
     timezone: "Mostrar horarios en",
@@ -207,6 +233,7 @@ const I18N = {
     transfer: "Transferencia",
     battleye: "BattlEye",
     services: "Services",
+    servicesCompleted: "Servicios completados",
     noSchedules: "Aún no hay ningún service registrado",
     noServersFound: "No se encontraron servidores",
     notAvailable: "N/D",
@@ -254,12 +281,24 @@ const I18N = {
     conflictWarn: "Some warzones are <20 min apart — tight but possible!",
     noAudio: "No audio",
     searchPlaceholder: "Server name…",
+    deathstrike: "Deathstrike",
+    gnomevil: "Gnomevil",
+    abyssador: "Abyssador",
+    mark: "Marca",
+    healthy: "Healthy",
+    inconclusive: "Inconcluso",
+    trolls: "Trolls",
+    history: "Historial",
+    viewHistory: "Ver historial",
+    servicesTooltip: (d, g, a) =>
+      `Muertes de Deathstrike: ${d}\nMuertes de Gnomevil: ${g}\nMuertes de Abyssador: ${a}`,
+    scheduleCount: (count) => `${count} horarios`,
   },
   pl: {
     pageTitle: "Tibia Warzones Schedule",
     heroTitle: "Tibia Warzones Schedule",
     heroSubtitle:
-      "Serwery z aktywnością Warzones na podstawie liczby zabójstw bossa Gnomevil.",
+      "Usługi Warzone wyliczone na podstawie zabójstw Deathstrike, Gnomevil i Abyssador.",
     questLinksLabel: "Bigfoot's Burden:",
     search: "Szukaj serwera",
     timezone: "Pokaż godziny w",
@@ -271,6 +310,7 @@ const I18N = {
     transfer: "Transfer",
     battleye: "BattlEye",
     services: "Services",
+    servicesCompleted: "Ukończone usługi",
     noSchedules: "Nie ma jeszcze żadnego zarejestrowanego service",
     noServersFound: "Nie znaleziono serwerów",
     notAvailable: "Brak",
@@ -319,6 +359,18 @@ const I18N = {
     conflictWarn: "Some warzones are <20 min apart — tight but possible!",
     noAudio: "No audio",
     searchPlaceholder: "Server name…",
+    deathstrike: "Deathstrike",
+    gnomevil: "Gnomevil",
+    abyssador: "Abyssador",
+    mark: "Oznaczenie",
+    healthy: "Healthy",
+    inconclusive: "Niejednoznaczne",
+    trolls: "Trolls",
+    history: "Historia",
+    viewHistory: "Zobacz historię",
+    servicesTooltip: (d, g, a) =>
+      `Zabójstwa Deathstrike: ${d}\nZabójstwa Gnomevil: ${g}\nZabójstwa Abyssador: ${a}`,
+    scheduleCount: (count) => `${count} harmonogramy`,
   },
 };
 
@@ -1348,6 +1400,36 @@ function getTransferLabel(world) {
   return v.charAt(0).toUpperCase() + v.slice(1) + " Transfer";
 }
 
+function getBossKills(world) {
+  const kills =
+    world && typeof world.last_detected_kills === "object" && world.last_detected_kills
+      ? world.last_detected_kills
+      : {};
+
+  return {
+    deathstrike: Number(kills.Deathstrike || 0),
+    gnomevil: Number(kills.Gnomevil || 0),
+    abyssador: Number(kills.Abyssador || 0),
+  };
+}
+
+function getMarkLabel(mark) {
+  const dict = t();
+  if (mark === "healthy") return dict.healthy;
+  if (mark === "trolls") return dict.trolls;
+  return dict.inconclusive;
+}
+
+function getMarkIcon(mark) {
+  if (mark === "healthy") return "●";
+  if (mark === "trolls") return "!";
+  return "?";
+}
+
+function getWorldHistoryUrl(worldName) {
+  return "./world.html?name=" + encodeURIComponent(worldName);
+}
+
 function renderExecutions(world) {
   const dict = t();
   const executions = Array.isArray(world.warzone_executions)
@@ -1410,16 +1492,58 @@ function renderWorld(world) {
   const hasAny = [...selectedExecutions].some((k) =>
     k.startsWith(world.name + "|")
   );
+  const kills = getBossKills(world);
+  const serviceCount = Number(
+    world.last_detected_services ?? world.warzone_services_per_day ?? 0
+  );
+  const badgeTitle = dict.servicesTooltip(
+    kills.deathstrike,
+    kills.gnomevil,
+    kills.abyssador
+  );
+  const mark = String(world.mark || "inconclusive");
+  const scheduleCount = Array.isArray(world.warzone_executions)
+    ? world.warzone_executions.length
+    : 0;
+
   return `
     <div class="world-card${
       hasAny ? " world-card--selected" : ""
-    }" data-world-name="${escapeHtml(world.name)}">
+    }" data-world-name="${escapeHtml(world.name)}" data-world-url="${escapeHtml(
+    getWorldHistoryUrl(world.name)
+  )}">
       <h2>
-        <span class="world-name">${escapeHtml(world.name || "")}</span>
-        <span class="badge">${escapeHtml(dict.warzones)}: ${escapeHtml(
-    String(world.warzonesperday ?? 0)
-  )}</span>
+        <a class="world-name world-name-link" href="${escapeHtml(
+          getWorldHistoryUrl(world.name)
+        )}">${escapeHtml(world.name || "")}</a>
+        <span class="badge" title="${escapeHtml(badgeTitle)}">${escapeHtml(
+    dict.warzones
+  )}: ${escapeHtml(String(serviceCount))}</span>
       </h2>
+      <div class="service-snapshot">
+        <span class="service-count">${escapeHtml(
+          dict.servicesCompleted
+        )}: ${escapeHtml(String(serviceCount))}</span>
+        <span class="service-mark service-mark--${escapeHtml(mark)}" title="${escapeHtml(
+    dict.mark
+  )}: ${escapeHtml(getMarkLabel(mark))}">
+          <span class="service-mark-icon" aria-hidden="true">${escapeHtml(
+            getMarkIcon(mark)
+          )}</span>
+          <span>${escapeHtml(getMarkLabel(mark))}</span>
+        </span>
+      </div>
+      <div class="boss-kills" aria-label="${escapeHtml(dict.servicesCompleted)}">
+        <span class="boss-pill"><strong>DS</strong> ${escapeHtml(
+          String(kills.deathstrike)
+        )}</span>
+        <span class="boss-pill"><strong>GV</strong> ${escapeHtml(
+          String(kills.gnomevil)
+        )}</span>
+        <span class="boss-pill"><strong>AB</strong> ${escapeHtml(
+          String(kills.abyssador)
+        )}</span>
+      </div>
       <div class="world-meta">
         <span class="meta-plain meta-left">${escapeHtml(
           world.location || dict.notAvailable
@@ -1429,10 +1553,17 @@ function renderWorld(world) {
         )}</span>
         <span class="meta-left">${escapeHtml(getTransferLabel(world))}</span>
         <span class="meta-right">${escapeHtml(getBattleyeDisplayLabel(getBattleyeKey(world)))}</span>
+        <span class="meta-left">${escapeHtml(dict.history)}</span>
+        <span class="meta-right">${escapeHtml(
+          dict.scheduleCount(scheduleCount)
+        )}</span>
       </div>
       <div class="executions">
         <div class="executions-header">
           <h3>${escapeHtml(dict.services)}</h3>
+          <a class="history-link" href="${escapeHtml(
+            getWorldHistoryUrl(world.name)
+          )}">${escapeHtml(dict.viewHistory)}</a>
         </div>
         ${renderExecutions(world)}
       </div>
@@ -1607,7 +1738,7 @@ function render() {
   const query = (searchInput?.value || "").trim().toLowerCase();
 
   // All worlds that perform warzones (base pool for filter options)
-  const warzoneWorlds = worlds.filter((w) => w && w.performs_warzone);
+  const warzoneWorlds = worlds.filter((w) => w && w.tracks_warzone_service);
 
   // Render filter bar based on full pool (not search-narrowed)
   renderFilters(warzoneWorlds);
@@ -1742,6 +1873,15 @@ async function init() {
           const [worldName, execId] = key.split("|");
           toggleExecutionSelection(worldName, execId);
         }
+        return;
+      }
+
+      const card = e.target.closest(".world-card");
+      const blocked = e.target.closest(
+        ".exec-select-btn, .history-link, .world-name-link, button"
+      );
+      if (card && !blocked && card.dataset.worldUrl) {
+        window.location.href = card.dataset.worldUrl;
       }
     });
   }
@@ -1750,20 +1890,12 @@ async function init() {
   if (searchInput) searchInput.oninput = render;
 
   try {
-    const [worldsResponse, manualResponse] = await Promise.all([
-      fetch("./data/worlds.json"),
-      fetch("./data/manual-schedules.json"),
-    ]);
+    const worldsResponse = await fetch("./data/worlds.json");
     if (!worldsResponse.ok)
       throw new Error(`${t().loadError}: ${worldsResponse.status}`);
-    if (!manualResponse.ok)
-      throw new Error(`${t().loadError}: ${manualResponse.status}`);
 
-    const [worldsData, manualSchedulesData] = await Promise.all([
-      worldsResponse.json(),
-      manualResponse.json(),
-    ]);
-    worlds = mergeManualSchedules(worldsData, manualSchedulesData);
+    const worldsData = await worldsResponse.json();
+    worlds = Array.isArray(worldsData) ? worldsData : [];
     render();
     let resizeTimer;
     window.addEventListener("resize", () => {

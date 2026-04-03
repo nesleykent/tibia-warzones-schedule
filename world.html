@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Warzone History</title>
+    <link rel="stylesheet" href="./assets/styles.css" />
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('theme');
+          if (saved === 'light' || saved === 'dark') {
+            document.documentElement.setAttribute('data-theme', saved);
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="bg-layer" aria-hidden="true"></div>
+
+    <div class="topbar" role="navigation" aria-label="Site navigation">
+      <div class="container topbar-inner">
+        <div class="topbar-links">
+          <a href="./index.html" class="history-back-link" id="backToIndex">Back</a>
+        </div>
+      </div>
+    </div>
+
+    <header class="site-header" role="banner">
+      <div class="container site-header-inner">
+        <div class="header-icon" aria-hidden="true">⚔️</div>
+        <div class="header-text">
+          <h1 id="worldTitle">Warzone History</h1>
+          <p class="header-subtitle" id="worldSubtitle">
+            Historical Warzone service records for the selected world.
+          </p>
+        </div>
+
+        <div class="header-controls">
+          <button
+            type="button"
+            id="themeToggle"
+            class="theme-toggle"
+            title="Toggle light/dark mode"
+            aria-label="Toggle light/dark mode"
+          >
+            <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+            <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="5"/>
+              <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+              <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+          </button>
+
+          <div class="lang-dropdown" id="langDropdown">
+            <button type="button" class="lang-menu-btn" id="langMenuBtn" aria-haspopup="true" aria-expanded="false" aria-label="Select language">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="2" y1="12" x2="22" y2="12"/>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+              </svg>
+            </button>
+            <div class="lang-menu" id="langMenu" role="menu" aria-label="Language selector">
+              <button type="button" class="lang-flag" data-lang="en" role="menuitem">🇺🇸 <span>English</span></button>
+              <button type="button" class="lang-flag" data-lang="pt-BR" role="menuitem">🇧🇷 <span>Português</span></button>
+              <button type="button" class="lang-flag" data-lang="es-419" role="menuitem">🇦🇷 <span>Español</span></button>
+              <button type="button" class="lang-flag" data-lang="pl" role="menuitem">🇵🇱 <span>Polski</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="container world-page" id="worldPage">
+      <section id="worldSummaryCard" class="world-detail-card" aria-live="polite"></section>
+      <section id="worldSchedulesCard" class="world-detail-card" aria-live="polite"></section>
+      <section id="worldHistoryCard" class="world-detail-card" aria-live="polite"></section>
+    </main>
+
+    <script>
+      (function () {
+        var html = document.documentElement;
+        var btn = document.getElementById('themeToggle');
+        if (!btn) return;
+
+        function getActiveTheme() {
+          var manual = html.getAttribute('data-theme');
+          if (manual) return manual;
+          return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        }
+
+        btn.addEventListener('click', function () {
+          var current = getActiveTheme();
+          var next = current === 'dark' ? 'light' : 'dark';
+          html.setAttribute('data-theme', next);
+          try { localStorage.setItem('theme', next); } catch (e) {}
+        });
+
+        window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function () {
+          try {
+            if (!localStorage.getItem('theme')) {
+              html.removeAttribute('data-theme');
+            }
+          } catch (e) {}
+        });
+      })();
+    </script>
+
+    <script>
+      (function () {
+        var artworks = ['bg1.jpg', 'bg2.jpg', 'bg3.jpg', 'bg4.jpg'];
+        var layer = document.getElementById('bg-layer');
+        if (!layer) return;
+        var pick = artworks[Math.floor(Math.random() * artworks.length)];
+        var img = new Image();
+        img.onload = function () {
+          layer.style.backgroundImage = 'url(assets/background/' + pick + ')';
+          layer.style.opacity = '1';
+        };
+        layer.style.opacity = '0';
+        img.src = 'assets/background/' + pick;
+      })();
+    </script>
+
+    <script>
+      (function () {
+        var btn = document.getElementById('langMenuBtn');
+        var menu = document.getElementById('langMenu');
+        var wrap = document.getElementById('langDropdown');
+        if (!btn || !menu || !wrap) return;
+
+        function open() { menu.classList.add('is-open'); btn.setAttribute('aria-expanded', 'true'); }
+        function close() { menu.classList.remove('is-open'); btn.setAttribute('aria-expanded', 'false'); }
+        function toggle() { menu.classList.contains('is-open') ? close() : open(); }
+
+        btn.addEventListener('click', function (e) { e.stopPropagation(); toggle(); });
+        document.addEventListener('click', function (e) { if (!wrap.contains(e.target)) close(); });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+      })();
+    </script>
+
+    <script src="./assets/world.js"></script>
+  </body>
+</html>
