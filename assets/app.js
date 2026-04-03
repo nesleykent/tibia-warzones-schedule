@@ -1488,7 +1488,6 @@ function renderExecutions(world) {
 }
 
 function renderWorld(world) {
-  const dict = t();
   const hasAny = [...selectedExecutions].some((k) =>
     k.startsWith(world.name + "|")
   );
@@ -1502,9 +1501,6 @@ function renderWorld(world) {
     kills.abyssador
   );
   const mark = String(world.mark || "inconclusive");
-  const scheduleCount = Array.isArray(world.warzone_executions)
-    ? world.warzone_executions.length
-    : 0;
 
   return `
     <div class="world-card${
@@ -1516,54 +1512,35 @@ function renderWorld(world) {
         <a class="world-name world-name-link" href="${escapeHtml(
           getWorldHistoryUrl(world.name)
         )}">${escapeHtml(world.name || "")}</a>
-        <span class="badge" title="${escapeHtml(badgeTitle)}">${escapeHtml(
-    dict.warzones
-  )}: ${escapeHtml(String(serviceCount))}</span>
-      </h2>
-      <div class="service-snapshot">
-        <span class="service-count">${escapeHtml(
-          dict.servicesCompleted
-        )}: ${escapeHtml(String(serviceCount))}</span>
-        <span class="service-mark service-mark--${escapeHtml(mark)}" title="${escapeHtml(
-    dict.mark
-  )}: ${escapeHtml(getMarkLabel(mark))}">
+        <div class="world-card-header-actions">
+          <span class="service-mark service-mark--${escapeHtml(mark)}" title="${escapeHtml(
+    getMarkLabel(mark)
+  )}" aria-label="${escapeHtml(getMarkLabel(mark))}">
           <span class="service-mark-icon" aria-hidden="true">${escapeHtml(
             getMarkIcon(mark)
           )}</span>
-          <span>${escapeHtml(getMarkLabel(mark))}</span>
         </span>
-      </div>
-      <div class="boss-kills" aria-label="${escapeHtml(dict.servicesCompleted)}">
-        <span class="boss-pill"><strong>DS</strong> ${escapeHtml(
-          String(kills.deathstrike)
-        )}</span>
-        <span class="boss-pill"><strong>GV</strong> ${escapeHtml(
-          String(kills.gnomevil)
-        )}</span>
-        <span class="boss-pill"><strong>AB</strong> ${escapeHtml(
-          String(kills.abyssador)
-        )}</span>
-      </div>
+          <span class="badge" title="${escapeHtml(badgeTitle)}">${escapeHtml(
+    t().warzones
+  )}: ${escapeHtml(String(serviceCount))}</span>
+        </div>
+      </h2>
       <div class="world-meta">
         <span class="meta-plain meta-left">${escapeHtml(
-          world.location || dict.notAvailable
+          world.location || t().notAvailable
         )}</span>
         <span class="meta-plain meta-right">${escapeHtml(
-          world.pvp_type || dict.notAvailable
+          world.pvp_type || t().notAvailable
         )}</span>
         <span class="meta-left">${escapeHtml(getTransferLabel(world))}</span>
         <span class="meta-right">${escapeHtml(getBattleyeDisplayLabel(getBattleyeKey(world)))}</span>
-        <span class="meta-left">${escapeHtml(dict.history)}</span>
-        <span class="meta-right">${escapeHtml(
-          dict.scheduleCount(scheduleCount)
-        )}</span>
       </div>
       <div class="executions">
         <div class="executions-header">
-          <h3>${escapeHtml(dict.services)}</h3>
+          <h3>${escapeHtml(t().services)}</h3>
           <a class="history-link" href="${escapeHtml(
             getWorldHistoryUrl(world.name)
-          )}">${escapeHtml(dict.viewHistory)}</a>
+          )}">${escapeHtml(t().viewHistory)}</a>
         </div>
         ${renderExecutions(world)}
       </div>
