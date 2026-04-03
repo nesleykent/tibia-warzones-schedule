@@ -8,11 +8,19 @@ It combines automated data from the TibiaData API with manually curated schedule
 
 Warzones in Tibia are player-organized events. There is no official schedule exposed by the game. However, Warzone activity can be inferred by tracking boss kills.
 
-This project uses the boss Gnomevil as a proxy signal:
+This project tracks the 3 Warzone bosses:
 
-- Each kill of Gnomevil indicates one Warzone execution
-- Kill statistics are fetched per world
-- The system estimates how many Warzones occur per day
+- Deathstrike
+- Gnomevil
+- Abyssador
+
+A completed Warzone service is counted when all 3 appear in the daily kill statistics.
+
+The system computes:
+
+- `services_completed = min(Deathstrike, Gnomevil, Abyssador)`
+- Automatic server marks: `healthy`, `trolls`, `inconclusive`
+- Persistent daily history per world
 
 Since the API does not provide exact execution times, schedules are manually curated and stored in the project.
 
@@ -33,9 +41,16 @@ Each world is stored in `data/worlds.json`:
   "transfer_type": "regular",
   "battleye_protected": true,
   "battleye_date": "2017-12-12",
-  "performs_warzone": true,
-  "warzonesperday": 2,
+  "tracks_warzone_service": true,
+  "warzone_services_per_day": 2,
   "timezone": "America/Sao_Paulo",
+  "last_detected_kills": {
+    "Deathstrike": 2,
+    "Gnomevil": 2,
+    "Abyssador": 2
+  },
+  "last_detected_services": 2,
+  "mark": "healthy",
   "warzone_executions": [
     {
       "execution_id": 1,
@@ -48,8 +63,11 @@ Each world is stored in `data/worlds.json`:
 
 ## Key Fields
 
-- `performs_warzone`: Indicates detected Warzone activity
-- `warzonesperday`: Estimated number of Warzones per day
+- `tracks_warzone_service`: Indicates detected Warzone activity
+- `warzone_services_per_day`: Completed Warzone services detected in the last day
+- `last_detected_kills`: Per-boss kill counts for the last day
+- `last_detected_services`: Minimum of the 3 tracked boss counts
+- `mark`: Automatic world classification based on kill symmetry
 - `warzone_executions`: Manually curated schedule entries
 - `timezone`: Reference timezone for the Warzone schedule
 
@@ -59,12 +77,13 @@ Each world is stored in `data/worlds.json`:
 2. For each world:
 
    - Fetch kill statistics
-   - Count Gnomevil kills
+   - Extract Deathstrike, Gnomevil, and Abyssador kills
+   - Compute completed services and automatic mark
 
-3. Infer Warzone activity level
+3. Persist or replace the daily history entry in `data/history/{world}.json`
 4. Merge with manual schedules
 5. Generate `data/worlds.json`
-6. Render the static frontend
+6. Render the static frontend and world history page
 
 ## Manual Schedules
 
@@ -80,9 +99,25 @@ This file contains:
 
 These entries are merged into the generated dataset.
 
+## Historical Records
+
+Each world has a dedicated history file:
+
+`data/history/{world}.json`
+
+The updater:
+
+- Reads existing history
+- Replaces the record for the current date if it already exists
+- Appends a new record for a new day
+- Sorts history newest first
+
 ## Frontend Features
 
 - Compact and readable services layout
+- 3 boss kill breakdown per world
+- Automatic server mark display
+- Dedicated world history page
 - Timezone conversion for all schedule times
 - Multiple languages:
 
@@ -110,8 +145,10 @@ These entries are merged into the generated dataset.
 assets/
   app.js
   styles.css
+  world.js
 
 data/
+  history/
   worlds.json
   manual-schedules.json
 
@@ -119,17 +156,12 @@ scripts/
   update_data.py
 
 index.html
+world.html
 ```
 
 ## Local Development
 
 Create environment:
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install requests
-```
 
 Run data update:
 
