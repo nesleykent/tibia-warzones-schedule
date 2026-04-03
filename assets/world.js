@@ -220,7 +220,7 @@ function renderSummary(world) {
       <div class="world-detail-stat"><span>${escapeHtml(dict.pvp)}</span><strong>${escapeHtml(world.pvp_type || "N/A")}</strong></div>
       <div class="world-detail-stat"><span>${escapeHtml(dict.transfer)}</span><strong>${escapeHtml(getTransferLabel(world))}</strong></div>
       <div class="world-detail-stat"><span>${escapeHtml(dict.battleye)}</span><strong>${escapeHtml(getBattleyeLabel(world))}</strong></div>
-      <div class="world-detail-stat"><span>${escapeHtml(dict.timezone)}</span><strong>${escapeHtml(world.timezone || "N/A")}</strong></div>
+      <div class="world-detail-stat"><span>${escapeHtml(dict.timezone)}</span><strong>${escapeHtml(getTimezoneDisplayLabel(pageTimezone))}</strong></div>
       <div class="world-detail-stat"><span>${escapeHtml(dict.servicesCompleted)}</span><strong>${escapeHtml(String(services))}</strong></div>
       <div class="world-detail-stat"><span>${escapeHtml(dict.mark)}</span><strong>${escapeHtml(getMarkLabel(world.mark))}</strong></div>
       <div class="world-detail-stat"><span>${escapeHtml(dict.deathstrike)}</span><strong>${escapeHtml(String(kills.Deathstrike || 0))}</strong></div>
