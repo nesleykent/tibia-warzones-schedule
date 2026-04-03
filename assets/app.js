@@ -1488,6 +1488,7 @@ function renderExecutions(world) {
 }
 
 function renderWorld(world) {
+  const dict = t();
   const hasAny = [...selectedExecutions].some((k) =>
     k.startsWith(world.name + "|")
   );
