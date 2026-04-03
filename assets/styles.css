@@ -639,7 +639,7 @@ body::after {
 .world-card-header-actions {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   flex-shrink: 0;
 }
 
@@ -647,43 +647,32 @@ body::after {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 14px;
+  height: 14px;
   padding: 0;
-  border-radius: 50%;
-  border: 1px solid var(--sep-md);
-  background: var(--fill-3);
   color: var(--text-secondary);
 }
 
 .service-mark-icon {
-  width: 18px;
-  height: 18px;
+  width: auto;
+  height: auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
   font-size: 11px;
   font-weight: 800;
-  background: rgba(255,255,255,0.18);
 }
 
 .service-mark--healthy {
-  color: #e9fff0;
-  border-color: rgba(92, 226, 146, 0.35);
-  background: rgba(92, 226, 146, 0.12);
+  color: #9af0ba;
 }
 
 .service-mark--trolls {
-  color: #fff2da;
-  border-color: rgba(252, 175, 69, 0.35);
-  background: rgba(252, 175, 69, 0.12);
+  color: #ffd37f;
 }
 
 .service-mark--inconclusive {
-  color: #f8eaff;
-  border-color: rgba(193, 53, 132, 0.35);
-  background: rgba(193, 53, 132, 0.12);
+  color: #f0b2de;
 }
 
 /* meta */
