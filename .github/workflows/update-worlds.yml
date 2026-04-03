@@ -9,7 +9,7 @@ on:
       - data/manual-schedules.json
       - scripts/update_data.py
   schedule:
-    - cron: "0 10 * * *"
+    - cron: "0 9 * * *"
 
 permissions:
   contents: write
