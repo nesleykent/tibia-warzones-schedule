@@ -7,6 +7,8 @@ const WORLD_I18N = {
     worldNotFound: "World not found.",
     summary: "Summary",
     schedules: "Manual schedule",
+    marketPrices: "Market Prices",
+    loading: "Loading...",
     history: "History",
     location: "Region",
     pvp: "PvP",
@@ -27,12 +29,15 @@ const WORLD_I18N = {
   },
   "pt-BR": {
     pageTitle: "Histórico de Warzones",
-    subtitle: "Registros históricos de services de Warzone do servidor selecionado.",
+    subtitle:
+      "Registros históricos de services de Warzone do servidor selecionado.",
     back: "Voltar para a visão geral",
     loadError: "Falha ao carregar o histórico do servidor.",
     worldNotFound: "Servidor não encontrado.",
     summary: "Resumo",
     schedules: "Horários manuais",
+    marketPrices: "Preços de mercado",
+    loading: "Carregando...",
     history: "Histórico",
     location: "Região",
     pvp: "PvP",
@@ -53,12 +58,15 @@ const WORLD_I18N = {
   },
   "es-419": {
     pageTitle: "Historial de Warzones",
-    subtitle: "Registros históricos de servicios de Warzone del mundo seleccionado.",
+    subtitle:
+      "Registros históricos de servicios de Warzone del mundo seleccionado.",
     back: "Volver al resumen",
     loadError: "Error al cargar el historial del servidor.",
     worldNotFound: "Servidor no encontrado.",
     summary: "Resumen",
     schedules: "Horario manual",
+    marketPrices: "Precios de mercado",
+    loading: "Cargando...",
     history: "Historial",
     location: "Región",
     pvp: "PvP",
@@ -85,6 +93,8 @@ const WORLD_I18N = {
     worldNotFound: "Nie znaleziono serwera.",
     summary: "Podsumowanie",
     schedules: "Ręczny harmonogram",
+    marketPrices: "Ceny rynkowe",
+    loading: "Ładowanie...",
     history: "Historia",
     location: "Region",
     pvp: "PvP",
@@ -149,6 +159,20 @@ function slugifyWorldName(worldName) {
     .replace(/^-+|-+$/g, "");
 }
 
+function slugifyItemName(itemName) {
+  return String(itemName || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "");
+}
+
+function buildMarketFilePath(worldName, itemName) {
+  return `./data/market/${slugifyWorldName(worldName)}_${slugifyItemName(
+    itemName
+  )}.json`;
+}
+
 function getMarkLabel(mark) {
   const dict = t();
   if (mark === "healthy") return dict.healthy;
@@ -156,7 +180,11 @@ function getMarkLabel(mark) {
   return dict.inconclusive;
 }
 
-function convertTimeBetweenTimezones(scheduleTime, sourceTimezone, targetTimezone) {
+function convertTimeBetweenTimezones(
+  scheduleTime,
+  sourceTimezone,
+  targetTimezone
+) {
   return convertSharedTimeBetweenTimezones(
     scheduleTime,
     sourceTimezone,
@@ -166,7 +194,9 @@ function convertTimeBetweenTimezones(scheduleTime, sourceTimezone, targetTimezon
 }
 
 function getTransferLabel(world) {
-  const value = String(world.transfer_type || "").trim().toLowerCase();
+  const value = String(world.transfer_type || "")
+    .trim()
+    .toLowerCase();
   if (!value) return "N/A";
   if (value === "regular") return "Regular Transfer";
   if (value === "blocked") return "Blocked Transfer";
@@ -216,16 +246,42 @@ function renderSummary(world) {
       <h2>${escapeHtml(dict.summary)}</h2>
     </div>
     <div class="world-detail-grid">
-      <div class="world-detail-stat"><span>${escapeHtml(dict.location)}</span><strong>${escapeHtml(world.location || "N/A")}</strong></div>
-      <div class="world-detail-stat"><span>${escapeHtml(dict.pvp)}</span><strong>${escapeHtml(world.pvp_type || "N/A")}</strong></div>
-      <div class="world-detail-stat"><span>${escapeHtml(dict.transfer)}</span><strong>${escapeHtml(getTransferLabel(world))}</strong></div>
-      <div class="world-detail-stat"><span>${escapeHtml(dict.battleye)}</span><strong>${escapeHtml(getBattleyeLabel(world))}</strong></div>
-      <div class="world-detail-stat"><span>${escapeHtml(dict.timezone)}</span><strong>${escapeHtml(getTimezoneDisplayLabel(pageTimezone))}</strong></div>
-      <div class="world-detail-stat"><span>${escapeHtml(dict.servicesCompleted)}</span><strong>${escapeHtml(String(services))}</strong></div>
-      <div class="world-detail-stat"><span>${escapeHtml(dict.mark)}</span><strong>${escapeHtml(getMarkLabel(world.mark))}</strong></div>
-      <div class="world-detail-stat"><span>${escapeHtml(dict.deathstrike)}</span><strong>${escapeHtml(String(kills.Deathstrike || 0))}</strong></div>
-      <div class="world-detail-stat"><span>${escapeHtml(dict.gnomevil)}</span><strong>${escapeHtml(String(kills.Gnomevil || 0))}</strong></div>
-      <div class="world-detail-stat"><span>${escapeHtml(dict.abyssador)}</span><strong>${escapeHtml(String(kills.Abyssador || 0))}</strong></div>
+      <div class="world-detail-stat"><span>${escapeHtml(
+        dict.location
+      )}</span><strong>${escapeHtml(world.location || "N/A")}</strong></div>
+      <div class="world-detail-stat"><span>${escapeHtml(
+        dict.pvp
+      )}</span><strong>${escapeHtml(world.pvp_type || "N/A")}</strong></div>
+      <div class="world-detail-stat"><span>${escapeHtml(
+        dict.transfer
+      )}</span><strong>${escapeHtml(getTransferLabel(world))}</strong></div>
+      <div class="world-detail-stat"><span>${escapeHtml(
+        dict.battleye
+      )}</span><strong>${escapeHtml(getBattleyeLabel(world))}</strong></div>
+      <div class="world-detail-stat"><span>${escapeHtml(
+        dict.timezone
+      )}</span><strong>${escapeHtml(
+    getTimezoneDisplayLabel(pageTimezone)
+  )}</strong></div>
+      <div class="world-detail-stat"><span>${escapeHtml(
+        dict.servicesCompleted
+      )}</span><strong>${escapeHtml(String(services))}</strong></div>
+      <div class="world-detail-stat"><span>${escapeHtml(
+        dict.mark
+      )}</span><strong>${escapeHtml(getMarkLabel(world.mark))}</strong></div>
+      <div class="world-detail-stat"><span>${escapeHtml(
+        dict.deathstrike
+      )}</span><strong>${escapeHtml(
+    String(kills.Deathstrike || 0)
+  )}</strong></div>
+      <div class="world-detail-stat"><span>${escapeHtml(
+        dict.gnomevil
+      )}</span><strong>${escapeHtml(String(kills.Gnomevil || 0))}</strong></div>
+      <div class="world-detail-stat"><span>${escapeHtml(
+        dict.abyssador
+      )}</span><strong>${escapeHtml(
+    String(kills.Abyssador || 0)
+  )}</strong></div>
     </div>
   `;
 }
@@ -251,10 +307,14 @@ function renderSchedules(world) {
       );
       return `
         <li class="world-schedule-item">
-          <span class="world-schedule-time">${escapeHtml(shownTime || "N/A")}</span>
-          <span class="world-schedule-seq">${escapeHtml(execution.warzone_sequence || "-")}</span>
+          <span class="world-schedule-time">${escapeHtml(
+            shownTime || "N/A"
+          )}</span>
+          <span class="world-schedule-seq">${escapeHtml(
+            execution.warzone_sequence || "-"
+          )}</span>
         </li>
-      `
+      `;
     })
     .join("");
 
@@ -267,6 +327,22 @@ function renderSchedules(world) {
     </div>
     <ul class="world-schedule-list">${items}</ul>
   `;
+}
+
+function renderMarketPricesPlaceholder() {
+  const dict = t();
+  return `
+    <div class="world-detail-card-header">
+      <h2>${escapeHtml(dict.marketPrices)}</h2>
+    </div>
+    <p class="world-detail-empty">${escapeHtml(dict.loading)}</p>
+  `;
+}
+
+async function loadTrackedItems() {
+  const response = await fetch("./data/market/tracked_items.json");
+  if (!response.ok) return [];
+  return await response.json();
 }
 
 function renderHistory(historyData) {
@@ -320,10 +396,18 @@ async function loadWorldPage() {
   const worldName = params.get("name");
   const summaryCard = document.getElementById("worldSummaryCard");
   const schedulesCard = document.getElementById("worldSchedulesCard");
+  const marketCard = document.getElementById("worldMarketPricesCard");
   const historyCard = document.getElementById("worldHistoryCard");
 
-  if (!worldName || !summaryCard || !schedulesCard || !historyCard) {
-    if (summaryCard) summaryCard.innerHTML = renderEmptyCard(dict.summary, dict.worldNotFound);
+  if (
+    !worldName ||
+    !summaryCard ||
+    !schedulesCard ||
+    !marketCard ||
+    !historyCard
+  ) {
+    if (summaryCard)
+      summaryCard.innerHTML = renderEmptyCard(dict.summary, dict.worldNotFound);
     return;
   }
 
@@ -338,6 +422,7 @@ async function loadWorldPage() {
     if (!world) {
       summaryCard.innerHTML = renderEmptyCard(dict.summary, dict.worldNotFound);
       schedulesCard.innerHTML = "";
+      marketCard.innerHTML = "";
       historyCard.innerHTML = "";
       return;
     }
@@ -345,6 +430,24 @@ async function loadWorldPage() {
     document.getElementById("worldTitle").textContent = world.name;
     summaryCard.innerHTML = renderSummary(world);
     schedulesCard.innerHTML = renderSchedules(world);
+
+    marketCard.innerHTML = renderMarketPricesPlaceholder();
+
+    const trackedItems = await loadTrackedItems();
+    console.log("Tracked market items:", trackedItems);
+
+    if (Array.isArray(trackedItems) && trackedItems.length > 0) {
+      const firstItem = trackedItems[0];
+      const marketFilePath = buildMarketFilePath(world.name, firstItem);
+      const marketResponse = await fetch(marketFilePath);
+
+      if (marketResponse.ok) {
+        const marketData = await marketResponse.json();
+        console.log("Market data sample:", marketData);
+      } else {
+        console.log("Market data file not found:", marketFilePath);
+      }
+    }
 
     const historyResponse = await fetch(
       "./data/history/" + slugifyWorldName(world.name) + ".json"
@@ -357,6 +460,7 @@ async function loadWorldPage() {
   } catch {
     summaryCard.innerHTML = renderEmptyCard(dict.summary, dict.loadError);
     schedulesCard.innerHTML = "";
+    marketCard.innerHTML = "";
     historyCard.innerHTML = "";
   }
 }
