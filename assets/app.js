@@ -29,6 +29,7 @@ const I18N = {
     services: "Services",
     servicesCompleted: "Services completed",
     noSchedules: "No services registered yet",
+    reportIssueCta: "If you know any, just report it on",
     noServersFound: "No servers found",
     notAvailable: "N/A",
     loadError: "Failed to load worlds.json",
@@ -107,6 +108,7 @@ const I18N = {
     services: "Services",
     servicesCompleted: "Services concluídos",
     noSchedules: "Ainda não há nenhum service cadastrado",
+    reportIssueCta: "Se souber de algum, reporte no",
     noServersFound: "Nenhum servidor encontrado",
     notAvailable: "N/D",
     loadError: "Falha ao carregar worlds.json",
@@ -185,6 +187,7 @@ const I18N = {
     services: "Services",
     servicesCompleted: "Servicios completados",
     noSchedules: "Aún no hay ningún service registrado",
+    reportIssueCta: "Si sabes alguno, repórtalo en",
     noServersFound: "No se encontraron servidores",
     notAvailable: "N/D",
     loadError: "Error al cargar worlds.json",
@@ -262,6 +265,7 @@ const I18N = {
     services: "Services",
     servicesCompleted: "Ukończone usługi",
     noSchedules: "Nie ma jeszcze żadnego zarejestrowanego service",
+    reportIssueCta: "Jesli znasz jakis termin, zglos go na",
     noServersFound: "Nie znaleziono serwerów",
     notAvailable: "Brak",
     loadError: "Nie udało się wczytać worlds.json",
@@ -1287,13 +1291,19 @@ function getWorldHistoryUrl(worldName) {
   return "./world.html?name=" + encodeURIComponent(worldName);
 }
 
+function renderNoSchedulesMessage() {
+  const dict = t();
+  return `<p>${escapeHtml(dict.noSchedules)}. ${escapeHtml(
+    dict.reportIssueCta
+  )} <a href="https://github.com/nesleykent/tibia-warzones-schedule/issues" target="_blank" rel="noopener noreferrer" class="empty-state-link">GitHub Issues</a>.</p>`;
+}
+
 function renderExecutions(world) {
   const dict = t();
   const executions = Array.isArray(world.warzone_executions)
     ? [...world.warzone_executions]
     : [];
-  if (executions.length === 0)
-    return "<p>" + escapeHtml(dict.noSchedules) + "</p>";
+  if (executions.length === 0) return renderNoSchedulesMessage();
   executions.sort(
     (a, b) => (Number(a.execution_id) || 0) - (Number(b.execution_id) || 0)
   );
