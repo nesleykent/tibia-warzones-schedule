@@ -457,6 +457,8 @@ function getOrderedTrackedItems(trackedItems) {
 }
 
 function extractMarketEntries(payload) {
+  if (Array.isArray(payload?.snapshots?.[0])) return payload.snapshots[0];
+  if (Array.isArray(payload?.snapshots)) return payload.snapshots;
   if (Array.isArray(payload?.[0])) return payload[0];
   if (Array.isArray(payload)) return payload;
   return [];
@@ -497,6 +499,17 @@ function formatMarketTimestamp(unixSeconds) {
     parts.map((part) => [part.type, part.value])
   );
   return `${partMap.year}-${partMap.month}-${partMap.day} ${partMap.hour}:${partMap.minute}:${partMap.second}`;
+}
+
+function formatMarketShortDate(unixSeconds) {
+  const numeric = Number(unixSeconds);
+  if (!Number.isFinite(numeric) || numeric <= 0) return "N/A";
+
+  return new Intl.DateTimeFormat(worldLang, {
+    timeZone: pageTimezone,
+    month: "short",
+    day: "numeric",
+  }).format(new Date(numeric * 1000));
 }
 
 function getRangeWindowSeconds(rangeKey) {
@@ -569,6 +582,172 @@ function formatMarketMetricNumber(value, options = {}) {
     maximumFractionDigits: options.maximumFractionDigits || 0,
   });
   return formatter.format(numeric);
+}
+
+function formatMetricDisplay(value, kind) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return "—";
+
+  if (kind === "price" || kind === "spread") {
+    return `$${formatMarketMetricNumber(numeric)}`;
+  }
+
+  if (kind === "transactions") {
+    return `${formatMarketMetricNumber(numeric, {
+      maximumFractionDigits: numeric >= 100 ? 0 : 1,
+    })}/day`;
+  }
+
+  const compact = new Intl.NumberFormat(worldLang, {
+    notation: "compact",
+    maximumFractionDigits: numeric >= 1000 ? 1 : 0,
+  }).format(numeric);
+  return `${compact}/day`;
+}
+
+function getSeriesPercentChange(values) {
+  const series = values.filter((value) => Number.isFinite(value));
+  if (series.length < 2) return null;
+
+  const first = series[0];
+  const last = series[series.length - 1];
+  if (first === 0) return null;
+  return ((last - first) / first) * 100;
+}
+
+function formatPercentChange(change) {
+  const numeric = Number(change);
+  if (!Number.isFinite(numeric)) return "";
+  const sign = numeric > 0 ? "+" : "";
+  return `${sign}${formatMarketMetricNumber(numeric, {
+    maximumFractionDigits: 1,
+  })}%`;
+}
+
+function getTrendClass(change, invert = false) {
+  const numeric = Number(change);
+  if (!Number.isFinite(numeric) || numeric === 0) return "is-flat";
+  const positive = numeric > 0;
+  const shouldBePositive = invert ? !positive : positive;
+  return shouldBePositive ? "is-positive" : "is-negative";
+}
+
+function buildSparkline(values, stroke, fill) {
+  const points = values.filter((value) => Number.isFinite(value));
+  if (points.length < 2) return "";
+
+  const width = 96;
+  const height = 22;
+  const minValue = Math.min(...points);
+  const maxValue = Math.max(...points);
+  const range = maxValue - minValue || 1;
+
+  const coords = values
+    .map((value, index) => {
+      if (!Number.isFinite(value)) return null;
+      const x = (index / Math.max(values.length - 1, 1)) * width;
+      const y = height - ((value - minValue) / range) * (height - 2) - 1;
+      return `${x},${y}`;
+    })
+    .filter(Boolean)
+    .join(" ");
+
+  return `
+    <svg class="market-sparkline" viewBox="0 0 ${width} ${height}" width="96" height="22" aria-hidden="true" focusable="false">
+      <polyline fill="none" stroke="${stroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="${coords}" />
+      <polyline fill="none" stroke="${fill}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.18" points="${coords}" />
+    </svg>
+  `;
+}
+
+function escapeAttribute(value) {
+  return escapeHtml(value).replaceAll("`", "&#096;");
+}
+
+function getSeriesStats(values) {
+  const series = values.filter((value) => Number.isFinite(value));
+  if (!series.length) {
+    return { min: null, max: null };
+  }
+  return {
+    min: Math.min(...series),
+    max: Math.max(...series),
+  };
+}
+
+function getSpreadHealth(avgSpread, avgSupplyPrice) {
+  const spread = Number(avgSpread);
+  const supply = Number(avgSupplyPrice);
+  if (!Number.isFinite(spread) || !Number.isFinite(supply) || supply <= 0) {
+    return { label: "Unknown", className: "is-neutral" };
+  }
+
+  const ratio = spread / supply;
+  if (ratio <= 0.05) return { label: "Healthy", className: "is-good" };
+  if (ratio <= 0.12) return { label: "Watch", className: "is-watch" };
+  return { label: "Wide", className: "is-risk" };
+}
+
+function buildMetricCell(value, kind, trend, sparkline, extraClass = "") {
+  const trendLabel = formatPercentChange(trend);
+  const trendClass = getTrendClass(trend, kind === "spread");
+  return `
+    <td class="market-metrics-cell ${extraClass}">
+      <div class="market-metrics-value">${escapeHtml(
+        formatMetricDisplay(value, kind)
+      )}</div>
+      ${
+        trendLabel
+          ? `<div class="market-metrics-trend ${trendClass}">${escapeHtml(
+              trendLabel
+            )}</div>`
+          : '<div class="market-metrics-trend is-flat">—</div>'
+      }
+      ${sparkline}
+    </td>
+  `;
+}
+
+function downloadMarketExport(itemName, rangeKey, rangeEntries, format) {
+  const rows = Array.isArray(rangeEntries) ? rangeEntries : [];
+  let content = "";
+  let mimeType = "text/plain;charset=utf-8";
+  let extension = format;
+
+  if (format === "json") {
+    mimeType = "application/json;charset=utf-8";
+    content = JSON.stringify(rows, null, 2);
+  } else {
+    mimeType = "text/csv;charset=utf-8";
+    extension = "csv";
+    const headers = [
+      "timestamp",
+      "day_average_sell",
+      "day_average_buy",
+      "day_sold",
+      "day_bought",
+    ];
+    const csvRows = rows.map((entry) =>
+      [
+        formatMarketTimestamp(entry?.time),
+        entry?.day_average_sell ?? "",
+        entry?.day_average_buy ?? "",
+        entry?.day_sold ?? "",
+        entry?.day_bought ?? "",
+      ].join(",")
+    );
+    content = [headers.join(","), ...csvRows].join("\n");
+  }
+
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${slugifyItemName(itemName)}_${String(rangeKey).toLowerCase()}.${extension}`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
 }
 
 function getMarketEquilibriumValue(entry) {
@@ -673,41 +852,162 @@ function computeMarketMetrics(rangeContext) {
   };
 }
 
-function renderMarketMetricsTable(metrics, rangeKey) {
+function renderMarketMetricsTable(metrics, rangeKey, dailyEntries) {
   const dict = t();
-  const metricRows = [
-    [dict.avgSupplyPrice, formatMarketMetricNumber(metrics.avgSupplyPrice)],
-    [dict.avgSupplyVolume, formatMarketMetricNumber(metrics.avgSupplyVolume)],
-    [dict.avgDemandPrice, formatMarketMetricNumber(metrics.avgDemandPrice)],
-    [dict.avgDemandVolume, formatMarketMetricNumber(metrics.avgDemandVolume)],
-    [dict.avgSpread, formatMarketMetricNumber(metrics.avgSpread)],
-    [
-      dict.avgTransactions,
-      formatMarketMetricNumber(metrics.avgTransactions, {
-        maximumFractionDigits: 1,
-      }),
-    ],
-  ]
+  const emptyValue = "—";
+  const supplyPriceSeries = dailyEntries.map((entry) =>
+    normalizeMarketMetricValue(entry?.day_average_sell)
+  );
+  const demandPriceSeries = dailyEntries.map((entry) =>
+    normalizeMarketMetricValue(entry?.day_average_buy)
+  );
+  const spreadSeries = dailyEntries.map((entry) => getMarketEquilibriumValue(entry) === null
+    ? null
+    : normalizeMarketMetricValue(entry?.day_average_sell) !== null &&
+      normalizeMarketMetricValue(entry?.day_average_buy) !== null
+    ? normalizeMarketMetricValue(entry?.day_average_sell) -
+      normalizeMarketMetricValue(entry?.day_average_buy)
+    : null);
+  const supplyVolumeSeries = dailyEntries.map((entry) =>
+    normalizeMarketMetricValue(entry?.day_sold)
+  );
+  const demandVolumeSeries = dailyEntries.map((entry) =>
+    normalizeMarketMetricValue(entry?.day_bought)
+  );
+  const transactionSeries = dailyEntries.map((entry) => {
+    const sold = normalizeMarketMetricValue(entry?.day_sold);
+    const bought = normalizeMarketMetricValue(entry?.day_bought);
+    if (sold === null || bought === null) return null;
+    return (sold + bought) / 2;
+  });
+
+  const spreadHealth = getSpreadHealth(
+    metrics.avgSpread,
+    metrics.avgSupplyPrice
+  );
+
+  const rows = [
+    {
+      label: "Avg Price",
+      tooltip: `Supply high/low: ${formatMetricDisplay(
+        getSeriesStats(supplyPriceSeries).max,
+        "price"
+      )} / ${formatMetricDisplay(getSeriesStats(supplyPriceSeries).min, "price")}
+Demand high/low: ${formatMetricDisplay(
+        getSeriesStats(demandPriceSeries).max,
+        "price"
+      )} / ${formatMetricDisplay(getSeriesStats(demandPriceSeries).min, "price")}
+Spread high/low: ${formatMetricDisplay(
+        getSeriesStats(spreadSeries).max,
+        "spread"
+      )} / ${formatMetricDisplay(getSeriesStats(spreadSeries).min, "spread")}`,
+      supplyCell: buildMetricCell(
+        metrics.avgSupplyPrice,
+        "price",
+        getSeriesPercentChange(supplyPriceSeries),
+        buildSparkline(supplyPriceSeries, "#8b5cf6", "#8b5cf6")
+      ),
+      demandCell: buildMetricCell(
+        metrics.avgDemandPrice,
+        "price",
+        getSeriesPercentChange(demandPriceSeries),
+        buildSparkline(demandPriceSeries, "#22c55e", "#22c55e")
+      ),
+      spreadCell: `
+        ${buildMetricCell(
+          metrics.avgSpread,
+          "spread",
+          getSeriesPercentChange(spreadSeries),
+          buildSparkline(spreadSeries, "#f59e0b", "#f59e0b"),
+          `market-metrics-spread ${spreadHealth.className}`
+        )}
+        <div class="market-metrics-health-pill ${spreadHealth.className}">${escapeHtml(
+          spreadHealth.label
+        )}</div>
+      `,
+    },
+    {
+      label: "Avg Volume",
+      tooltip: `Supply high/low: ${formatMetricDisplay(
+        getSeriesStats(supplyVolumeSeries).max,
+        "volume"
+      )} / ${formatMetricDisplay(getSeriesStats(supplyVolumeSeries).min, "volume")}
+Demand high/low: ${formatMetricDisplay(
+        getSeriesStats(demandVolumeSeries).max,
+        "volume"
+      )} / ${formatMetricDisplay(getSeriesStats(demandVolumeSeries).min, "volume")}`,
+      supplyCell: buildMetricCell(
+        metrics.avgSupplyVolume,
+        "volume",
+        getSeriesPercentChange(supplyVolumeSeries),
+        buildSparkline(supplyVolumeSeries, "#8b5cf6", "#8b5cf6")
+      ),
+      demandCell: buildMetricCell(
+        metrics.avgDemandVolume,
+        "volume",
+        getSeriesPercentChange(demandVolumeSeries),
+        buildSparkline(demandVolumeSeries, "#22c55e", "#22c55e")
+      ),
+      spreadCell: `<td class="market-metrics-cell market-metrics-na"><div class="market-metrics-value">${emptyValue}</div><div class="market-metrics-subcopy">Price only</div></td>`,
+    },
+    {
+      label: "Avg Transactions",
+      tooltip: `Transactions high/low: ${formatMetricDisplay(
+        getSeriesStats(transactionSeries).max,
+        "transactions"
+      )} / ${formatMetricDisplay(
+        getSeriesStats(transactionSeries).min,
+        "transactions"
+      )}`,
+      supplyCell: `<td class="market-metrics-cell market-metrics-na"><div class="market-metrics-value">${emptyValue}</div><div class="market-metrics-subcopy">Not split</div></td>`,
+      demandCell: `<td class="market-metrics-cell market-metrics-na"><div class="market-metrics-value">${emptyValue}</div><div class="market-metrics-subcopy">Not split</div></td>`,
+      spreadCell: buildMetricCell(
+        metrics.avgTransactions,
+        "transactions",
+        getSeriesPercentChange(transactionSeries),
+        buildSparkline(transactionSeries, "#f59e0b", "#f59e0b")
+      ),
+    },
+  ];
+
+  const metricRows = rows
     .map(
-      ([label, value]) => `
-        <tr>
-          <th>${escapeHtml(label)}</th>
-          <td>${escapeHtml(value)}</td>
+      (row) => `
+        <tr class="market-metrics-row" title="${escapeHtml(row.tooltip)}">
+          <th scope="row">
+            <span class="market-metrics-row-label">${escapeHtml(row.label)}</span>
+          </th>
+          ${row.supplyCell}
+          ${row.demandCell}
+          ${row.spreadCell}
         </tr>
       `
     )
     .join("");
 
   return `
-    <div class="market-item-chart-summary">
-      <p class="market-item-chart-empty">${escapeHtml(
-        dict.selectedRange
-      )}: ${escapeHtml(rangeKey)}</p>
-      <p class="market-item-chart-empty">${escapeHtml(
-        dict.dataPoints
-      )}: ${escapeHtml(String(metrics.dataPoints))}</p>
+    <div class="market-metrics-toolbar">
+      <div class="market-metrics-meta">
+        <span>${escapeHtml(dict.selectedRange)}: ${escapeHtml(rangeKey)}</span>
+        <span>${escapeHtml(dict.dataPoints)}: ${escapeHtml(
+    String(metrics.dataPoints)
+  )}</span>
+        <span class="market-metrics-formula">Spread = Supply Price - Demand Price</span>
+      </div>
+      <div class="market-metrics-actions">
+        <button type="button" class="market-export-btn" data-market-export="csv">Export CSV</button>
+        <button type="button" class="market-export-btn" data-market-export="json">Export JSON</button>
+      </div>
     </div>
-    <table>
+    <table class="market-metrics-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th scope="col">Supply</th>
+          <th scope="col">Demand</th>
+          <th scope="col">Spread</th>
+        </tr>
+      </thead>
       <tbody>${metricRows}</tbody>
     </table>
   `;
@@ -752,9 +1052,9 @@ function renderMarketLineChart(rangeEntries, rangeKey, seriesDefinitions) {
 
   const width = 860;
   const height = 240;
-  const paddingLeft = 56;
-  const paddingRight = 20;
-  const paddingTop = 18;
+  const paddingLeft = 18;
+  const paddingRight = 54;
+  const paddingTop = 14;
   const paddingBottom = 36;
   const chartWidth = width - paddingLeft - paddingRight;
   const chartHeight = height - paddingTop - paddingBottom;
@@ -775,46 +1075,124 @@ function renderMarketLineChart(rangeEntries, rangeKey, seriesDefinitions) {
   const getY = (value) =>
     paddingTop + (1 - (value - minValue) / (maxValue - minValue)) * chartHeight;
 
-  const gridLines = Array.from({ length: 4 }, (_, index) => {
-    const y = paddingTop + (index / 3) * chartHeight;
-    return `<line x1="${paddingLeft}" y1="${y}" x2="${
-      width - paddingRight
-    }" y2="${y}" stroke="rgba(255,255,255,0.10)" stroke-width="1" />`;
-  }).join("");
+  const yTicks = Array.from({ length: 3 }, (_, index) => {
+    const value = maxValue - ((maxValue - minValue) * index) / 2;
+    const y = paddingTop + (index / 2) * chartHeight;
+    return { value, y };
+  });
+
+  const gridLines = yTicks
+    .map(
+      ({ y }) => `<line x1="${paddingLeft}" y1="${y}" x2="${
+        width - paddingRight
+      }" y2="${y}" class="market-chart-grid-line" />`
+    )
+    .join("");
+
+  const yAxisLabels = yTicks
+    .map(
+      ({ y, value }) => `<text x="${width - paddingRight + 8}" y="${y + 4}" text-anchor="start" class="market-chart-axis-label">${escapeHtml(
+        formatMarketMetricNumber(value)
+      )}</text>`
+    )
+    .join("");
+
+  const xTickIndices = Array.from(
+    new Set([0, Math.floor(slotCount / 2), slotCount])
+  ).filter((index) => index >= 0 && index < rangeEntries.length);
+
+  const xAxisLabels = xTickIndices
+    .map((index) => {
+      const anchor =
+        index === 0 ? "start" : index === slotCount ? "end" : "middle";
+      return `<text x="${getX(index)}" y="${height - 8}" text-anchor="${anchor}" class="market-chart-axis-label">${escapeHtml(
+        formatMarketShortDate(rangeEntries[index]?.time)
+      )}</text>`;
+    })
+    .join("");
+
+  const gradientDefs = series
+    .map(
+      (item, index) => `
+        <linearGradient id="marketChartGradient-${index}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${item.stroke}" stop-opacity="0.28" />
+          <stop offset="100%" stop-color="${item.stroke}" stop-opacity="0" />
+        </linearGradient>
+      `
+    )
+    .join("");
 
   const lineMarkup = series
-    .map((item) => {
+    .map((item, index) => {
       const polylinePoints = item.points
         .map((point) => `${getX(point.index)},${getY(point.value)}`)
         .join(" ");
+      const lastPoint = item.points[item.points.length - 1];
+      const areaPoints = `${paddingLeft},${height - paddingBottom} ${polylinePoints} ${
+        lastPoint ? `${getX(lastPoint.index)},${height - paddingBottom}` : ""
+      }`;
 
-      const pointsMarkup = item.points
-        .map(
-          (point) => `
-            <circle cx="${getX(point.index)}" cy="${getY(
-            point.value
-          )}" r="3.5" fill="${item.stroke}">
+      const pointsMarkup = lastPoint
+        ? `
+            <circle
+              cx="${getX(lastPoint.index)}"
+              cy="${getY(lastPoint.value)}"
+              r="7"
+              class="market-chart-endpoint-halo"
+              fill="${item.stroke}"
+            />
+            <circle
+              cx="${getX(lastPoint.index)}"
+              cy="${getY(lastPoint.value)}"
+              r="3.5"
+              class="market-chart-endpoint-core"
+              fill="${item.stroke}"
+            >
               <title>${escapeHtml(item.label)}\n${escapeHtml(
-            point.label
-          )}\n${escapeHtml(formatMarketMetricNumber(point.value))}</title>
+            lastPoint.label
+          )}\n${escapeHtml(formatMarketMetricNumber(lastPoint.value))}</title>
             </circle>
           `
-        )
-        .join("");
+        : "";
 
       return `
+        <polygon
+          points="${areaPoints}"
+          fill="url(#marketChartGradient-${index})"
+          class="market-chart-area"
+        />
         <polyline
           fill="none"
           stroke="${item.stroke}"
-          stroke-width="3"
+          stroke-width="3.25"
           stroke-linecap="round"
           stroke-linejoin="round"
+          class="market-chart-line"
           points="${polylinePoints}"
         />
         ${pointsMarkup}
       `;
     })
     .join("");
+
+  const interactivePoints = rangeEntries.map((entry, index) => ({
+    index,
+    x: getX(index),
+    label: formatMarketTimestamp(entry?.time),
+    shortLabel: formatMarketShortDate(entry?.time),
+    series: series
+      .map((item) => {
+        const point = item.points.find((candidate) => candidate.index === index);
+        if (!point) return null;
+        return {
+          label: item.label,
+          color: item.stroke,
+          value: point.value,
+          y: getY(point.value),
+        };
+      })
+      .filter(Boolean),
+  }));
 
   const legendMarkup = series
     .map(
@@ -829,48 +1207,172 @@ function renderMarketLineChart(rangeEntries, rangeKey, seriesDefinitions) {
     )
     .join("");
 
+  const interactivePayload = escapeAttribute(JSON.stringify(interactivePoints));
+  const interactiveSummary = escapeAttribute(summary);
+
   return `
     <div class="market-item-modal-content">
       <div class="market-item-chart-summary">
-        <span>${summary}</span>
+        <span data-market-chart-summary>${summary}</span>
         <span class="market-item-chart-legend">${legendMarkup}</span>
       </div>
-      <div class="market-item-chart-wrap">
+      <div
+        class="market-item-chart-wrap"
+        tabindex="0"
+        role="group"
+        aria-label="${summary}"
+        data-market-chart-points="${interactivePayload}"
+        data-market-chart-default-summary="${interactiveSummary}"
+      >
         <svg viewBox="0 0 ${width} ${height}" width="100%" height="240" role="img" aria-label="${summary}">
+          <defs>${gradientDefs}</defs>
           ${gridLines}
-          <line x1="${paddingLeft}" y1="${paddingTop}" x2="${paddingLeft}" y2="${
-    height - paddingBottom
-  }" stroke="rgba(255,255,255,0.14)" stroke-width="1" />
           <line x1="${paddingLeft}" y1="${height - paddingBottom}" x2="${
     width - paddingRight
   }" y2="${
     height - paddingBottom
-  }" stroke="rgba(255,255,255,0.14)" stroke-width="1" />
+  }" class="market-chart-axis-line" />
+          ${yAxisLabels}
           ${lineMarkup}
-          <text x="8" y="${
-            paddingTop + 10
-          }" fill="rgba(255,255,255,0.68)" font-size="12">${escapeHtml(
-    formatMarketMetricNumber(maxValue)
-  )}</text>
-          <text x="8" y="${
-            height - paddingBottom
-          }" fill="rgba(255,255,255,0.68)" font-size="12">${escapeHtml(
-    formatMarketMetricNumber(minValue)
-  )}</text>
-          <text x="${paddingLeft}" y="${
-    height - 8
-  }" fill="rgba(255,255,255,0.68)" font-size="12">${escapeHtml(
-    formatMarketTimestamp(first?.time)
-  )}</text>
-          <text x="${width - paddingRight}" y="${
-    height - 8
-  }" text-anchor="end" fill="rgba(255,255,255,0.68)" font-size="12">${escapeHtml(
-    formatMarketTimestamp(latest?.time)
-  )}</text>
+          <g class="market-chart-hover-layer" aria-hidden="true">
+            <line
+              x1="${paddingLeft}"
+              y1="${paddingTop}"
+              x2="${paddingLeft}"
+              y2="${height - paddingBottom}"
+              class="market-chart-hover-line"
+            />
+          </g>
+          ${xAxisLabels}
         </svg>
+        <div class="market-chart-tooltip" hidden></div>
       </div>
     </div>
   `;
+}
+
+function bindMarketChartInteractions(scope) {
+  scope.querySelectorAll("[data-market-chart-points]").forEach((wrap) => {
+    if (wrap.dataset.marketChartBound === "true") return;
+    wrap.dataset.marketChartBound = "true";
+
+    const points = JSON.parse(wrap.dataset.marketChartPoints || "[]");
+    const svg = wrap.querySelector("svg");
+    const summaryEl = wrap.parentElement?.querySelector("[data-market-chart-summary]");
+    const tooltip = wrap.querySelector(".market-chart-tooltip");
+    const hoverLayer = svg?.querySelector(".market-chart-hover-layer");
+    const hoverLine = svg?.querySelector(".market-chart-hover-line");
+
+    if (!svg || !summaryEl || !tooltip || !hoverLayer || !hoverLine || !points.length) {
+      return;
+    }
+
+    let markerGroup = hoverLayer.querySelector(".market-chart-hover-markers");
+    if (!markerGroup) {
+      markerGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      markerGroup.setAttribute("class", "market-chart-hover-markers");
+      hoverLayer.appendChild(markerGroup);
+    }
+
+    let activeIndex = -1;
+
+    function hideActiveState() {
+      activeIndex = -1;
+      hoverLayer.classList.remove("is-visible");
+      tooltip.hidden = true;
+      tooltip.innerHTML = "";
+      summaryEl.textContent = wrap.dataset.marketChartDefaultSummary || "";
+      markerGroup.innerHTML = "";
+    }
+
+    function renderActivePoint(index) {
+      const point = points[index];
+      if (!point) return;
+      activeIndex = index;
+      hoverLayer.classList.add("is-visible");
+      hoverLine.setAttribute("x1", String(point.x));
+      hoverLine.setAttribute("x2", String(point.x));
+      summaryEl.textContent = point.label;
+      tooltip.hidden = false;
+      tooltip.innerHTML = `
+        <div class="market-chart-tooltip-date">${escapeHtml(point.shortLabel)}</div>
+        ${point.series
+          .map(
+            (seriesPoint) => `
+              <div class="market-chart-tooltip-row">
+                <span class="market-chart-tooltip-key">
+                  <span class="market-chart-tooltip-swatch" style="background:${seriesPoint.color}"></span>
+                  ${escapeHtml(seriesPoint.label)}
+                </span>
+                <strong>${escapeHtml(formatMarketMetricNumber(seriesPoint.value))}</strong>
+              </div>
+            `
+          )
+          .join("")}
+      `;
+
+      markerGroup.innerHTML = point.series
+        .map(
+          (seriesPoint) => `
+            <circle
+              cx="${point.x}"
+              cy="${seriesPoint.y}"
+              r="5.5"
+              class="market-chart-hover-dot-ring"
+              fill="${seriesPoint.color}"
+            />
+            <circle
+              cx="${point.x}"
+              cy="${seriesPoint.y}"
+              r="3"
+              class="market-chart-hover-dot-core"
+              fill="${seriesPoint.color}"
+            />
+          `
+        )
+        .join("");
+    }
+
+    function getNearestIndex(clientX) {
+      const rect = wrap.getBoundingClientRect();
+      const relativeX = ((clientX - rect.left) / rect.width) * svg.viewBox.baseVal.width;
+      let nearest = 0;
+      let nearestDistance = Infinity;
+      points.forEach((point, index) => {
+        const distance = Math.abs(point.x - relativeX);
+        if (distance < nearestDistance) {
+          nearestDistance = distance;
+          nearest = index;
+        }
+      });
+      return nearest;
+    }
+
+    wrap.addEventListener("pointermove", (event) => {
+      renderActivePoint(getNearestIndex(event.clientX));
+    });
+
+    wrap.addEventListener("pointerenter", (event) => {
+      renderActivePoint(getNearestIndex(event.clientX));
+    });
+
+    wrap.addEventListener("pointerleave", hideActiveState);
+    wrap.addEventListener("blur", hideActiveState);
+
+    wrap.addEventListener("focus", () => {
+      renderActivePoint(activeIndex >= 0 ? activeIndex : points.length - 1);
+    });
+
+    wrap.addEventListener("keydown", (event) => {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      event.preventDefault();
+      const nextIndex =
+        event.key === "ArrowRight"
+          ? Math.min(points.length - 1, (activeIndex >= 0 ? activeIndex : 0) + 1)
+          : Math.max(0, (activeIndex >= 0 ? activeIndex : points.length - 1) - 1);
+      renderActivePoint(nextIndex);
+    });
+  });
 }
 
 function updateMarketItemModalContent(modalRoot, entries, rangeKey) {
@@ -886,6 +1388,7 @@ function updateMarketItemModalContent(modalRoot, entries, rangeKey) {
   );
   const metricsSection = modalRoot.querySelector("[data-market-metrics]");
   const dict = t();
+  modalRoot.dataset.marketRange = rangeKey;
 
   if (chartsSection) {
     chartsSection.innerHTML = renderMarketLineChart(dailyEntries, rangeKey, [
@@ -917,9 +1420,12 @@ function updateMarketItemModalContent(modalRoot, entries, rangeKey) {
     );
   }
 
+  if (chartsSection) bindMarketChartInteractions(chartsSection);
+  if (equilibriumSection) bindMarketChartInteractions(equilibriumSection);
+
   if (metricsSection) {
     metricsSection.innerHTML = dailyEntries.length
-      ? renderMarketMetricsTable(metrics, rangeKey)
+      ? renderMarketMetricsTable(metrics, rangeKey, dailyEntries)
       : `<p class="market-item-chart-empty">${escapeHtml(
           dict.noMarketData
         )}</p>`;
@@ -1007,6 +1513,12 @@ function renderMarketItemModalShell(itemName) {
           tabindex="0"
         >
           <section>
+            <h3 class="market-item-modal-section-title">Metrics</h3>
+            <div data-market-metrics><p class="market-item-chart-empty">${escapeHtml(
+              dict.metricsComingSoon
+            )}</p></div>
+          </section>
+          <section>
             <h3 class="market-item-modal-section-title">Supply vs Demand</h3>
             <div data-market-chart-section="supply-demand"><p class="market-item-chart-empty">${escapeHtml(
               dict.chartsComingSoon
@@ -1016,12 +1528,6 @@ function renderMarketItemModalShell(itemName) {
             <h3 class="market-item-modal-section-title">Equilibrium</h3>
             <div data-market-chart-section="equilibrium"><p class="market-item-chart-empty">${escapeHtml(
               dict.chartsComingSoon
-            )}</p></div>
-          </section>
-          <section>
-            <h3 class="market-item-modal-section-title">Metrics</h3>
-            <div data-market-metrics><p class="market-item-chart-empty">${escapeHtml(
-              dict.metricsComingSoon
             )}</p></div>
           </section>
         </div>
@@ -1044,8 +1550,19 @@ async function openMarketItemModal(worldName, itemName) {
   document.body.appendChild(modalRoot);
   document.body.style.overflow = "hidden";
 
+  let loadedEntries = [];
+  let activeRangeKey = "7D";
+
   modalRoot.addEventListener("click", (event) => {
     if (!(event.target instanceof Element)) return;
+
+    const exportButton = event.target.closest("[data-market-export]");
+    if (exportButton) {
+      const format = exportButton.getAttribute("data-market-export") || "csv";
+      const rangeContext = getMarketRangeContext(loadedEntries, activeRangeKey);
+      downloadMarketExport(itemName, activeRangeKey, rangeContext.rangeEntries, format);
+      return;
+    }
 
     if (event.target.closest("[data-market-modal-close='true']")) {
       closeMarketItemModal();
@@ -1092,6 +1609,7 @@ async function openMarketItemModal(worldName, itemName) {
 
   try {
     const entries = await loadMarketEntries(worldName, itemName);
+    loadedEntries = entries;
     const latest = getLatestMarketEntry(entries);
     const updatedLabel = modalRoot.querySelector(".market-item-modal-updated");
     const rangeButtons = Array.from(modalRoot.querySelectorAll("[data-range]"));
@@ -1104,10 +1622,12 @@ async function openMarketItemModal(worldName, itemName) {
 
     requestAnimationFrame(() => {
       updateMarketItemModalContent(modalRoot, entries, "7D");
+      activeRangeKey = "7D";
 
       rangeButtons.forEach((button, index) => {
         button.addEventListener("click", () => {
           const rangeKey = button.getAttribute("data-range") || "7D";
+          activeRangeKey = rangeKey;
           requestAnimationFrame(() => {
             updateMarketItemModalContent(modalRoot, entries, rangeKey);
           });
