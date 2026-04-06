@@ -1,37 +1,113 @@
 # Tibia Warzones Schedule
 
-Tibia Warzones Schedule is a static website that aggregates Warzone activity across Tibia game worlds.
+Tibia Warzones Schedule is a static website for tracking Warzone activity across Tibia worlds.
 
-It combines automated data from the TibiaData API with manually curated schedules to provide a reliable and practical overview of when Warzones happen on each world.
+It combines inferred Warzone service data, manually curated schedules, historical records, and a Phase 3 market layer for tracked items on each world.
+
+## Current Status
+
+The project is currently in Phase 3.
+
+Compared with the older `main` branch README description, the app now includes:
+
+- A dedicated `Market Prices` block on the world page
+- A clickable per-item market table
+- A market item modal with range tabs, charts, metrics, spread, and exports
+- Dark-mode-only UI
+- Updated branding and footer credits
+- Better empty-state reporting links to GitHub Issues
 
 ## Overview
 
-Warzones in Tibia are player-organized events. There is no official schedule exposed by the game. However, Warzone activity can be inferred by tracking boss kills.
-
-This project tracks the 3 Warzone bosses:
+Warzones in Tibia are player-organized events. There is no official in-game schedule API for them, so this project infers activity by tracking the three Bigfoot's Burden bosses:
 
 - Deathstrike
 - Gnomevil
 - Abyssador
 
-A completed Warzone service is counted when all 3 appear in the daily kill statistics.
-
-The system computes:
+A completed service is counted when all three bosses appear in the daily kill statistics. The project computes:
 
 - `services_completed = min(Deathstrike, Gnomevil, Abyssador)`
-- Automatic server marks: `healthy`, `trolls`, `inconclusive`
+- Automatic world marks: `healthy`, `trolls`, `inconclusive`
 - Persistent daily history per world
+- Manual execution schedules per world
 
-Since the API does not provide exact execution times, schedules are manually curated and stored in the project.
+## Phase 3
 
-## Data Sources
+Phase 3 adds a market layer to the world page.
 
-- Worlds list: https://api.tibiadata.com/v4/worlds
-- Kill statistics: https://api.tibiadata.com/v4/killstatistics/{world}
+The world page layout is now:
+
+1. `Summary`
+2. `Manual Schedule`
+3. `Market Prices`
+4. `History`
+
+### Market Prices
+
+The market table shows the latest snapshot for tracked items in a fixed order:
+
+1. Tibia Coins
+2. Gold Token
+3. Silver Token
+4. Minor Crystalline Token
+5. Gill Necklace
+6. Prismatic Necklace
+7. Prismatic Ring
+
+Columns:
+
+- Item
+- Supply Price
+- Demand Price
+- Spread
+- Updated
+
+Each row is clickable and opens a modal.
+
+### Market Item Modal
+
+The modal includes:
+
+- Range tabs: `7D`, `28D`, `90D`, `180D`, `360D`, `ALL`
+- Supply vs Demand chart
+- Equilibrium chart
+- Metrics table
+- CSV and JSON export buttons
+
+Metrics include:
+
+- Avg Supply Price
+- Avg Supply Volume
+- Avg Demand Price
+- Avg Demand Volume
+- Avg Spread
+- Avg Transactions
+
+Spread is calculated from supply and demand price data and is shown both in the modal metrics and in the world-level market table.
+
+## Data Sources and Credits
+
+This project references data and game resources from:
+
+- TibiaData: https://api.tibiadata.com
+- TibiaMarket.top: https://tibiamarket.top
+- Tibia.com: https://www.tibia.com
+- CipSoft GmbH
+
+Important notes:
+
+- Tibia is a registered trademark of CipSoft GmbH.
+- All related game assets belong to CipSoft GmbH.
+- This project is independent and has no affiliation, support, or endorsement from CipSoft GmbH, Tibia.com, TibiaData, or TibiaMarket.top.
 
 ## Data Model
 
-Each world is stored in `data/worlds.json`:
+### World Dataset
+
+Generated worlds are stored in `data/worlds.json`.
+
+Example:
 
 ```json
 {
@@ -61,98 +137,112 @@ Each world is stored in `data/worlds.json`:
 }
 ```
 
-## Key Fields
+Key fields:
 
-- `tracks_warzone_service`: Indicates detected Warzone activity
-- `warzone_services_per_day`: Completed Warzone services detected in the last day
-- `last_detected_kills`: Per-boss kill counts for the last day
-- `last_detected_services`: Minimum of the 3 tracked boss counts
-- `mark`: Automatic world classification based on kill symmetry
-- `warzone_executions`: Manually curated schedule entries
-- `timezone`: Reference timezone for the Warzone schedule
+- `tracks_warzone_service`: whether Warzone activity was detected
+- `warzone_services_per_day`: completed services detected in the last day
+- `last_detected_kills`: per-boss kill counts
+- `last_detected_services`: minimum of the three tracked bosses
+- `mark`: automatic world classification
+- `warzone_executions`: manual schedules
+- `timezone`: schedule reference timezone
 
-## How It Works
+### History Dataset
 
-1. Fetch all worlds from TibiaData
-2. For each world:
-
-   - Fetch kill statistics
-   - Extract Deathstrike, Gnomevil, and Abyssador kills
-   - Compute completed services and automatic mark
-
-3. Persist or replace the daily history entry in `data/history/{world}.json`
-4. Merge with manual schedules
-5. Generate `data/worlds.json`
-6. Render the static frontend and world history page
-
-## Manual Schedules
-
-Schedules are defined in:
-
-`data/manual-schedules.json`
-
-This file contains:
-
-- Execution times
-- Warzone sequence order
-- Reference timezone for each schedule
-
-These entries are merged into the generated dataset.
-
-## Historical Records
-
-Each world has a dedicated history file:
+Per-world history is stored in:
 
 `data/history/{world}.json`
 
 The updater:
 
 - Reads existing history
-- Replaces the record for the current date if it already exists
-- Appends a new record for a new day
+- Replaces the current date entry if it already exists
+- Appends a new record when needed
 - Sorts history newest first
+
+### Market Dataset
+
+Phase 3 market files are stored as:
+
+`data/market/world/<World>/<world>_<item>.json`
+
+Each file contains time-series snapshots with fields such as:
+
+- `time`
+- `day_average_sell`
+- `day_average_buy`
+- `day_sold`
+- `day_bought`
+
+Tracked item metadata is stored in:
+
+- `data/market/items/tracked_items.json`
+- `data/market/items/items.csv`
+
+## How It Works
+
+### Warzone Data
+
+1. Fetch all worlds from TibiaData
+2. Fetch kill statistics for each world
+3. Extract Deathstrike, Gnomevil, and Abyssador kills
+4. Compute completed services and automatic mark
+5. Merge manual schedules
+6. Persist `data/worlds.json`
+7. Update `data/history/{world}.json`
+
+### Market Data
+
+1. Read tracked item definitions
+2. Load per-world market history files
+3. Extract latest values for the world table
+4. Filter historical entries by range in the browser
+5. Render modal charts, spread, equilibrium, and metrics
 
 ## Frontend Features
 
-- Compact and readable services layout
-- 3 boss kill breakdown per world
-- Automatic server mark display
-- Dedicated world history page
-- Timezone conversion for all schedule times
+- Dark-mode-only UI
+- Search by world name
+- Filters for region, PvP, BattlEye, and transfer type
+- Warzone planner for selected worlds
+- Timezone conversion in the browser
 - Multiple languages:
-
   - English
   - Portuguese (Brazil)
   - Spanish (LATAM)
   - Polish
+- Dedicated world page
+- World history table
+- Market Prices table with spread
+- Interactive market modal
+- GitHub Issues shortcuts in empty states
+- Updated logo-based branding
 
-- BattlEye classification:
+## Scripts
 
-  - GBE, Green BattlEye
-  - YBE, Yellow BattlEye
+Core scripts in `scripts/`:
 
-- Search by world name
-
-## Timezone Handling
-
-- Each schedule uses a reference timezone
-- Users can select their own display timezone
-- All times are converted dynamically in the browser
+- `update_data.py`: updates world data and history
+- `fetch_item_history.py`: fetches and backfills market history from TibiaMarket.top
+- `remove_outliers.py`: cleans suspicious market data points
 
 ## Project Structure
 
-```
+```text
 assets/
   app.js
   styles.css
   world.js
+  logo/
 
 data/
   history/
+  market/
   worlds.json
   manual-schedules.json
 
 scripts/
+  remove_outliers.py
   update_data.py
 
 index.html
@@ -161,15 +251,13 @@ world.html
 
 ## Local Development
 
-Create environment:
-
-Run data update:
+Update generated data:
 
 ```bash
 python scripts/update_data.py
 ```
 
-Run local server:
+Run a local server:
 
 ```bash
 python -m http.server 8000
@@ -181,27 +269,20 @@ Open:
 
 ## Deployment
 
-The project runs entirely on GitHub Pages.
+The site is deployed as a static project.
 
-Steps:
+Primary flow:
 
-1. Push to `main`
-2. Open repository Settings
-3. Go to Pages
-4. Select:
+1. Push changes to `main`
+2. GitHub Pages serves the site from `main`
 
-   - Branch: `main`
-   - Folder: `/ (root)`
+If GitHub Pages settings need to be configured manually:
 
-## Future Improvements
-
-- Global timeline view across all worlds
-- Improved schedule editing workflow
-- Filtering by region, PvP type and time
-- Better validation of manual schedule data
+1. Open repository Settings
+2. Go to Pages
+3. Select branch `main`
+4. Select folder `/ (root)`
 
 ## Purpose
 
-This project reduces uncertainty in Warzone participation by aggregating collective behavior patterns into a clear and accessible schedule.
-
-It acts as a coordination tool for players across different worlds and timezones.
+This project reduces uncertainty around Warzone participation by turning fragmented signals, manual reports, and market context into a single accessible reference for players across worlds and timezones.
