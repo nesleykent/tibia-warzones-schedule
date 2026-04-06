@@ -16,6 +16,7 @@ import json
 import math
 import os
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
@@ -25,10 +26,11 @@ from urllib.request import Request, urlopen
 from common import RAW_WORLD_DIR, discover_tracked_items, get_tracked_worlds, slugify
 
 BASE_URL = "https://api.tibiamarket.top/item_history"
-DEFAULT_RATE_LIMIT_DELAY = 12.0
+DEFAULT_RATE_LIMIT_DELAY = 6.0
 DEFAULT_RETRIES = 3
 DEFAULT_START_DAYS_AGO = 9998
 DEFAULT_END_DAYS_AGO = -1
+REFRESH_INTERVAL_SECONDS = 24 * 60 * 60
 DEFAULT_BEARER_TOKEN = (
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9."
     "eyJzdWIiOiJ3ZWJzaXRlIiwiaWF0IjoxNzA2Mzc2MTM1LCJleHAiOjI0ODM5NzYxMzV9."
@@ -38,7 +40,7 @@ DEFAULT_BEARER_TOKEN = (
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Fetch or backfill raw item history from TibiaMarket into data/raw/world/."
+        description="Fetch or backfill item history from TibiaMarket into data/market/world/."
     )
     parser.add_argument(
         "--server",
@@ -84,7 +86,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--force",
         action="store_true",
-        help="Replace existing raw files instead of merging in newly fetched snapshots.",
+        help="Replace existing market files instead of merging in newly fetched snapshots.",
     )
     parser.add_argument(
         "--dry-run",
@@ -177,6 +179,22 @@ def parse_json_payload(payload: bytes) -> Any:
     return json.loads(payload)
 
 
+def format_run_marker(timestamp: float | None = None) -> str:
+    moment = datetime.fromtimestamp(timestamp or time.time(), tz=timezone.utc)
+    return moment.isoformat().replace("+00:00", "Z")
+
+
+def parse_run_marker(value: Any) -> float | None:
+    if not isinstance(value, str) or not value.strip():
+        return None
+
+    normalized = value.strip().replace("Z", "+00:00")
+    try:
+        return datetime.fromisoformat(normalized).timestamp()
+    except ValueError:
+        return None
+
+
 def extract_rows(payload: Any) -> list[dict[str, Any]]:
     if isinstance(payload, list):
         if payload and all(isinstance(row, dict) for row in payload):
@@ -199,12 +217,19 @@ def extract_rows(payload: Any) -> list[dict[str, Any]]:
     return []
 
 
-def load_existing_rows(path: Path) -> list[dict[str, Any]]:
+def extract_last_run_at(payload: Any) -> str | None:
+    if isinstance(payload, dict):
+        marker = payload.get("last_run_at")
+        return marker if isinstance(marker, str) and marker.strip() else None
+    return None
+
+
+def load_existing_state(path: Path) -> tuple[list[dict[str, Any]], str | None]:
     payload = parse_json_payload(path.read_bytes())
     rows = extract_rows(payload)
     if not rows:
         raise RuntimeError(f"Existing file {path} does not contain market snapshots.")
-    return rows
+    return rows, extract_last_run_at(payload)
 
 
 def snapshot_sort_key(row: dict[str, Any]) -> tuple[float, float]:
@@ -236,8 +261,47 @@ def merge_rows(existing_rows: list[dict[str, Any]], incoming_rows: list[dict[str
     return sorted(merged.values(), key=snapshot_sort_key)
 
 
-def serialize_rows(rows: list[dict[str, Any]]) -> bytes:
-    return json.dumps([rows], separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+def serialize_rows(rows: list[dict[str, Any]], last_run_at: str) -> bytes:
+    payload = {
+        "last_run_at": last_run_at,
+        "snapshots": [rows],
+    }
+    return json.dumps(payload, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+
+
+def should_refresh(last_run_at: str | None, now: float | None = None) -> bool:
+    last_run_timestamp = parse_run_marker(last_run_at)
+    if last_run_timestamp is None:
+        return True
+    current_time = time.time() if now is None else now
+    return current_time - last_run_timestamp >= REFRESH_INTERVAL_SECONDS
+
+
+def describe_refresh_status(last_run_at: str | None, now: float | None = None) -> tuple[bool, str]:
+    current_time = time.time() if now is None else now
+    last_run_timestamp = parse_run_marker(last_run_at)
+    if last_run_timestamp is None:
+        if last_run_at:
+            return True, f"invalid last_run_at: {last_run_at}"
+        return True, "missing last_run_at"
+
+    age_seconds = max(current_time - last_run_timestamp, 0.0)
+    if age_seconds >= REFRESH_INTERVAL_SECONDS:
+        return True, f"stale last_run_at: {last_run_at}"
+    return False, f"fresh last_run_at: {last_run_at}"
+
+
+def sleep_with_interrupt(seconds: float, *, world: str, item_name: str) -> None:
+    wait_seconds = max(seconds, 0.0)
+    if wait_seconds <= 0:
+        return
+
+    print(f"[wait] {wait_seconds:.1f}s before next request for {world} :: {item_name}")
+    try:
+        time.sleep(wait_seconds)
+    except KeyboardInterrupt:
+        print(f"Interrupted during rate-limit wait before {world} :: {item_name}")
+        raise SystemExit(130) from None
 
 
 def resolve_update_window_days(existing_rows: list[dict[str, Any]], requested_start_days_ago: int) -> int:
@@ -338,62 +402,77 @@ def run(
     last_request_at = 0.0
     failures = 0
 
-    for world in selected_worlds:
-        world_dir = RAW_WORLD_DIR / world
-        world_dir.mkdir(parents=True, exist_ok=True)
+    try:
+        for world in selected_worlds:
+            world_dir = RAW_WORLD_DIR / world
+            world_dir.mkdir(parents=True, exist_ok=True)
 
-        for item in selected_items:
-            path = destination_path(world, item["slug"])
-            existing_rows: list[dict[str, Any]] = []
-            resolved_start_days_ago = start_days_ago
+            for item in selected_items:
+                item_name = item["name"]
+                path = destination_path(world, item["slug"])
+                existing_rows: list[dict[str, Any]] = []
+                last_run_at: str | None = None
+                resolved_start_days_ago = start_days_ago
 
-            if path.exists() and not force:
+                if path.exists() and not force:
+                    try:
+                        existing_rows, last_run_at = load_existing_state(path)
+                        resolved_start_days_ago = resolve_update_window_days(existing_rows, start_days_ago)
+                    except Exception:
+                        existing_rows = []
+                        last_run_at = None
+                        resolved_start_days_ago = start_days_ago
+
+                if dry_run:
+                    should_fetch, refresh_reason = describe_refresh_status(last_run_at)
+                    if path.exists() and not force and existing_rows and not should_fetch:
+                        print(f"[skip] {world} :: {item_name} ({refresh_reason}, dry-run)")
+                        continue
+                    mode = "update" if path.exists() and not force and existing_rows else "fetch"
+                    print(f"[{mode}] {world} :: {item_name} ({refresh_reason}, dry-run)")
+                    print(f"[done] {path}")
+                    continue
+
+                should_fetch, refresh_reason = describe_refresh_status(last_run_at)
+                if path.exists() and not force and existing_rows and not should_fetch:
+                    print(f"[skip] {world} :: {item_name} ({refresh_reason})")
+                    continue
+
+                url = build_url(world, item["id"], resolved_start_days_ago, end_days_ago)
+
+                elapsed = time.time() - last_request_at
+                if elapsed < rate_limit_delay:
+                    sleep_with_interrupt(rate_limit_delay - elapsed, world=world, item_name=item_name)
+
+                is_update = path.exists() and not force and bool(existing_rows)
+                print(f"[{'update' if is_update else 'fetch'}] {world} :: {item_name} ({refresh_reason})")
+
                 try:
-                    existing_rows = load_existing_rows(path)
-                    resolved_start_days_ago = resolve_update_window_days(existing_rows, start_days_ago)
-                except Exception:
-                    existing_rows = []
-                    resolved_start_days_ago = start_days_ago
+                    payload = fetch_bytes(url, headers, retries)
+                    incoming_rows = extract_rows(parse_json_payload(payload))
+                    if not incoming_rows:
+                        raise RuntimeError("Fetched payload did not contain market snapshots.")
 
-            if dry_run:
-                mode = "update" if path.exists() and not force else "fetch"
-                print(f"[dry-run] {mode} {world} :: {item['name']} ({resolved_start_days_ago}d) -> {path}")
-                continue
-
-            url = build_url(world, item["id"], resolved_start_days_ago, end_days_ago)
-
-            elapsed = time.time() - last_request_at
-            if elapsed < rate_limit_delay:
-                time.sleep(rate_limit_delay - elapsed)
-
-            action = "Updating" if path.exists() and not force and existing_rows else "Fetching"
-            print(f"{action} {world} :: {item['name']}")
-
-            try:
-                payload = fetch_bytes(url, headers, retries)
-                incoming_rows = extract_rows(parse_json_payload(payload))
-                if not incoming_rows:
-                    raise RuntimeError("Fetched payload did not contain market snapshots.")
-
-                if path.exists() and not force and existing_rows:
-                    merged_rows = merge_rows(existing_rows, incoming_rows)
-                    path.write_bytes(serialize_rows(merged_rows))
-                    added_rows = len(merged_rows) - len(existing_rows)
-                    if added_rows > 0:
-                        print(f"Updated {path} with {added_rows} new snapshots.")
+                    run_marker = format_run_marker()
+                    if is_update:
+                        merged_rows = merge_rows(existing_rows, incoming_rows)
+                        path.write_bytes(serialize_rows(merged_rows, run_marker))
                     else:
-                        print(f"No new snapshots for {path.name}; file kept current.")
-                else:
-                    path.write_bytes(serialize_rows(sorted(incoming_rows, key=snapshot_sort_key)))
-                    print(f"Saved {path}")
-            except Exception as error:  # noqa: BLE001
-                if is_ignorable_market_error(error):
-                    print(f"Skipping {world} :: {item['name']} because TibiaMarket has no usable data for it.")
-                else:
-                    failures += 1
-                    print(f"Failed {world} :: {item['name']}: {error}")
-            finally:
-                last_request_at = time.time()
+                        path.write_bytes(
+                            serialize_rows(sorted(incoming_rows, key=snapshot_sort_key), run_marker)
+                        )
+                    print(f"[done] {path}")
+                except Exception as error:  # noqa: BLE001
+                    if is_ignorable_market_error(error):
+                        print(f"[skip] {world} :: {item_name}")
+                    else:
+                        failures += 1
+                        print(f"[fail] {world} :: {item_name}: {error}")
+                finally:
+                    last_request_at = time.time()
+    except KeyboardInterrupt:
+        print("Interrupted. Stopping cleanly.")
+        return 130
 
     return failures
 
@@ -407,7 +486,7 @@ def main() -> int:
         print(error)
         return 1
 
-    failures = run(
+    status = run(
         worlds=worlds,
         items=items,
         start_days_ago=args.start_days_ago,
@@ -418,7 +497,9 @@ def main() -> int:
         force=args.force,
         dry_run=args.dry_run,
     )
-    return 1 if failures else 0
+    if status == 130:
+        return 130
+    return 1 if status else 0
 
 
 if __name__ == "__main__":
