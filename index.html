@@ -6,17 +6,6 @@
     <title>Tibia Warzones Schedule</title>
     <link rel="stylesheet" href="./assets/styles.css" />
 
-    <!-- Apply saved theme before first paint to avoid flash -->
-    <script>
-      (function () {
-        try {
-          var saved = localStorage.getItem('theme');
-          if (saved === 'light' || saved === 'dark') {
-            document.documentElement.setAttribute('data-theme', saved);
-          }
-        } catch (e) {}
-      })();
-    </script>
   </head>
   <body>
     <!-- Background artwork layer — image picked randomly by JS below -->
@@ -43,7 +32,11 @@
 
     <header class="site-header" role="banner">
       <div class="container site-header-inner">
-        <div class="header-icon" aria-hidden="true">⚔️</div>
+        <img
+          class="header-icon"
+          src="./assets/logo/logo.png"
+          alt="Tibia Warzones logo"
+        />
         <div class="header-text">
           <h1>Tibia Warzones</h1>
           <p class="header-subtitle">
@@ -51,23 +44,8 @@
           </p>
         </div>
 
-        <!-- Controls: lang dropdown + theme toggle -->
+        <!-- Controls: lang dropdown -->
         <div class="header-controls">
-
-          <button type="button" id="themeToggle" class="theme-toggle"
-            title="Toggle light/dark mode" aria-label="Toggle light/dark mode">
-            <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-            </svg>
-            <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="5"/>
-              <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-              <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-            </svg>
-          </button>
-
           <div class="lang-dropdown" id="langDropdown">
             <button type="button" class="lang-menu-btn" id="langMenuBtn"
               aria-haspopup="true" aria-expanded="false" aria-label="Select language">
@@ -157,7 +135,11 @@
 
         <div class="footer-top">
           <div class="footer-brand">
-            <span class="footer-icon" aria-hidden="true">⚔️</span>
+            <img
+              class="footer-icon"
+              src="./assets/logo/logo.png"
+              alt="Tibia Warzones logo"
+            />
             <span class="footer-brand-name">Tibia Warzones Schedule</span>
           </div>
 
@@ -167,7 +149,12 @@
             Community driven schedule for Warzone services across multiple servers, based on
             Deathstrike, Gnomevil, and Abyssador kill statistics plus player reports. Times can vary due to delays, in-game
             events, disruptive behavior, or server activity changes. Service availability depends
-            on in‑game conditions and server rules. Report times via
+            on in‑game conditions and server rules. Reference sources and credits:
+            <a href="https://www.tibia.com" target="_blank" rel="noopener noreferrer" class="footer-link">Tibia.com</a>,
+            CipSoft GmbH,
+            <a href="https://tibiadata.com" target="_blank" rel="noopener noreferrer" class="footer-link">TibiaData</a>,
+            and <a href="https://tibiamarket.top" target="_blank" rel="noopener noreferrer" class="footer-link">TibiaMarket.top</a>.
+            Report times via
             <a href="https://github.com/nesleykent/tibia-warzones-schedule/issues"
                target="_blank" rel="noopener noreferrer" class="footer-link">GitHub Issues</a>
             — community contributions keep the schedule accurate.
@@ -187,46 +174,13 @@
           <span class="footer-copy">© 2026 Tibia Warzones Schedule contributors</span>
           <span class="footer-disclaimer">
             Tibia is a registered trademark of CipSoft GmbH. All related assets belong to CipSoft GmbH.
-            This project is independent and has no affiliation, support, or endorsement from CipSoft GmbH.
+            This project is independent and has no affiliation, support, or endorsement from CipSoft GmbH, Tibia.com,
+            TibiaData, or TibiaMarket.top.
           </span>
         </div>
 
       </div>
     </footer>
-
-    <!-- Theme toggle logic -->
-    <script>
-      (function () {
-        var html = document.documentElement;
-        var btn  = document.getElementById('themeToggle');
-        if (!btn) return;
-
-        function getActiveTheme() {
-          var manual = html.getAttribute('data-theme');
-          if (manual) return manual;
-          // Fall back to system preference
-          return window.matchMedia('(prefers-color-scheme: light)').matches
-            ? 'light'
-            : 'dark';
-        }
-
-        btn.addEventListener('click', function () {
-          var current = getActiveTheme();
-          var next    = current === 'dark' ? 'light' : 'dark';
-          html.setAttribute('data-theme', next);
-          try { localStorage.setItem('theme', next); } catch (e) {}
-        });
-
-        // Sync with system changes when no manual override is saved
-        window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function () {
-          try {
-            if (!localStorage.getItem('theme')) {
-              html.removeAttribute('data-theme');
-            }
-          } catch (e) {}
-        });
-      })();
-    </script>
 
     <!-- Random Tibia artwork background -->
     <script>

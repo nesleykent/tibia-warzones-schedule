@@ -35,6 +35,7 @@ const WORLD_I18N = {
     abyssador: "Abyssador",
     date: "Date",
     noSchedules: "No manual schedules registered yet.",
+    reportIssueCta: "If you know any, just report it on",
     noHistory: "No history recorded yet.",
     healthy: "Healthy",
     inconclusive: "Inconclusive",
@@ -77,6 +78,7 @@ const WORLD_I18N = {
     abyssador: "Abyssador",
     date: "Data",
     noSchedules: "Ainda não há horários manuais cadastrados.",
+    reportIssueCta: "Se souber de algum, reporte no",
     noHistory: "Ainda não há histórico registrado.",
     healthy: "Healthy",
     inconclusive: "Inconclusivo",
@@ -119,6 +121,7 @@ const WORLD_I18N = {
     abyssador: "Abyssador",
     date: "Fecha",
     noSchedules: "Todavía no hay horarios manuales registrados.",
+    reportIssueCta: "Si sabes alguno, repórtalo en",
     noHistory: "Todavía no hay historial registrado.",
     healthy: "Healthy",
     inconclusive: "Inconcluso",
@@ -160,6 +163,7 @@ const WORLD_I18N = {
     abyssador: "Abyssador",
     date: "Data",
     noSchedules: "Nie ma jeszcze zapisanych ręcznych harmonogramów.",
+    reportIssueCta: "Jesli znasz jakis termin, zglos go na",
     noHistory: "Nie ma jeszcze zapisanej historii.",
     healthy: "Healthy",
     inconclusive: "Niejednoznaczne",
@@ -315,6 +319,18 @@ function renderEmptyCard(title, body) {
   `;
 }
 
+function renderNoSchedulesCard(title) {
+  const dict = t();
+  return `
+    <div class="world-detail-card-header">
+      <h2>${escapeHtml(title)}</h2>
+    </div>
+    <p class="world-detail-empty">${escapeHtml(dict.noSchedules)}. ${escapeHtml(
+      dict.reportIssueCta
+    )} <a href="https://github.com/nesleykent/tibia-warzones-schedule/issues" target="_blank" rel="noopener noreferrer" class="empty-state-link">GitHub Issues</a>.</p>
+  `;
+}
+
 function renderSummary(world) {
   const dict = t();
   const kills = world.last_detected_kills || {};
@@ -372,7 +388,7 @@ function renderSchedules(world) {
     : [];
 
   if (executions.length === 0) {
-    return renderEmptyCard(dict.schedules, dict.noSchedules);
+    return renderNoSchedulesCard(dict.schedules);
   }
 
   const items = executions
@@ -1738,6 +1754,7 @@ async function renderMarketPrices(worldName) {
             itemName,
             supply: "N/A",
             demand: "N/A",
+            spread: "N/A",
             updated: "N/A",
           };
         }
@@ -1750,14 +1767,23 @@ async function renderMarketPrices(worldName) {
             itemName,
             supply: "N/A",
             demand: "N/A",
+            spread: "N/A",
             updated: "N/A",
           };
         }
+
+        const latestSupply = normalizeMarketMetricValue(latest.day_average_sell);
+        const latestDemand = normalizeMarketMetricValue(latest.day_average_buy);
+        const latestSpread =
+          latestSupply !== null && latestDemand !== null
+            ? formatMarketMetricNumber(latestSupply - latestDemand)
+            : "N/A";
 
         return {
           itemName,
           supply: formatMarketValue(latest.day_average_sell),
           demand: formatMarketValue(latest.day_average_buy),
+          spread: latestSpread,
           updated: formatMarketTimestamp(latest.time),
         };
       } catch {
@@ -1765,6 +1791,7 @@ async function renderMarketPrices(worldName) {
           itemName,
           supply: "N/A",
           demand: "N/A",
+          spread: "N/A",
           updated: "N/A",
         };
       }
@@ -1778,6 +1805,7 @@ async function renderMarketPrices(worldName) {
           <td>${escapeHtml(row.itemName)}</td>
           <td>${escapeHtml(row.supply)}</td>
           <td>${escapeHtml(row.demand)}</td>
+          <td>${escapeHtml(row.spread)}</td>
           <td>${escapeHtml(row.updated)}</td>
         </tr>
       `
@@ -1795,6 +1823,7 @@ async function renderMarketPrices(worldName) {
             <th>Item</th>
             <th>Supply Price</th>
             <th>Demand Price</th>
+            <th>Spread</th>
             <th>Updated</th>
           </tr>
         </thead>
