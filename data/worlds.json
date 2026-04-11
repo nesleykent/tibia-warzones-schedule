@@ -28,14 +28,14 @@
     "battleye_protected": true,
     "battleye_date": "2017-08-29",
     "tracks_warzone_service": true,
-    "warzone_services_per_day": 2,
+    "warzone_services_per_day": 3,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 2,
-      "Gnomevil": 2,
-      "Abyssador": 2
+      "Deathstrike": 3,
+      "Gnomevil": 3,
+      "Abyssador": 3
     },
-    "last_detected_services": 2,
+    "last_detected_services": 3,
     "mark": "healthy",
     "warzone_executions": [
       {
@@ -55,7 +55,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 2
+    "warzonesperday": 3
   },
   {
     "name": "Astera",
@@ -65,14 +65,14 @@
     "battleye_protected": true,
     "battleye_date": "2017-09-12",
     "tracks_warzone_service": true,
-    "warzone_services_per_day": 3,
+    "warzone_services_per_day": 4,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 5,
-      "Gnomevil": 3,
+      "Deathstrike": 4,
+      "Gnomevil": 5,
       "Abyssador": 4
     },
-    "last_detected_services": 3,
+    "last_detected_services": 4,
     "mark": "inconclusive",
     "warzone_executions": [
       {
@@ -92,7 +92,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 3
+    "warzonesperday": 4
   },
   {
     "name": "Belobra",
@@ -133,19 +133,19 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "release",
-    "tracks_warzone_service": false,
-    "warzone_services_per_day": 0,
+    "tracks_warzone_service": true,
+    "warzone_services_per_day": 1,
     "timezone": null,
     "last_detected_kills": {
-      "Deathstrike": 0,
-      "Gnomevil": 0,
-      "Abyssador": 0
+      "Deathstrike": 1,
+      "Gnomevil": 1,
+      "Abyssador": 1
     },
-    "last_detected_services": 0,
+    "last_detected_services": 1,
     "mark": "healthy",
     "warzone_executions": [],
-    "performs_warzone": false,
-    "warzonesperday": 0
+    "performs_warzone": true,
+    "warzonesperday": 1
   },
   {
     "name": "Bona",
@@ -458,19 +458,19 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "2018-04-19",
-    "tracks_warzone_service": true,
-    "warzone_services_per_day": 1,
+    "tracks_warzone_service": false,
+    "warzone_services_per_day": 0,
     "timezone": null,
     "last_detected_kills": {
-      "Deathstrike": 1,
-      "Gnomevil": 1,
-      "Abyssador": 1
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 1,
+    "last_detected_services": 0,
     "mark": "healthy",
     "warzone_executions": [],
-    "performs_warzone": true,
-    "warzonesperday": 1
+    "performs_warzone": false,
+    "warzonesperday": 0
   },
   {
     "name": "Escura",
@@ -750,19 +750,19 @@
     "transfer_type": "blocked",
     "battleye_protected": true,
     "battleye_date": "release",
-    "tracks_warzone_service": false,
-    "warzone_services_per_day": 0,
+    "tracks_warzone_service": true,
+    "warzone_services_per_day": 1,
     "timezone": null,
     "last_detected_kills": {
-      "Deathstrike": 0,
-      "Gnomevil": 0,
-      "Abyssador": 0
+      "Deathstrike": 1,
+      "Gnomevil": 1,
+      "Abyssador": 1
     },
-    "last_detected_services": 0,
+    "last_detected_services": 1,
     "mark": "healthy",
     "warzone_executions": [],
-    "performs_warzone": false,
-    "warzonesperday": 0
+    "performs_warzone": true,
+    "warzonesperday": 1
   },
   {
     "name": "Idyllia",
@@ -819,18 +819,18 @@
     "transfer_type": "blocked",
     "battleye_protected": true,
     "battleye_date": "release",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "warzone_services_per_day": 0,
     "timezone": null,
     "last_detected_kills": {
       "Deathstrike": 0,
-      "Gnomevil": 1,
-      "Abyssador": 1
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "trolls",
+    "mark": "healthy",
     "warzone_executions": [],
-    "performs_warzone": true,
+    "performs_warzone": false,
     "warzonesperday": 0
   },
   {
@@ -910,14 +910,14 @@
     "battleye_protected": true,
     "battleye_date": "release",
     "tracks_warzone_service": true,
-    "warzone_services_per_day": 3,
+    "warzone_services_per_day": 2,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 3,
-      "Gnomevil": 3,
-      "Abyssador": 3
+      "Deathstrike": 2,
+      "Gnomevil": 2,
+      "Abyssador": 2
     },
-    "last_detected_services": 3,
+    "last_detected_services": 2,
     "mark": "healthy",
     "warzone_executions": [
       {
@@ -932,7 +932,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 3
+    "warzonesperday": 2
   },
   {
     "name": "Kalanta",
@@ -1020,11 +1020,11 @@
     "timezone": null,
     "last_detected_kills": {
       "Deathstrike": 1,
-      "Gnomevil": 2,
+      "Gnomevil": 1,
       "Abyssador": 1
     },
     "last_detected_services": 1,
-    "mark": "inconclusive",
+    "mark": "healthy",
     "warzone_executions": [],
     "performs_warzone": true,
     "warzonesperday": 1
@@ -1202,19 +1202,19 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "release",
-    "tracks_warzone_service": false,
-    "warzone_services_per_day": 0,
+    "tracks_warzone_service": true,
+    "warzone_services_per_day": 1,
     "timezone": null,
     "last_detected_kills": {
-      "Deathstrike": 0,
-      "Gnomevil": 0,
-      "Abyssador": 0
+      "Deathstrike": 1,
+      "Gnomevil": 1,
+      "Abyssador": 1
     },
-    "last_detected_services": 0,
+    "last_detected_services": 1,
     "mark": "healthy",
     "warzone_executions": [],
-    "performs_warzone": false,
-    "warzonesperday": 0
+    "performs_warzone": true,
+    "warzonesperday": 1
   },
   {
     "name": "Monza",
@@ -1351,18 +1351,18 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "2024-04-10",
-    "tracks_warzone_service": false,
+    "tracks_warzone_service": true,
     "warzone_services_per_day": 0,
     "timezone": null,
     "last_detected_kills": {
-      "Deathstrike": 0,
-      "Gnomevil": 0,
+      "Deathstrike": 1,
+      "Gnomevil": 1,
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "trolls",
     "warzone_executions": [],
-    "performs_warzone": false,
+    "performs_warzone": true,
     "warzonesperday": 0
   },
   {
@@ -1559,15 +1559,15 @@
     "battleye_protected": true,
     "battleye_date": "2017-12-12",
     "tracks_warzone_service": true,
-    "warzone_services_per_day": 3,
+    "warzone_services_per_day": 2,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
       "Deathstrike": 3,
-      "Gnomevil": 3,
-      "Abyssador": 3
+      "Gnomevil": 2,
+      "Abyssador": 2
     },
-    "last_detected_services": 3,
-    "mark": "healthy",
+    "last_detected_services": 2,
+    "mark": "inconclusive",
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1581,7 +1581,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 3
+    "warzonesperday": 2
   },
   {
     "name": "Quidera",
@@ -1623,10 +1623,10 @@
     "last_detected_kills": {
       "Deathstrike": 2,
       "Gnomevil": 2,
-      "Abyssador": 2
+      "Abyssador": 3
     },
     "last_detected_services": 2,
-    "mark": "healthy",
+    "mark": "inconclusive",
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1648,12 +1648,12 @@
     "warzone_services_per_day": 2,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 2,
+      "Deathstrike": 3,
       "Gnomevil": 2,
       "Abyssador": 2
     },
     "last_detected_services": 2,
-    "mark": "healthy",
+    "mark": "inconclusive",
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1761,11 +1761,11 @@
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
       "Deathstrike": 2,
-      "Gnomevil": 3,
-      "Abyssador": 3
+      "Gnomevil": 2,
+      "Abyssador": 2
     },
     "last_detected_services": 2,
-    "mark": "trolls",
+    "mark": "healthy",
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1789,14 +1789,14 @@
     "battleye_protected": true,
     "battleye_date": "2018-04-19",
     "tracks_warzone_service": true,
-    "warzone_services_per_day": 1,
+    "warzone_services_per_day": 2,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 1,
-      "Gnomevil": 1,
-      "Abyssador": 1
+      "Deathstrike": 2,
+      "Gnomevil": 2,
+      "Abyssador": 2
     },
-    "last_detected_services": 1,
+    "last_detected_services": 2,
     "mark": "healthy",
     "warzone_executions": [
       {
@@ -1806,7 +1806,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 1
+    "warzonesperday": 2
   },
   {
     "name": "Sombra",
@@ -1879,18 +1879,18 @@
     "battleye_protected": true,
     "battleye_date": "2018-04-19",
     "tracks_warzone_service": true,
-    "warzone_services_per_day": 4,
+    "warzone_services_per_day": 3,
     "timezone": null,
     "last_detected_kills": {
-      "Deathstrike": 4,
-      "Gnomevil": 4,
-      "Abyssador": 4
+      "Deathstrike": 3,
+      "Gnomevil": 3,
+      "Abyssador": 3
     },
-    "last_detected_services": 4,
+    "last_detected_services": 3,
     "mark": "healthy",
     "warzone_executions": [],
     "performs_warzone": true,
-    "warzonesperday": 4
+    "warzonesperday": 3
   },
   {
     "name": "Tempestera",
