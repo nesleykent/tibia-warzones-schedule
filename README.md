@@ -6,7 +6,7 @@ Tibia Warzones Schedule is a static GitHub Pages project for tracking Bigfoot's 
 
 - World overview with search and filtering
 - Per-world pages with summary, manual schedule, market data, and history
-- Expected-return ranking based on local Tibia Coin prices
+- Expected-return ranking based on local Tibia Coins market prices
 - Timezone-aware planner for manual execution schedules
 - Static deployment and validation through GitHub Actions
 

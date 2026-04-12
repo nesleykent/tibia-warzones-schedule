@@ -54,7 +54,7 @@ The total gold value of the service is the sum of the three individual Warzone v
 `Service_EV = WZ1_EV + WZ2_EV + WZ3_EV`
 
 ### Step B: The Return Metric
-To determine the "real-world" value, the total gold is divided by the local market price of a Tibia Coin.
+To determine the "real-world" value, the total gold is divided by the local market price of Tibia Coins.
 `Expected_Return = Service_EV / Price_Tibia_Coin`
 
 ## Summary of Constants
