@@ -84,7 +84,9 @@ def compute_services_and_mark(
 ) -> dict[str, Any]:
     services_completed = min(deathstrike, gnomevil, abyssador)
 
-    if deathstrike == gnomevil == abyssador:
+    if deathstrike == 0 and gnomevil == 0 and abyssador == 0:
+        mark = "na"
+    elif deathstrike == gnomevil == abyssador:
         mark = "healthy"
     elif (
         (deathstrike == gnomevil and abyssador < deathstrike)
@@ -197,6 +199,17 @@ def save_world_history(world_name: str, history_data: dict[str, Any]) -> None:
     save_json(history_path(world_name), history_data)
 
 
+def has_service_history(history_data: dict[str, Any]) -> bool:
+    history_items = history_data.get("history", [])
+    if not isinstance(history_items, list):
+        return False
+
+    return any(
+        isinstance(item, dict) and int(item.get("services_completed", 0) or 0) > 0
+        for item in history_items
+    )
+
+
 def build_daily_record(
     date_value: str, boss_kills: dict[str, int], computed_data: dict[str, Any]
 ) -> dict[str, Any]:
@@ -215,6 +228,7 @@ def build_world_summary(
     manual_schedule: dict[str, Any],
     boss_kills: dict[str, int],
     computed_data: dict[str, Any],
+    has_service_history_value: bool,
 ) -> dict[str, Any]:
     services_completed = computed_data["services_completed"]
     tracks_warzone_service = any(count > 0 for count in boss_kills.values())
@@ -232,6 +246,7 @@ def build_world_summary(
         "last_detected_kills": boss_kills,
         "last_detected_services": services_completed,
         "mark": computed_data["mark"],
+        "has_service_history": has_service_history_value,
         "warzone_executions": manual_schedule.get("warzone_executions", []),
         "performs_warzone": tracks_warzone_service,
         "warzonesperday": services_completed,
@@ -250,8 +265,11 @@ def validate_world_record(record: dict[str, Any]) -> list[str]:
     if not isinstance(record.get("warzone_services_per_day"), int):
         errors.append("warzone_services_per_day inválido")
 
-    if record.get("mark") not in {"healthy", "inconclusive", "trolls"}:
+    if record.get("mark") not in {"healthy", "inconclusive", "trolls", "na"}:
         errors.append("mark inválido")
+
+    if not isinstance(record.get("has_service_history"), bool):
+        errors.append("has_service_history inválido")
 
     last_detected_kills = record.get("last_detected_kills")
     if not isinstance(last_detected_kills, dict):
@@ -342,6 +360,7 @@ def main() -> int:
                 manual_schedule,
                 boss_kills,
                 computed_data,
+                has_service_history(history_data),
             )
             output.append(record)
             print(
@@ -368,7 +387,10 @@ def main() -> int:
                     "timezone": manual_schedule.get("timezone"),
                     "last_detected_kills": {boss: 0 for boss in BOSSES},
                     "last_detected_services": 0,
-                    "mark": "healthy",
+                    "mark": "na",
+                    "has_service_history": has_service_history(
+                        load_world_history(world_name, manual_schedule.get("timezone"))
+                    ),
                     "warzone_executions": manual_schedule.get(
                         "warzone_executions", []
                     ),

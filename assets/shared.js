@@ -1,60 +1,287 @@
 (function () {
+  const DEFAULT_TIMEZONE = "America/Sao_Paulo#Curitiba";
   const SUPPORTED_TIMEZONES = [
     {
-      value: "America/Noronha",
-      label: "Fernando de Noronha",
-      short: "FNT",
-      offset: "GMT-2",
+      group: "Americas",
+      value: "America/Los_Angeles",
+      label: "Los Angeles",
+      short: "PDT",
+      offset: "GMT-7",
     },
     {
-      value: "America/Sao_Paulo",
-      label: "Curitiba",
-      short: "BRT",
-      offset: "GMT-3",
+      group: "Americas",
+      value: "America/Tijuana",
+      label: "Tijuana",
+      short: "PDT",
+      offset: "GMT-7",
     },
     {
+      group: "Americas",
+      value: "America/Denver",
+      label: "Denver",
+      short: "MDT",
+      offset: "GMT-6",
+    },
+    {
+      group: "Americas",
+      value: "America/Mexico_City",
+      label: "Mexico City",
+      short: "CST",
+      offset: "GMT-6",
+    },
+    {
+      group: "Americas",
+      value: "America/Bogota",
+      label: "Bogotá",
+      short: "COT",
+      offset: "GMT-5",
+    },
+    {
+      group: "Americas",
+      value: "America/Cancun",
+      label: "Cancún",
+      short: "EST",
+      offset: "GMT-5",
+    },
+    {
+      group: "Americas",
+      value: "America/Chicago",
+      label: "Chicago",
+      short: "CDT",
+      offset: "GMT-5",
+    },
+    {
+      group: "Americas",
+      value: "America/Lima",
+      label: "Lima",
+      short: "PET",
+      offset: "GMT-5",
+    },
+    {
+      group: "Americas",
+      value: "America/Rio_Branco",
+      label: "Rio Branco",
+      short: "ACT",
+      offset: "GMT-5",
+    },
+    {
+      group: "Americas",
+      value: "America/Caracas",
+      label: "Caracas",
+      short: "VET",
+      offset: "GMT-4",
+    },
+    {
+      group: "Americas",
+      value: "America/Cuiaba",
+      label: "Cuiabá",
+      short: "AMT",
+      offset: "GMT-4",
+    },
+    {
+      group: "Americas",
+      value: "America/Manaus",
+      label: "Manaus",
+      short: "AMT",
+      offset: "GMT-4",
+    },
+    {
+      group: "Americas",
+      value: "America/New_York",
+      label: "New York",
+      short: "EDT",
+      offset: "GMT-4",
+    },
+    {
+      group: "Americas",
+      value: "America/Porto_Velho",
+      label: "Porto Velho",
+      short: "AMT",
+      offset: "GMT-4",
+    },
+    {
+      group: "Americas",
+      value: "America/Santiago",
+      label: "Santiago",
+      short: "CLT",
+      offset: "GMT-4",
+    },
+    {
+      group: "Americas",
       value: "America/Argentina/Buenos_Aires",
       label: "Buenos Aires",
       short: "ART",
       offset: "GMT-3",
     },
     {
-      value: "America/Santiago",
-      label: "Santiago",
-      short: "CLT",
+      group: "Americas",
+      value: DEFAULT_TIMEZONE,
+      timeZone: "America/Sao_Paulo",
+      label: "Curitiba",
+      short: "BRT",
       offset: "GMT-3",
     },
-    { value: "America/Manaus", label: "Manaus", short: "AMT", offset: "GMT-4" },
-    { value: "America/Cuiaba", label: "Cuiabá", short: "AMT", offset: "GMT-4" },
     {
-      value: "America/Porto_Velho",
-      label: "Porto Velho",
-      short: "AMT",
-      offset: "GMT-4",
+      group: "Americas",
+      value: "America/Bahia",
+      label: "Xique-Xique",
+      short: "BRT",
+      offset: "GMT-3",
     },
-    { value: "America/Caracas", label: "Caracas", short: "VET", offset: "GMT-4" },
     {
-      value: "America/Rio_Branco",
-      label: "Rio Branco",
-      short: "ACT",
-      offset: "GMT-5",
+      group: "Americas",
+      value: "America/Noronha",
+      label: "Fernando de Noronha",
+      short: "FNT",
+      offset: "GMT-2",
     },
-    { value: "America/Cancun", label: "Cancún", short: "EST", offset: "GMT-5" },
     {
-      value: "America/Mexico_City",
-      label: "Mexico City",
-      short: "CST",
-      offset: "GMT-6",
-    },
-    { value: "America/Tijuana", label: "Tijuana", short: "PST", offset: "GMT-7" },
-    { value: "Europe/London", label: "London", short: "GMT", offset: "GMT+0" },
-    {
-      value: "Europe/Berlin",
-      label: "Regensburg",
-      short: "CET",
+      group: "Europe",
+      value: "Europe/Lisbon",
+      label: "Lisbon",
+      short: "WEST",
       offset: "GMT+1",
     },
-    { value: "Europe/Warsaw", label: "Warsaw", short: "CET", offset: "GMT+1" },
+    {
+      group: "Europe",
+      value: "Europe/London",
+      label: "London",
+      short: "BST",
+      offset: "GMT+1",
+    },
+    {
+      group: "Europe",
+      value: "Europe/Amsterdam",
+      label: "Amsterdam",
+      short: "CEST",
+      offset: "GMT+2",
+    },
+    {
+      group: "Europe",
+      value: "Europe/Berlin",
+      label: "Berlin",
+      short: "CEST",
+      offset: "GMT+2",
+    },
+    {
+      group: "Europe",
+      value: "Europe/Madrid",
+      label: "Madrid",
+      short: "CEST",
+      offset: "GMT+2",
+    },
+    {
+      group: "Europe",
+      value: "Europe/Paris",
+      label: "Paris",
+      short: "CEST",
+      offset: "GMT+2",
+    },
+    {
+      group: "Europe",
+      value: "Europe/Rome",
+      label: "Rome",
+      short: "CEST",
+      offset: "GMT+2",
+    },
+    {
+      group: "Europe",
+      value: "Europe/Stockholm",
+      label: "Stockholm",
+      short: "CEST",
+      offset: "GMT+2",
+    },
+    {
+      group: "Europe",
+      value: "Europe/Warsaw",
+      label: "Warsaw",
+      short: "CEST",
+      offset: "GMT+2",
+    },
+    {
+      group: "Europe",
+      value: "Europe/Athens",
+      label: "Athens",
+      short: "EEST",
+      offset: "GMT+3",
+    },
+    {
+      group: "Europe",
+      value: "Europe/Bucharest",
+      label: "Bucharest",
+      short: "EEST",
+      offset: "GMT+3",
+    },
+    {
+      group: "Europe",
+      value: "Europe/Helsinki",
+      label: "Helsinki",
+      short: "EEST",
+      offset: "GMT+3",
+    },
+    {
+      group: "Europe",
+      value: "Europe/Istanbul",
+      label: "Istanbul",
+      short: "TRT",
+      offset: "GMT+3",
+    },
+    {
+      group: "Europe",
+      value: "Europe/Moscow",
+      label: "Moscow",
+      short: "MSK",
+      offset: "GMT+3",
+    },
+    {
+      group: "Asia / Pacific",
+      value: "Asia/Dubai",
+      label: "Dubai",
+      short: "GST",
+      offset: "GMT+4",
+    },
+    {
+      group: "Asia / Pacific",
+      value: "Asia/Kolkata",
+      label: "Kolkata",
+      short: "IST",
+      offset: "GMT+5:30",
+    },
+    {
+      group: "Asia / Pacific",
+      value: "Asia/Singapore",
+      label: "Singapore",
+      short: "SGT",
+      offset: "GMT+8",
+    },
+    {
+      group: "Asia / Pacific",
+      value: "Asia/Seoul",
+      label: "Seoul",
+      short: "KST",
+      offset: "GMT+9",
+    },
+    {
+      group: "Asia / Pacific",
+      value: "Asia/Tokyo",
+      label: "Tokyo",
+      short: "JST",
+      offset: "GMT+9",
+    },
+    {
+      group: "Asia / Pacific",
+      value: "Australia/Sydney",
+      label: "Sydney",
+      short: "AEST",
+      offset: "GMT+10",
+    },
+    {
+      group: "Asia / Pacific",
+      value: "Pacific/Auckland",
+      label: "Auckland",
+      short: "NZST",
+      offset: "GMT+12",
+    },
   ];
 
   function escapeHtml(value) {
@@ -76,19 +303,21 @@
 
   function loadSavedTimezone() {
     try {
-      return localStorage.getItem("tz") || getBrowserTimezone();
+      return localStorage.getItem("tz") || DEFAULT_TIMEZONE;
     } catch {
-      return getBrowserTimezone();
+      return DEFAULT_TIMEZONE;
     }
   }
 
   function getTimezoneOffsetLabel(tz) {
+    const resolvedTimezone = resolveTimezoneValue(tz);
     try {
       const parts = new Intl.DateTimeFormat("en", {
-        timeZone: tz,
+        timeZone: resolvedTimezone,
         timeZoneName: "longOffset",
       }).formatToParts(new Date());
-      const value = parts.find((part) => part.type === "timeZoneName")?.value || "GMT";
+      const value =
+        parts.find((part) => part.type === "timeZoneName")?.value || "GMT";
       return value.replace("GMT", "UTC");
     } catch {
       return "UTC";
@@ -96,9 +325,13 @@
   }
 
   function getTimezoneDisplayLabel(tz) {
-    const entry = SUPPORTED_TIMEZONES.find((item) => item.value === tz);
+    const entry =
+      SUPPORTED_TIMEZONES.find((item) => item.value === tz) ||
+      SUPPORTED_TIMEZONES.find((item) => item.timeZone === tz);
     if (entry) {
-      return `${entry.label} (${entry.short}, ${entry.offset})`;
+      return entry.short
+        ? `${entry.label} (${entry.short}, ${entry.offset})`
+        : `${entry.label} (${entry.offset})`;
     }
     const offsetRaw = getTimezoneOffsetLabel(tz);
     const offsetCompact = offsetRaw
@@ -106,6 +339,11 @@
       .replace(/:00$/, "")
       .replace(/([+-])0(\d)$/, "$1$2");
     return `${tz} (${offsetCompact})`;
+  }
+
+  function resolveTimezoneValue(tz) {
+    const entry = SUPPORTED_TIMEZONES.find((item) => item.value === tz);
+    return entry?.timeZone || tz;
   }
 
   function initBackgroundArtwork() {
@@ -191,8 +429,16 @@
     initLanguageDropdown();
   }
 
-  function convertTimeBetweenTimezones(scheduleTime, sourceTimezone, targetTimezone, locale) {
-    if (!scheduleTime || !sourceTimezone || !targetTimezone) return scheduleTime || "";
+  function convertTimeBetweenTimezones(
+    scheduleTime,
+    sourceTimezone,
+    targetTimezone,
+    locale
+  ) {
+    if (!scheduleTime || !sourceTimezone || !targetTimezone)
+      return scheduleTime || "";
+    const resolvedSourceTimezone = resolveTimezoneValue(sourceTimezone);
+    const resolvedTargetTimezone = resolveTimezoneValue(targetTimezone);
     const parts = String(scheduleTime).split(":");
     if (parts.length !== 2) return scheduleTime;
     const hour = Number(parts[0]);
@@ -202,7 +448,7 @@
     try {
       const ref = new Date(Date.UTC(2025, 0, 15, 12, 0, 0));
       const srcParts = new Intl.DateTimeFormat("en-CA", {
-        timeZone: sourceTimezone,
+        timeZone: resolvedSourceTimezone,
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
@@ -225,11 +471,12 @@
       );
       const probeDate = new Date(wallClockUtc);
       const offParts = new Intl.DateTimeFormat("en", {
-        timeZone: sourceTimezone,
+        timeZone: resolvedSourceTimezone,
         timeZoneName: "longOffset",
       }).formatToParts(probeDate);
       const offsetText =
-        offParts.find((part) => part.type === "timeZoneName")?.value || "GMT+00:00";
+        offParts.find((part) => part.type === "timeZoneName")?.value ||
+        "GMT+00:00";
       const normalized = offsetText.replace("GMT", "");
       const match = normalized.match(/^([+-])(\d{2}):(\d{2})$/);
       let offMin = 0;
@@ -239,7 +486,7 @@
       }
       const actualDate = new Date(wallClockUtc - offMin * 60 * 1000);
       return new Intl.DateTimeFormat(locale || "en", {
-        timeZone: targetTimezone,
+        timeZone: resolvedTargetTimezone,
         hour: "2-digit",
         minute: "2-digit",
         hourCycle: "h23",
@@ -251,11 +498,13 @@
 
   window.TibiaTime = {
     SUPPORTED_TIMEZONES,
+    DEFAULT_TIMEZONE,
     escapeHtml,
     getBrowserTimezone,
     loadSavedTimezone,
     getTimezoneOffsetLabel,
     getTimezoneDisplayLabel,
+    resolveTimezoneValue,
     convertTimeBetweenTimezones,
     initBackgroundArtwork,
     initLanguageDropdown,

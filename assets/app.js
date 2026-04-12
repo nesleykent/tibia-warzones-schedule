@@ -3,12 +3,14 @@
 // ─────────────────────────────────────────────
 
 const {
+  DEFAULT_TIMEZONE,
   SUPPORTED_TIMEZONES,
   escapeHtml,
   getBrowserTimezone,
   initSharedUi,
   loadSavedTimezone,
   getTimezoneDisplayLabel,
+  resolveTimezoneValue,
   convertTimeBetweenTimezones: convertSharedTimeBetweenTimezones,
 } = window.TibiaTime;
 
@@ -21,8 +23,8 @@ const I18N = {
     questLinksLabel: "Bigfoot's Burden:",
     search: "Search server",
     timezone: "Show times in",
-    summary: (total, withSchedules, tzLabel) =>
-      `${total} servers. ${withSchedules} with services. Timezone: ${tzLabel}`,
+    summary: (total, activeWorlds, withSchedules, tzLabel) =>
+      `Tibia's got ${total} worlds atm. ${activeWorlds} ran warzones services, and we know the schedule for ${withSchedules} of them. Timezone's ${tzLabel}.`,
     warzones: "Warzones",
     region: "Region",
     pvp: "PvP",
@@ -91,6 +93,7 @@ const I18N = {
     servicesTooltip: (d, g, a) =>
       `Deathstrike kills: ${d}\nGnomevil kills: ${g}\nAbyssador kills: ${a}`,
     scheduleCount: (count) => `${count} schedules`,
+    noServicesLabel: "No services",
   },
   "pt-BR": {
     pageTitle: "Tibia Warzones Schedule",
@@ -100,8 +103,8 @@ const I18N = {
     questLinksLabel: "Bigfoot's Burden:",
     search: "Buscar servidor",
     timezone: "Exibir horários em",
-    summary: (total, withSchedules, tzLabel) =>
-      `${total} servidores. ${withSchedules} com services. Timezone: ${tzLabel}`,
+    summary: (total, activeWorlds, withSchedules, tzLabel) =>
+      `Tibia tem ${total} mundos no momento. ${activeWorlds} rodaram services de warzone, e a gente conhece o horário de ${withSchedules} deles. Timezone: ${tzLabel}.`,
     warzones: "Warzones",
     region: "Região",
     pvp: "PvP",
@@ -170,6 +173,7 @@ const I18N = {
     servicesTooltip: (d, g, a) =>
       `Kills de Deathstrike: ${d}\nKills de Gnomevil: ${g}\nKills de Abyssador: ${a}`,
     scheduleCount: (count) => `${count} horários`,
+    noServicesLabel: "Sem services",
   },
   "es-419": {
     pageTitle: "Tibia Warzones Schedule",
@@ -179,8 +183,8 @@ const I18N = {
     questLinksLabel: "Bigfoot's Burden:",
     search: "Buscar servidor",
     timezone: "Mostrar horarios en",
-    summary: (total, withSchedules, tzLabel) =>
-      `${total} servidores. ${withSchedules} con services. Zona: ${tzLabel}`,
+    summary: (total, activeWorlds, withSchedules, tzLabel) =>
+      `Tibia tiene ${total} mundos ahora mismo. ${activeWorlds} hicieron servicios de warzone, y conocemos el horario de ${withSchedules} de ellos. Zona horaria: ${tzLabel}.`,
     warzones: "Warzones",
     region: "Región",
     pvp: "PvP",
@@ -248,6 +252,7 @@ const I18N = {
     servicesTooltip: (d, g, a) =>
       `Muertes de Deathstrike: ${d}\nMuertes de Gnomevil: ${g}\nMuertes de Abyssador: ${a}`,
     scheduleCount: (count) => `${count} horarios`,
+    noServicesLabel: "Sin services",
   },
   pl: {
     pageTitle: "Tibia Warzones Schedule",
@@ -257,8 +262,8 @@ const I18N = {
     questLinksLabel: "Bigfoot's Burden:",
     search: "Szukaj serwera",
     timezone: "Pokaż godziny w",
-    summary: (total, withSchedules, tzLabel) =>
-      `${total} serwerów. ${withSchedules} z services. Strefa: ${tzLabel}`,
+    summary: (total, activeWorlds, withSchedules, tzLabel) =>
+      `Tibia ma teraz ${total} światy. ${activeWorlds} miało usługi warzone, a harmonogram znamy dla ${withSchedules} z nich. Strefa czasowa: ${tzLabel}.`,
     warzones: "Warzones",
     region: "Region",
     pvp: "PvP",
@@ -327,6 +332,7 @@ const I18N = {
     servicesTooltip: (d, g, a) =>
       `Zabójstwa Deathstrike: ${d}\nZabójstwa Gnomevil: ${g}\nZabójstwa Abyssador: ${a}`,
     scheduleCount: (count) => `${count} harmonogramy`,
+    noServicesLabel: "Brak services",
   },
 };
 
@@ -424,9 +430,10 @@ function playSound() {
 
 function nowMinutesInTZ(tz) {
   const now = new Date();
+  const resolvedTimezone = resolveTimezoneValue(tz);
   try {
     const parts = new Intl.DateTimeFormat("en-CA", {
-      timeZone: tz,
+      timeZone: resolvedTimezone,
       hour: "2-digit",
       minute: "2-digit",
       hourCycle: "h23",
@@ -441,9 +448,10 @@ function nowMinutesInTZ(tz) {
 
 function nowSecondsInTZ(tz) {
   const now = new Date();
+  const resolvedTimezone = resolveTimezoneValue(tz);
   try {
     const parts = new Intl.DateTimeFormat("en-CA", {
-      timeZone: tz,
+      timeZone: resolvedTimezone,
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",
@@ -461,8 +469,9 @@ function hhmm2min(hhmm) {
 }
 
 function todayKeyInTZ(tz) {
+  const resolvedTimezone = resolveTimezoneValue(tz);
   return new Intl.DateTimeFormat("en-CA", {
-    timeZone: tz,
+    timeZone: resolvedTimezone,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
@@ -578,9 +587,10 @@ function showToast(entry, offsetMin) {
 // ─── Clock ───────────────────────────────────────────
 
 function getCurrentTimeStr(tz) {
+  const resolvedTimezone = resolveTimezoneValue(tz);
   try {
     return new Intl.DateTimeFormat("en-GB", {
-      timeZone: tz,
+      timeZone: resolvedTimezone,
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",
@@ -1149,12 +1159,14 @@ function saveTZ(value) {
 function loadSettings() {
   lang = getInitialLanguage();
   timezone = loadSavedTimezone();
+  if (!timezone) timezone = DEFAULT_TIMEZONE;
 }
 
 function getTimezoneShortName(tz) {
+  const resolvedTimezone = resolveTimezoneValue(tz);
   try {
     const parts = new Intl.DateTimeFormat("en", {
-      timeZone: tz,
+      timeZone: resolvedTimezone,
       timeZoneName: "short",
     }).formatToParts(new Date());
     return parts.find((p) => p.type === "timeZoneName")?.value || tz;
@@ -1166,7 +1178,10 @@ function getTimezoneShortName(tz) {
 function offsetMinutes(tz) {
   try {
     const now = new Date();
-    const zoned = new Date(now.toLocaleString("en-US", { timeZone: tz }));
+    const resolvedTimezone = resolveTimezoneValue(tz);
+    const zoned = new Date(
+      now.toLocaleString("en-US", { timeZone: resolvedTimezone })
+    );
     return Math.round((zoned.getTime() - now.getTime()) / 60000);
   } catch {
     return 0;
@@ -1176,21 +1191,41 @@ function offsetMinutes(tz) {
 function populateTimezoneSelect() {
   const select = document.getElementById("timezoneSelect");
   if (!select) return;
-  const options = [...SUPPORTED_TIMEZONES];
-  if (!options.some((item) => item.value === timezone))
-    options.push({ value: timezone, label: timezone });
-  options.sort((a, b) => {
-    const d = offsetMinutes(a.value) - offsetMinutes(b.value);
-    return d !== 0 ? d : a.label.localeCompare(b.label, "en");
-  });
-  select.innerHTML = options
-    .map((item) => {
-      const sel = item.value === timezone ? "selected" : "";
-      return `<option value="${escapeHtml(item.value)}" ${sel}>${escapeHtml(
+  const groupedOptions = [];
+  let currentGroup = null;
+
+  SUPPORTED_TIMEZONES.forEach((item) => {
+    if (item.group !== currentGroup) {
+      if (currentGroup !== null) {
+        groupedOptions.push("</optgroup>");
+      }
+      currentGroup = item.group || "";
+      groupedOptions.push(
+        `<optgroup label="${escapeHtml(currentGroup)}">`
+      );
+    }
+
+    const sel = item.value === timezone ? "selected" : "";
+    groupedOptions.push(
+      `<option value="${escapeHtml(item.value)}" ${sel}>${escapeHtml(
         getTimezoneDisplayLabel(item.value)
-      )}</option>`;
-    })
-    .join("");
+      )}</option>`
+    );
+  });
+
+  if (currentGroup !== null) {
+    groupedOptions.push("</optgroup>");
+  }
+
+  if (!SUPPORTED_TIMEZONES.some((item) => item.value === timezone)) {
+    groupedOptions.push(
+      `<option value="${escapeHtml(timezone)}" selected>${escapeHtml(
+        getTimezoneDisplayLabel(timezone)
+      )}</option>`
+    );
+  }
+
+  select.innerHTML = groupedOptions.join("");
   select.onchange = (e) => saveTZ(e.target.value);
 }
 
@@ -1269,6 +1304,7 @@ function getBossKills(world) {
 
 function getMarkLabel(mark) {
   const dict = t();
+  if (mark === "na") return dict.notAvailable;
   if (mark === "healthy") return dict.healthy;
   if (mark === "trolls") return dict.trolls;
   return dict.inconclusive;
@@ -1280,12 +1316,32 @@ function getMarkIcon(mark) {
   return "?";
 }
 
+function isNoActivityWorld(kills) {
+  return (
+    Number(kills?.deathstrike || 0) === 0 &&
+    Number(kills?.gnomevil || 0) === 0 &&
+    Number(kills?.abyssador || 0) === 0
+  );
+}
+
+function getEffectiveMark(mark, kills) {
+  if (isNoActivityWorld(kills)) return "na";
+  return String(mark || "inconclusive");
+}
+
 function getWorldHistoryUrl(worldName) {
   return "./world.html?name=" + encodeURIComponent(worldName);
 }
 
-function renderNoSchedulesMessage() {
+function renderNoSchedulesMessage(world) {
   const dict = t();
+  const kills = getBossKills(world);
+  const effectiveMark = getEffectiveMark(world?.mark, kills);
+
+  if (effectiveMark === "na") {
+    return "";
+  }
+
   return `<p>${escapeHtml(dict.noSchedules)}. ${escapeHtml(
     dict.reportIssueCta
   )} <a href="https://github.com/nesleykent/tibia-warzones-schedule/issues" target="_blank" rel="noopener noreferrer" class="empty-state-link">GitHub Issues</a>.</p>`;
@@ -1296,7 +1352,7 @@ function renderExecutions(world) {
   const executions = Array.isArray(world.warzone_executions)
     ? [...world.warzone_executions]
     : [];
-  if (executions.length === 0) return renderNoSchedulesMessage();
+  if (executions.length === 0) return renderNoSchedulesMessage(world);
   executions.sort(
     (a, b) => (Number(a.execution_id) || 0) - (Number(b.execution_id) || 0)
   );
@@ -1361,7 +1417,21 @@ function renderWorld(world) {
     kills.gnomevil,
     kills.abyssador
   );
-  const mark = String(world.mark || "inconclusive");
+  const mark = getEffectiveMark(world.mark, kills);
+  const executionsTitle =
+    mark === "na" && !world.has_service_history
+      ? dict.noServicesLabel || dict.noSchedules
+      : t().services;
+  const markHtml =
+    mark !== "na"
+      ? `<span class="service-mark service-mark--${escapeHtml(mark)}" title="${escapeHtml(
+          getMarkLabel(mark)
+        )}" aria-label="${escapeHtml(getMarkLabel(mark))}">
+          <span class="service-mark-icon" aria-hidden="true">${escapeHtml(
+            getMarkIcon(mark)
+          )}</span>
+        </span>`
+      : "";
 
   return `
     <div class="world-card${
@@ -1377,13 +1447,7 @@ function renderWorld(world) {
           <span class="badge" title="${escapeHtml(badgeTitle)}">${escapeHtml(
     t().warzones
   )}: ${escapeHtml(String(serviceCount))}</span>
-          <span class="service-mark service-mark--${escapeHtml(mark)}" title="${escapeHtml(
-    getMarkLabel(mark)
-  )}" aria-label="${escapeHtml(getMarkLabel(mark))}">
-          <span class="service-mark-icon" aria-hidden="true">${escapeHtml(
-            getMarkIcon(mark)
-          )}</span>
-        </span>
+          ${markHtml}
         </div>
       </h2>
       <div class="world-meta">
@@ -1398,7 +1462,7 @@ function renderWorld(world) {
       </div>
       <div class="executions">
         <div class="executions-header">
-          <h3>${escapeHtml(t().services)}</h3>
+          <h3>${escapeHtml(executionsTitle)}</h3>
           <a class="history-link" href="${escapeHtml(
             getWorldHistoryUrl(world.name)
           )}">${escapeHtml(t().viewHistory)}</a>
@@ -1575,39 +1639,34 @@ function render() {
 
   const query = (searchInput?.value || "").trim().toLowerCase();
 
-  // All worlds that perform warzones (base pool for filter options)
-  const warzoneWorlds = worlds.filter((w) => w && w.tracks_warzone_service);
+  const availableWorlds = worlds.filter(Boolean);
 
   // Render filter bar based on full pool (not search-narrowed)
-  renderFilters(warzoneWorlds);
+  renderFilters(availableWorlds);
 
-  const filtered = warzoneWorlds
+  const filtered = availableWorlds
     .filter((w) => worldPassesFilters(w))
     .filter((w) =>
       String(w.name || "")
         .toLowerCase()
         .includes(query)
     )
-    .sort((a, b) => {
-      const aH =
-        Array.isArray(a.warzone_executions) && a.warzone_executions.length > 0
-          ? 1
-          : 0;
-      const bH =
-        Array.isArray(b.warzone_executions) && b.warzone_executions.length > 0
-          ? 1
-          : 0;
-      if (bH !== aH) return bH - aH;
-      return String(a.name || "").localeCompare(String(b.name || ""), lang);
-    });
+    .sort((a, b) =>
+      String(a.name || "").localeCompare(String(b.name || ""), lang)
+    );
 
-  const withSchedules = filtered.filter(
+  const activeWorlds = availableWorlds.filter(
+    (w) => w && w.tracks_warzone_service
+  ).length;
+
+  const withSchedules = availableWorlds.filter(
     (w) =>
       Array.isArray(w.warzone_executions) && w.warzone_executions.length > 0
   ).length;
 
   summary.textContent = dict.summary(
-    filtered.length,
+    availableWorlds.length,
+    activeWorlds,
     withSchedules,
     getTimezoneDisplayLabel(timezone)
   );

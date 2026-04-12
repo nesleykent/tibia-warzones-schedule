@@ -37,6 +37,7 @@ const WORLD_I18N = {
     noSchedules: "No manual schedules registered yet.",
     reportIssueCta: "If you know any, just report it on",
     noHistory: "No history recorded yet.",
+    notAvailable: "N/A",
     healthy: "Healthy",
     inconclusive: "Inconclusive",
     trolls: "Trolls",
@@ -80,6 +81,7 @@ const WORLD_I18N = {
     noSchedules: "Ainda não há horários manuais cadastrados.",
     reportIssueCta: "Se souber de algum, reporte no",
     noHistory: "Ainda não há histórico registrado.",
+    notAvailable: "N/D",
     healthy: "Healthy",
     inconclusive: "Inconclusivo",
     trolls: "Trolls",
@@ -123,6 +125,7 @@ const WORLD_I18N = {
     noSchedules: "Todavía no hay horarios manuales registrados.",
     reportIssueCta: "Si sabes alguno, repórtalo en",
     noHistory: "Todavía no hay historial registrado.",
+    notAvailable: "N/D",
     healthy: "Healthy",
     inconclusive: "Inconcluso",
     trolls: "Trolls",
@@ -165,6 +168,7 @@ const WORLD_I18N = {
     noSchedules: "Nie ma jeszcze zapisanych ręcznych harmonogramów.",
     reportIssueCta: "Jesli znasz jakis termin, zglos go na",
     noHistory: "Nie ma jeszcze zapisanej historii.",
+    notAvailable: "Brak",
     healthy: "Healthy",
     inconclusive: "Niejednoznaczne",
     trolls: "Trolls",
@@ -176,6 +180,7 @@ const {
   initSharedUi,
   loadSavedTimezone,
   getTimezoneDisplayLabel,
+  resolveTimezoneValue,
   convertTimeBetweenTimezones: convertSharedTimeBetweenTimezones,
 } = window.TibiaTime;
 
@@ -251,9 +256,23 @@ const MARKET_RANGE_TABS = [
 
 function getMarkLabel(mark) {
   const dict = t();
+  if (mark === "na") return dict.notAvailable || "N/A";
   if (mark === "healthy") return dict.healthy;
   if (mark === "trolls") return dict.trolls;
   return dict.inconclusive;
+}
+
+function isNoActivityWorld(kills) {
+  return (
+    Number(kills?.Deathstrike || 0) === 0 &&
+    Number(kills?.Gnomevil || 0) === 0 &&
+    Number(kills?.Abyssador || 0) === 0
+  );
+}
+
+function getEffectiveMark(mark, kills) {
+  if (isNoActivityWorld(kills)) return "na";
+  return String(mark || "inconclusive");
 }
 
 function convertTimeBetweenTimezones(
@@ -310,8 +329,20 @@ function renderEmptyCard(title, body) {
   `;
 }
 
-function renderNoSchedulesCard(title) {
+function renderNoSchedulesCard(title, world) {
   const dict = t();
+  const kills = world?.last_detected_kills || {};
+  const effectiveMark = getEffectiveMark(world?.mark, kills);
+
+  if (effectiveMark === "na") {
+    return `
+      <div class="world-detail-card-header">
+        <h2>${escapeHtml(title)}</h2>
+      </div>
+      <p class="world-detail-empty">${escapeHtml(dict.noSchedules)}</p>
+    `;
+  }
+
   return `
     <div class="world-detail-card-header">
       <h2>${escapeHtml(title)}</h2>
@@ -326,6 +357,7 @@ function renderSummary(world) {
   const dict = t();
   const kills = world.last_detected_kills || {};
   const services = Number(world.last_detected_services || 0);
+  const effectiveMark = getEffectiveMark(world.mark, kills);
 
   return `
     <div class="world-detail-card-header">
@@ -354,7 +386,7 @@ function renderSummary(world) {
       )}</span><strong>${escapeHtml(String(services))}</strong></div>
       <div class="world-detail-stat"><span>${escapeHtml(
         dict.mark
-      )}</span><strong>${escapeHtml(getMarkLabel(world.mark))}</strong></div>
+      )}</span><strong>${escapeHtml(getMarkLabel(effectiveMark))}</strong></div>
       <div class="world-detail-stat"><span>${escapeHtml(
         dict.deathstrike
       )}</span><strong>${escapeHtml(
@@ -379,7 +411,7 @@ function renderSchedules(world) {
     : [];
 
   if (executions.length === 0) {
-    return renderNoSchedulesCard(dict.schedules);
+    return renderNoSchedulesCard(dict.schedules, world);
   }
 
   const items = executions
@@ -491,8 +523,9 @@ function formatMarketTimestamp(unixSeconds) {
   if (!Number.isFinite(numeric) || numeric <= 0) return "N/A";
 
   const date = new Date(numeric * 1000);
+  const resolvedTimezone = resolveTimezoneValue(pageTimezone);
   const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone: pageTimezone,
+    timeZone: resolvedTimezone,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
@@ -511,9 +544,10 @@ function formatMarketTimestamp(unixSeconds) {
 function formatMarketShortDate(unixSeconds) {
   const numeric = Number(unixSeconds);
   if (!Number.isFinite(numeric) || numeric <= 0) return "N/A";
+  const resolvedTimezone = resolveTimezoneValue(pageTimezone);
 
   return new Intl.DateTimeFormat(worldLang, {
-    timeZone: pageTimezone,
+    timeZone: resolvedTimezone,
     month: "short",
     day: "numeric",
   }).format(new Date(numeric * 1000));
@@ -769,8 +803,9 @@ function getMarketDayKey(unixSeconds) {
   if (!Number.isFinite(numeric) || numeric <= 0) return null;
 
   const date = new Date(numeric * 1000);
+  const resolvedTimezone = resolveTimezoneValue(pageTimezone);
   const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone: pageTimezone,
+    timeZone: resolvedTimezone,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
@@ -1841,7 +1876,15 @@ function renderHistory(historyData) {
           <td>${escapeHtml(String(item.gnomevil_kills || 0))}</td>
           <td>${escapeHtml(String(item.abyssador_kills || 0))}</td>
           <td>${escapeHtml(String(item.services_completed || 0))}</td>
-          <td>${escapeHtml(getMarkLabel(item.mark))}</td>
+          <td>${escapeHtml(
+            getMarkLabel(
+              getEffectiveMark(item.mark, {
+                Deathstrike: item.deathstrike_kills,
+                Gnomevil: item.gnomevil_kills,
+                Abyssador: item.abyssador_kills,
+              })
+            )
+          )}</td>
         </tr>
       `
     )
