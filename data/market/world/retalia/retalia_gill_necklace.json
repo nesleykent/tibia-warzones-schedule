@@ -1,0 +1,73 @@
+{
+  "last_run_at": "2026-04-11T22:12:00.228935Z",
+  "snapshots": [
+    [
+      {
+        "id": 16108,
+        "time": 1773521065.6661565,
+        "is_full_data": false,
+        "buy_offer": -1,
+        "sell_offer": -1,
+        "month_average_sell": -1,
+        "month_average_buy": -1,
+        "month_sold": -1,
+        "month_bought": -1,
+        "active_traders": -1,
+        "month_highest_sell": -1,
+        "month_lowest_buy": -1,
+        "month_lowest_sell": -1,
+        "month_highest_buy": -1,
+        "buy_offers": -1,
+        "sell_offers": -1,
+        "day_average_sell": 80000,
+        "day_average_buy": 48751,
+        "day_sold": 1,
+        "day_bought": 2,
+        "day_highest_sell": 80000,
+        "day_lowest_sell": 80000,
+        "day_highest_buy": 48751,
+        "day_lowest_buy": 48751,
+        "total_immediate_profit": -1,
+        "total_immediate_profit_info": ""
+      }
+    ]
+  ],
+  "_outlier_cleanup": {
+    "version": 1,
+    "lower_percentile": 1.5,
+    "upper_percentile": 98.5,
+    "window_size": 0,
+    "accepted_fingerprints": [
+      "6e918a9acee5a5be"
+    ],
+    "rejected_fingerprints": [
+      "0a5a48ca5f31121f",
+      "0e7678e42db83aa7",
+      "165b3af6a2d6d1cf",
+      "18b87c20553a1494",
+      "5b85d1f86cc8a2b7",
+      "5bedb57be7a8a0b2",
+      "612a681cc5775915",
+      "67e507c8f10d1f80",
+      "7258a970ecc9b616",
+      "7b88091dfe7dffde",
+      "84ef7e77f8a9d55b",
+      "9578eeb629d390fa",
+      "9cdc0be920aa228a",
+      "a17933091e050d83",
+      "a9dac249f02610e5",
+      "afd8281000103c41",
+      "c20f7a486be37d87",
+      "c415ee6fc573f429",
+      "c6e7f67b8c7955ab",
+      "ccb40075a339fdbb",
+      "d983cf8bec262480",
+      "d98551e57bc412fd",
+      "db0d2ba59ab7837a",
+      "df1f42359a1ab02e",
+      "ed8e95b57ae748a7",
+      "f4649ef8f9ceb3fe",
+      "f675a704e039e115"
+    ]
+  }
+}
