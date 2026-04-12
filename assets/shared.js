@@ -1,7 +1,10 @@
 (function () {
   const DEFAULT_TIMEZONE = "America/Sao_Paulo#Curitiba";
+  const GITHUB_ISSUES_URL =
+    "https://github.com/nesleykent/tibia-warzones-schedule/issues";
   const STORAGE_KEY_LANGUAGE = "lang";
   const STORAGE_KEY_TIMEZONE = "tz";
+  const WORLDS_DATA_PATH = "./data/worlds.json";
   const SUPPORTED_TIMEZONES = [
     {
       group: "Americas",
@@ -295,6 +298,27 @@
       .replaceAll("'", "&#039;");
   }
 
+  function setTextContent(element, value) {
+    if (element) {
+      element.textContent = value;
+    }
+  }
+
+  function setHtml(element, html) {
+    if (element) {
+      element.innerHTML = html;
+    }
+  }
+
+  async function fetchJson(path) {
+    const response = await fetch(path);
+    if (!response.ok) {
+      throw new Error(String(response.status));
+    }
+
+    return response.json();
+  }
+
   function readStorage(key, fallbackValue = null) {
     try {
       const storedValue = localStorage.getItem(key);
@@ -379,8 +403,8 @@
     return fallbackLabel;
   }
 
-  function getWorldTransferLabel(world, fallbackLabel = "N/A") {
-    const value = String(world?.transfer_type || "")
+  function formatTransferType(transferType, fallbackLabel = "N/A") {
+    const value = String(transferType || "")
       .trim()
       .toLowerCase();
 
@@ -389,6 +413,10 @@
     if (value === "blocked") return "Blocked Transfer";
     if (value === "locked") return "Locked Transfer";
     return `${value.charAt(0).toUpperCase()}${value.slice(1)} Transfer`;
+  }
+
+  function getWorldTransferLabel(world, fallbackLabel = "N/A") {
+    return formatTransferType(world?.transfer_type, fallbackLabel);
   }
 
   function getNormalizedBossKills(kills) {
@@ -605,9 +633,14 @@
   }
 
   window.TibiaTime = {
+    GITHUB_ISSUES_URL,
+    WORLDS_DATA_PATH,
     SUPPORTED_TIMEZONES,
     DEFAULT_TIMEZONE,
     escapeHtml,
+    setTextContent,
+    setHtml,
+    fetchJson,
     readStorage,
     writeStorage,
     getInitialLanguage,
@@ -618,6 +651,7 @@
     resolveTimezoneValue,
     getWorldBattleyeKey,
     getWorldBattleyeLabel,
+    formatTransferType,
     getWorldTransferLabel,
     getNormalizedBossKills,
     getEffectiveWorldMark,

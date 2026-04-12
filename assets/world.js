@@ -177,15 +177,20 @@ const WORLD_I18N = {
 
 const {
   escapeHtml,
+  fetchJson,
+  GITHUB_ISSUES_URL,
   getEffectiveWorldMark,
   getInitialLanguage: getSharedInitialLanguage,
   initSharedUi,
   loadSavedTimezone,
+  setHtml,
+  setTextContent,
   getWorldBattleyeLabel,
   getWorldMarkLabel,
   getTimezoneDisplayLabel,
   getWorldTransferLabel,
   resolveTimezoneValue,
+  WORLDS_DATA_PATH,
   writeStorage,
   convertTimeBetweenTimezones: convertSharedTimeBetweenTimezones,
 } = window.TibiaTime;
@@ -194,9 +199,6 @@ const STORAGE_KEYS = {
   lang: "lang",
 };
 
-const GITHUB_ISSUES_URL =
-  "https://github.com/nesleykent/tibia-warzones-schedule/issues";
-const WORLDS_DATA_PATH = "./data/worlds.json";
 const TRACKED_ITEMS_PATHS = [
   "./data/market/items/tracked_items.json",
   "./data/market/tracked_items.json",
@@ -207,12 +209,6 @@ let pageTimezone = "UTC";
 
 function t() {
   return WORLD_I18N[worldLang] || WORLD_I18N["pt-BR"];
-}
-
-function setTextContent(element, value) {
-  if (element) {
-    element.textContent = value;
-  }
 }
 
 function slugifyWorldName(worldName) {
@@ -263,6 +259,14 @@ const MARKET_RANGE_TABS = [
   { key: "360D", label: "360 Days" },
   { key: "ALL", label: "All Time" },
 ];
+
+const MARKET_RANGE_WINDOWS = {
+  "7D": 7 * 24 * 60 * 60,
+  "28D": 28 * 24 * 60 * 60,
+  "90D": 90 * 24 * 60 * 60,
+  "180D": 180 * 24 * 60 * 60,
+  "360D": 360 * 24 * 60 * 60,
+};
 
 function getMarkLabel(mark) {
   return getWorldMarkLabel(mark, {
@@ -455,10 +459,7 @@ function renderMarketPricesPlaceholder() {
 async function loadTrackedItems() {
   for (const path of TRACKED_ITEMS_PATHS) {
     try {
-      const response = await fetch(path);
-      if (!response.ok) continue;
-
-      const payload = await response.json();
+      const payload = await fetchJson(path);
       if (Array.isArray(payload)) return payload;
       if (Array.isArray(payload?.items)) return payload.items;
     } catch {
@@ -544,12 +545,7 @@ function formatMarketShortDate(unixSeconds) {
 }
 
 function getRangeWindowSeconds(rangeKey) {
-  if (rangeKey === "7D") return 7 * 24 * 60 * 60;
-  if (rangeKey === "28D") return 28 * 24 * 60 * 60;
-  if (rangeKey === "90D") return 90 * 24 * 60 * 60;
-  if (rangeKey === "180D") return 180 * 24 * 60 * 60;
-  if (rangeKey === "360D") return 360 * 24 * 60 * 60;
-  return null;
+  return MARKET_RANGE_WINDOWS[rangeKey] || null;
 }
 
 function normalizeMarketMetricValue(value) {
@@ -1910,48 +1906,47 @@ async function loadWorldPage() {
     !historyCard
   ) {
     if (summaryCard)
-      summaryCard.innerHTML = renderEmptyCard(dict.summary, dict.worldNotFound);
+      setHtml(summaryCard, renderEmptyCard(dict.summary, dict.worldNotFound));
     return;
   }
 
   const clearSecondaryCards = () => {
-    schedulesCard.innerHTML = "";
-    marketCard.innerHTML = "";
-    historyCard.innerHTML = "";
+    setHtml(schedulesCard, "");
+    setHtml(marketCard, "");
+    setHtml(historyCard, "");
   };
 
   try {
-    const worldsResponse = await fetch(WORLDS_DATA_PATH);
-    if (!worldsResponse.ok) throw new Error(String(worldsResponse.status));
-    const worlds = await worldsResponse.json();
+    const worlds = await fetchJson(WORLDS_DATA_PATH);
     const world = Array.isArray(worlds)
       ? worlds.find((item) => item && item.name === worldName)
       : null;
 
     if (!world) {
-      summaryCard.innerHTML = renderEmptyCard(dict.summary, dict.worldNotFound);
+      setHtml(summaryCard, renderEmptyCard(dict.summary, dict.worldNotFound));
       clearSecondaryCards();
       return;
     }
 
     setTextContent(document.getElementById("worldTitle"), world.name);
-    summaryCard.innerHTML = renderSummary(world);
-    schedulesCard.innerHTML = renderSchedules(world);
+    setHtml(summaryCard, renderSummary(world));
+    setHtml(schedulesCard, renderSchedules(world));
 
-    marketCard.innerHTML = renderMarketPricesPlaceholder();
-    marketCard.innerHTML = await renderMarketPrices(world.name);
+    setHtml(marketCard, renderMarketPricesPlaceholder());
+    setHtml(marketCard, await renderMarketPrices(world.name));
     bindMarketPricesTableInteractions(marketCard, world.name);
 
-    const historyResponse = await fetch(
-      "./data/history/" + slugifyWorldName(world.name) + ".json"
-    );
     let historyData = { history: [] };
-    if (historyResponse.ok) {
-      historyData = await historyResponse.json();
+    try {
+      historyData = await fetchJson(
+        "./data/history/" + slugifyWorldName(world.name) + ".json"
+      );
+    } catch {
+      historyData = { history: [] };
     }
-    historyCard.innerHTML = renderHistory(historyData);
+    setHtml(historyCard, renderHistory(historyData));
   } catch {
-    summaryCard.innerHTML = renderEmptyCard(dict.summary, dict.loadError);
+    setHtml(summaryCard, renderEmptyCard(dict.summary, dict.loadError));
     clearSecondaryCards();
   }
 }

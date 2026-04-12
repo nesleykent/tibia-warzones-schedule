@@ -4,14 +4,19 @@
 
 const {
   DEFAULT_TIMEZONE,
+  GITHUB_ISSUES_URL,
   SUPPORTED_TIMEZONES,
+  WORLDS_DATA_PATH,
   escapeHtml,
+  fetchJson,
+  formatTransferType,
   getEffectiveWorldMark,
   getInitialLanguage: getSharedInitialLanguage,
   getNormalizedBossKills,
   initSharedUi,
   loadSavedTimezone,
   readStorage,
+  setTextContent,
   getWorldBattleyeKey,
   getWorldBattleyeLabel,
   getWorldMarkLabel,
@@ -32,10 +37,6 @@ const STORAGE_KEYS = {
   selectedSound: "selectedSound",
   timezone: "tz",
 };
-
-const GITHUB_ISSUES_URL =
-  "https://github.com/nesleykent/tibia-warzones-schedule/issues";
-const WORLDS_DATA_PATH = "./data/worlds.json";
 
 const I18N = {
   en: {
@@ -400,12 +401,6 @@ let tickInterval = null;
 let lastTickMin = -1;
 
 let _soundPickerCloseHandler = null;
-
-function setTextContent(element, value) {
-  if (element) {
-    element.textContent = value;
-  }
-}
 
 // ─── Audio ───────────────────────────────────────────
 let audioCtx = null;
@@ -1552,10 +1547,7 @@ function getBattleyeDisplayLabel(key) {
 }
 
 function getTransferDisplayLabel(key) {
-  if (key === "regular") return "Regular Transfer";
-  if (key === "blocked") return "Blocked Transfer";
-  if (key === "locked")  return "Locked Transfer";
-  return key.charAt(0).toUpperCase() + key.slice(1) + " Transfer";
+  return formatTransferType(key, key);
 }
 
 function renderFilters(warzone_worlds) {
@@ -1763,11 +1755,9 @@ async function init() {
   if (searchInput) searchInput.addEventListener("input", render);
 
   try {
-    const worldsResponse = await fetch(WORLDS_DATA_PATH);
-    if (!worldsResponse.ok)
-      throw new Error(`${t().loadError}: ${worldsResponse.status}`);
-
-    const worldsData = await worldsResponse.json();
+    const worldsData = await fetchJson(WORLDS_DATA_PATH).catch((error) => {
+      throw new Error(`${t().loadError}: ${error.message}`);
+    });
     worlds = Array.isArray(worldsData) ? worldsData : [];
     render();
     let resizeTimer;

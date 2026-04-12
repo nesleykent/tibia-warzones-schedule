@@ -40,6 +40,9 @@
   --t-fast: 140ms;
   --t-base: 220ms;
   --t-theme: 280ms;
+  --glass-backdrop: saturate(180%) blur(24px);
+  --text-shadow-strong: 0 1px 4px rgba(0, 0, 0, 0.9),
+    0 0 12px rgba(0, 0, 0, 0.7);
 }
 
 /* ══════════════════════════════════════════════
@@ -183,8 +186,8 @@ body::after {
   top: 0;
   z-index: 100;
   background: var(--bg-topbar);
-  backdrop-filter: saturate(180%) blur(24px);
-  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
   border-bottom: 1px solid var(--sep-md);
   transition: background var(--t-theme) var(--ease-out),
     border-color var(--t-theme) var(--ease-out);
@@ -300,8 +303,8 @@ body::after {
   right: 0;
   min-width: 148px;
   background: var(--bg-topbar);
-  backdrop-filter: saturate(180%) blur(24px);
-  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
   border: 1px solid var(--sep-md);
   border-radius: var(--r-md);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
@@ -370,8 +373,8 @@ body::after {
 ══════════════════════════════════════════════ */
 .site-header {
   background: var(--bg-header);
-  backdrop-filter: saturate(180%) blur(24px);
-  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
   border-bottom: 1px solid var(--sep);
   padding-block: 20px 18px;
   position: relative;
@@ -414,7 +417,7 @@ body::after {
   letter-spacing: -0.03em;
   line-height: 1.1;
   color: var(--text-primary);
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 0 12px rgba(0, 0, 0, 0.7);
+  text-shadow: var(--text-shadow-strong);
 }
 
 .site-header p {
@@ -446,7 +449,7 @@ body::after {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: #ffffff;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 0 12px rgba(0, 0, 0, 0.7);
+  text-shadow: var(--text-shadow-strong);
 }
 
 .section-label {
@@ -639,7 +642,7 @@ body::after {
 .summary {
   font-size: 12px;
   color: #ffffff;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 0 12px rgba(0, 0, 0, 0.7);
+  text-shadow: var(--text-shadow-strong);
   padding-bottom: 14px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   margin-bottom: 18px;
@@ -1392,8 +1395,8 @@ body::after {
   right: 0;
   min-width: 152px;
   background: var(--bg-topbar);
-  backdrop-filter: saturate(180%) blur(24px);
-  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
   border: 1px solid var(--sep-md);
   border-radius: var(--r-md);
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
@@ -2178,8 +2181,8 @@ body::after {
   gap: 10px;
   padding: 10px 14px;
   background: var(--bg-card);
-  backdrop-filter: saturate(180%) blur(24px);
-  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
   border: 1px solid rgba(193, 53, 132, 0.4);
   border-radius: var(--r-xl);
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
@@ -2286,8 +2289,8 @@ body::after {
 .site-footer {
   margin-top: 56px;
   background: var(--bg-topbar);
-  backdrop-filter: saturate(180%) blur(24px);
-  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
   border-top: 1px solid var(--sep-md);
   padding-block: 24px 20px;
   transition: background var(--t-theme) var(--ease-out),
