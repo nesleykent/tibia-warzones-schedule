@@ -21,8 +21,8 @@ const STORAGE_KEYS = {
 
 const I18N = {
   en: {
-    pageTitle: "Warzone Ranking",
-    title: "Warzone Ranking",
+    pageTitle: "Warzones Ranking",
+    title: "Warzones Ranking",
     subtitle: "Ranking based on expected return only.",
     explanationTitle: "Understanding the calculation",
     explanationIntro:
@@ -117,8 +117,8 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     notAvailable: "N/A",
   },
   "pt-BR": {
-    pageTitle: "Warzone Ranking",
-    title: "Warzone Ranking",
+    pageTitle: "Warzones Ranking",
+    title: "Warzones Ranking",
     subtitle: "Ranking baseado apenas em expected return.",
     explanationTitle: "Understanding the calculation",
     explanationIntro:
@@ -212,8 +212,8 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     notAvailable: "N/D",
   },
   "es-419": {
-    pageTitle: "Warzone Ranking",
-    title: "Warzone Ranking",
+    pageTitle: "Warzones Ranking",
+    title: "Warzones Ranking",
     subtitle: "Ranking basado solo en expected return.",
     explanationTitle: "Understanding the calculation",
     explanationIntro:
@@ -307,8 +307,8 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     notAvailable: "N/D",
   },
   pl: {
-    pageTitle: "Warzone Ranking",
-    title: "Warzone Ranking",
+    pageTitle: "Warzones Ranking",
+    title: "Warzones Ranking",
     subtitle: "Ranking oparty wyłącznie na expected return.",
     explanationTitle: "Understanding the calculation",
     explanationIntro:
