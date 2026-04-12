@@ -108,6 +108,8 @@ scripts/
   remove_outliers.py
   update_data.py
 
+logs/
+
 .github/workflows/
   deploy-pages.yml
   update-worlds.yml
@@ -180,6 +182,12 @@ Shared timezone logic, shared UI initialization, and common helpers.
 ### `assets/styles.css`
 
 The shared site stylesheet.
+
+## Logs
+
+### `logs/`
+
+Reserved for generated log output, including future Markdown log files.
 
 ## Scripts
 

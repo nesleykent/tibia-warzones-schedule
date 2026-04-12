@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+LOGS_DIR = BASE_DIR / "logs"
 
 RAW_WORLD_DIR = BASE_DIR / "data" / "market" / "world"
 ITEMS_CSV = BASE_DIR / "data" / "market" / "items" / "items.csv"
