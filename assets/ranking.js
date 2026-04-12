@@ -26,7 +26,7 @@ const I18N = {
     subtitle: "Ranking based on expected return only.",
     explanationTitle: "Understanding the calculation",
     explanationIntro:
-      "The ranking normalizes each world's service value by the Tibia Coin price, so worlds can be compared on the same scale.",
+      "The ranking normalizes each world's service value by the Tibia Coins price, so worlds can be compared on the same scale.",
     explanationRankingFormulaTitle: "Ranking formula",
     explanationRankingFormula:
       String.raw`\[
@@ -68,7 +68,7 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
       },
       {
         term: String.raw`\(P_{TC}\)`,
-        description: "7-day rolling Tibia Coin price for that world.",
+        description: "7-day rolling Tibia Coins price for that world.",
       },
       {
         term: String.raw`\(P_{GCS}, P_{BCS}, P_{VCS}\)`,
@@ -90,8 +90,8 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     ],
     explanationNotesTitle: "Notes",
     explanationNotes: [
-      "Gold values alone are not directly comparable between worlds with very different Tibia Coin prices.",
-      "The Tibia Coin price uses the rolling market value stored in the ranking dataset.",
+      "Gold values alone are not directly comparable between worlds with very different Tibia Coins prices.",
+      "The Tibia Coins price uses the rolling market value stored in the ranking dataset.",
       "ER (xGold) on the world page is the raw Service EV, while ER (xTC) is the normalized ranking value.",
     ],
     explanationLink: "Understanding the calculation",
@@ -104,7 +104,7 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     all: "All",
     expectedReturn: "Expected Return",
     rank: "Rank",
-    tibiaCoin: "Tibia Coin Price",
+    tibiaCoin: "Tibia Coins Price",
     pvpType: "PvP Type",
     serviceExpectedValue: "Service EV",
     expectedReturnXtc: "Expected Return",
@@ -122,14 +122,14 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     subtitle: "Ranking baseado apenas em expected return.",
     explanationTitle: "Understanding the calculation",
     explanationIntro:
-      "O ranking normaliza o valor esperado do service pelo preço da Tibia Coin, para que os mundos possam ser comparados na mesma escala.",
+      "O ranking normaliza o valor esperado do service pelo preço da Tibia Coins, para que os mundos possam ser comparados na mesma escala.",
     explanationRankingFormulaTitle: "Fórmula do ranking",
     explanationRankingFormula:
       String.raw`\[
 \mathrm{ER}_{xTC} = \frac{\mathrm{ServiceEV}_{gold}}{P_{TC}}
 \]`,
     explanationRankingFormulaText:
-      "Isso converte o valor esperado do service, em gold coins, para uma unidade baseada em Tibia Coin.",
+      "Isso converte o valor esperado do service, em gold coins, para uma unidade baseada em Tibia Coins.",
     explanationServiceFormulaTitle: "Fórmula do Service EV",
     explanationServiceFormula:
       String.raw`\[
@@ -163,7 +163,7 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
       },
       {
         term: String.raw`\(P_{TC}\)`,
-        description: "preço rolling de 7 dias da Tibia Coin naquele mundo.",
+        description: "preço rolling de 7 dias da Tibia Coins naquele mundo.",
       },
       {
         term: String.raw`\(P_{GCS}, P_{BCS}, P_{VCS}\)`,
@@ -185,8 +185,8 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     ],
     explanationNotesTitle: "Notas",
     explanationNotes: [
-      "Valores em gold puro não são diretamente comparáveis entre mundos com preços muito diferentes de Tibia Coin.",
-      "O preço da Tibia Coin usa o valor rolling salvo no dataset do ranking.",
+      "Valores em gold puro não são diretamente comparáveis entre mundos com preços muito diferentes de Tibia Coins.",
+      "O preço da Tibia Coins usa o valor rolling salvo no dataset do ranking.",
       "ER (xGold) na world page é o Service EV bruto, enquanto ER (xTC) é o valor normalizado do ranking.",
     ],
     explanationLink: "Understanding the calculation",
@@ -199,7 +199,7 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     all: "Todos",
     expectedReturn: "Expected Return",
     rank: "Rank",
-    tibiaCoin: "Tibia Coin Price",
+    tibiaCoin: "Tibia Coins Price",
     pvpType: "Tipo PvP",
     serviceExpectedValue: "Service EV",
     expectedReturnXtc: "Expected Return",
@@ -217,14 +217,14 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     subtitle: "Ranking basado solo en expected return.",
     explanationTitle: "Understanding the calculation",
     explanationIntro:
-      "El ranking normaliza el valor esperado del service por el precio de Tibia Coin, para comparar mundos en la misma escala.",
+      "El ranking normaliza el valor esperado del service por el precio de Tibia Coins, para comparar mundos en la misma escala.",
     explanationRankingFormulaTitle: "Fórmula del ranking",
     explanationRankingFormula:
       String.raw`\[
 \mathrm{ER}_{xTC} = \frac{\mathrm{ServiceEV}_{gold}}{P_{TC}}
 \]`,
     explanationRankingFormulaText:
-      "Esto convierte el valor esperado del service desde gold coins a una unidad basada en Tibia Coin.",
+      "Esto convierte el valor esperado del service desde gold coins a una unidad basada en Tibia Coins.",
     explanationServiceFormulaTitle: "Fórmula del Service EV",
     explanationServiceFormula:
       String.raw`\[
@@ -258,7 +258,7 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
       },
       {
         term: String.raw`\(P_{TC}\)`,
-        description: "precio rolling de 7 días de Tibia Coin en ese mundo.",
+        description: "precio rolling de 7 días de Tibia Coins en ese mundo.",
       },
       {
         term: String.raw`\(P_{GCS}, P_{BCS}, P_{VCS}\)`,
@@ -280,8 +280,8 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     ],
     explanationNotesTitle: "Notas",
     explanationNotes: [
-      "Los valores brutos en gold no son directamente comparables entre mundos con precios muy distintos de Tibia Coin.",
-      "El precio de Tibia Coin usa el valor rolling guardado en el dataset del ranking.",
+      "Los valores brutos en gold no son directamente comparables entre mundos con precios muy distintos de Tibia Coins.",
+      "El precio de Tibia Coins usa el valor rolling guardado en el dataset del ranking.",
       "ER (xGold) en la world page es el Service EV bruto, mientras ER (xTC) es el valor normalizado del ranking.",
     ],
     explanationLink: "Understanding the calculation",
@@ -294,7 +294,7 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     all: "Todos",
     expectedReturn: "Expected Return",
     rank: "Rank",
-    tibiaCoin: "Tibia Coin Price",
+    tibiaCoin: "Tibia Coins Price",
     pvpType: "Tipo PvP",
     serviceExpectedValue: "Service EV",
     expectedReturnXtc: "Expected Return",
@@ -312,14 +312,14 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     subtitle: "Ranking oparty wyłącznie na expected return.",
     explanationTitle: "Understanding the calculation",
     explanationIntro:
-      "Ranking normalizuje oczekiwaną wartość service przez cenę Tibia Coin, aby porównywać światy na tej samej skali.",
+      "Ranking normalizuje oczekiwaną wartość service przez cenę Tibia Coins, aby porównywać światy na tej samej skali.",
     explanationRankingFormulaTitle: "Wzór rankingu",
     explanationRankingFormula:
       String.raw`\[
 \mathrm{ER}_{xTC} = \frac{\mathrm{ServiceEV}_{gold}}{P_{TC}}
 \]`,
     explanationRankingFormulaText:
-      "To przelicza oczekiwaną wartość service z gold coins na jednostkę opartą o Tibia Coin.",
+      "To przelicza oczekiwaną wartość service z gold coins na jednostkę opartą o Tibia Coins.",
     explanationServiceFormulaTitle: "Wzór Service EV",
     explanationServiceFormula:
       String.raw`\[
@@ -353,7 +353,7 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
       },
       {
         term: String.raw`\(P_{TC}\)`,
-        description: "7-dniowa rolling price Tibia Coin dla danego świata.",
+        description: "7-dniowa rolling price Tibia Coins dla danego świata.",
       },
       {
         term: String.raw`\(P_{GCS}, P_{BCS}, P_{VCS}\)`,
@@ -375,8 +375,8 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     ],
     explanationNotesTitle: "Uwagi",
     explanationNotes: [
-      "Surowe wartości w gold nie są bezpośrednio porównywalne między światami z bardzo różnymi cenami Tibia Coin.",
-      "Cena Tibia Coin używa rolling value zapisanego w dataset rankingu.",
+      "Surowe wartości w gold nie są bezpośrednio porównywalne między światami z bardzo różnymi cenami Tibia Coins.",
+      "Cena Tibia Coins używa rolling value zapisanego w dataset rankingu.",
       "ER (xGold) na world page to surowy Service EV, a ER (xTC) to znormalizowana wartość rankingowa.",
     ],
     explanationLink: "Understanding the calculation",
@@ -389,7 +389,7 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     all: "Wszystkie",
     expectedReturn: "Expected Return",
     rank: "Rank",
-    tibiaCoin: "Tibia Coin Price",
+    tibiaCoin: "Tibia Coins Price",
     pvpType: "Typ PvP",
     serviceExpectedValue: "Service EV",
     expectedReturnXtc: "Expected Return",
