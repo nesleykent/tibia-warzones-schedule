@@ -77,4 +77,5 @@ jobs:
           git config user.email "$COMMIT_AUTHOR_EMAIL"
           git add data/worlds.json data/history
           git commit -m "chore: refresh worlds and history data"
+          git pull --rebase origin main
           git push

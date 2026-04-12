@@ -239,7 +239,7 @@ The shared site stylesheet.
 
 ### `logs/`
 
-Reserved for generated log output, including future Markdown log files.
+Used for generated log output and auxiliary run artifacts when needed.
 
 ## Scripts
 
@@ -334,6 +334,12 @@ Refresh world data:
 python scripts/update_data.py
 ```
 
+Rebuild ranking metrics from the existing world dataset only:
+
+```bash
+python scripts/enrich_worlds_with_rankings.py
+```
+
 Serve the site locally:
 
 ```bash
@@ -352,42 +358,35 @@ The site is deployed through GitHub Pages from this repository.
 
 The deployment workflow prepares a static Pages artifact and publishes it through GitHub Actions.
 
-## Roadmap
+## Economic Ranking Pipeline
 
-One planned extension is return scoring per Warzone world using recent market history.
+The expected-return ranking is implemented and attached to each world during data refresh.
 
-The intended model is:
+At a high level, the pipeline:
 
-1. load market history for:
-   - Tibia Coins
-   - Gill Necklace
-   - Prismatic Necklace
-   - Prismatic Ring
-2. recursively extract rows from arrays or from keys such as:
-   - `data`
-   - `results`
-   - `history`
-   - `items`
-   - `snapshots`
-3. keep only rows with:
-   - a positive numeric timestamp
-   - at least one positive numeric value among `day_average_sell` and `day_average_buy`
-4. convert timestamps to UTC dates
-5. keep only the latest row per UTC date
-6. keep at most the most recent 7 dates
-7. compute daily prices from the mean of positive sell/buy values
-8. compute expected item prices as arithmetic means of those daily prices
-9. compute:
+1. loads market history for Tibia Coins, Gill Necklace, Prismatic Necklace, Prismatic Ring, and other ranking-supporting items
+2. extracts valid rows from supported payload shapes
+3. keeps only rows with valid positive timestamps
+4. reduces market history to the latest valid row per UTC day
+5. computes 7-day rolling prices from daily sell/buy averages
+6. computes:
 
 ```text
 wz1 = 30000 + 10500 * 0.5 + gill_necklace_price
 wz2 = 40000 + 15000 + prismatic_necklace_price
 wz3 = 50000 + 18000 + prismatic_ring_price
 service_expected_value = wz1 + wz2 + wz3
-expected_return = service_expected_value / Tibia_coin_price
+expected_return = service_expected_value / tibia_coin_price
 ```
 
-If any required expected item price is missing, `expected_return` remains `null`.
+7. attaches `warzone_economic_ranking` to each world in `data/worlds.json`
+8. assigns ranking positions to worlds with sufficient data
+
+If any required price input is missing, the world is kept in the dataset but marked as insufficient for ranking.
+
+For the detailed expected-return methodology, see:
+
+- [Expected_Return_Explanation.md](./Expected_Return_Explanation.md)
 
 ## Credits
 
