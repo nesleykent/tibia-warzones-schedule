@@ -308,13 +308,6 @@ body::after {
   }
 }
 
-.header-controls {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
-}
-
 /* ── Language dropdown ── */
 .lang-dropdown {
   position: relative;

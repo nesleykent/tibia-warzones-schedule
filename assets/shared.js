@@ -10,6 +10,10 @@
     "Community driven schedule for Warzone services across multiple servers, based on Deathstrike, Gnomevil, and Abyssador kill statistics plus player reports. Times can vary due to delays, in-game events, disruptive behavior, or server activity changes. Service availability depends on in‑game conditions and server rules.";
   const STORAGE_KEY_LANGUAGE = "lang";
   const STORAGE_KEY_TIMEZONE = "tz";
+  const SHARED_STORAGE_KEYS = {
+    language: STORAGE_KEY_LANGUAGE,
+    timezone: STORAGE_KEY_TIMEZONE,
+  };
   const WORLDS_DATA_PATH = "./data/worlds.json";
   const SUPPORTED_TIMEZONES = [
     {
@@ -812,6 +816,7 @@
     WORLDS_DATA_PATH,
     SUPPORTED_TIMEZONES,
     DEFAULT_TIMEZONE,
+    SHARED_STORAGE_KEYS,
     escapeHtml,
     setTextContent,
     setHtml,

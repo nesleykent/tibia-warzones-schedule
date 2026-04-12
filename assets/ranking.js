@@ -1,4 +1,5 @@
 const {
+  SHARED_STORAGE_KEYS,
   WORLDS_DATA_PATH,
   escapeHtml,
   fetchJson,
@@ -22,7 +23,7 @@ const {
 
 const STORAGE_KEYS = {
   activeFilters: "rankingActiveFilters",
-  lang: "lang",
+  lang: SHARED_STORAGE_KEYS.language,
 };
 const FILTER_GROUPS = ["region", "pvp", "transfer", "mark"];
 const FILTER_VALUE_GETTERS = {
@@ -31,6 +32,12 @@ const FILTER_VALUE_GETTERS = {
   transfer: getTransferKey,
   mark: getMarkKey,
 };
+const FILTER_CONFIGS = [
+  { group: "region", format: (value) => value },
+  { group: "pvp", format: (value) => value },
+  { group: "transfer", format: (value) => formatTransferType(value, value) },
+  { group: "mark", format: getMarkLabel },
+];
 
 const I18N = {
   en: {
@@ -566,17 +573,12 @@ function renderFilters() {
   }
 
   const allPill = `<button type="button" class="filter-pill filter-pill--all${!hasActiveFilters() ? " is-active" : ""}" data-filter-group="__all__" data-filter-value="__all__">${escapeHtml(dict.all)}</button>`;
-  const filterGroups = [
-    { group: "region", values: new Set(rankedWorlds.map(getRegionKey)), format: (value) => value },
-    { group: "pvp", values: new Set(rankedWorlds.map(getPvpKey)), format: (value) => value },
-    { group: "transfer", values: new Set(rankedWorlds.map(getTransferKey)), format: (value) => formatTransferType(value, value) },
-    { group: "mark", values: new Set(rankedWorlds.map(getMarkKey)), format: getMarkLabel },
-  ];
-
   filterBar.innerHTML = `<div class="filter-pills-row">${
     allPill +
-    filterGroups
-      .map(({ group, values, format }) => pills(group, values, format))
+    FILTER_CONFIGS
+      .map(({ group, format }) =>
+        pills(group, new Set(rankedWorlds.map(FILTER_VALUE_GETTERS[group])), format)
+      )
       .join("")
   }</div>`;
 }

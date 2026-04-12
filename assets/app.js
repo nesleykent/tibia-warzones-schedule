@@ -5,6 +5,7 @@
 const {
   DEFAULT_TIMEZONE,
   GITHUB_ISSUES_URL,
+  SHARED_STORAGE_KEYS,
   SUPPORTED_TIMEZONES,
   WORLDS_DATA_PATH,
   escapeHtml,
@@ -37,13 +38,31 @@ const {
 const STORAGE_KEYS = {
   activeFilters: "activeFilters",
   alertOffset: "alertOffset",
-  lang: "lang",
+  lang: SHARED_STORAGE_KEYS.language,
   masterVolume: "masterVolume",
   notificationsEnabled: "notificationsEnabled",
   selectedExecutions: "selectedExecutions",
   selectedSound: "selectedSound",
-  timezone: "tz",
+  timezone: SHARED_STORAGE_KEYS.timezone,
 };
+
+const FILTER_GROUPS = ["region", "pvp", "battleye", "transfer"];
+const FILTER_VALUE_GETTERS = {
+  region: getRegionKey,
+  pvp: getPvpKey,
+  battleye: getBattleyeKey,
+  transfer: getTransferKey,
+};
+const FILTER_VALUE_LABELS = {
+  region: (value) => value,
+  pvp: (value) => value,
+  battleye: getBattleyeDisplayLabel,
+  transfer: getTransferDisplayLabel,
+};
+
+function createEmptyFilterState() {
+  return Object.fromEntries(FILTER_GROUPS.map((group) => [group, new Set()]));
+}
 
 const I18N = {
   en: {
@@ -376,12 +395,7 @@ let lang = "pt-BR";
 let selectedExecutions = new Set();
 
 // ─── Filter state ─────────────────────────────────
-let activeFilters = {
-  region:   new Set(), // e.g. "South America", "Europe", "North America"
-  pvp:      new Set(), // e.g. "Open PvP", "Optional PvP", "Retro Open PvP", "Retro Hardcore PvP", "Hardcore PvP"
-  battleye: new Set(), // "GBE", "YBE", "none"
-  transfer: new Set(), // "Regular", "Blocked", "Locked"
-};
+let activeFilters = createEmptyFilterState();
 
 function execKey(worldName, execId) {
   return worldName + "|" + execId;
@@ -1236,18 +1250,16 @@ function bindLanguageButtons() {
 function applyStaticLabels() {
   const d = t();
   document.title = d.pageTitle;
-  const heroTitle = document.querySelector(".site-header h1");
-  const heroSubtitle = document.querySelector(".site-header p");
-  const questLinksLabel = document.getElementById("questLinksLabel");
-  const searchLabel = document.querySelector('label[for="searchInput"]');
-  const timezoneLabel = document.querySelector('label[for="timezoneSelect"]');
+  const heroTitle = document.getElementById("heroTitle");
+  const heroSubtitle = document.getElementById("heroSubtitle");
+  const searchLabel = document.getElementById("searchLabel");
+  const timezoneLabel = document.getElementById("timezoneLabel");
   const searchInput = document.getElementById("searchInput");
   const filtersLabel = document.getElementById("filtersLabel");
   const plannerLabel = document.getElementById("warzonePlannerLabel");
 
   setTextContent(heroTitle, d.heroTitle);
   setTextContent(heroSubtitle, d.heroSubtitle);
-  setTextContent(questLinksLabel, d.questLinksLabel);
   setTextContent(searchLabel, d.search);
   setTextContent(timezoneLabel, d.timezone);
   if (searchInput) searchInput.placeholder = d.searchPlaceholder || d.search;
@@ -1458,34 +1470,23 @@ function getPvpKey(world) {
 }
 
 function hasActiveFilters() {
-  return (
-    activeFilters.region.size > 0 ||
-    activeFilters.pvp.size > 0 ||
-    activeFilters.battleye.size > 0 ||
-    activeFilters.transfer.size > 0
-  );
+  return FILTER_GROUPS.some((group) => activeFilters[group].size > 0);
 }
 
 function worldPassesFilters(world) {
-  if (activeFilters.region.size > 0 && !activeFilters.region.has(getRegionKey(world))) return false;
-  if (activeFilters.pvp.size > 0 && !activeFilters.pvp.has(getPvpKey(world))) return false;
-  if (activeFilters.battleye.size > 0 && !activeFilters.battleye.has(getBattleyeKey(world))) return false;
-  if (activeFilters.transfer.size > 0 && !activeFilters.transfer.has(getTransferKey(world))) return false;
-  return true;
+  return FILTER_GROUPS.every((group) => {
+    const values = activeFilters[group];
+    return values.size === 0 || values.has(FILTER_VALUE_GETTERS[group](world));
+  });
 }
 
 function getFilterOptions(warzone_worlds) {
-  const regions   = new Set();
-  const pvpTypes  = new Set();
-  const battleyeSet = new Set();
-  const transferSet = new Set();
-  for (const w of warzone_worlds) {
-    regions.add(getRegionKey(w));
-    pvpTypes.add(getPvpKey(w));
-    battleyeSet.add(getBattleyeKey(w));
-    transferSet.add(getTransferKey(w));
-  }
-  return { regions, pvpTypes, battleyeSet, transferSet };
+  return Object.fromEntries(
+    FILTER_GROUPS.map((group) => [
+      group,
+      new Set(warzone_worlds.map((world) => FILTER_VALUE_GETTERS[group](world))),
+    ])
+  );
 }
 
 function toggleFilter(group, value) {
@@ -1499,38 +1500,28 @@ function toggleFilter(group, value) {
 }
 
 function clearAllFilters() {
-  activeFilters.region.clear();
-  activeFilters.pvp.clear();
-  activeFilters.battleye.clear();
-  activeFilters.transfer.clear();
+  FILTER_GROUPS.forEach((group) => activeFilters[group].clear());
   saveFilters();
   render();
 }
 
 function saveFilters() {
-  writeJsonStorage(STORAGE_KEYS.activeFilters, {
-    region: [...activeFilters.region],
-    pvp: [...activeFilters.pvp],
-    battleye: [...activeFilters.battleye],
-    transfer: [...activeFilters.transfer],
-  });
+  writeJsonStorage(
+    STORAGE_KEYS.activeFilters,
+    Object.fromEntries(
+      FILTER_GROUPS.map((group) => [group, [...activeFilters[group]]])
+    )
+  );
 }
 
 function loadFilters() {
   const savedFilters = readJsonStorage(STORAGE_KEYS.activeFilters, {});
 
-  if (Array.isArray(savedFilters.region)) {
-    activeFilters.region = new Set(savedFilters.region);
-  }
-  if (Array.isArray(savedFilters.pvp)) {
-    activeFilters.pvp = new Set(savedFilters.pvp);
-  }
-  if (Array.isArray(savedFilters.battleye)) {
-    activeFilters.battleye = new Set(savedFilters.battleye);
-  }
-  if (Array.isArray(savedFilters.transfer)) {
-    activeFilters.transfer = new Set(savedFilters.transfer);
-  }
+  FILTER_GROUPS.forEach((group) => {
+    if (Array.isArray(savedFilters[group])) {
+      activeFilters[group] = new Set(savedFilters[group]);
+    }
+  });
 }
 
 function getBattleyeDisplayLabel(key) {
@@ -1550,7 +1541,7 @@ function renderFilters(warzone_worlds) {
   if (warzone_worlds.length === 0) { el.innerHTML = ""; return; }
 
   const dict = t();
-  const { regions, pvpTypes, battleyeSet, transferSet } = getFilterOptions(warzone_worlds);
+  const filterOptions = getFilterOptions(warzone_worlds);
   const isAllActive = !hasActiveFilters();
 
   function pills(group, values, labelFn) {
@@ -1562,11 +1553,9 @@ function renderFilters(warzone_worlds) {
 
   const allPill = `<button type="button" class="filter-pill filter-pill--all${isAllActive ? " is-active" : ""}" data-filter-group="__all__" data-filter-value="__all__">${escapeHtml(dict.filterAll)}</button>`;
 
-  const rest =
-    pills("region",   regions,      v => v) +
-    pills("pvp",      pvpTypes,     v => v) +
-    pills("battleye", battleyeSet,  getBattleyeDisplayLabel) +
-    pills("transfer", transferSet,  getTransferDisplayLabel);
+  const rest = FILTER_GROUPS.map((group) =>
+    pills(group, filterOptions[group], FILTER_VALUE_LABELS[group])
+  ).join("");
 
   el.innerHTML = `<div class="filter-pills-row">${allPill}${rest}</div>`;
 }

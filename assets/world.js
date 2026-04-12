@@ -197,6 +197,7 @@ const {
   GITHUB_ISSUES_URL,
   getEffectiveWorldMark,
   getInitialLanguage: getSharedInitialLanguage,
+  SHARED_STORAGE_KEYS,
   bindLanguageButtons: bindSharedLanguageButtons,
   initSharedUi,
   loadSavedTimezone,
@@ -214,7 +215,7 @@ const {
 } = window.TibiaTime;
 
 const STORAGE_KEYS = {
-  lang: "lang",
+  lang: SHARED_STORAGE_KEYS.language,
 };
 
 const TRACKED_ITEMS_PATHS = [
@@ -534,13 +535,13 @@ function getLatestMarketEntry(entries) {
 
 function formatMarketValue(value) {
   const numeric = Number(value);
-  if (!Number.isFinite(numeric) || numeric < 0) return "N/A";
+  if (!Number.isFinite(numeric) || numeric < 0) return NOT_AVAILABLE;
   return new Intl.NumberFormat(worldLang).format(numeric);
 }
 
 function formatMarketTimestamp(unixSeconds) {
   const numeric = Number(unixSeconds);
-  if (!Number.isFinite(numeric) || numeric <= 0) return "N/A";
+  if (!Number.isFinite(numeric) || numeric <= 0) return NOT_AVAILABLE;
 
   const date = new Date(numeric * 1000);
   const resolvedTimezone = resolveTimezoneValue(pageTimezone);
@@ -563,7 +564,7 @@ function formatMarketTimestamp(unixSeconds) {
 
 function formatMarketShortDate(unixSeconds) {
   const numeric = Number(unixSeconds);
-  if (!Number.isFinite(numeric) || numeric <= 0) return "N/A";
+  if (!Number.isFinite(numeric) || numeric <= 0) return NOT_AVAILABLE;
   const resolvedTimezone = resolveTimezoneValue(pageTimezone);
 
   return new Intl.DateTimeFormat(worldLang, {
@@ -631,7 +632,7 @@ function getFilteredMarketEntries(entries, rangeKey) {
 
 function formatMarketMetricNumber(value, options = {}) {
   const numeric = Number(value);
-  if (!Number.isFinite(numeric)) return "N/A";
+  if (!Number.isFinite(numeric)) return NOT_AVAILABLE;
 
   const formatter = new Intl.NumberFormat(worldLang, {
     minimumFractionDigits: options.minimumFractionDigits || 0,
@@ -1821,10 +1822,10 @@ async function renderMarketPrices(worldName) {
       } catch {
         return {
           itemName,
-          supply: "N/A",
-          demand: "N/A",
-          spread: "N/A",
-          updated: "N/A",
+          supply: NOT_AVAILABLE,
+          demand: NOT_AVAILABLE,
+          spread: NOT_AVAILABLE,
+          updated: NOT_AVAILABLE,
         };
       }
     })
