@@ -33,6 +33,10 @@ const STORAGE_KEYS = {
   timezone: "tz",
 };
 
+const GITHUB_ISSUES_URL =
+  "https://github.com/nesleykent/tibia-warzones-schedule/issues";
+const WORLDS_DATA_PATH = "./data/worlds.json";
+
 const I18N = {
   en: {
     pageTitle: "Tibia Warzones Schedule",
@@ -397,6 +401,12 @@ let lastTickMin = -1;
 
 let _soundPickerCloseHandler = null;
 
+function setTextContent(element, value) {
+  if (element) {
+    element.textContent = value;
+  }
+}
+
 // ─── Audio ───────────────────────────────────────────
 let audioCtx = null;
 let audioBuffer = null;
@@ -523,30 +533,6 @@ function buildScheduleEntries() {
   }
   entries.sort((a, b) => a.totalMin - b.totalMin);
   return entries;
-}
-
-function mergeManualSchedules(worldsData, manualSchedulesData) {
-  const manualByWorld =
-    manualSchedulesData && typeof manualSchedulesData === "object"
-      ? manualSchedulesData
-      : {};
-
-  return worldsData.map((world) => {
-    const manual = manualByWorld[world.name];
-    const warzoneExecutions = Array.isArray(manual?.warzone_executions)
-      ? manual.warzone_executions
-      : [];
-    const timezone =
-      typeof manual?.timezone === "string" && manual.timezone.trim()
-        ? manual.timezone.trim()
-        : world.timezone;
-
-    return {
-      ...world,
-      warzone_executions: warzoneExecutions,
-      timezone: timezone,
-    };
-  });
 }
 
 // ─── Notifications ───────────────────────────────────
@@ -1265,14 +1251,14 @@ function applyStaticLabels() {
   const filtersLabel = document.getElementById("filtersLabel");
   const plannerLabel = document.getElementById("warzonePlannerLabel");
 
-  if (heroTitle) heroTitle.textContent = d.heroTitle;
-  if (heroSubtitle) heroSubtitle.textContent = d.heroSubtitle;
-  if (questLinksLabel) questLinksLabel.textContent = d.questLinksLabel;
-  if (searchLabel) searchLabel.textContent = d.search;
-  if (timezoneLabel) timezoneLabel.textContent = d.timezone;
+  setTextContent(heroTitle, d.heroTitle);
+  setTextContent(heroSubtitle, d.heroSubtitle);
+  setTextContent(questLinksLabel, d.questLinksLabel);
+  setTextContent(searchLabel, d.search);
+  setTextContent(timezoneLabel, d.timezone);
   if (searchInput) searchInput.placeholder = d.searchPlaceholder || d.search;
-  if (filtersLabel) filtersLabel.textContent = d.filterLabel || "Filtros";
-  if (plannerLabel) plannerLabel.textContent = d.warzonePlannerLabel || "Warzone Planner";
+  setTextContent(filtersLabel, d.filterLabel || "Filtros");
+  setTextContent(plannerLabel, d.warzonePlannerLabel || "Warzone Planner");
 }
 
 function convertTimeBetweenTimezones(scheduleTime, sourceTimezone, targetTimezone) {
@@ -1330,7 +1316,7 @@ function renderNoSchedulesMessage(world) {
 
   return `<p>${escapeHtml(dict.noSchedules)}. ${escapeHtml(
     dict.reportIssueCta
-  )} <a href="https://github.com/nesleykent/tibia-warzones-schedule/issues" target="_blank" rel="noopener noreferrer" class="empty-state-link">GitHub Issues</a>.</p>`;
+  )} <a href="${GITHUB_ISSUES_URL}" target="_blank" rel="noopener noreferrer" class="empty-state-link">GitHub Issues</a>.</p>`;
 }
 
 function renderExecutions(world) {
@@ -1777,7 +1763,7 @@ async function init() {
   if (searchInput) searchInput.addEventListener("input", render);
 
   try {
-    const worldsResponse = await fetch("./data/worlds.json");
+    const worldsResponse = await fetch(WORLDS_DATA_PATH);
     if (!worldsResponse.ok)
       throw new Error(`${t().loadError}: ${worldsResponse.status}`);
 

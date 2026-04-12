@@ -1,5 +1,7 @@
 (function () {
   const DEFAULT_TIMEZONE = "America/Sao_Paulo#Curitiba";
+  const STORAGE_KEY_LANGUAGE = "lang";
+  const STORAGE_KEY_TIMEZONE = "tz";
   const SUPPORTED_TIMEZONES = [
     {
       group: "Americas",
@@ -311,12 +313,25 @@
     }
   }
 
+  function findSupportedTimezoneEntry(tz) {
+    return (
+      SUPPORTED_TIMEZONES.find((item) => item.value === tz) ||
+      SUPPORTED_TIMEZONES.find((item) => item.timeZone === tz) ||
+      null
+    );
+  }
+
+  function pickRandomItem(items) {
+    if (!Array.isArray(items) || items.length === 0) return null;
+    return items[Math.floor(Math.random() * items.length)];
+  }
+
   function getInitialLanguage(supportedLanguages, fallbackLanguage = "pt-BR") {
     const availableLanguages =
       supportedLanguages && typeof supportedLanguages === "object"
         ? supportedLanguages
         : {};
-    const savedLanguage = readStorage("lang");
+    const savedLanguage = readStorage(STORAGE_KEY_LANGUAGE);
 
     if (savedLanguage && availableLanguages[savedLanguage]) {
       return savedLanguage;
@@ -348,7 +363,7 @@
   }
 
   function loadSavedTimezone() {
-    return readStorage("tz", DEFAULT_TIMEZONE) || DEFAULT_TIMEZONE;
+    return readStorage(STORAGE_KEY_TIMEZONE, DEFAULT_TIMEZONE) || DEFAULT_TIMEZONE;
   }
 
   function getWorldBattleyeKey(world) {
@@ -423,9 +438,7 @@
   }
 
   function getTimezoneDisplayLabel(tz) {
-    const entry =
-      SUPPORTED_TIMEZONES.find((item) => item.value === tz) ||
-      SUPPORTED_TIMEZONES.find((item) => item.timeZone === tz);
+    const entry = findSupportedTimezoneEntry(tz);
     if (entry) {
       return entry.short
         ? `${entry.label} (${entry.short}, ${entry.offset})`
@@ -440,7 +453,7 @@
   }
 
   function resolveTimezoneValue(tz) {
-    const entry = SUPPORTED_TIMEZONES.find((item) => item.value === tz);
+    const entry = findSupportedTimezoneEntry(tz);
     return entry?.timeZone || tz;
   }
 
@@ -455,22 +468,19 @@
 
     if (artworks.length === 0) return;
 
-    const pickRandomArtwork = (choices) =>
-      choices[Math.floor(Math.random() * choices.length)];
-
     const applyArtwork = (fileName) => {
       layer.style.backgroundImage = `url(assets/background/${fileName})`;
       layer.style.opacity = "1";
     };
 
-    const initialPick = pickRandomArtwork(artworks);
+    const initialPick = pickRandomItem(artworks);
     const image = new Image();
 
     image.onload = () => applyArtwork(initialPick);
     image.onerror = () => {
       const remaining = artworks.filter((artwork) => artwork !== initialPick);
       if (remaining.length > 0) {
-        applyArtwork(pickRandomArtwork(remaining));
+        applyArtwork(pickRandomItem(remaining));
       }
     };
 

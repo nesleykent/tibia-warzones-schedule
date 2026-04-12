@@ -11,7 +11,7 @@
     <div
       id="bg-layer"
       aria-hidden="true"
-      data-artworks="bg1.jpg,bg2.jpg,bg3.jpg,bg4.jpg,bg5.jpg"
+      data-artworks="bg1.jpg,bg2.jpg,bg3.jpg,bg4.jpg"
     ></div>
 
     <nav class="topbar" aria-label="Site navigation">
@@ -109,15 +109,17 @@
         </div>
       </section>
 
-      <h2 class="section-label" id="warzonePlannerLabel">Warzone Planner</h2>
-      <div id="nextWarzoneBar" style="display:none" aria-live="polite" aria-label="Next warzone"></div>
+      <section aria-labelledby="warzonePlannerLabel">
+        <h2 class="section-label" id="warzonePlannerLabel">Warzone Planner</h2>
+        <div id="nextWarzoneBar" style="display:none" aria-live="polite" aria-label="Next warzone"></div>
 
-      <section
-        id="schedulePanel"
-        class="schedule-panel"
-        aria-label="Selected schedule"
-        aria-live="polite"
-      ></section>
+        <section
+          id="schedulePanel"
+          class="schedule-panel"
+          aria-label="Selected schedule"
+          aria-live="polite"
+        ></section>
+      </section>
 
       <section
         class="summary"

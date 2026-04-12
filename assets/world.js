@@ -194,11 +194,25 @@ const STORAGE_KEYS = {
   lang: "lang",
 };
 
+const GITHUB_ISSUES_URL =
+  "https://github.com/nesleykent/tibia-warzones-schedule/issues";
+const WORLDS_DATA_PATH = "./data/worlds.json";
+const TRACKED_ITEMS_PATHS = [
+  "./data/market/items/tracked_items.json",
+  "./data/market/tracked_items.json",
+];
+
 let worldLang = "pt-BR";
 let pageTimezone = "UTC";
 
 function t() {
   return WORLD_I18N[worldLang] || WORLD_I18N["pt-BR"];
+}
+
+function setTextContent(element, value) {
+  if (element) {
+    element.textContent = value;
+  }
 }
 
 function slugifyWorldName(worldName) {
@@ -295,15 +309,21 @@ function updateLanguageButtons() {
 function applyStaticLabels() {
   const dict = t();
   document.title = dict.pageTitle;
-  const subtitle = document.getElementById("worldSubtitle");
-  if (subtitle) subtitle.textContent = dict.subtitle;
+  setTextContent(document.getElementById("worldSubtitle"), dict.subtitle);
+}
+
+function renderCardHeader(title, extraContent = "") {
+  return `
+    <div class="world-detail-card-header">
+      <h2>${escapeHtml(title)}</h2>
+      ${extraContent}
+    </div>
+  `;
 }
 
 function renderEmptyCard(title, body) {
   return `
-    <div class="world-detail-card-header">
-      <h2>${escapeHtml(title)}</h2>
-    </div>
+    ${renderCardHeader(title)}
     <p class="world-detail-empty">${escapeHtml(body)}</p>
   `;
 }
@@ -315,20 +335,16 @@ function renderNoSchedulesCard(title, world) {
 
   if (effectiveMark === "na") {
     return `
-      <div class="world-detail-card-header">
-        <h2>${escapeHtml(title)}</h2>
-      </div>
+      ${renderCardHeader(title)}
       <p class="world-detail-empty">${escapeHtml(dict.noSchedules)}</p>
     `;
   }
 
   return `
-    <div class="world-detail-card-header">
-      <h2>${escapeHtml(title)}</h2>
-    </div>
+    ${renderCardHeader(title)}
     <p class="world-detail-empty">${escapeHtml(dict.noSchedules)}. ${escapeHtml(
       dict.reportIssueCta
-    )} <a href="https://github.com/nesleykent/tibia-warzones-schedule/issues" target="_blank" rel="noopener noreferrer" class="empty-state-link">GitHub Issues</a>.</p>
+    )} <a href="${GITHUB_ISSUES_URL}" target="_blank" rel="noopener noreferrer" class="empty-state-link">GitHub Issues</a>.</p>
   `;
 }
 
@@ -437,12 +453,7 @@ function renderMarketPricesPlaceholder() {
 }
 
 async function loadTrackedItems() {
-  const candidatePaths = [
-    "./data/market/items/tracked_items.json",
-    "./data/market/tracked_items.json",
-  ];
-
-  for (const path of candidatePaths) {
+  for (const path of TRACKED_ITEMS_PATHS) {
     try {
       const response = await fetch(path);
       if (!response.ok) continue;
@@ -1742,17 +1753,8 @@ async function renderMarketPrices(worldName) {
 
   const rows = await Promise.all(
     trackedItems.map(async (itemName) => {
-      const marketFilePaths = buildMarketFilePath(worldName, itemName);
-
       try {
-        let payload = null;
-
-        for (const marketFilePath of marketFilePaths) {
-          const response = await fetch(marketFilePath);
-          if (!response.ok) continue;
-          payload = await response.json();
-          break;
-        }
+        const payload = await loadMarketPayload(worldName, itemName);
 
         if (!payload) {
           return {
@@ -1919,7 +1921,7 @@ async function loadWorldPage() {
   };
 
   try {
-    const worldsResponse = await fetch("./data/worlds.json");
+    const worldsResponse = await fetch(WORLDS_DATA_PATH);
     if (!worldsResponse.ok) throw new Error(String(worldsResponse.status));
     const worlds = await worldsResponse.json();
     const world = Array.isArray(worlds)
@@ -1932,7 +1934,7 @@ async function loadWorldPage() {
       return;
     }
 
-    document.getElementById("worldTitle").textContent = world.name;
+    setTextContent(document.getElementById("worldTitle"), world.name);
     summaryCard.innerHTML = renderSummary(world);
     schedulesCard.innerHTML = renderSchedules(world);
 
