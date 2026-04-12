@@ -24,6 +24,13 @@ const STORAGE_KEYS = {
   activeFilters: "rankingActiveFilters",
   lang: "lang",
 };
+const FILTER_GROUPS = ["region", "pvp", "transfer", "mark"];
+const FILTER_VALUE_GETTERS = {
+  region: getRegionKey,
+  pvp: getPvpKey,
+  transfer: getTransferKey,
+  mark: getMarkKey,
+};
 
 const I18N = {
   en: {
@@ -412,12 +419,11 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
 let worlds = [];
 let lang = "pt-BR";
 let explanationModalKeydownHandler = null;
-let activeFilters = {
-  region: new Set(),
-  pvp: new Set(),
-  transfer: new Set(),
-  mark: new Set(),
-};
+let activeFilters = createEmptyFilterState();
+
+function createEmptyFilterState() {
+  return Object.fromEntries(FILTER_GROUPS.map((group) => [group, new Set()]));
+}
 
 function t() {
   return I18N[lang] || I18N["pt-BR"];
@@ -453,47 +459,34 @@ function getTransferKey(world) {
 }
 
 function hasActiveFilters() {
-  return (
-    activeFilters.region.size > 0 ||
-    activeFilters.pvp.size > 0 ||
-    activeFilters.transfer.size > 0 ||
-    activeFilters.mark.size > 0
-  );
+  return FILTER_GROUPS.some((group) => activeFilters[group].size > 0);
 }
 
 function worldPassesFilters(world) {
-  if (activeFilters.region.size > 0 && !activeFilters.region.has(getRegionKey(world))) return false;
-  if (activeFilters.pvp.size > 0 && !activeFilters.pvp.has(getPvpKey(world))) return false;
-  if (activeFilters.transfer.size > 0 && !activeFilters.transfer.has(getTransferKey(world))) return false;
-  if (activeFilters.mark.size > 0 && !activeFilters.mark.has(getMarkKey(world))) return false;
-  return true;
+  return FILTER_GROUPS.every((group) => {
+    const values = activeFilters[group];
+    return values.size === 0 || values.has(FILTER_VALUE_GETTERS[group](world));
+  });
 }
 
 function loadSettings() {
   lang = getSharedInitialLanguage(I18N);
   const savedFilters = readJsonStorage(STORAGE_KEYS.activeFilters, {});
 
-  if (Array.isArray(savedFilters.region)) {
-    activeFilters.region = new Set(savedFilters.region);
-  }
-  if (Array.isArray(savedFilters.pvp)) {
-    activeFilters.pvp = new Set(savedFilters.pvp);
-  }
-  if (Array.isArray(savedFilters.transfer)) {
-    activeFilters.transfer = new Set(savedFilters.transfer);
-  }
-  if (Array.isArray(savedFilters.mark)) {
-    activeFilters.mark = new Set(savedFilters.mark);
-  }
+  FILTER_GROUPS.forEach((group) => {
+    if (Array.isArray(savedFilters[group])) {
+      activeFilters[group] = new Set(savedFilters[group]);
+    }
+  });
 }
 
 function saveFilters() {
-  writeJsonStorage(STORAGE_KEYS.activeFilters, {
-    region: [...activeFilters.region],
-    pvp: [...activeFilters.pvp],
-    transfer: [...activeFilters.transfer],
-    mark: [...activeFilters.mark],
-  });
+  writeJsonStorage(
+    STORAGE_KEYS.activeFilters,
+    Object.fromEntries(
+      FILTER_GROUPS.map((group) => [group, [...activeFilters[group]]])
+    )
+  );
 }
 
 function toggleFilter(group, value) {
@@ -504,10 +497,7 @@ function toggleFilter(group, value) {
 }
 
 function clearFilters() {
-  activeFilters.region.clear();
-  activeFilters.pvp.clear();
-  activeFilters.transfer.clear();
-  activeFilters.mark.clear();
+  FILTER_GROUPS.forEach((group) => activeFilters[group].clear());
   saveFilters();
   render();
 }
@@ -564,10 +554,6 @@ function renderFilters() {
   if (!filterBar) return;
 
   const rankedWorlds = worlds.filter((world) => getRanking(world)?.is_ranked);
-  const regions = new Set(rankedWorlds.map(getRegionKey));
-  const pvpTypes = new Set(rankedWorlds.map(getPvpKey));
-  const transfers = new Set(rankedWorlds.map(getTransferKey));
-  const marks = new Set(rankedWorlds.map(getMarkKey));
 
   function pills(group, values, format) {
     return [...values]
@@ -580,13 +566,18 @@ function renderFilters() {
   }
 
   const allPill = `<button type="button" class="filter-pill filter-pill--all${!hasActiveFilters() ? " is-active" : ""}" data-filter-group="__all__" data-filter-value="__all__">${escapeHtml(dict.all)}</button>`;
+  const filterGroups = [
+    { group: "region", values: new Set(rankedWorlds.map(getRegionKey)), format: (value) => value },
+    { group: "pvp", values: new Set(rankedWorlds.map(getPvpKey)), format: (value) => value },
+    { group: "transfer", values: new Set(rankedWorlds.map(getTransferKey)), format: (value) => formatTransferType(value, value) },
+    { group: "mark", values: new Set(rankedWorlds.map(getMarkKey)), format: getMarkLabel },
+  ];
 
   filterBar.innerHTML = `<div class="filter-pills-row">${
     allPill +
-    pills("region", regions, (value) => value) +
-    pills("pvp", pvpTypes, (value) => value) +
-    pills("transfer", transfers, (value) => formatTransferType(value, value)) +
-    pills("mark", marks, getMarkLabel)
+    filterGroups
+      .map(({ group, values, format }) => pills(group, values, format))
+      .join("")
   }</div>`;
 }
 

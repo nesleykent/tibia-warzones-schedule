@@ -221,6 +221,7 @@ const TRACKED_ITEMS_PATHS = [
   "./data/market/items/tracked_items.json",
   "./data/market/tracked_items.json",
 ];
+const NOT_AVAILABLE = "N/A";
 
 let worldLang = "pt-BR";
 let pageTimezone = "UTC";
@@ -229,66 +230,38 @@ function t() {
   return WORLD_I18N[worldLang] || WORLD_I18N["pt-BR"];
 }
 
-function slugifyWorldName(worldName) {
-  return String(worldName || "")
+function slugifySegment(value, separator) {
+  return String(value || "")
     .trim()
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+    .replace(/[^a-z0-9]+/g, separator)
+    .replace(new RegExp(`^\\${separator}+|\\${separator}+$`, "g"), "");
+}
+
+function slugifyWorldName(worldName) {
+  return slugifySegment(worldName, "-");
 }
 
 function slugifyItemName(itemName) {
-  return String(itemName || "")
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "_")
-    .replace(/^_+|_+$/g, "");
+  return slugifySegment(itemName, "_");
 }
 
 function buildMarketFilePath(worldName, itemName) {
   const worldFolderName = String(worldName || "").trim();
-  const fileName = `${slugifyWorldName(worldName)}_${slugifyItemName(
-    itemName
-  )}.json`;
+  const worldSlug = slugifyWorldName(worldName);
+  const fileName = `${worldSlug}_${slugifyItemName(itemName)}.json`;
   return [
     `./data/market/world/${worldFolderName}/${fileName}`,
-    `./data/market/world/${slugifyWorldName(worldName)}/${fileName}`,
+    `./data/market/world/${worldSlug}/${fileName}`,
     `./data/market/${fileName}`,
     `./data/market/items/${fileName}`,
     `./data/market/history/${fileName}`,
   ];
 }
 
-const MARKET_ITEM_ORDER = [
-  "Tibia Coins",
-  "Gold Token",
-  "Silver Token",
-  "Minor Crystalline Token",
-  "Gill Necklace",
-  "Prismatic Necklace",
-  "Prismatic Ring",
-];
-
-const MARKET_RANGE_TABS = [
-  { key: "7D", label: "7 Days" },
-  { key: "28D", label: "28 Days" },
-  { key: "90D", label: "90 Days" },
-  { key: "180D", label: "180 Days" },
-  { key: "360D", label: "360 Days" },
-  { key: "ALL", label: "All Time" },
-];
-
-const MARKET_RANGE_WINDOWS = {
-  "7D": 7 * 24 * 60 * 60,
-  "28D": 28 * 24 * 60 * 60,
-  "90D": 90 * 24 * 60 * 60,
-  "180D": 180 * 24 * 60 * 60,
-  "360D": 360 * 24 * 60 * 60,
-};
-
 function getMarkLabel(mark) {
   return getWorldMarkLabel(mark, {
-    notAvailable: t().notAvailable || "N/A",
+    notAvailable: t().notAvailable || NOT_AVAILABLE,
     healthy: t().healthy,
     trolls: t().trolls,
     inconclusive: t().inconclusive,
@@ -313,11 +286,11 @@ function convertTimeBetweenTimezones(
 }
 
 function getTransferLabel(world) {
-  return getWorldTransferLabel(world, "N/A");
+  return getWorldTransferLabel(world, NOT_AVAILABLE);
 }
 
 function getBattleyeLabel(world) {
-  return getWorldBattleyeLabel(world, "N/A");
+  return getWorldBattleyeLabel(world, NOT_AVAILABLE);
 }
 
 function formatExpectedReturn(value) {
@@ -431,6 +404,33 @@ function renderSummary(world) {
     </div>
   `;
 }
+
+const MARKET_ITEM_ORDER = [
+  "Tibia Coins",
+  "Gold Token",
+  "Silver Token",
+  "Minor Crystalline Token",
+  "Gill Necklace",
+  "Prismatic Necklace",
+  "Prismatic Ring",
+];
+
+const MARKET_RANGE_TABS = [
+  { key: "7D", label: "7 Days" },
+  { key: "28D", label: "28 Days" },
+  { key: "90D", label: "90 Days" },
+  { key: "180D", label: "180 Days" },
+  { key: "360D", label: "360 Days" },
+  { key: "ALL", label: "All Time" },
+];
+
+const MARKET_RANGE_WINDOWS = {
+  "7D": 7 * 24 * 60 * 60,
+  "28D": 28 * 24 * 60 * 60,
+  "90D": 90 * 24 * 60 * 60,
+  "180D": 180 * 24 * 60 * 60,
+  "360D": 360 * 24 * 60 * 60,
+};
 
 function renderSchedules(world) {
   const dict = t();

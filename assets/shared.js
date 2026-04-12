@@ -2,6 +2,12 @@
   const DEFAULT_TIMEZONE = "America/Sao_Paulo#Curitiba";
   const GITHUB_ISSUES_URL =
     "https://github.com/nesleykent/tibia-warzones-schedule/issues";
+  const SITE_NAME = "Tibia Warzones Schedule";
+  const SITE_FOOTER_COPYRIGHT = "© 2026 Tibia Warzones Schedule contributors";
+  const SITE_FOOTER_DISCLAIMER =
+    "Tibia is a registered trademark of CipSoft GmbH. All related assets belong to CipSoft GmbH. This project is independent and has no affiliation, support, or endorsement from CipSoft GmbH, Tibia.com, TibiaData, or TibiaMarket.top.";
+  const SITE_FOOTER_NOTICE =
+    "Community driven schedule for Warzone services across multiple servers, based on Deathstrike, Gnomevil, and Abyssador kill statistics plus player reports. Times can vary due to delays, in-game events, disruptive behavior, or server activity changes. Service availability depends on in‑game conditions and server rules.";
   const STORAGE_KEY_LANGUAGE = "lang";
   const STORAGE_KEY_TIMEZONE = "tz";
   const WORLDS_DATA_PATH = "./data/worlds.json";
@@ -554,6 +560,70 @@
     image.src = `assets/background/${initialPick}`;
   }
 
+  function renderSiteFooter() {
+    return `
+      <div class="container site-footer-inner">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <img
+              class="footer-icon"
+              src="./assets/logo/logo.png"
+              alt="Tibia Warzones logo"
+            />
+            <span class="footer-brand-name">${SITE_NAME}</span>
+          </div>
+
+          <div class="footer-sep-v" aria-hidden="true"></div>
+
+          <p class="footer-notice">
+            ${SITE_FOOTER_NOTICE}
+            Reference sources and credits:
+            <a href="https://www.tibia.com" target="_blank" rel="noopener noreferrer" class="footer-link">Tibia.com</a>,
+            CipSoft GmbH,
+            <a href="https://tibiadata.com" target="_blank" rel="noopener noreferrer" class="footer-link">TibiaData</a>,
+            and
+            <a href="https://tibiamarket.top" target="_blank" rel="noopener noreferrer" class="footer-link">TibiaMarket.top</a>.
+            Report times via
+            <a href="${GITHUB_ISSUES_URL}" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub Issues</a>
+            — community contributions keep the schedule accurate.
+          </p>
+
+          <a
+            href="${GITHUB_ISSUES_URL}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="footer-gh-btn"
+            aria-label="Report on GitHub Issues"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"
+              />
+            </svg>
+            Report on GitHub
+          </a>
+        </div>
+
+        <div class="footer-bottom">
+          <span class="footer-copy">${SITE_FOOTER_COPYRIGHT}</span>
+          <span class="footer-disclaimer">${SITE_FOOTER_DISCLAIMER}</span>
+        </div>
+      </div>
+    `;
+  }
+
+  function initSiteFooter() {
+    const footer = document.querySelector("[data-site-footer]");
+    if (!footer) return;
+    setHtml(footer, renderSiteFooter());
+  }
+
   function initLanguageDropdown() {
     const button = document.getElementById("langMenuBtn");
     const menu = document.getElementById("langMenu");
@@ -664,6 +734,7 @@
   }
 
   function initSharedUi() {
+    initSiteFooter();
     initBackgroundArtwork();
     initLanguageDropdown();
     initBackLinks();
@@ -767,6 +838,7 @@
     getWorldMarkLabel,
     convertTimeBetweenTimezones,
     initBackgroundArtwork,
+    initSiteFooter,
     initLanguageDropdown,
     updateLanguageButtons,
     bindLanguageButtons,
