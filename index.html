@@ -9,9 +9,13 @@
   </head>
   <body>
     <!-- Background artwork layer — image picked randomly by JS below -->
-    <div id="bg-layer" aria-hidden="true"></div>
+    <div
+      id="bg-layer"
+      aria-hidden="true"
+      data-artworks="bg1.jpg,bg2.jpg,bg3.jpg,bg4.jpg,bg5.jpg"
+    ></div>
 
-    <div class="topbar" role="navigation" aria-label="Site navigation">
+    <nav class="topbar" aria-label="Site navigation">
       <div class="container topbar-inner">
         <div class="topbar-links">
           <span class="topbar-label" id="questLinksLabel">BIGFOOT'S BURDEN</span>
@@ -28,7 +32,7 @@
           </a>
         </div>
       </div>
-    </div>
+    </nav>
 
     <header class="site-header" role="banner">
       <div class="container site-header-inner">
@@ -181,69 +185,6 @@
 
       </div>
     </footer>
-
-    <!-- Random Tibia artwork background -->
-    <script>
-      (function () {
-        // Add your artwork filenames inside assets/background/
-        // The list below is auto-picked randomly on each load.
-        var artworks = [
-          'bg1.jpg',
-          'bg2.jpg',
-          'bg3.jpg',
-          'bg4.jpg',
-          'bg5.jpg',
-        ];
-
-        var layer = document.getElementById('bg-layer');
-        if (!layer) return;
-
-        var pick = artworks[Math.floor(Math.random() * artworks.length)];
-        var img  = new Image();
-
-        img.onload = function () {
-          layer.style.backgroundImage = 'url(assets/background/' + pick + ')';
-          layer.style.opacity = '1';
-        };
-
-        img.onerror = function () {
-          // Try next random if one fails, or leave fallback color
-          var remaining = artworks.filter(function (a) { return a !== pick; });
-          if (remaining.length) {
-            var fallback = remaining[Math.floor(Math.random() * remaining.length)];
-            layer.style.backgroundImage = 'url(assets/background/' + fallback + ')';
-            layer.style.opacity = '1';
-          }
-        };
-
-        // Start hidden, fade in once loaded
-        layer.style.opacity = '0';
-        img.src = 'assets/background/' + pick;
-      })();
-    </script>
-
-    <!-- Language dropdown logic -->
-    <script>
-      (function () {
-        var btn  = document.getElementById('langMenuBtn');
-        var menu = document.getElementById('langMenu');
-        var wrap = document.getElementById('langDropdown');
-        if (!btn || !menu) return;
-
-        function open()  { menu.classList.add('is-open');  btn.setAttribute('aria-expanded','true'); }
-        function close() { menu.classList.remove('is-open'); btn.setAttribute('aria-expanded','false'); }
-        function toggle(){ menu.classList.contains('is-open') ? close() : open(); }
-
-        btn.addEventListener('click', function(e){ e.stopPropagation(); toggle(); });
-
-        document.addEventListener('click', function(e){
-          if (!wrap.contains(e.target)) close();
-        });
-        document.addEventListener('keydown', function(e){
-          if (e.key === 'Escape') close();
-        });
-      })();
-    </script>
 
     <script src="./assets/shared.js"></script>
     <script src="./assets/app.js"></script>

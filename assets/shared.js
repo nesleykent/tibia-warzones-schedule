@@ -57,6 +57,15 @@
     { value: "Europe/Warsaw", label: "Warsaw", short: "CET", offset: "GMT+1" },
   ];
 
+  function escapeHtml(value) {
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
   function getBrowserTimezone() {
     try {
       return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
@@ -97,6 +106,89 @@
       .replace(/:00$/, "")
       .replace(/([+-])0(\d)$/, "$1$2");
     return `${tz} (${offsetCompact})`;
+  }
+
+  function initBackgroundArtwork() {
+    const layer = document.getElementById("bg-layer");
+    if (!layer) return;
+
+    const artworks = String(layer.dataset.artworks || "")
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+
+    if (artworks.length === 0) return;
+
+    const pickRandomArtwork = (choices) =>
+      choices[Math.floor(Math.random() * choices.length)];
+
+    const applyArtwork = (fileName) => {
+      layer.style.backgroundImage = `url(assets/background/${fileName})`;
+      layer.style.opacity = "1";
+    };
+
+    const initialPick = pickRandomArtwork(artworks);
+    const image = new Image();
+
+    image.onload = () => applyArtwork(initialPick);
+    image.onerror = () => {
+      const remaining = artworks.filter((artwork) => artwork !== initialPick);
+      if (remaining.length > 0) {
+        applyArtwork(pickRandomArtwork(remaining));
+      }
+    };
+
+    layer.style.opacity = "0";
+    image.src = `assets/background/${initialPick}`;
+  }
+
+  function initLanguageDropdown() {
+    const button = document.getElementById("langMenuBtn");
+    const menu = document.getElementById("langMenu");
+    const wrapper = document.getElementById("langDropdown");
+
+    if (!button || !menu || !wrapper) return;
+
+    const openMenu = () => {
+      menu.classList.add("is-open");
+      button.setAttribute("aria-expanded", "true");
+    };
+
+    const closeMenu = () => {
+      menu.classList.remove("is-open");
+      button.setAttribute("aria-expanded", "false");
+    };
+
+    const toggleMenu = () => {
+      if (menu.classList.contains("is-open")) {
+        closeMenu();
+        return;
+      }
+
+      openMenu();
+    };
+
+    button.addEventListener("click", (event) => {
+      event.stopPropagation();
+      toggleMenu();
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!wrapper.contains(event.target)) {
+        closeMenu();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeMenu();
+      }
+    });
+  }
+
+  function initSharedUi() {
+    initBackgroundArtwork();
+    initLanguageDropdown();
   }
 
   function convertTimeBetweenTimezones(scheduleTime, sourceTimezone, targetTimezone, locale) {
@@ -159,10 +251,14 @@
 
   window.TibiaTime = {
     SUPPORTED_TIMEZONES,
+    escapeHtml,
     getBrowserTimezone,
     loadSavedTimezone,
     getTimezoneOffsetLabel,
     getTimezoneDisplayLabel,
     convertTimeBetweenTimezones,
+    initBackgroundArtwork,
+    initLanguageDropdown,
+    initSharedUi,
   };
 })();

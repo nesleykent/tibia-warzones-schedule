@@ -4,7 +4,9 @@
 
 const {
   SUPPORTED_TIMEZONES,
+  escapeHtml,
   getBrowserTimezone,
+  initSharedUi,
   loadSavedTimezone,
   getTimezoneDisplayLabel,
   convertTimeBetweenTimezones: convertSharedTimeBetweenTimezones,
@@ -1149,15 +1151,6 @@ function loadSettings() {
   timezone = loadSavedTimezone();
 }
 
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
 function getTimezoneShortName(tz) {
   try {
     const parts = new Intl.DateTimeFormat("en", {
@@ -1690,6 +1683,7 @@ function masterTick() {
 // ─── Init ─────────────────────────────────────────────
 
 async function init() {
+  initSharedUi();
   loadSettings();
   loadSelectedWorlds();
   loadNotificationsPref();

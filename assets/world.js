@@ -172,6 +172,8 @@ const WORLD_I18N = {
 };
 
 const {
+  escapeHtml,
+  initSharedUi,
   loadSavedTimezone,
   getTimezoneDisplayLabel,
   convertTimeBetweenTimezones: convertSharedTimeBetweenTimezones,
@@ -196,15 +198,6 @@ function getInitialLanguage() {
 
 function t() {
   return WORLD_I18N[worldLang] || WORLD_I18N["pt-BR"];
-}
-
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
 }
 
 function slugifyWorldName(worldName) {
@@ -304,8 +297,6 @@ function updateLanguageButtons() {
 function applyStaticLabels() {
   const dict = t();
   document.title = dict.pageTitle;
-  const back = document.getElementById("backToIndex");
-  if (back) back.textContent = dict.back;
   const subtitle = document.getElementById("worldSubtitle");
   if (subtitle) subtitle.textContent = dict.subtitle;
 }
@@ -1955,6 +1946,7 @@ function bindLanguageButtons() {
 }
 
 function initWorldPage() {
+  initSharedUi();
   worldLang = getInitialLanguage();
   pageTimezone = loadSavedTimezone();
   applyStaticLabels();
