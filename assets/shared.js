@@ -293,6 +293,52 @@
       .replaceAll("'", "&#039;");
   }
 
+  function readStorage(key, fallbackValue = null) {
+    try {
+      const storedValue = localStorage.getItem(key);
+      return storedValue ?? fallbackValue;
+    } catch {
+      return fallbackValue;
+    }
+  }
+
+  function writeStorage(key, value) {
+    try {
+      localStorage.setItem(key, value);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function getInitialLanguage(supportedLanguages, fallbackLanguage = "pt-BR") {
+    const availableLanguages =
+      supportedLanguages && typeof supportedLanguages === "object"
+        ? supportedLanguages
+        : {};
+    const savedLanguage = readStorage("lang");
+
+    if (savedLanguage && availableLanguages[savedLanguage]) {
+      return savedLanguage;
+    }
+
+    const browserLanguage = navigator.language || fallbackLanguage;
+    if (browserLanguage.startsWith("pt") && availableLanguages["pt-BR"]) {
+      return "pt-BR";
+    }
+    if (browserLanguage.startsWith("es") && availableLanguages["es-419"]) {
+      return "es-419";
+    }
+    if (browserLanguage.startsWith("pl") && availableLanguages.pl) {
+      return "pl";
+    }
+    if (availableLanguages.en) {
+      return "en";
+    }
+
+    return fallbackLanguage;
+  }
+
   function getBrowserTimezone() {
     try {
       return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
@@ -302,11 +348,7 @@
   }
 
   function loadSavedTimezone() {
-    try {
-      return localStorage.getItem("tz") || DEFAULT_TIMEZONE;
-    } catch {
-      return DEFAULT_TIMEZONE;
-    }
+    return readStorage("tz", DEFAULT_TIMEZONE) || DEFAULT_TIMEZONE;
   }
 
   function getTimezoneOffsetLabel(tz) {
@@ -500,6 +542,9 @@
     SUPPORTED_TIMEZONES,
     DEFAULT_TIMEZONE,
     escapeHtml,
+    readStorage,
+    writeStorage,
+    getInitialLanguage,
     getBrowserTimezone,
     loadSavedTimezone,
     getTimezoneOffsetLabel,

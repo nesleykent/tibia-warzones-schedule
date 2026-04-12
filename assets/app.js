@@ -6,13 +6,26 @@ const {
   DEFAULT_TIMEZONE,
   SUPPORTED_TIMEZONES,
   escapeHtml,
-  getBrowserTimezone,
+  getInitialLanguage: getSharedInitialLanguage,
   initSharedUi,
   loadSavedTimezone,
+  readStorage,
   getTimezoneDisplayLabel,
   resolveTimezoneValue,
+  writeStorage,
   convertTimeBetweenTimezones: convertSharedTimeBetweenTimezones,
 } = window.TibiaTime;
+
+const STORAGE_KEYS = {
+  activeFilters: "activeFilters",
+  alertOffset: "alertOffset",
+  lang: "lang",
+  masterVolume: "masterVolume",
+  notificationsEnabled: "notificationsEnabled",
+  selectedExecutions: "selectedExecutions",
+  selectedSound: "selectedSound",
+  timezone: "tz",
+};
 
 const I18N = {
   en: {
@@ -773,7 +786,7 @@ function bindNotifyToolbarEvents(container) {
   container.querySelector("#offsetPlus")?.addEventListener("click", () => changeAlertOffset(1));
   container.querySelector("#volumeSlider")?.addEventListener("input", (e) => {
     masterVolume = parseInt(e.target.value, 10) / 100;
-    try { localStorage.setItem("masterVolume", String(masterVolume)); } catch {}
+    writeStorage(STORAGE_KEYS.masterVolume, String(masterVolume));
   });
   container.querySelector("#scheduleTestBtn")?.addEventListener("click", () => {
     const ctx = getAudioContext();
@@ -877,7 +890,7 @@ function renderSchedulePanel() {
     .getElementById("scheduleClearBtn")
     ?.addEventListener("click", () => {
       selectedExecutions.clear();
-      try { localStorage.setItem("selectedExecutions", JSON.stringify([])); } catch {}
+      writeStorage(STORAGE_KEYS.selectedExecutions, JSON.stringify([]));
       renderSchedulePanel();
       updateCountdownPanel();
       renderSelectedBadges();
@@ -911,7 +924,7 @@ function refreshScheduleRowStates() {
 function changeAlertOffset(delta) {
   alertOffsetMinutes = Math.max(0, Math.min(60, alertOffsetMinutes + delta));
   try {
-    localStorage.setItem("alertOffset", String(alertOffsetMinutes));
+    writeStorage(STORAGE_KEYS.alertOffset, String(alertOffsetMinutes));
   } catch {}
   const el = document.getElementById("offsetDisplay");
   if (el) el.textContent = alertOffsetMinutes;
@@ -924,7 +937,10 @@ function changeAlertOffset(delta) {
 function toggleNotifications() {
   notificationsEnabled = !notificationsEnabled;
   try {
-    localStorage.setItem("notificationsEnabled", String(notificationsEnabled));
+    writeStorage(
+      STORAGE_KEYS.notificationsEnabled,
+      String(notificationsEnabled)
+    );
   } catch {}
   if (notificationsEnabled) {
     loadAudio();
@@ -983,8 +999,8 @@ function toggleExecutionSelection(worldName, execId) {
     loadAudio();
   }
   try {
-    localStorage.setItem(
-      "selectedExecutions",
+    writeStorage(
+      STORAGE_KEYS.selectedExecutions,
       JSON.stringify([...selectedExecutions])
     );
   } catch {}
@@ -1068,7 +1084,7 @@ function checkScheduleConflicts() {
 
 function loadSelectedWorlds() {
   try {
-    const saved = localStorage.getItem("selectedExecutions");
+    const saved = readStorage(STORAGE_KEYS.selectedExecutions);
     if (saved) {
       const arr = JSON.parse(saved);
       if (Array.isArray(arr)) selectedExecutions = new Set(arr);
@@ -1079,13 +1095,13 @@ function loadSelectedWorlds() {
 function loadNotificationsPref() {
   try {
     notificationsEnabled =
-      localStorage.getItem("notificationsEnabled") === "true";
+      readStorage(STORAGE_KEYS.notificationsEnabled) === "true";
   } catch {}
 }
 
 function loadAlertOffset() {
   try {
-    const v = localStorage.getItem("alertOffset");
+    const v = readStorage(STORAGE_KEYS.alertOffset);
     if (v !== null) {
       const n = parseInt(v, 10);
       if (!isNaN(n)) alertOffsetMinutes = Math.max(0, Math.min(60, n));
@@ -1095,11 +1111,11 @@ function loadAlertOffset() {
 
 function loadSelectedSound() {
   try {
-    const v = localStorage.getItem("selectedSound");
+    const v = readStorage(STORAGE_KEYS.selectedSound);
     if (v && SOUNDS.some((s) => s.id === v)) selectedSound = v;
   } catch {}
   try {
-    const vol = localStorage.getItem("masterVolume");
+    const vol = readStorage(STORAGE_KEYS.masterVolume);
     if (vol !== null) {
       const n = parseFloat(vol);
       if (!isNaN(n)) masterVolume = Math.min(1, Math.max(0, n));
@@ -1110,26 +1126,12 @@ function loadSelectedSound() {
 function saveSelectedSound(id) {
   selectedSound = id;
   try {
-    localStorage.setItem("selectedSound", id);
+    writeStorage(STORAGE_KEYS.selectedSound, id);
   } catch {}
   loadAudio(true); // reload audio with new sound
 }
 
 // ─── Existing helpers ────────────────────────────────
-
-function getInitialLanguage() {
-  try {
-    const saved = localStorage.getItem("lang");
-    if (saved && I18N[saved]) return saved;
-    const browser = navigator.language || "pt-BR";
-    if (browser.startsWith("pt")) return "pt-BR";
-    if (browser.startsWith("es")) return "es-419";
-    if (browser.startsWith("pl")) return "pl";
-    return "en";
-  } catch {
-    return "pt-BR";
-  }
-}
 
 function t() {
   return I18N[lang] || I18N["pt-BR"];
@@ -1137,9 +1139,7 @@ function t() {
 
 function saveLang(value) {
   lang = value;
-  try {
-    localStorage.setItem("lang", value);
-  } catch {}
+  writeStorage(STORAGE_KEYS.lang, value);
   applyStaticLabels();
   updateLanguageButtons();
   populateTimezoneSelect();
@@ -1148,16 +1148,14 @@ function saveLang(value) {
 
 function saveTZ(value) {
   timezone = value;
-  try {
-    localStorage.setItem("tz", value);
-  } catch {}
+  writeStorage(STORAGE_KEYS.timezone, value);
   populateTimezoneSelect();
   updateClock();
   render();
 }
 
 function loadSettings() {
-  lang = getInitialLanguage();
+  lang = getSharedInitialLanguage(I18N);
   timezone = loadSavedTimezone();
   if (!timezone) timezone = DEFAULT_TIMEZONE;
 }
@@ -1553,18 +1551,21 @@ function clearAllFilters() {
 
 function saveFilters() {
   try {
-    localStorage.setItem("activeFilters", JSON.stringify({
-      region:   [...activeFilters.region],
-      pvp:      [...activeFilters.pvp],
-      battleye: [...activeFilters.battleye],
-      transfer: [...activeFilters.transfer],
-    }));
+    writeStorage(
+      STORAGE_KEYS.activeFilters,
+      JSON.stringify({
+        region: [...activeFilters.region],
+        pvp: [...activeFilters.pvp],
+        battleye: [...activeFilters.battleye],
+        transfer: [...activeFilters.transfer],
+      })
+    );
   } catch {}
 }
 
 function loadFilters() {
   try {
-    const saved = localStorage.getItem("activeFilters");
+    const saved = readStorage(STORAGE_KEYS.activeFilters);
     if (saved) {
       const obj = JSON.parse(saved);
       if (obj.region)   activeFilters.region   = new Set(obj.region);
@@ -1614,17 +1615,25 @@ function renderFilters(warzone_worlds) {
     pills("transfer", transferSet,  getTransferDisplayLabel);
 
   el.innerHTML = `<div class="filter-pills-row">${allPill}${rest}</div>`;
+}
 
-  el.querySelectorAll(".filter-pill").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const group = btn.dataset.filterGroup;
-      const value = btn.dataset.filterValue;
-      if (group === "__all__") {
-        clearAllFilters();
-      } else {
-        toggleFilter(group, value);
-      }
-    });
+function bindFilterBar() {
+  const filterBar = document.getElementById("filtersBar");
+  if (!filterBar) return;
+
+  filterBar.addEventListener("click", (event) => {
+    const button = event.target.closest(".filter-pill");
+    if (!button) return;
+
+    const group = button.dataset.filterGroup;
+    const value = button.dataset.filterValue;
+    if (group === "__all__") {
+      clearAllFilters();
+      return;
+    }
+    if (group && value) {
+      toggleFilter(group, value);
+    }
   });
 }
 
@@ -1751,6 +1760,7 @@ async function init() {
   loadFilters();
   applyStaticLabels();
   bindLanguageButtons();
+  bindFilterBar();
   updateLanguageButtons();
   populateTimezoneSelect();
 

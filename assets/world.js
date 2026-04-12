@@ -177,29 +177,21 @@ const WORLD_I18N = {
 
 const {
   escapeHtml,
+  getInitialLanguage: getSharedInitialLanguage,
   initSharedUi,
   loadSavedTimezone,
   getTimezoneDisplayLabel,
   resolveTimezoneValue,
+  writeStorage,
   convertTimeBetweenTimezones: convertSharedTimeBetweenTimezones,
 } = window.TibiaTime;
 
+const STORAGE_KEYS = {
+  lang: "lang",
+};
+
 let worldLang = "pt-BR";
 let pageTimezone = "UTC";
-
-function getInitialLanguage() {
-  try {
-    const saved = localStorage.getItem("lang");
-    if (saved && WORLD_I18N[saved]) return saved;
-    const browser = navigator.language || "pt-BR";
-    if (browser.startsWith("pt")) return "pt-BR";
-    if (browser.startsWith("es")) return "es-419";
-    if (browser.startsWith("pl")) return "pl";
-    return "en";
-  } catch {
-    return "pt-BR";
-  }
-}
 
 function t() {
   return WORLD_I18N[worldLang] || WORLD_I18N["pt-BR"];
@@ -1978,9 +1970,7 @@ function bindLanguageButtons() {
     btn.onclick = () => {
       if (!btn.dataset.lang) return;
       worldLang = btn.dataset.lang;
-      try {
-        localStorage.setItem("lang", worldLang);
-      } catch {}
+      writeStorage(STORAGE_KEYS.lang, worldLang);
       applyStaticLabels();
       updateLanguageButtons();
       loadWorldPage();
@@ -1990,7 +1980,7 @@ function bindLanguageButtons() {
 
 function initWorldPage() {
   initSharedUi();
-  worldLang = getInitialLanguage();
+  worldLang = getSharedInitialLanguage(WORLD_I18N);
   pageTimezone = loadSavedTimezone();
   applyStaticLabels();
   updateLanguageButtons();

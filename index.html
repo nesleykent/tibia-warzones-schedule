@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tibia Warzones Schedule</title>
     <link rel="stylesheet" href="./assets/styles.css" />
-
   </head>
   <body>
     <!-- Background artwork layer — image picked randomly by JS below -->
@@ -105,12 +104,12 @@
         </div>
 
         <div class="control-group control-group--filters" id="filtersControlGroup">
-          <label id="filtersLabel">Filters</label>
-          <div id="filtersBar" aria-label="Filters"></div>
+          <div id="filtersLabel">Filters</div>
+          <div id="filtersBar" aria-labelledby="filtersLabel"></div>
         </div>
       </section>
 
-      <label class="section-label" id="warzonePlannerLabel">Warzone Planner</label>
+      <h2 class="section-label" id="warzonePlannerLabel">Warzone Planner</h2>
       <div id="nextWarzoneBar" style="display:none" aria-live="polite" aria-label="Next warzone"></div>
 
       <section
