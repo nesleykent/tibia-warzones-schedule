@@ -661,7 +661,11 @@ function renderTable(rows) {
             const market = ranking.market || {};
             return `
               <tr class="ranking-table-row" data-world-url="./world.html?name=${encodeURIComponent(world.name)}" tabindex="0" role="link" aria-label="Open ${escapeHtml(world.name)} world page">
-                <td>${escapeHtml(String(ranking.ranking_position || dict.notAvailable))}</td>
+                <td>${escapeHtml(
+                  ranking.ranking_position
+                    ? `#${String(ranking.ranking_position)}`
+                    : String(dict.notAvailable)
+                )}</td>
                 <td><a class="world-name-link" href="./world.html?name=${encodeURIComponent(world.name)}">${escapeHtml(world.name)}</a></td>
                 <td>${escapeHtml(formatRankingNumber(ranking.economic_score_raw, 2))}</td>
                 <td>${escapeHtml(world.pvp_type || dict.notAvailable)}</td>
