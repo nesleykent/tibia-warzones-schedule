@@ -351,6 +351,62 @@
     return readStorage("tz", DEFAULT_TIMEZONE) || DEFAULT_TIMEZONE;
   }
 
+  function getWorldBattleyeKey(world) {
+    if (world?.battleye_date === "release") return "GBE";
+    if (world?.battleye_date) return "YBE";
+    return "none";
+  }
+
+  function getWorldBattleyeLabel(world, fallbackLabel = "N/A") {
+    const key = getWorldBattleyeKey(world);
+    if (key === "GBE") return "GBE";
+    if (key === "YBE") return "YBE";
+    return fallbackLabel;
+  }
+
+  function getWorldTransferLabel(world, fallbackLabel = "N/A") {
+    const value = String(world?.transfer_type || "")
+      .trim()
+      .toLowerCase();
+
+    if (!value) return fallbackLabel;
+    if (value === "regular") return "Regular Transfer";
+    if (value === "blocked") return "Blocked Transfer";
+    if (value === "locked") return "Locked Transfer";
+    return `${value.charAt(0).toUpperCase()}${value.slice(1)} Transfer`;
+  }
+
+  function getNormalizedBossKills(kills) {
+    const source =
+      kills && typeof kills === "object"
+        ? kills
+        : {};
+
+    return {
+      deathstrike: Number(source.Deathstrike ?? source.deathstrike ?? 0),
+      gnomevil: Number(source.Gnomevil ?? source.gnomevil ?? 0),
+      abyssador: Number(source.Abyssador ?? source.abyssador ?? 0),
+    };
+  }
+
+  function getEffectiveWorldMark(mark, kills) {
+    const totals = getNormalizedBossKills(kills);
+    const hasNoActivity =
+      totals.deathstrike === 0 &&
+      totals.gnomevil === 0 &&
+      totals.abyssador === 0;
+
+    if (hasNoActivity) return "na";
+    return String(mark || "inconclusive");
+  }
+
+  function getWorldMarkLabel(mark, labels = {}) {
+    if (mark === "na") return labels.notAvailable || "N/A";
+    if (mark === "healthy") return labels.healthy || "Healthy";
+    if (mark === "trolls") return labels.trolls || "Trolls";
+    return labels.inconclusive || "Inconclusive";
+  }
+
   function getTimezoneOffsetLabel(tz) {
     const resolvedTimezone = resolveTimezoneValue(tz);
     try {
@@ -550,6 +606,12 @@
     getTimezoneOffsetLabel,
     getTimezoneDisplayLabel,
     resolveTimezoneValue,
+    getWorldBattleyeKey,
+    getWorldBattleyeLabel,
+    getWorldTransferLabel,
+    getNormalizedBossKills,
+    getEffectiveWorldMark,
+    getWorldMarkLabel,
     convertTimeBetweenTimezones,
     initBackgroundArtwork,
     initLanguageDropdown,

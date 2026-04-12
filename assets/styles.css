@@ -256,7 +256,6 @@ body::after {
   flex-shrink: 0;
 }
 
-.topbar-right,
 .header-controls {
   display: flex;
   align-items: center;
@@ -357,14 +356,6 @@ body::after {
 }
 .lang-flag span {
   flex: 1;
-}
-
-.topbar-vsep {
-  width: 1px;
-  height: 18px;
-  background: var(--sep-md);
-  flex-shrink: 0;
-  margin-inline: 4px;
 }
 
 @media (max-width: 640px) {

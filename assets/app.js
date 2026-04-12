@@ -6,11 +6,17 @@ const {
   DEFAULT_TIMEZONE,
   SUPPORTED_TIMEZONES,
   escapeHtml,
+  getEffectiveWorldMark,
   getInitialLanguage: getSharedInitialLanguage,
+  getNormalizedBossKills,
   initSharedUi,
   loadSavedTimezone,
   readStorage,
+  getWorldBattleyeKey,
+  getWorldBattleyeLabel,
+  getWorldMarkLabel,
   getTimezoneDisplayLabel,
+  getWorldTransferLabel,
   resolveTimezoneValue,
   writeStorage,
   convertTimeBetweenTimezones: convertSharedTimeBetweenTimezones,
@@ -1189,42 +1195,46 @@ function offsetMinutes(tz) {
 function populateTimezoneSelect() {
   const select = document.getElementById("timezoneSelect");
   if (!select) return;
-  const groupedOptions = [];
+  const fragment = document.createDocumentFragment();
   let currentGroup = null;
+  let currentOptgroup = null;
 
   SUPPORTED_TIMEZONES.forEach((item) => {
     if (item.group !== currentGroup) {
-      if (currentGroup !== null) {
-        groupedOptions.push("</optgroup>");
-      }
       currentGroup = item.group || "";
-      groupedOptions.push(
-        `<optgroup label="${escapeHtml(currentGroup)}">`
-      );
+      currentOptgroup = document.createElement("optgroup");
+      currentOptgroup.label = currentGroup;
+      fragment.appendChild(currentOptgroup);
     }
 
-    const sel = item.value === timezone ? "selected" : "";
-    groupedOptions.push(
-      `<option value="${escapeHtml(item.value)}" ${sel}>${escapeHtml(
-        getTimezoneDisplayLabel(item.value)
-      )}</option>`
-    );
+    if (!currentOptgroup) return;
+
+    const option = document.createElement("option");
+    option.value = item.value;
+    option.textContent = getTimezoneDisplayLabel(item.value);
+    option.selected = item.value === timezone;
+    currentOptgroup.appendChild(option);
   });
 
-  if (currentGroup !== null) {
-    groupedOptions.push("</optgroup>");
-  }
-
   if (!SUPPORTED_TIMEZONES.some((item) => item.value === timezone)) {
-    groupedOptions.push(
-      `<option value="${escapeHtml(timezone)}" selected>${escapeHtml(
-        getTimezoneDisplayLabel(timezone)
-      )}</option>`
-    );
+    const option = document.createElement("option");
+    option.value = timezone;
+    option.textContent = getTimezoneDisplayLabel(timezone);
+    option.selected = true;
+    if (currentOptgroup) {
+      currentOptgroup.appendChild(option);
+    } else {
+      fragment.appendChild(option);
+    }
   }
 
-  select.innerHTML = groupedOptions.join("");
-  select.onchange = (e) => saveTZ(e.target.value);
+  select.replaceChildren(fragment);
+  select.onchange = (event) => {
+    const nextTimezone = event.target?.value;
+    if (nextTimezone) {
+      saveTZ(nextTimezone);
+    }
+  };
 }
 
 function updateLanguageButtons() {
@@ -1237,30 +1247,32 @@ function updateLanguageButtons() {
 
 function bindLanguageButtons() {
   document.querySelectorAll(".lang-flag").forEach((btn) => {
-    btn.onclick = () => {
+    btn.addEventListener("click", () => {
       if (btn.dataset.lang) saveLang(btn.dataset.lang);
-    };
+    });
   });
 }
 
 function applyStaticLabels() {
   const d = t();
   document.title = d.pageTitle;
-  const qs = (s) => document.querySelector(s);
-  if (qs(".site-header h1")) qs(".site-header h1").textContent = d.heroTitle;
-  if (qs(".site-header p")) qs(".site-header p").textContent = d.heroSubtitle;
-  const qsl = document.getElementById("questLinksLabel");
-  if (qsl) qsl.textContent = d.questLinksLabel;
-  const sl = qs('label[for="searchInput"]');
-  if (sl) sl.textContent = d.search;
-  const tl = qs('label[for="timezoneSelect"]');
-  if (tl) tl.textContent = d.timezone;
-  const si = document.getElementById("searchInput");
-  if (si) si.placeholder = d.searchPlaceholder || d.search;
-  const fl = document.getElementById("filtersLabel");
-  if (fl) fl.textContent = d.filterLabel || "Filtros";
-  const wpl = document.getElementById("warzonePlannerLabel");
-  if (wpl) wpl.textContent = d.warzonePlannerLabel || "Warzone Planner";
+  const heroTitle = document.querySelector(".site-header h1");
+  const heroSubtitle = document.querySelector(".site-header p");
+  const questLinksLabel = document.getElementById("questLinksLabel");
+  const searchLabel = document.querySelector('label[for="searchInput"]');
+  const timezoneLabel = document.querySelector('label[for="timezoneSelect"]');
+  const searchInput = document.getElementById("searchInput");
+  const filtersLabel = document.getElementById("filtersLabel");
+  const plannerLabel = document.getElementById("warzonePlannerLabel");
+
+  if (heroTitle) heroTitle.textContent = d.heroTitle;
+  if (heroSubtitle) heroSubtitle.textContent = d.heroSubtitle;
+  if (questLinksLabel) questLinksLabel.textContent = d.questLinksLabel;
+  if (searchLabel) searchLabel.textContent = d.search;
+  if (timezoneLabel) timezoneLabel.textContent = d.timezone;
+  if (searchInput) searchInput.placeholder = d.searchPlaceholder || d.search;
+  if (filtersLabel) filtersLabel.textContent = d.filterLabel || "Filtros";
+  if (plannerLabel) plannerLabel.textContent = d.warzonePlannerLabel || "Warzone Planner";
 }
 
 function convertTimeBetweenTimezones(scheduleTime, sourceTimezone, targetTimezone) {
@@ -1273,39 +1285,24 @@ function convertTimeBetweenTimezones(scheduleTime, sourceTimezone, targetTimezon
 }
 
 function getBattleyeLabel(world) {
-  if (world.battleye_date === "release") return "GBE";
-  if (world.battleye_date) return "YBE";
-  return t().notAvailable;
+  return getWorldBattleyeLabel(world, t().notAvailable);
 }
 
 function getTransferLabel(world) {
-  const v = String(world.transfer_type || "").trim();
-  if (!v) return t().notAvailable;
-  if (v.toLowerCase() === "regular") return "Regular Transfer";
-  if (v.toLowerCase() === "blocked") return "Blocked Transfer";
-  if (v.toLowerCase() === "locked")  return "Locked Transfer";
-  return v.charAt(0).toUpperCase() + v.slice(1) + " Transfer";
+  return getWorldTransferLabel(world, t().notAvailable);
 }
 
 function getBossKills(world) {
-  const kills =
-    world && typeof world.last_detected_kills === "object" && world.last_detected_kills
-      ? world.last_detected_kills
-      : {};
-
-  return {
-    deathstrike: Number(kills.Deathstrike || 0),
-    gnomevil: Number(kills.Gnomevil || 0),
-    abyssador: Number(kills.Abyssador || 0),
-  };
+  return getNormalizedBossKills(world?.last_detected_kills);
 }
 
 function getMarkLabel(mark) {
-  const dict = t();
-  if (mark === "na") return dict.notAvailable;
-  if (mark === "healthy") return dict.healthy;
-  if (mark === "trolls") return dict.trolls;
-  return dict.inconclusive;
+  return getWorldMarkLabel(mark, {
+    notAvailable: t().notAvailable,
+    healthy: t().healthy,
+    trolls: t().trolls,
+    inconclusive: t().inconclusive,
+  });
 }
 
 function getMarkIcon(mark) {
@@ -1314,17 +1311,8 @@ function getMarkIcon(mark) {
   return "?";
 }
 
-function isNoActivityWorld(kills) {
-  return (
-    Number(kills?.deathstrike || 0) === 0 &&
-    Number(kills?.gnomevil || 0) === 0 &&
-    Number(kills?.abyssador || 0) === 0
-  );
-}
-
 function getEffectiveMark(mark, kills) {
-  if (isNoActivityWorld(kills)) return "na";
-  return String(mark || "inconclusive");
+  return getEffectiveWorldMark(mark, kills);
 }
 
 function getWorldHistoryUrl(worldName) {
@@ -1471,16 +1459,10 @@ function renderWorld(world) {
   `;
 }
 
-function bindSelectButtons() {
-  // No-op: handled via event delegation set up once in init()
-}
-
 // ─── Filter helpers ───────────────────────────────
 
 function getBattleyeKey(world) {
-  if (world.battleye_date === "release") return "GBE";
-  if (world.battleye_date) return "YBE";
-  return "none";
+  return getWorldBattleyeKey(world);
 }
 
 function getTransferKey(world) {
@@ -1688,7 +1670,6 @@ function render() {
   }
 
   worldsList.innerHTML = filtered.map(renderWorld).join("");
-  bindSelectButtons();
   requestAnimationFrame(() => applyMasonry(worldsList));
 
   renderSchedulePanel();
@@ -1709,7 +1690,6 @@ function applyMasonry(container) {
   if (cols === 1) {
     container.style.cssText = "display:flex;flex-direction:column;";
     cards.forEach((c) => container.appendChild(c));
-    bindSelectButtons();
     return;
   }
   const gap = cols === 3 ? 16 : 14;
@@ -1731,7 +1711,6 @@ function applyMasonry(container) {
       columns[s].appendChild(card);
       heights[s] += card.getBoundingClientRect().height + gap;
     });
-    bindSelectButtons();
   });
 }
 
@@ -1795,7 +1774,7 @@ async function init() {
   }
 
   const searchInput = document.getElementById("searchInput");
-  if (searchInput) searchInput.oninput = render;
+  if (searchInput) searchInput.addEventListener("input", render);
 
   try {
     const worldsResponse = await fetch("./data/worlds.json");

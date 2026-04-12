@@ -177,10 +177,14 @@ const WORLD_I18N = {
 
 const {
   escapeHtml,
+  getEffectiveWorldMark,
   getInitialLanguage: getSharedInitialLanguage,
   initSharedUi,
   loadSavedTimezone,
+  getWorldBattleyeLabel,
+  getWorldMarkLabel,
   getTimezoneDisplayLabel,
+  getWorldTransferLabel,
   resolveTimezoneValue,
   writeStorage,
   convertTimeBetweenTimezones: convertSharedTimeBetweenTimezones,
@@ -247,24 +251,16 @@ const MARKET_RANGE_TABS = [
 ];
 
 function getMarkLabel(mark) {
-  const dict = t();
-  if (mark === "na") return dict.notAvailable || "N/A";
-  if (mark === "healthy") return dict.healthy;
-  if (mark === "trolls") return dict.trolls;
-  return dict.inconclusive;
-}
-
-function isNoActivityWorld(kills) {
-  return (
-    Number(kills?.Deathstrike || 0) === 0 &&
-    Number(kills?.Gnomevil || 0) === 0 &&
-    Number(kills?.Abyssador || 0) === 0
-  );
+  return getWorldMarkLabel(mark, {
+    notAvailable: t().notAvailable || "N/A",
+    healthy: t().healthy,
+    trolls: t().trolls,
+    inconclusive: t().inconclusive,
+  });
 }
 
 function getEffectiveMark(mark, kills) {
-  if (isNoActivityWorld(kills)) return "na";
-  return String(mark || "inconclusive");
+  return getEffectiveWorldMark(mark, kills);
 }
 
 function convertTimeBetweenTimezones(
@@ -281,20 +277,11 @@ function convertTimeBetweenTimezones(
 }
 
 function getTransferLabel(world) {
-  const value = String(world.transfer_type || "")
-    .trim()
-    .toLowerCase();
-  if (!value) return "N/A";
-  if (value === "regular") return "Regular Transfer";
-  if (value === "blocked") return "Blocked Transfer";
-  if (value === "locked") return "Locked Transfer";
-  return value;
+  return getWorldTransferLabel(world, "N/A");
 }
 
 function getBattleyeLabel(world) {
-  if (world.battleye_date === "release") return "GBE";
-  if (world.battleye_date) return "YBE";
-  return "N/A";
+  return getWorldBattleyeLabel(world, "N/A");
 }
 
 function updateLanguageButtons() {
@@ -1925,6 +1912,12 @@ async function loadWorldPage() {
     return;
   }
 
+  const clearSecondaryCards = () => {
+    schedulesCard.innerHTML = "";
+    marketCard.innerHTML = "";
+    historyCard.innerHTML = "";
+  };
+
   try {
     const worldsResponse = await fetch("./data/worlds.json");
     if (!worldsResponse.ok) throw new Error(String(worldsResponse.status));
@@ -1935,9 +1928,7 @@ async function loadWorldPage() {
 
     if (!world) {
       summaryCard.innerHTML = renderEmptyCard(dict.summary, dict.worldNotFound);
-      schedulesCard.innerHTML = "";
-      marketCard.innerHTML = "";
-      historyCard.innerHTML = "";
+      clearSecondaryCards();
       return;
     }
 
@@ -1959,22 +1950,20 @@ async function loadWorldPage() {
     historyCard.innerHTML = renderHistory(historyData);
   } catch {
     summaryCard.innerHTML = renderEmptyCard(dict.summary, dict.loadError);
-    schedulesCard.innerHTML = "";
-    marketCard.innerHTML = "";
-    historyCard.innerHTML = "";
+    clearSecondaryCards();
   }
 }
 
 function bindLanguageButtons() {
   document.querySelectorAll(".lang-flag").forEach((btn) => {
-    btn.onclick = () => {
+    btn.addEventListener("click", () => {
       if (!btn.dataset.lang) return;
       worldLang = btn.dataset.lang;
       writeStorage(STORAGE_KEYS.lang, worldLang);
       applyStaticLabels();
       updateLanguageButtons();
       loadWorldPage();
-    };
+    });
   });
 }
 
