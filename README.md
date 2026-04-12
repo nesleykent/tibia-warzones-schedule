@@ -93,7 +93,7 @@ Project automation lives in:
 
 This repository is distributed under the terms in [LICENSE](./LICENSE).
 
-Data sources and references used by the project follow this order:
+The project uses data or reference material from:
 
 - CipSoft GmbH
 - Tibia.com
