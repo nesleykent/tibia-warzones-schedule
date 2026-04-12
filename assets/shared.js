@@ -337,6 +337,25 @@
     }
   }
 
+  function readJsonStorage(key, fallbackValue = null) {
+    const storedValue = readStorage(key);
+    if (storedValue == null) return fallbackValue;
+
+    try {
+      return JSON.parse(storedValue);
+    } catch {
+      return fallbackValue;
+    }
+  }
+
+  function writeJsonStorage(key, value) {
+    try {
+      return writeStorage(key, JSON.stringify(value));
+    } catch {
+      return false;
+    }
+  }
+
   function findSupportedTimezoneEntry(tz) {
     return (
       SUPPORTED_TIMEZONES.find((item) => item.value === tz) ||
@@ -417,6 +436,25 @@
 
   function getWorldTransferLabel(world, fallbackLabel = "N/A") {
     return formatTransferType(world?.transfer_type, fallbackLabel);
+  }
+
+  function getWorldRegionKey(world) {
+    return String(world?.location || "").trim() || "unknown";
+  }
+
+  function getWorldPvpKey(world) {
+    return String(world?.pvp_type || "").trim() || "unknown";
+  }
+
+  function getWorldTransferKey(world) {
+    const value = String(world?.transfer_type || "")
+      .trim()
+      .toLowerCase();
+
+    if (!value) return "locked";
+    if (value === "regular") return "regular";
+    if (value === "blocked") return "blocked";
+    return value;
   }
 
   function getNormalizedBossKills(kills) {
@@ -560,6 +598,27 @@
     });
   }
 
+  function updateLanguageButtons(activeLanguage) {
+    document.querySelectorAll(".lang-flag").forEach((button) => {
+      const isActive = button.dataset.lang === activeLanguage;
+      button.classList.toggle("is-active", isActive);
+      button.setAttribute("aria-pressed", isActive ? "true" : "false");
+    });
+  }
+
+  function bindLanguageButtons(onSelectLanguage) {
+    if (typeof onSelectLanguage !== "function") return;
+
+    document.querySelectorAll(".lang-flag").forEach((button) => {
+      button.addEventListener("click", () => {
+        const nextLanguage = button.dataset.lang;
+        if (nextLanguage) {
+          onSelectLanguage(nextLanguage);
+        }
+      });
+    });
+  }
+
   function initBackLinks() {
     const backLinks = document.querySelectorAll("[data-back-link]");
     if (backLinks.length === 0) return;
@@ -688,6 +747,8 @@
     fetchJson,
     readStorage,
     writeStorage,
+    readJsonStorage,
+    writeJsonStorage,
     getInitialLanguage,
     getBrowserTimezone,
     loadSavedTimezone,
@@ -698,12 +759,17 @@
     getWorldBattleyeLabel,
     formatTransferType,
     getWorldTransferLabel,
+    getWorldRegionKey,
+    getWorldPvpKey,
+    getWorldTransferKey,
     getNormalizedBossKills,
     getEffectiveWorldMark,
     getWorldMarkLabel,
     convertTimeBetweenTimezones,
     initBackgroundArtwork,
     initLanguageDropdown,
+    updateLanguageButtons,
+    bindLanguageButtons,
     initBackLinks,
     initSharedUi,
   };

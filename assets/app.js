@@ -14,15 +14,22 @@ const {
   getInitialLanguage: getSharedInitialLanguage,
   getNormalizedBossKills,
   initSharedUi,
+  bindLanguageButtons: bindSharedLanguageButtons,
   loadSavedTimezone,
+  readJsonStorage,
   readStorage,
   setTextContent,
+  updateLanguageButtons: updateSharedLanguageButtons,
   getWorldBattleyeKey,
   getWorldBattleyeLabel,
   getWorldMarkLabel,
+  getWorldPvpKey,
+  getWorldRegionKey,
+  getWorldTransferKey,
   getTimezoneDisplayLabel,
   getWorldTransferLabel,
   resolveTimezoneValue,
+  writeJsonStorage,
   writeStorage,
   convertTimeBetweenTimezones: convertSharedTimeBetweenTimezones,
 } = window.TibiaTime;
@@ -1219,19 +1226,11 @@ function populateTimezoneSelect() {
 }
 
 function updateLanguageButtons() {
-  document.querySelectorAll(".lang-flag").forEach((btn) => {
-    const isActive = btn.dataset.lang === lang;
-    btn.classList.toggle("is-active", isActive);
-    btn.setAttribute("aria-pressed", isActive ? "true" : "false");
-  });
+  updateSharedLanguageButtons(lang);
 }
 
 function bindLanguageButtons() {
-  document.querySelectorAll(".lang-flag").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      if (btn.dataset.lang) saveLang(btn.dataset.lang);
-    });
-  });
+  bindSharedLanguageButtons(saveLang);
 }
 
 function applyStaticLabels() {
@@ -1447,19 +1446,15 @@ function getBattleyeKey(world) {
 }
 
 function getTransferKey(world) {
-  const v = String(world.transfer_type || "").trim().toLowerCase();
-  if (!v) return "locked";
-  if (v === "regular") return "regular";
-  if (v === "blocked") return "blocked";
-  return v;
+  return getWorldTransferKey(world);
 }
 
 function getRegionKey(world) {
-  return String(world.location || "").trim() || "unknown";
+  return getWorldRegionKey(world);
 }
 
 function getPvpKey(world) {
-  return String(world.pvp_type || "").trim() || "unknown";
+  return getWorldPvpKey(world);
 }
 
 function hasActiveFilters() {
@@ -1513,30 +1508,29 @@ function clearAllFilters() {
 }
 
 function saveFilters() {
-  try {
-    writeStorage(
-      STORAGE_KEYS.activeFilters,
-      JSON.stringify({
-        region: [...activeFilters.region],
-        pvp: [...activeFilters.pvp],
-        battleye: [...activeFilters.battleye],
-        transfer: [...activeFilters.transfer],
-      })
-    );
-  } catch {}
+  writeJsonStorage(STORAGE_KEYS.activeFilters, {
+    region: [...activeFilters.region],
+    pvp: [...activeFilters.pvp],
+    battleye: [...activeFilters.battleye],
+    transfer: [...activeFilters.transfer],
+  });
 }
 
 function loadFilters() {
-  try {
-    const saved = readStorage(STORAGE_KEYS.activeFilters);
-    if (saved) {
-      const obj = JSON.parse(saved);
-      if (obj.region)   activeFilters.region   = new Set(obj.region);
-      if (obj.pvp)      activeFilters.pvp      = new Set(obj.pvp);
-      if (obj.battleye) activeFilters.battleye = new Set(obj.battleye);
-      if (obj.transfer) activeFilters.transfer = new Set(obj.transfer);
-    }
-  } catch {}
+  const savedFilters = readJsonStorage(STORAGE_KEYS.activeFilters, {});
+
+  if (Array.isArray(savedFilters.region)) {
+    activeFilters.region = new Set(savedFilters.region);
+  }
+  if (Array.isArray(savedFilters.pvp)) {
+    activeFilters.pvp = new Set(savedFilters.pvp);
+  }
+  if (Array.isArray(savedFilters.battleye)) {
+    activeFilters.battleye = new Set(savedFilters.battleye);
+  }
+  if (Array.isArray(savedFilters.transfer)) {
+    activeFilters.transfer = new Set(savedFilters.transfer);
+  }
 }
 
 function getBattleyeDisplayLabel(key) {

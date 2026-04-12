@@ -6,11 +6,17 @@ const {
   getEffectiveWorldMark,
   getInitialLanguage: getSharedInitialLanguage,
   getNormalizedBossKills,
-  getWorldBattleyeKey,
+  bindLanguageButtons: bindSharedLanguageButtons,
   getWorldMarkLabel,
+  getWorldPvpKey,
+  getWorldRegionKey,
+  getWorldTransferKey,
   initSharedUi,
+  readJsonStorage,
   readStorage,
   setTextContent,
+  updateLanguageButtons: updateSharedLanguageButtons,
+  writeJsonStorage,
   writeStorage,
 } = window.TibiaTime;
 
@@ -435,19 +441,15 @@ function getMarkLabel(mark) {
 }
 
 function getRegionKey(world) {
-  return String(world.location || "").trim() || "unknown";
+  return getWorldRegionKey(world);
 }
 
 function getPvpKey(world) {
-  return String(world.pvp_type || "").trim() || "unknown";
+  return getWorldPvpKey(world);
 }
 
 function getTransferKey(world) {
-  const value = String(world.transfer_type || "").trim().toLowerCase();
-  if (!value) return "locked";
-  if (value === "regular") return "regular";
-  if (value === "blocked") return "blocked";
-  return value;
+  return getWorldTransferKey(world);
 }
 
 function hasActiveFilters() {
@@ -469,28 +471,29 @@ function worldPassesFilters(world) {
 
 function loadSettings() {
   lang = getSharedInitialLanguage(I18N);
-  try {
-    const saved = readStorage(STORAGE_KEYS.activeFilters);
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (parsed.region) activeFilters.region = new Set(parsed.region);
-      if (parsed.pvp) activeFilters.pvp = new Set(parsed.pvp);
-      if (parsed.transfer) activeFilters.transfer = new Set(parsed.transfer);
-      if (parsed.mark) activeFilters.mark = new Set(parsed.mark);
-    }
-  } catch {}
+  const savedFilters = readJsonStorage(STORAGE_KEYS.activeFilters, {});
+
+  if (Array.isArray(savedFilters.region)) {
+    activeFilters.region = new Set(savedFilters.region);
+  }
+  if (Array.isArray(savedFilters.pvp)) {
+    activeFilters.pvp = new Set(savedFilters.pvp);
+  }
+  if (Array.isArray(savedFilters.transfer)) {
+    activeFilters.transfer = new Set(savedFilters.transfer);
+  }
+  if (Array.isArray(savedFilters.mark)) {
+    activeFilters.mark = new Set(savedFilters.mark);
+  }
 }
 
 function saveFilters() {
-  writeStorage(
-    STORAGE_KEYS.activeFilters,
-    JSON.stringify({
-      region: [...activeFilters.region],
-      pvp: [...activeFilters.pvp],
-      transfer: [...activeFilters.transfer],
-      mark: [...activeFilters.mark],
-    })
-  );
+  writeJsonStorage(STORAGE_KEYS.activeFilters, {
+    region: [...activeFilters.region],
+    pvp: [...activeFilters.pvp],
+    transfer: [...activeFilters.transfer],
+    mark: [...activeFilters.mark],
+  });
 }
 
 function toggleFilter(group, value) {
@@ -521,25 +524,17 @@ function applyStaticLabels() {
 }
 
 function updateLanguageButtons() {
-  document.querySelectorAll(".lang-flag").forEach((button) => {
-    const active = button.dataset.lang === lang;
-    button.classList.toggle("is-active", active);
-    button.setAttribute("aria-pressed", active ? "true" : "false");
-  });
+  updateSharedLanguageButtons(lang);
 }
 
 function bindLanguageButtons() {
-  document.querySelectorAll(".lang-flag").forEach((button) => {
-    button.addEventListener("click", () => {
-      const nextLang = button.dataset.lang;
-      if (!nextLang) return;
-      lang = nextLang;
-      writeStorage(STORAGE_KEYS.lang, lang);
-      closeExplanationModal();
-      applyStaticLabels();
-      updateLanguageButtons();
-      render();
-    });
+  bindSharedLanguageButtons((nextLang) => {
+    lang = nextLang;
+    writeStorage(STORAGE_KEYS.lang, lang);
+    closeExplanationModal();
+    applyStaticLabels();
+    updateLanguageButtons();
+    render();
   });
 }
 
@@ -646,12 +641,12 @@ function renderTable(rows) {
     <table class="ranking-table">
       <thead>
         <tr>
-          <th>${escapeHtml(dict.rank)}</th>
-          <th>${escapeHtml(dict.world)}</th>
-          <th>${escapeHtml(dict.expectedReturnXtc)}</th>
-          <th>${escapeHtml(dict.pvpType)}</th>
-          <th>${escapeHtml(dict.tibiaCoin)}</th>
-          <th>${escapeHtml(dict.serviceExpectedValue)}</th>
+          <th scope="col">${escapeHtml(dict.rank)}</th>
+          <th scope="col">${escapeHtml(dict.world)}</th>
+          <th scope="col">${escapeHtml(dict.expectedReturnXtc)}</th>
+          <th scope="col">${escapeHtml(dict.pvpType)}</th>
+          <th scope="col">${escapeHtml(dict.tibiaCoin)}</th>
+          <th scope="col">${escapeHtml(dict.serviceExpectedValue)}</th>
         </tr>
       </thead>
       <tbody>

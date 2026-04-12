@@ -197,10 +197,12 @@ const {
   GITHUB_ISSUES_URL,
   getEffectiveWorldMark,
   getInitialLanguage: getSharedInitialLanguage,
+  bindLanguageButtons: bindSharedLanguageButtons,
   initSharedUi,
   loadSavedTimezone,
   setHtml,
   setTextContent,
+  updateLanguageButtons: updateSharedLanguageButtons,
   getWorldBattleyeLabel,
   getWorldMarkLabel,
   getTimezoneDisplayLabel,
@@ -337,11 +339,7 @@ function formatGoldCoins(value) {
 }
 
 function updateLanguageButtons() {
-  document.querySelectorAll(".lang-flag").forEach((btn) => {
-    const active = btn.dataset.lang === worldLang;
-    btn.classList.toggle("is-active", active);
-    btn.setAttribute("aria-pressed", active ? "true" : "false");
-  });
+  updateSharedLanguageButtons(worldLang);
 }
 
 function applyStaticLabels() {
@@ -1854,11 +1852,11 @@ async function renderMarketPrices(worldName) {
       <table class="world-history-table market-prices-table">
         <thead>
           <tr>
-            <th>Item</th>
-            <th>Supply Price</th>
-            <th>Demand Price</th>
-            <th>Spread</th>
-            <th>Updated</th>
+            <th scope="col">Item</th>
+            <th scope="col">Supply Price</th>
+            <th scope="col">Demand Price</th>
+            <th scope="col">Spread</th>
+            <th scope="col">Updated</th>
           </tr>
         </thead>
         <tbody>${bodyRows}</tbody>
@@ -1906,12 +1904,12 @@ function renderHistory(historyData) {
       <table class="world-history-table">
         <thead>
           <tr>
-            <th>${escapeHtml(dict.date)}</th>
-            <th>${escapeHtml(dict.deathstrike)}</th>
-            <th>${escapeHtml(dict.gnomevil)}</th>
-            <th>${escapeHtml(dict.abyssador)}</th>
-            <th>${escapeHtml(dict.servicesCompleted)}</th>
-            <th>${escapeHtml(dict.mark)}</th>
+            <th scope="col">${escapeHtml(dict.date)}</th>
+            <th scope="col">${escapeHtml(dict.deathstrike)}</th>
+            <th scope="col">${escapeHtml(dict.gnomevil)}</th>
+            <th scope="col">${escapeHtml(dict.abyssador)}</th>
+            <th scope="col">${escapeHtml(dict.servicesCompleted)}</th>
+            <th scope="col">${escapeHtml(dict.mark)}</th>
           </tr>
         </thead>
         <tbody>${rows}</tbody>
@@ -1983,15 +1981,12 @@ async function loadWorldPage() {
 }
 
 function bindLanguageButtons() {
-  document.querySelectorAll(".lang-flag").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      if (!btn.dataset.lang) return;
-      worldLang = btn.dataset.lang;
-      writeStorage(STORAGE_KEYS.lang, worldLang);
-      applyStaticLabels();
-      updateLanguageButtons();
-      loadWorldPage();
-    });
+  bindSharedLanguageButtons((nextLanguage) => {
+    worldLang = nextLanguage;
+    writeStorage(STORAGE_KEYS.lang, worldLang);
+    applyStaticLabels();
+    updateLanguageButtons();
+    loadWorldPage();
   });
 }
 
