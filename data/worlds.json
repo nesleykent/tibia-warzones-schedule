@@ -15,11 +15,11 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": false,
     "warzone_executions": [],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": false
+    "warzonesperday": 0
   },
   {
     "name": "Antica",
@@ -38,6 +38,7 @@
     },
     "last_detected_services": 3,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -56,8 +57,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 3,
-    "has_service_history": true
+    "warzonesperday": 3
   },
   {
     "name": "Astera",
@@ -76,6 +76,7 @@
     },
     "last_detected_services": 5,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -94,8 +95,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 5,
-    "has_service_history": true
+    "warzonesperday": 5
   },
   {
     "name": "Belobra",
@@ -114,6 +114,7 @@
     },
     "last_detected_services": 0,
     "mark": "trolls",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -127,8 +128,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 0,
-    "has_service_history": true
+    "warzonesperday": 0
   },
   {
     "name": "Blumera",
@@ -147,10 +147,10 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Bona",
@@ -169,6 +169,7 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -177,8 +178,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Bravoria",
@@ -196,11 +196,11 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": false,
     "warzone_executions": [],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": false
+    "warzonesperday": 0
   },
   {
     "name": "Calmera",
@@ -219,6 +219,7 @@
     },
     "last_detected_services": 2,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -227,8 +228,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 2,
-    "has_service_history": true
+    "warzonesperday": 2
   },
   {
     "name": "Cantabra",
@@ -247,10 +247,10 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Celebra",
@@ -269,6 +269,7 @@
     },
     "last_detected_services": 2,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -282,8 +283,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 2,
-    "has_service_history": true
+    "warzonesperday": 2
   },
   {
     "name": "Celesta",
@@ -302,6 +302,7 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -310,8 +311,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Citra",
@@ -329,11 +329,11 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": false,
     "warzone_executions": [],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": false
+    "warzonesperday": 0
   },
   {
     "name": "Collabra",
@@ -352,6 +352,7 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -360,8 +361,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Descubra",
@@ -380,6 +380,7 @@
     },
     "last_detected_services": 2,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -393,8 +394,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 2,
-    "has_service_history": true
+    "warzonesperday": 2
   },
   {
     "name": "Dia",
@@ -413,10 +413,10 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Dracobra",
@@ -435,6 +435,7 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -443,8 +444,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Eclipta",
@@ -462,11 +462,11 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": false,
     "warzone_executions": [],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": false
+    "warzonesperday": 0
   },
   {
     "name": "Epoca",
@@ -484,11 +484,11 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": true,
     "warzone_executions": [],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": true
+    "warzonesperday": 0
   },
   {
     "name": "Escura",
@@ -506,11 +506,11 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": false,
     "warzone_executions": [],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": false
+    "warzonesperday": 0
   },
   {
     "name": "Etebra",
@@ -529,6 +529,7 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -537,8 +538,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Ferobra",
@@ -557,6 +557,7 @@
     },
     "last_detected_services": 2,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -570,8 +571,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 2,
-    "has_service_history": true
+    "warzonesperday": 2
   },
   {
     "name": "Firmera",
@@ -589,11 +589,11 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": false,
     "warzone_executions": [],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": false
+    "warzonesperday": 0
   },
   {
     "name": "Gentebra",
@@ -612,6 +612,7 @@
     },
     "last_detected_services": 2,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -630,8 +631,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 2,
-    "has_service_history": true
+    "warzonesperday": 2
   },
   {
     "name": "Gladera",
@@ -650,10 +650,10 @@
     },
     "last_detected_services": 2,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [],
     "performs_warzone": true,
-    "warzonesperday": 2,
-    "has_service_history": true
+    "warzonesperday": 2
   },
   {
     "name": "Gladibra",
@@ -671,11 +671,11 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": false,
     "warzone_executions": [],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": false
+    "warzonesperday": 0
   },
   {
     "name": "Harmonia",
@@ -693,7 +693,8 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -702,8 +703,7 @@
       }
     ],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": true
+    "warzonesperday": 0
   },
   {
     "name": "Havera",
@@ -722,6 +722,7 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -730,8 +731,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Honbra",
@@ -750,6 +750,7 @@
     },
     "last_detected_services": 2,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -763,8 +764,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 2,
-    "has_service_history": true
+    "warzonesperday": 2
   },
   {
     "name": "Hostera",
@@ -782,11 +782,11 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": true,
     "warzone_executions": [],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": true
+    "warzonesperday": 0
   },
   {
     "name": "Idyllia",
@@ -804,7 +804,8 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": false,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -813,8 +814,7 @@
       }
     ],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": false
+    "warzonesperday": 0
   },
   {
     "name": "Ignibra",
@@ -832,11 +832,11 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": false,
     "warzone_executions": [],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": false
+    "warzonesperday": 0
   },
   {
     "name": "Ignitera",
@@ -855,10 +855,10 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Inabra",
@@ -877,6 +877,7 @@
     },
     "last_detected_services": 4,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -900,8 +901,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 4,
-    "has_service_history": true
+    "warzonesperday": 4
   },
   {
     "name": "Issobra",
@@ -920,6 +920,7 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -928,8 +929,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Jadebra",
@@ -948,6 +948,7 @@
     },
     "last_detected_services": 2,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -961,8 +962,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 2,
-    "has_service_history": true
+    "warzonesperday": 2
   },
   {
     "name": "Kalanta",
@@ -981,10 +981,10 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Kalibra",
@@ -1003,6 +1003,7 @@
     },
     "last_detected_services": 2,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1016,8 +1017,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 2,
-    "has_service_history": true
+    "warzonesperday": 2
   },
   {
     "name": "Kalimera",
@@ -1035,11 +1035,11 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": false,
     "warzone_executions": [],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": false
+    "warzonesperday": 0
   },
   {
     "name": "Kanda",
@@ -1058,10 +1058,10 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Karmeya",
@@ -1080,6 +1080,7 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1088,8 +1089,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Lobera",
@@ -1108,6 +1108,7 @@
     },
     "last_detected_services": 3,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1121,8 +1122,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 3,
-    "has_service_history": true
+    "warzonesperday": 3
   },
   {
     "name": "Luminera",
@@ -1141,6 +1141,7 @@
     },
     "last_detected_services": 2,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1154,8 +1155,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 2,
-    "has_service_history": true
+    "warzonesperday": 2
   },
   {
     "name": "Lutabra",
@@ -1173,11 +1173,11 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": false,
     "warzone_executions": [],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": false
+    "warzonesperday": 0
   },
   {
     "name": "Luzibra",
@@ -1196,6 +1196,7 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1204,8 +1205,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Menera",
@@ -1224,6 +1224,7 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1232,8 +1233,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Monstera",
@@ -1251,11 +1251,11 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": true,
     "warzone_executions": [],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": true
+    "warzonesperday": 0
   },
   {
     "name": "Monza",
@@ -1274,6 +1274,7 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1282,8 +1283,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Mystera",
@@ -1301,11 +1301,11 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": false,
     "warzone_executions": [],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": false
+    "warzonesperday": 0
   },
   {
     "name": "Nefera",
@@ -1324,6 +1324,7 @@
     },
     "last_detected_services": 2,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1337,8 +1338,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 2,
-    "has_service_history": true
+    "warzonesperday": 2
   },
   {
     "name": "Nevia",
@@ -1357,6 +1357,7 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1365,8 +1366,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Noctalia",
@@ -1384,11 +1384,11 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": true,
     "warzone_executions": [],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": true
+    "warzonesperday": 0
   },
   {
     "name": "Oceanis",
@@ -1407,10 +1407,10 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Ombra",
@@ -1429,6 +1429,7 @@
     },
     "last_detected_services": 2,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1442,8 +1443,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 2,
-    "has_service_history": true
+    "warzonesperday": 2
   },
   {
     "name": "Opulera",
@@ -1461,11 +1461,11 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": true,
     "warzone_executions": [],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": true
+    "warzonesperday": 0
   },
   {
     "name": "Ourobra",
@@ -1484,6 +1484,7 @@
     },
     "last_detected_services": 2,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1497,8 +1498,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 2,
-    "has_service_history": true
+    "warzonesperday": 2
   },
   {
     "name": "Pacera",
@@ -1517,6 +1517,7 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1530,8 +1531,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Peloria",
@@ -1550,6 +1550,7 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1558,8 +1559,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Penumbra",
@@ -1577,11 +1577,11 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": false,
     "warzone_executions": [],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": false
+    "warzonesperday": 0
   },
   {
     "name": "Premia",
@@ -1600,10 +1600,10 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Quelibra",
@@ -1622,6 +1622,7 @@
     },
     "last_detected_services": 2,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1635,8 +1636,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 2,
-    "has_service_history": true
+    "warzonesperday": 2
   },
   {
     "name": "Quidera",
@@ -1655,6 +1655,7 @@
     },
     "last_detected_services": 2,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1663,8 +1664,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 2,
-    "has_service_history": true
+    "warzonesperday": 2
   },
   {
     "name": "Quintera",
@@ -1683,6 +1683,7 @@
     },
     "last_detected_services": 2,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1691,8 +1692,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 2,
-    "has_service_history": true
+    "warzonesperday": 2
   },
   {
     "name": "Rasteibra",
@@ -1711,6 +1711,7 @@
     },
     "last_detected_services": 2,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1724,8 +1725,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 2,
-    "has_service_history": true
+    "warzonesperday": 2
   },
   {
     "name": "Refugia",
@@ -1744,6 +1744,7 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1752,8 +1753,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Retalia",
@@ -1771,11 +1771,11 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": false,
     "warzone_executions": [],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": false
+    "warzonesperday": 0
   },
   {
     "name": "Secura",
@@ -1794,6 +1794,7 @@
     },
     "last_detected_services": 3,
     "mark": "inconclusive",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1807,8 +1808,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 3,
-    "has_service_history": true
+    "warzonesperday": 3
   },
   {
     "name": "Serdebra",
@@ -1827,6 +1827,7 @@
     },
     "last_detected_services": 2,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1840,8 +1841,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 2,
-    "has_service_history": true
+    "warzonesperday": 2
   },
   {
     "name": "Solidera",
@@ -1860,6 +1860,7 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -1868,8 +1869,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Sombra",
@@ -1887,11 +1887,11 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": false,
     "warzone_executions": [],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": false
+    "warzonesperday": 0
   },
   {
     "name": "Sonira",
@@ -1909,11 +1909,11 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": false,
     "warzone_executions": [],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": false
+    "warzonesperday": 0
   },
   {
     "name": "Stralis",
@@ -1931,11 +1931,11 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": true,
     "warzone_executions": [],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": true
+    "warzonesperday": 0
   },
   {
     "name": "Talera",
@@ -1954,10 +1954,10 @@
     },
     "last_detected_services": 3,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [],
     "performs_warzone": true,
-    "warzonesperday": 3,
-    "has_service_history": true
+    "warzonesperday": 3
   },
   {
     "name": "Tempestera",
@@ -1975,11 +1975,11 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": false,
     "warzone_executions": [],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": false
+    "warzonesperday": 0
   },
   {
     "name": "Terribra",
@@ -1998,10 +1998,10 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Thyria",
@@ -2020,6 +2020,7 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -2028,8 +2029,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Tornabra",
@@ -2048,6 +2048,7 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -2056,8 +2057,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Unebra",
@@ -2076,6 +2076,7 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -2084,8 +2085,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Ustebra",
@@ -2104,6 +2104,7 @@
     },
     "last_detected_services": 2,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -2117,8 +2118,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 2,
-    "has_service_history": true
+    "warzonesperday": 2
   },
   {
     "name": "Venebra",
@@ -2137,6 +2137,7 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -2145,8 +2146,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Victoris",
@@ -2164,11 +2164,11 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": true,
     "warzone_executions": [],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": true
+    "warzonesperday": 0
   },
   {
     "name": "Vunira",
@@ -2187,6 +2187,7 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -2195,8 +2196,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Wintera",
@@ -2215,6 +2215,7 @@
     },
     "last_detected_services": 2,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -2228,8 +2229,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 2,
-    "has_service_history": true
+    "warzonesperday": 2
   },
   {
     "name": "Xybra",
@@ -2248,6 +2248,7 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -2256,8 +2257,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Xyla",
@@ -2276,10 +2276,10 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Xymera",
@@ -2298,10 +2298,10 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Yonabra",
@@ -2320,6 +2320,7 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -2328,8 +2329,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Yovera",
@@ -2348,6 +2348,7 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -2356,8 +2357,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Yubra",
@@ -2376,6 +2376,7 @@
     },
     "last_detected_services": 1,
     "mark": "healthy",
+    "has_service_history": true,
     "warzone_executions": [
       {
         "execution_id": 1,
@@ -2384,8 +2385,7 @@
       }
     ],
     "performs_warzone": true,
-    "warzonesperday": 1,
-    "has_service_history": true
+    "warzonesperday": 1
   },
   {
     "name": "Zuna",
@@ -2403,11 +2403,11 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": false,
     "warzone_executions": [],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": false
+    "warzonesperday": 0
   },
   {
     "name": "Zunera",
@@ -2425,10 +2425,10 @@
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "healthy",
+    "mark": "na",
+    "has_service_history": false,
     "warzone_executions": [],
     "performs_warzone": false,
-    "warzonesperday": 0,
-    "has_service_history": false
+    "warzonesperday": 0
   }
 ]
