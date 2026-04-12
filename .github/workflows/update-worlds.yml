@@ -7,6 +7,8 @@ on:
       - main
     paths:
       - data/manual-schedules.json
+      - data/active_warzones.txt
+      - scripts/common.py
       - scripts/update_data.py
   schedule:
     - cron: "0 9 * * *"
@@ -21,6 +23,7 @@ concurrency:
 jobs:
   update-worlds:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Check out repository
@@ -33,6 +36,32 @@ jobs:
 
       - name: Refresh worlds data
         run: python scripts/update_data.py
+
+      - name: Validate generated data
+        run: |
+          python3 -m py_compile scripts/update_data.py
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          worlds_path = Path("data/worlds.json")
+          payload = json.loads(worlds_path.read_text(encoding="utf-8"))
+          assert isinstance(payload, list), "data/worlds.json must contain a list"
+          assert payload, "data/worlds.json must not be empty"
+          required_keys = {
+              "name",
+              "tracks_warzone_service",
+              "warzone_services_per_day",
+              "last_detected_kills",
+              "last_detected_services",
+              "mark",
+              "has_service_history",
+              "warzone_executions",
+          }
+          for record in payload:
+              missing = required_keys.difference(record)
+              assert not missing, f"Missing keys for {record.get('name')}: {sorted(missing)}"
+          PY
 
       - name: Commit updated data
         run: |

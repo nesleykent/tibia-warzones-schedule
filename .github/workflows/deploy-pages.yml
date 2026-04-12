@@ -15,11 +15,47 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Validate static site assets
+        run: |
+          node --check assets/shared.js
+          node --check assets/app.js
+          node --check assets/world.js
+
+      - name: Validate required site files
+        run: |
+          test -f index.html
+          test -f world.html
+          test -f assets/styles.css
+          test -f data/worlds.json
+
+      - name: Prepare Pages artifact
+        run: |
+          mkdir -p _site
+          cp -R assets data index.html world.html LICENSE README.md _site/
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
   deploy:
+    needs: validate
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -31,11 +67,6 @@ jobs:
 
       - name: Set up Pages
         uses: actions/configure-pages@v5
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: .
 
       - name: Deploy to GitHub Pages
         id: deployment
