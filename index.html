@@ -17,38 +17,19 @@
     <nav class="topbar" aria-label="Site navigation">
       <div class="container topbar-inner">
         <div class="topbar-links">
-          <span class="topbar-label" id="questLinksLabel">BIGFOOT'S BURDEN</span>
-          <a href="https://tibia.fandom.com/wiki/Bigfoot's_Burden_Quest" target="_blank" rel="noopener noreferrer">
-            <span class="link-full">TibiaWiki</span><span class="link-short">TW</span>
+          <a href="./index.html" class="is-active" aria-current="page">
+            Home
           </a>
           <span class="topbar-divider" aria-hidden="true"></span>
-          <a href="https://www.tibiawiki.com.br/wiki/Bigfoot%27s_Burden_Quest" target="_blank" rel="noopener noreferrer">
-            <span class="link-full">Tibia Wiki BR</span><span class="link-short">TWBR</span>
+          <a href="./ranking.html">
+            Ranking
           </a>
           <span class="topbar-divider" aria-hidden="true"></span>
-          <a href="https://tibiopedia.pl/quests/Bigfoots_Burden_Quest" target="_blank" rel="noopener noreferrer">
-            <span class="link-full">Tibiopedia.pl</span><span class="link-short">TBP</span>
+          <a href="./bigfoot.html">
+            <span class="link-full">Bigfoot's Burden Quest</span><span class="link-short">Quest</span>
           </a>
         </div>
-      </div>
-    </nav>
-
-    <header class="site-header" role="banner">
-      <div class="container site-header-inner">
-        <img
-          class="header-icon"
-          src="./assets/logo/logo.png"
-          alt="Tibia Warzones logo"
-        />
-        <div class="header-text">
-          <h1>Tibia Warzones</h1>
-          <p class="header-subtitle">
-            Services de Warzone inferidos pelas kills de Deathstrike, Gnomevil e Abyssador.
-          </p>
-        </div>
-
-        <!-- Controls: lang dropdown -->
-        <div class="header-controls">
+        <div class="topbar-actions">
           <div class="lang-dropdown" id="langDropdown">
             <button type="button" class="lang-menu-btn" id="langMenuBtn"
               aria-haspopup="true" aria-expanded="false" aria-label="Select language">
@@ -65,7 +46,22 @@
               <button type="button" class="lang-flag" data-lang="pl"     role="menuitem">🇵🇱 <span>Polski</span></button>
             </div>
           </div>
+        </div>
+      </div>
+    </nav>
 
+    <header class="site-header" role="banner">
+      <div class="container site-header-inner">
+        <img
+          class="header-icon"
+          src="./assets/logo/logo.png"
+          alt="Tibia Warzones logo"
+        />
+        <div class="header-text">
+          <h1>Tibia Warzones</h1>
+          <p class="header-subtitle">
+            Services de Warzone inferidos pelas kills de Deathstrike, Gnomevil e Abyssador.
+          </p>
         </div>
       </div>
     </header>
@@ -107,6 +103,7 @@
           <div id="filtersLabel">Filters</div>
           <div id="filtersBar" aria-labelledby="filtersLabel"></div>
         </div>
+
       </section>
 
       <section aria-labelledby="warzonePlannerLabel">

@@ -1,0 +1,1 @@
+window.TibiaTime.initSharedUi();

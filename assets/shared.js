@@ -560,9 +560,54 @@
     });
   }
 
+  function initBackLinks() {
+    const backLinks = document.querySelectorAll("[data-back-link]");
+    if (backLinks.length === 0) return;
+
+    let sameOriginReferrer = null;
+    try {
+      if (document.referrer) {
+        const referrerUrl = new URL(document.referrer, window.location.href);
+        if (referrerUrl.origin === window.location.origin) {
+          sameOriginReferrer = `${referrerUrl.pathname}${referrerUrl.search}${referrerUrl.hash}`;
+        }
+      }
+    } catch {
+      sameOriginReferrer = null;
+    }
+
+    backLinks.forEach((link) => {
+      if (!(link instanceof HTMLAnchorElement)) return;
+
+      const fallbackHref =
+        link.dataset.defaultHref || link.getAttribute("href") || "./index.html";
+
+      link.setAttribute("href", sameOriginReferrer || fallbackHref);
+
+      link.addEventListener("click", (event) => {
+        if (
+          event.defaultPrevented ||
+          event.button !== 0 ||
+          event.metaKey ||
+          event.ctrlKey ||
+          event.shiftKey ||
+          event.altKey
+        ) {
+          return;
+        }
+
+        if (sameOriginReferrer && window.history.length > 1) {
+          event.preventDefault();
+          window.history.back();
+        }
+      });
+    });
+  }
+
   function initSharedUi() {
     initBackgroundArtwork();
     initLanguageDropdown();
+    initBackLinks();
   }
 
   function convertTimeBetweenTimezones(
@@ -659,6 +704,7 @@
     convertTimeBetweenTimezones,
     initBackgroundArtwork,
     initLanguageDropdown,
+    initBackLinks,
     initSharedUi,
   };
 })();

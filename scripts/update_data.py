@@ -9,6 +9,8 @@ from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
 
+from economic_ranking import attach_ranking_metrics
+
 BASE_URL = "https://api.tibiadata.com/v4"
 BOSSES = ("Deathstrike", "Gnomevil", "Abyssador")
 
@@ -401,6 +403,7 @@ def main() -> int:
             )
 
     output.sort(key=lambda item: str(item.get("name", "")).lower())
+    output = attach_ranking_metrics(output, DATA_DIR)
     validate_worlds(output)
     save_json(OUTPUT_FILE, output)
 

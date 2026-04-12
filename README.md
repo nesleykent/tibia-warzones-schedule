@@ -17,6 +17,11 @@ This project brings together:
 
 The goal is to make that information available in a single static site that is easy to browse, easy to maintain, and easy to deploy through GitHub Pages.
 
+## Documentation
+
+- [README.md](./README.md): project overview, repository structure, and maintenance notes
+- [Expected_Return_Explanation.md](./Expected_Return_Explanation.md): expected-return methodology, formulas, and market-price logic
+
 ## Project Stack
 
 - HTML
@@ -52,6 +57,19 @@ Each world has a dedicated detail page with four major sections:
 3. Market Prices
 4. History
 
+### Ranking Page
+
+The ranking page compares worlds by normalized expected return.
+
+Its main columns are:
+
+- rank
+- world
+- ER (xTC)
+- PvP type
+- Tibia Coin price
+- ER (xGold)
+
 ## Core Warzone Model
 
 The project tracks these three bosses:
@@ -72,6 +90,32 @@ Worlds are classified from the latest available kill snapshot with one of these 
 - `trolls`
 - `inconclusive`
 - `na`
+
+## Expected Return Model
+
+The economic ranking uses two closely related outputs:
+
+- `ER (xGold)`: the expected value of one full warzone service in gold coins
+- `ER (xTC)`: the same expected value normalized by the local Tibia Coin price
+
+At a high level:
+
+```text
+Service_EV = WZ1_EV + WZ2_EV + WZ3_EV
+Expected_Return = Service_EV / Tibia_Coin_Price
+```
+
+Where:
+
+- `WZ1_EV = 30000 + (10500 * 0.5) + Gill_Necklace_Price`
+- `WZ2_EV = 40000 + 15000 + Prismatic_Necklace_Price`
+- `WZ3_EV = 50000 + 18000 + Prismatic_Ring_Price`
+
+The item prices are derived from a 7-day rolling market window.
+
+For the full formula explanation, assumptions, and variable definitions, see:
+
+- [Expected_Return_Explanation.md](./Expected_Return_Explanation.md)
 
 ## Data Sources
 
@@ -104,6 +148,8 @@ data/
 
 scripts/
   common.py
+  economic_ranking.py
+  enrich_worlds_with_rankings.py
   fetch_item_history.py
   remove_outliers.py
   update_data.py
@@ -157,6 +203,8 @@ This file stores manually curated Warzone execution schedules per world.
 
 These files store per-world item market history used by the world-page market block and modal.
 
+They also provide the rolling prices used by the expected-return model.
+
 ## Frontend Files
 
 ### `index.html`
@@ -174,6 +222,10 @@ Home page behavior, planner logic, filters, notifications, and rendering.
 ### `assets/world.js`
 
 World page behavior, summary rendering, history rendering, market table logic, and modal interactions.
+
+### `assets/ranking.js`
+
+Ranking page behavior, ranking-table rendering, filters, and world navigation.
 
 ### `assets/shared.js`
 
@@ -212,6 +264,14 @@ Fetches and backfills per-world item market history files.
 ### `scripts/remove_outliers.py`
 
 Cleans suspicious market-history rows.
+
+### `scripts/economic_ranking.py`
+
+Builds the economic ranking fields attached to each world record, including service EV, normalized expected return, and ranking positions.
+
+### `scripts/enrich_worlds_with_rankings.py`
+
+Standalone helper script that reloads `data/worlds.json`, attaches ranking metrics, and writes the enriched output back to disk.
 
 ### `scripts/common.py`
 

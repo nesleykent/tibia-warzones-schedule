@@ -6,6 +6,13 @@ const WORLD_I18N = {
     loadError: "Failed to load world history.",
     worldNotFound: "World not found.",
     summary: "Summary",
+    region: "Region",
+    pvp: "PvP",
+    transfer: "Transfer",
+    battleye: "BattlEye",
+    rankingPosition: "Ranking Position",
+    expectedReturnTcs: "ER (xTC)",
+    expectedReturnGoldCoins: "ER (xGold)",
     schedules: "Manual schedule",
     marketPrices: "Market Prices",
     loading: "Loading...",
@@ -24,9 +31,6 @@ const WORLD_I18N = {
     dataPoints: "Data points",
     history: "History",
     location: "Region",
-    pvp: "PvP",
-    transfer: "Transfer",
-    battleye: "BattlEye",
     timezone: "Timezone",
     servicesCompleted: "Services completed",
     mark: "Mark",
@@ -50,6 +54,13 @@ const WORLD_I18N = {
     loadError: "Falha ao carregar o histórico do servidor.",
     worldNotFound: "Servidor não encontrado.",
     summary: "Resumo",
+    region: "Region",
+    pvp: "PvP",
+    transfer: "Transfer",
+    battleye: "BattlEye",
+    rankingPosition: "Ranking Position",
+    expectedReturnTcs: "ER (xTC)",
+    expectedReturnGoldCoins: "ER (xGold)",
     schedules: "Horários manuais",
     marketPrices: "Preços de mercado",
     loading: "Carregando...",
@@ -68,9 +79,6 @@ const WORLD_I18N = {
     dataPoints: "Pontos de dados",
     history: "Histórico",
     location: "Região",
-    pvp: "PvP",
-    transfer: "Transferência",
-    battleye: "BattlEye",
     timezone: "Timezone",
     servicesCompleted: "Services concluídos",
     mark: "Marca",
@@ -94,6 +102,13 @@ const WORLD_I18N = {
     loadError: "Error al cargar el historial del servidor.",
     worldNotFound: "Servidor no encontrado.",
     summary: "Resumen",
+    region: "Region",
+    pvp: "PvP",
+    transfer: "Transfer",
+    battleye: "BattlEye",
+    rankingPosition: "Ranking Position",
+    expectedReturnTcs: "ER (xTC)",
+    expectedReturnGoldCoins: "ER (xGold)",
     schedules: "Horario manual",
     marketPrices: "Precios de mercado",
     loading: "Cargando...",
@@ -112,9 +127,6 @@ const WORLD_I18N = {
     dataPoints: "Puntos de datos",
     history: "Historial",
     location: "Región",
-    pvp: "PvP",
-    transfer: "Transferencia",
-    battleye: "BattlEye",
     timezone: "Zona horaria",
     servicesCompleted: "Servicios completados",
     mark: "Marca",
@@ -137,6 +149,13 @@ const WORLD_I18N = {
     loadError: "Nie udało się wczytać historii serwera.",
     worldNotFound: "Nie znaleziono serwera.",
     summary: "Podsumowanie",
+    region: "Region",
+    pvp: "PvP",
+    transfer: "Transfer",
+    battleye: "BattlEye",
+    rankingPosition: "Ranking Position",
+    expectedReturnTcs: "ER (xTC)",
+    expectedReturnGoldCoins: "ER (xGold)",
     schedules: "Ręczny harmonogram",
     marketPrices: "Ceny rynkowe",
     loading: "Ładowanie...",
@@ -155,9 +174,6 @@ const WORLD_I18N = {
     dataPoints: "Punkty danych",
     history: "Historia",
     location: "Region",
-    pvp: "PvP",
-    transfer: "Transfer",
-    battleye: "BattlEye",
     timezone: "Strefa czasowa",
     servicesCompleted: "Ukończone usługi",
     mark: "Oznaczenie",
@@ -302,6 +318,24 @@ function getBattleyeLabel(world) {
   return getWorldBattleyeLabel(world, "N/A");
 }
 
+function formatExpectedReturn(value) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return t().notAvailable;
+  return new Intl.NumberFormat(worldLang, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(numeric);
+}
+
+function formatGoldCoins(value) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return t().notAvailable;
+  return new Intl.NumberFormat(worldLang, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(numeric);
+}
+
 function updateLanguageButtons() {
   document.querySelectorAll(".lang-flag").forEach((btn) => {
     const active = btn.dataset.lang === worldLang;
@@ -355,8 +389,17 @@ function renderNoSchedulesCard(title, world) {
 function renderSummary(world) {
   const dict = t();
   const kills = world.last_detected_kills || {};
-  const services = Number(world.last_detected_services || 0);
   const effectiveMark = getEffectiveMark(world.mark, kills);
+  const ranking = world.warzone_economic_ranking || {};
+  const rankingPosition = ranking.ranking_position ?? dict.notAvailable;
+  const expectedReturnTcs =
+    ranking.economic_score_raw == null
+      ? dict.notAvailable
+      : formatExpectedReturn(ranking.economic_score_raw);
+  const expectedReturnGoldCoins =
+    ranking.service_expected_value == null
+      ? dict.notAvailable
+      : formatGoldCoins(ranking.service_expected_value);
 
   return `
     <div class="world-detail-card-header">
@@ -364,11 +407,11 @@ function renderSummary(world) {
     </div>
     <div class="world-detail-grid">
       <div class="world-detail-stat"><span>${escapeHtml(
-        dict.location
-      )}</span><strong>${escapeHtml(world.location || "N/A")}</strong></div>
+        dict.region
+      )}</span><strong>${escapeHtml(world.location || dict.notAvailable)}</strong></div>
       <div class="world-detail-stat"><span>${escapeHtml(
         dict.pvp
-      )}</span><strong>${escapeHtml(world.pvp_type || "N/A")}</strong></div>
+      )}</span><strong>${escapeHtml(world.pvp_type || dict.notAvailable)}</strong></div>
       <div class="world-detail-stat"><span>${escapeHtml(
         dict.transfer
       )}</span><strong>${escapeHtml(getTransferLabel(world))}</strong></div>
@@ -376,29 +419,17 @@ function renderSummary(world) {
         dict.battleye
       )}</span><strong>${escapeHtml(getBattleyeLabel(world))}</strong></div>
       <div class="world-detail-stat"><span>${escapeHtml(
-        dict.timezone
-      )}</span><strong>${escapeHtml(
-    getTimezoneDisplayLabel(pageTimezone)
-  )}</strong></div>
-      <div class="world-detail-stat"><span>${escapeHtml(
-        dict.servicesCompleted
-      )}</span><strong>${escapeHtml(String(services))}</strong></div>
-      <div class="world-detail-stat"><span>${escapeHtml(
         dict.mark
       )}</span><strong>${escapeHtml(getMarkLabel(effectiveMark))}</strong></div>
       <div class="world-detail-stat"><span>${escapeHtml(
-        dict.deathstrike
-      )}</span><strong>${escapeHtml(
-    String(kills.Deathstrike || 0)
-  )}</strong></div>
+        dict.rankingPosition
+      )}</span><strong>${escapeHtml(String(rankingPosition))}</strong></div>
       <div class="world-detail-stat"><span>${escapeHtml(
-        dict.gnomevil
-      )}</span><strong>${escapeHtml(String(kills.Gnomevil || 0))}</strong></div>
+        dict.expectedReturnTcs
+      )}</span><strong>${escapeHtml(expectedReturnTcs)}</strong></div>
       <div class="world-detail-stat"><span>${escapeHtml(
-        dict.abyssador
-      )}</span><strong>${escapeHtml(
-    String(kills.Abyssador || 0)
-  )}</strong></div>
+        dict.expectedReturnGoldCoins
+      )}</span><strong>${escapeHtml(expectedReturnGoldCoins)}</strong></div>
     </div>
   `;
 }

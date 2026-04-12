@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Warzone Ranking</title>
+    <link rel="stylesheet" href="./assets/styles.css" />
+  </head>
+  <body>
+    <div
+      id="bg-layer"
+      aria-hidden="true"
+      data-artworks="bg1.jpg,bg2.jpg,bg3.jpg,bg4.jpg"
+    ></div>
+
+    <nav class="topbar" aria-label="Site navigation">
+      <div class="container topbar-inner">
+        <div class="topbar-links">
+          <a href="./index.html">
+            Home
+          </a>
+          <span class="topbar-divider" aria-hidden="true"></span>
+          <a href="./ranking.html" class="is-active" aria-current="page">
+            Ranking
+          </a>
+          <span class="topbar-divider" aria-hidden="true"></span>
+          <a href="./bigfoot.html">
+            <span class="link-full">Bigfoot's Burden Quest</span><span class="link-short">Quest</span>
+          </a>
+        </div>
+        <div class="topbar-actions">
+          <div class="lang-dropdown" id="langDropdown">
+            <button type="button" class="lang-menu-btn" id="langMenuBtn"
+              aria-haspopup="true" aria-expanded="false" aria-label="Select language">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="2" y1="12" x2="22" y2="12"/>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+              </svg>
+            </button>
+            <div class="lang-menu" id="langMenu" role="menu" aria-label="Language selector">
+              <button type="button" class="lang-flag" data-lang="en" role="menuitem">🇺🇸 <span>English</span></button>
+              <button type="button" class="lang-flag" data-lang="pt-BR" role="menuitem">🇧🇷 <span>Português</span></button>
+              <button type="button" class="lang-flag" data-lang="es-419" role="menuitem">🇦🇷 <span>Español</span></button>
+              <button type="button" class="lang-flag" data-lang="pl" role="menuitem">🇵🇱 <span>Polski</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <header class="site-header" role="banner">
+      <div class="container site-header-inner">
+        <img
+          class="header-icon"
+          src="./assets/logo/logo.png"
+          alt="Tibia Warzones logo"
+        />
+        <div class="header-text">
+          <h1 id="rankingTitle">Warzone Ranking</h1>
+          <p class="header-subtitle" id="rankingSubtitle">
+            Comparative ranking built from expected return.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <main class="container" id="main-content">
+      <section class="controls" aria-label="Ranking controls">
+        <div class="control-group">
+          <label for="searchInput" id="searchLabel">Search world</label>
+          <div class="input-wrapper">
+            <span class="input-icon" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <input
+              type="search"
+              id="searchInput"
+              placeholder="World name…"
+              autocomplete="off"
+              aria-label="Search world"
+            />
+          </div>
+        </div>
+
+        <div class="control-group control-group--filters" id="filtersControlGroup">
+          <div id="filtersLabel">Filters</div>
+          <div id="filtersBar" aria-labelledby="filtersLabel"></div>
+        </div>
+
+      </section>
+
+      <section class="summary" id="summary" aria-live="polite"></section>
+
+      <section class="ranking-section" aria-label="Warzone Ranking">
+        <div id="rankingTableWrap" class="ranking-table-wrap" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <script src="./assets/shared.js" defer></script>
+    <script src="./assets/ranking.js" defer></script>
+  </body>
+</html>
