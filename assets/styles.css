@@ -2527,6 +2527,11 @@ body::after {
   letter-spacing: -0.01em;
 }
 
+.footer-brand .footer-link {
+  color: inherit;
+  text-decoration: none;
+}
+
 .footer-sep-v {
   width: 1px;
   align-self: stretch;
@@ -2541,6 +2546,14 @@ body::after {
   font-size: 12px;
   line-height: 1.6;
   color: var(--text-quaternary);
+}
+
+.footer-notice p {
+  margin: 0;
+}
+
+.footer-notice p + p {
+  margin-top: 8px;
 }
 
 .footer-gh-btn {
