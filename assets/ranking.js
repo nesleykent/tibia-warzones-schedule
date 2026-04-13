@@ -15,6 +15,7 @@ const {
   initSharedUi,
   readJsonStorage,
   readStorage,
+  setHtml,
   setTextContent,
   updateLanguageButtons: updateSharedLanguageButtons,
   writeJsonStorage,
@@ -25,19 +26,30 @@ const STORAGE_KEYS = {
   activeFilters: "rankingActiveFilters",
   lang: SHARED_STORAGE_KEYS.language,
 };
-const FILTER_GROUPS = ["region", "pvp", "transfer", "mark"];
-const FILTER_VALUE_GETTERS = {
-  region: getRegionKey,
-  pvp: getPvpKey,
-  transfer: getTransferKey,
-  mark: getMarkKey,
-};
 const FILTER_CONFIGS = [
-  { group: "region", format: (value) => value },
-  { group: "pvp", format: (value) => value },
-  { group: "transfer", format: (value) => formatTransferType(value, value) },
-  { group: "mark", format: getMarkLabel },
+  { group: "region", getValue: getRegionKey, format: (value) => value },
+  { group: "pvp", getValue: getPvpKey, format: (value) => value },
+  {
+    group: "transfer",
+    getValue: getTransferKey,
+    format: (value) => formatTransferType(value, value),
+  },
+  { group: "mark", getValue: getMarkKey, format: getMarkLabel },
 ];
+const FILTER_GROUPS = FILTER_CONFIGS.map(({ group }) => group);
+const FILTER_CONFIGS_BY_GROUP = Object.fromEntries(
+  FILTER_CONFIGS.map((config) => [config.group, config])
+);
+const PAGE_ELEMENT_IDS = {
+  title: "rankingTitle",
+  subtitle: "rankingSubtitle",
+  searchLabel: "searchLabel",
+  filtersLabel: "filtersLabel",
+  searchInput: "searchInput",
+  filtersBar: "filtersBar",
+  summary: "summary",
+  tableWrap: "rankingTableWrap",
+};
 
 const I18N = {
   en: {
@@ -427,9 +439,16 @@ let worlds = [];
 let lang = "pt-BR";
 let explanationModalKeydownHandler = null;
 let activeFilters = createEmptyFilterState();
+const pageElements = {};
 
 function createEmptyFilterState() {
   return Object.fromEntries(FILTER_GROUPS.map((group) => [group, new Set()]));
+}
+
+function cachePageElements() {
+  Object.entries(PAGE_ELEMENT_IDS).forEach(([key, id]) => {
+    pageElements[key] = document.getElementById(id);
+  });
 }
 
 function t() {
@@ -470,9 +489,9 @@ function hasActiveFilters() {
 }
 
 function worldPassesFilters(world) {
-  return FILTER_GROUPS.every((group) => {
+  return FILTER_CONFIGS.every(({ group, getValue }) => {
     const values = activeFilters[group];
-    return values.size === 0 || values.has(FILTER_VALUE_GETTERS[group](world));
+    return values.size === 0 || values.has(getValue(world));
   });
 }
 
@@ -512,12 +531,13 @@ function clearFilters() {
 function applyStaticLabels() {
   const dict = t();
   document.title = dict.pageTitle;
-  setTextContent(document.getElementById("rankingTitle"), dict.title);
-  setTextContent(document.getElementById("rankingSubtitle"), dict.subtitle);
-  setTextContent(document.getElementById("searchLabel"), dict.search);
-  setTextContent(document.getElementById("filtersLabel"), dict.filters);
-  const searchInput = document.getElementById("searchInput");
-  if (searchInput) searchInput.placeholder = dict.searchPlaceholder;
+  setTextContent(pageElements.title, dict.title);
+  setTextContent(pageElements.subtitle, dict.subtitle);
+  setTextContent(pageElements.searchLabel, dict.search);
+  setTextContent(pageElements.filtersLabel, dict.filters);
+  if (pageElements.searchInput) {
+    pageElements.searchInput.placeholder = dict.searchPlaceholder;
+  }
 }
 
 function updateLanguageButtons() {
@@ -557,7 +577,7 @@ function compareWorlds(a, b) {
 
 function renderFilters() {
   const dict = t();
-  const filterBar = document.getElementById("filtersBar");
+  const filterBar = pageElements.filtersBar;
   if (!filterBar) return;
 
   const rankedWorlds = worlds.filter((world) => getRanking(world)?.is_ranked);
@@ -577,14 +597,20 @@ function renderFilters() {
     allPill +
     FILTER_CONFIGS
       .map(({ group, format }) =>
-        pills(group, new Set(rankedWorlds.map(FILTER_VALUE_GETTERS[group])), format)
+        pills(
+          group,
+          new Set(
+            rankedWorlds.map((world) => FILTER_CONFIGS_BY_GROUP[group].getValue(world))
+          ),
+          format
+        )
       )
       .join("")
   }</div>`;
 }
 
 function bindFilterBar() {
-  const filterBar = document.getElementById("filtersBar");
+  const filterBar = pageElements.filtersBar;
   if (!filterBar) return;
   filterBar.addEventListener("click", (event) => {
     const button = event.target.closest(".filter-pill");
@@ -600,7 +626,7 @@ function bindFilterBar() {
 }
 
 function bindRankingTable() {
-  const wrap = document.getElementById("rankingTableWrap");
+  const wrap = pageElements.tableWrap;
   if (!wrap) return;
 
   wrap.addEventListener("click", (event) => {
@@ -620,13 +646,20 @@ function bindRankingTable() {
   });
 }
 
+function renderEmptyState(container, message) {
+  if (!container) return;
+  container.innerHTML = `<div class="empty-state">${escapeHtml(
+    message
+  )}</div>`;
+}
+
 function renderTable(rows) {
   const dict = t();
-  const wrap = document.getElementById("rankingTableWrap");
+  const wrap = pageElements.tableWrap;
   if (!wrap) return;
 
   if (rows.length === 0) {
-    wrap.innerHTML = `<div class="empty-state">${escapeHtml(dict.noWorlds)}</div>`;
+    renderEmptyState(wrap, dict.noWorlds);
     return;
   }
 
@@ -669,7 +702,7 @@ function renderTable(rows) {
 }
 
 function render() {
-  const query = String(document.getElementById("searchInput")?.value || "")
+  const query = String(pageElements.searchInput?.value || "")
     .trim()
     .toLowerCase();
   const rows = worlds
@@ -677,11 +710,13 @@ function render() {
     .filter((world) => worldPassesFilters(world))
     .filter((world) => String(world.name || "").toLowerCase().includes(query))
     .sort(compareWorlds);
-  const summary = document.getElementById("summary");
-  if (summary) {
-    summary.innerHTML = `<span class="summary-text">${escapeHtml(
-      t().summary(worlds.length, rows.length)
-    )}</span>`;
+  if (pageElements.summary) {
+    setHtml(
+      pageElements.summary,
+      `<span class="summary-text">${escapeHtml(
+        t().summary(worlds.length, rows.length)
+      )}</span>`
+    );
   }
   renderFilters();
   renderTable(rows);
@@ -689,6 +724,7 @@ function render() {
 
 async function init() {
   initSharedUi();
+  cachePageElements();
   loadSettings();
   applyStaticLabels();
   updateLanguageButtons();
@@ -696,7 +732,7 @@ async function init() {
   bindFilterBar();
   bindRankingTable();
 
-  const searchInput = document.getElementById("searchInput");
+  const searchInput = pageElements.searchInput;
   if (searchInput) searchInput.addEventListener("input", render);
 
   const worldsData = await fetchJson(WORLDS_DATA_PATH);
@@ -705,6 +741,5 @@ async function init() {
 }
 
 init().catch((error) => {
-  const wrap = document.getElementById("rankingTableWrap");
-  if (wrap) wrap.innerHTML = `<div class="empty-state">${escapeHtml(error.message)}</div>`;
+  renderEmptyState(pageElements.tableWrap, error.message);
 });

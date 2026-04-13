@@ -701,13 +701,18 @@ body::after {
   flex: 1 1 240px;
 }
 
-.ranking-section {
+.ranking-section,
+.world-card,
+.empty-state {
   background: var(--bg-card);
-  backdrop-filter: saturate(160%) blur(20px);
-  -webkit-backdrop-filter: saturate(160%) blur(20px);
   border: 1px solid var(--sep-md);
   border-radius: var(--r-xl);
   box-shadow: var(--shadow);
+}
+
+.ranking-section {
+  backdrop-filter: saturate(160%) blur(20px);
+  -webkit-backdrop-filter: saturate(160%) blur(20px);
   padding: 18px;
   margin-bottom: 18px;
 }
@@ -881,13 +886,9 @@ body::after {
    WORLD CARD — glass, texto contrastante
 ══════════════════════════════════════════════ */
 .world-card {
-  background: var(--bg-card);
   backdrop-filter: saturate(160%) blur(20px);
   -webkit-backdrop-filter: saturate(160%) blur(20px);
-  border: 1px solid var(--sep-md);
-  border-radius: var(--r-xl);
   overflow: hidden;
-  box-shadow: var(--shadow);
   transition: box-shadow var(--t-base) var(--ease-out),
     transform var(--t-base) var(--ease-out),
     border-color var(--t-fast) var(--ease-out),
@@ -1089,14 +1090,10 @@ body::after {
 .empty-state {
   padding: 40px 20px;
   text-align: center;
-  background: var(--bg-card);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--sep-md);
-  border-radius: var(--r-xl);
   color: var(--text-tertiary);
   font-size: 14px;
-  box-shadow: var(--shadow);
 }
 
 /* ══════════════════════════════════════════════

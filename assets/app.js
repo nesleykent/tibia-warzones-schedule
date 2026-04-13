@@ -46,18 +46,36 @@ const STORAGE_KEYS = {
   timezone: SHARED_STORAGE_KEYS.timezone,
 };
 
-const FILTER_GROUPS = ["region", "pvp", "battleye", "transfer"];
-const FILTER_VALUE_GETTERS = {
-  region: getRegionKey,
-  pvp: getPvpKey,
-  battleye: getBattleyeKey,
-  transfer: getTransferKey,
-};
-const FILTER_VALUE_LABELS = {
-  region: (value) => value,
-  pvp: (value) => value,
-  battleye: getBattleyeDisplayLabel,
-  transfer: getTransferDisplayLabel,
+const FILTER_CONFIGS = [
+  { group: "region", getValue: getRegionKey, getLabel: (value) => value },
+  { group: "pvp", getValue: getPvpKey, getLabel: (value) => value },
+  {
+    group: "battleye",
+    getValue: getBattleyeKey,
+    getLabel: getBattleyeDisplayLabel,
+  },
+  {
+    group: "transfer",
+    getValue: getTransferKey,
+    getLabel: getTransferDisplayLabel,
+  },
+];
+const FILTER_GROUPS = FILTER_CONFIGS.map(({ group }) => group);
+const FILTER_CONFIGS_BY_GROUP = Object.fromEntries(
+  FILTER_CONFIGS.map((config) => [config.group, config])
+);
+const PAGE_ELEMENT_IDS = {
+  heroTitle: "heroTitle",
+  heroSubtitle: "heroSubtitle",
+  searchLabel: "searchLabel",
+  timezoneLabel: "timezoneLabel",
+  searchInput: "searchInput",
+  filtersLabel: "filtersLabel",
+  plannerLabel: "warzonePlannerLabel",
+  timezoneSelect: "timezoneSelect",
+  filtersBar: "filtersBar",
+  summary: "summary",
+  worldsList: "worldsList",
 };
 
 function createEmptyFilterState() {
@@ -396,6 +414,13 @@ let selectedExecutions = new Set();
 
 // ─── Filter state ─────────────────────────────────
 let activeFilters = createEmptyFilterState();
+const pageElements = {};
+
+function cachePageElements() {
+  Object.entries(PAGE_ELEMENT_IDS).forEach(([key, id]) => {
+    pageElements[key] = document.getElementById(id);
+  });
+}
 
 function execKey(worldName, execId) {
   return worldName + "|" + execId;
@@ -1195,7 +1220,7 @@ function offsetMinutes(tz) {
 }
 
 function populateTimezoneSelect() {
-  const select = document.getElementById("timezoneSelect");
+  const select = pageElements.timezoneSelect;
   if (!select) return;
   const fragment = document.createDocumentFragment();
   let currentGroup = null;
@@ -1250,21 +1275,18 @@ function bindLanguageButtons() {
 function applyStaticLabels() {
   const d = t();
   document.title = d.pageTitle;
-  const heroTitle = document.getElementById("heroTitle");
-  const heroSubtitle = document.getElementById("heroSubtitle");
-  const searchLabel = document.getElementById("searchLabel");
-  const timezoneLabel = document.getElementById("timezoneLabel");
-  const searchInput = document.getElementById("searchInput");
-  const filtersLabel = document.getElementById("filtersLabel");
-  const plannerLabel = document.getElementById("warzonePlannerLabel");
-
-  setTextContent(heroTitle, d.heroTitle);
-  setTextContent(heroSubtitle, d.heroSubtitle);
-  setTextContent(searchLabel, d.search);
-  setTextContent(timezoneLabel, d.timezone);
-  if (searchInput) searchInput.placeholder = d.searchPlaceholder || d.search;
-  setTextContent(filtersLabel, d.filterLabel || "Filtros");
-  setTextContent(plannerLabel, d.warzonePlannerLabel || "Warzone Planner");
+  setTextContent(pageElements.heroTitle, d.heroTitle);
+  setTextContent(pageElements.heroSubtitle, d.heroSubtitle);
+  setTextContent(pageElements.searchLabel, d.search);
+  setTextContent(pageElements.timezoneLabel, d.timezone);
+  if (pageElements.searchInput) {
+    pageElements.searchInput.placeholder = d.searchPlaceholder || d.search;
+  }
+  setTextContent(pageElements.filtersLabel, d.filterLabel || "Filtros");
+  setTextContent(
+    pageElements.plannerLabel,
+    d.warzonePlannerLabel || "Warzone Planner"
+  );
 }
 
 function convertTimeBetweenTimezones(scheduleTime, sourceTimezone, targetTimezone) {
@@ -1474,17 +1496,17 @@ function hasActiveFilters() {
 }
 
 function worldPassesFilters(world) {
-  return FILTER_GROUPS.every((group) => {
+  return FILTER_CONFIGS.every(({ group, getValue }) => {
     const values = activeFilters[group];
-    return values.size === 0 || values.has(FILTER_VALUE_GETTERS[group](world));
+    return values.size === 0 || values.has(getValue(world));
   });
 }
 
 function getFilterOptions(warzone_worlds) {
   return Object.fromEntries(
-    FILTER_GROUPS.map((group) => [
+    FILTER_CONFIGS.map(({ group, getValue }) => [
       group,
-      new Set(warzone_worlds.map((world) => FILTER_VALUE_GETTERS[group](world))),
+      new Set(warzone_worlds.map((world) => getValue(world))),
     ])
   );
 }
@@ -1536,32 +1558,44 @@ function getTransferDisplayLabel(key) {
 }
 
 function renderFilters(warzone_worlds) {
-  const el = document.getElementById("filtersBar");
+  const el = pageElements.filtersBar;
   if (!el) return;
-  if (warzone_worlds.length === 0) { el.innerHTML = ""; return; }
+  if (warzone_worlds.length === 0) {
+    el.replaceChildren();
+    return;
+  }
 
   const dict = t();
   const filterOptions = getFilterOptions(warzone_worlds);
   const isAllActive = !hasActiveFilters();
 
-  function pills(group, values, labelFn) {
-    return [...values].sort().map(v => {
-      const active = activeFilters[group].has(v);
-      return `<button type="button" class="filter-pill${active ? " is-active" : ""}" data-filter-group="${escapeHtml(group)}" data-filter-value="${escapeHtml(v)}">${escapeHtml(labelFn(v))}</button>`;
-    }).join("");
+  function pills(group, values) {
+    return [...values]
+      .sort()
+      .map((value) => {
+        const active = activeFilters[group].has(value);
+        return `<button type="button" class="filter-pill${
+          active ? " is-active" : ""
+        }" data-filter-group="${escapeHtml(
+          group
+        )}" data-filter-value="${escapeHtml(value)}">${escapeHtml(
+          FILTER_CONFIGS_BY_GROUP[group].getLabel(value)
+        )}</button>`;
+      })
+      .join("");
   }
 
   const allPill = `<button type="button" class="filter-pill filter-pill--all${isAllActive ? " is-active" : ""}" data-filter-group="__all__" data-filter-value="__all__">${escapeHtml(dict.filterAll)}</button>`;
 
-  const rest = FILTER_GROUPS.map((group) =>
-    pills(group, filterOptions[group], FILTER_VALUE_LABELS[group])
-  ).join("");
+  const rest = FILTER_GROUPS.map((group) => pills(group, filterOptions[group])).join(
+    ""
+  );
 
   el.innerHTML = `<div class="filter-pills-row">${allPill}${rest}</div>`;
 }
 
 function bindFilterBar() {
-  const filterBar = document.getElementById("filtersBar");
+  const filterBar = pageElements.filtersBar;
   if (!filterBar) return;
 
   filterBar.addEventListener("click", (event) => {
@@ -1580,13 +1614,18 @@ function bindFilterBar() {
   });
 }
 
+function renderEmptyState(container, message) {
+  if (!container) return;
+  container.innerHTML = `<div class="empty-state">${escapeHtml(
+    message
+  )}</div>`;
+}
+
 // ─── Main render ─────────────────────────────────────
 
 function render() {
   const dict = t();
-  const searchInput = document.getElementById("searchInput");
-  const summary = document.getElementById("summary");
-  const worldsList = document.getElementById("worldsList");
+  const { searchInput, summary, worldsList } = pageElements;
   if (!summary || !worldsList) return;
 
   const query = (searchInput?.value || "").trim().toLowerCase();
@@ -1624,9 +1663,7 @@ function render() {
   );
 
   if (filtered.length === 0) {
-    worldsList.innerHTML = `<div class="empty-state">${escapeHtml(
-      dict.noServersFound
-    )}</div>`;
+    renderEmptyState(worldsList, dict.noServersFound);
     return;
   }
 
@@ -1647,7 +1684,7 @@ function getColumnCount(container) {
 function applyMasonry(container) {
   const cols = getColumnCount(container);
   const cards = [...container.querySelectorAll(".world-card, .empty-state")];
-  container.innerHTML = "";
+  container.replaceChildren();
   if (cols === 1) {
     container.style.cssText = "display:flex;flex-direction:column;";
     cards.forEach((c) => container.appendChild(c));
@@ -1665,7 +1702,7 @@ function applyMasonry(container) {
   cards.forEach((card, i) => columns[i % cols].appendChild(card));
   requestAnimationFrame(() => {
     cards.forEach((c) => c.remove());
-    columns.forEach((c) => (c.innerHTML = ""));
+    columns.forEach((column) => column.replaceChildren());
     const heights = new Array(cols).fill(0);
     cards.forEach((card) => {
       const s = heights.indexOf(Math.min(...heights));
@@ -1692,6 +1729,7 @@ function masterTick() {
 
 async function init() {
   initSharedUi();
+  cachePageElements();
   loadSettings();
   loadSelectedWorlds();
   loadNotificationsPref();
@@ -1711,7 +1749,7 @@ async function init() {
   updateCountdownPanel();
 
   // Single delegated listener for all .world-select-btn clicks (survives masonry re-renders)
-  const worldsList = document.getElementById("worldsList");
+  const worldsList = pageElements.worldsList;
   if (worldsList) {
     worldsList.addEventListener("click", (e) => {
       const btn = e.target.closest(".exec-select-btn");
@@ -1734,7 +1772,7 @@ async function init() {
     });
   }
 
-  const searchInput = document.getElementById("searchInput");
+  const searchInput = pageElements.searchInput;
   if (searchInput) searchInput.addEventListener("input", render);
 
   try {
@@ -1749,13 +1787,9 @@ async function init() {
       resizeTimer = setTimeout(render, 120);
     });
   } catch (error) {
-    const summary = document.getElementById("summary");
-    const worldsList = document.getElementById("worldsList");
+    const { summary, worldsList } = pageElements;
     if (summary) summary.textContent = "";
-    if (worldsList)
-      worldsList.innerHTML = `<div class="empty-state">${escapeHtml(
-        error.message
-      )}</div>`;
+    if (worldsList) renderEmptyState(worldsList, error.message);
   }
 }
 
