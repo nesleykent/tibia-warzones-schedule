@@ -79,6 +79,14 @@ def normalize_price(value: Any) -> float | None:
     return numeric
 
 
+def first_positive_number(*values: Any) -> float | None:
+    for value in values:
+        numeric = to_float(value)
+        if numeric is not None and numeric > 0:
+            return numeric
+    return None
+
+
 def map_mark_value(mark: Any) -> float:
     return MARK_VALUE_MAP.get(str(mark or "").strip().lower(), 0.0)
 
@@ -345,12 +353,34 @@ def compute_world_ranking_metrics(world: dict[str, Any], data_dir: Path) -> dict
     wz3_expected_value = None
     service_expected_value = None
 
-    tibia_coin_price = market_models["tibia_coin"]["rolling_window_price"]
-    gill_necklace_price = market_models["gill_necklace"]["rolling_window_price"]
-    prismatic_necklace_price = market_models["prismatic_necklace"][
-        "rolling_window_price"
-    ]
-    prismatic_ring_price = market_models["prismatic_ring"]["rolling_window_price"]
+    tibia_coin_price = first_positive_number(
+        market_models["tibia_coin"]["rolling_window_price"],
+        market_models["tibia_coin"]["adjusted_effective_price"],
+        market_models["tibia_coin"]["mid_price"],
+        market_models["tibia_coin"]["supply_price"],
+        market_models["tibia_coin"]["demand_price"],
+    )
+    gill_necklace_price = first_positive_number(
+        market_models["gill_necklace"]["rolling_window_price"],
+        market_models["gill_necklace"]["adjusted_effective_price"],
+        market_models["gill_necklace"]["mid_price"],
+        market_models["gill_necklace"]["supply_price"],
+        market_models["gill_necklace"]["demand_price"],
+    )
+    prismatic_necklace_price = first_positive_number(
+        market_models["prismatic_necklace"]["rolling_window_price"],
+        market_models["prismatic_necklace"]["adjusted_effective_price"],
+        market_models["prismatic_necklace"]["mid_price"],
+        market_models["prismatic_necklace"]["supply_price"],
+        market_models["prismatic_necklace"]["demand_price"],
+    )
+    prismatic_ring_price = first_positive_number(
+        market_models["prismatic_ring"]["rolling_window_price"],
+        market_models["prismatic_ring"]["adjusted_effective_price"],
+        market_models["prismatic_ring"]["mid_price"],
+        market_models["prismatic_ring"]["supply_price"],
+        market_models["prismatic_ring"]["demand_price"],
+    )
 
     if (
         tibia_coin_price is None
