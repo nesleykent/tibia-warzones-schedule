@@ -585,7 +585,7 @@
 
           <div class="footer-notice">
             <p>
-              A community-run schedule for Warzone services across multiple servers, built from Deathstrike, Gnomevil, and Abyssador kill stats plus verified player reports. Times can shift with events, delays, and server activity. The Expected Return metric follows a standardized methodology for cross world comparison and profitability assessment. Full documentation is available at <a href="${EXPECTED_RETURN_DOC_URL}" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub</a>.
+              A community-run schedule for Warzones services across multiple servers, built from Deathstrike, Gnomevil, and Abyssador kill stats plus verified player reports. Times can shift with events, delays, and server activity. The Expected Return metric follows a standardized methodology for cross world comparison and profitability assessment. Full documentation is available at <a href="${EXPECTED_RETURN_DOC_URL}" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub</a>.
             </p>
             <p>
               Sources and acknowledgments include
