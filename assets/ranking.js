@@ -4,9 +4,7 @@ const {
   escapeHtml,
   fetchJson,
   formatTransferType,
-  getEffectiveWorldMark,
   getInitialLanguage: getSharedInitialLanguage,
-  getNormalizedBossKills,
   bindLanguageButtons: bindSharedLanguageButtons,
   getWorldMarkLabel,
   getWorldPvpKey,
@@ -455,12 +453,9 @@ function t() {
   return I18N[lang] || I18N["pt-BR"];
 }
 
-function getBossKills(world) {
-  return getNormalizedBossKills(world?.last_detected_kills);
-}
 
 function getMarkKey(world) {
-  return getEffectiveWorldMark(world?.mark, getBossKills(world));
+  return String(world?.mark || "").trim().toLowerCase();
 }
 
 function getMarkLabel(mark) {
