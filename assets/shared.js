@@ -1,13 +1,16 @@
 (function () {
   const DEFAULT_TIMEZONE = "America/Sao_Paulo#Curitiba";
+  const GITHUB_REPO_URL =
+    "https://github.com/nesleykent/tibia-warzones-schedule";
   const GITHUB_ISSUES_URL =
     "https://github.com/nesleykent/tibia-warzones-schedule/issues";
+  const EXPECTED_RETURN_DOC_URL =
+    "https://github.com/nesleykent/tibia-warzones-schedule/blob/main/Expected_Return_Explanation.md";
   const SITE_NAME = "Tibia Warzones Schedule";
-  const SITE_FOOTER_COPYRIGHT = "© 2026 Tibia Warzones Schedule contributors";
+  const SITE_FOOTER_COPYRIGHT =
+    "© 2026 Tibia Warzones Schedule Contributors. All rights reserved.";
   const SITE_FOOTER_DISCLAIMER =
-    "Tibia is a registered trademark of CipSoft GmbH. All related assets belong to CipSoft GmbH. This project is independent and has no affiliation, support, or endorsement from CipSoft GmbH, Tibia.com, TibiaData, or TibiaMarket.top.";
-  const SITE_FOOTER_NOTICE =
-    "Community driven schedule for Warzone services across multiple servers, based on Deathstrike, Gnomevil, and Abyssador kill statistics plus player reports. Times can vary due to delays, in-game events, disruptive behavior, or server activity changes. Service availability depends on in‑game conditions and server rules.";
+    "Tibia remains a registered trademark of CipSoft GmbH. All related names, assets, and content remain the property of CipSoft GmbH. This project operates independently and holds no affiliation, sponsorship, or endorsement from CipSoft GmbH or Tibia.com.";
   const STORAGE_KEY_LANGUAGE = "lang";
   const STORAGE_KEY_TIMEZONE = "tz";
   const SHARED_STORAGE_KEYS = {
@@ -416,7 +419,9 @@
   }
 
   function loadSavedTimezone() {
-    return readStorage(STORAGE_KEY_TIMEZONE, DEFAULT_TIMEZONE) || DEFAULT_TIMEZONE;
+    return (
+      readStorage(STORAGE_KEY_TIMEZONE, DEFAULT_TIMEZONE) || DEFAULT_TIMEZONE
+    );
   }
 
   function getWorldBattleyeKey(world) {
@@ -468,10 +473,7 @@
   }
 
   function getNormalizedBossKills(kills) {
-    const source =
-      kills && typeof kills === "object"
-        ? kills
-        : {};
+    const source = kills && typeof kills === "object" ? kills : {};
 
     return {
       deathstrike: Number(source.Deathstrike ?? source.deathstrike ?? 0),
@@ -569,28 +571,34 @@
       <div class="container site-footer-inner">
         <div class="footer-top">
           <div class="footer-brand">
-            <img
-              class="footer-icon"
-              src="./assets/logo/logo.png"
-              alt="Tibia Warzones logo"
-            />
-            <span class="footer-brand-name">${SITE_NAME}</span>
+            <a href="${GITHUB_REPO_URL}" target="_blank" rel="noopener noreferrer" class="footer-link">
+              <img
+                class="footer-icon"
+                src="./assets/logo/logo.png"
+                alt="Tibia Warzones logo"
+              />
+            </a>
+            <a href="${GITHUB_REPO_URL}" target="_blank" rel="noopener noreferrer" class="footer-link footer-brand-name">${SITE_NAME}</a>
           </div>
 
           <div class="footer-sep-v" aria-hidden="true"></div>
 
-          <p class="footer-notice">
-            ${SITE_FOOTER_NOTICE}
-            Reference sources and credits:
-            <a href="https://www.tibia.com" target="_blank" rel="noopener noreferrer" class="footer-link">Tibia.com</a>,
-            CipSoft GmbH,
-            <a href="https://tibiadata.com" target="_blank" rel="noopener noreferrer" class="footer-link">TibiaData</a>,
-            and
-            <a href="https://tibiamarket.top" target="_blank" rel="noopener noreferrer" class="footer-link">TibiaMarket.top</a>.
-            Report times via
-            <a href="${GITHUB_ISSUES_URL}" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub Issues</a>
-            — community contributions keep the schedule accurate.
-          </p>
+          <div class="footer-notice">
+            <p>
+              A community-run schedule for Warzone services across multiple servers, built from Deathstrike, Gnomevil, and Abyssador kill stats plus verified player reports. Times can shift with events, delays, and server activity. The Expected Return metric follows a standardized methodology for cross world comparison and profitability assessment. Full documentation is available at <a href="${EXPECTED_RETURN_DOC_URL}" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub</a>.
+            </p>
+            <p>
+              Sources and acknowledgments include
+              <a href="https://www.tibia.com" target="_blank" rel="noopener noreferrer" class="footer-link">Tibia.com</a>,
+              <a href="https://www.cipsoft.com" target="_blank" rel="noopener noreferrer" class="footer-link">CipSoft GmbH</a>,
+              <a href="https://tibiadata.com" target="_blank" rel="noopener noreferrer" class="footer-link">TibiaData</a>,
+              <a href="https://www.tibiamarket.top" target="_blank" rel="noopener noreferrer" class="footer-link">TibiaMarket.top</a>,
+              and
+              <a href="https://youtube.com/@warzoneirostibia" target="_blank" rel="noopener noreferrer" class="footer-link">Warzoneiros Tibia</a>.
+              Community input sustains accuracy through continuous updates and validation. Want to fix or share a schedule? Use
+              <a href="${GITHUB_ISSUES_URL}" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub Issues</a>.
+            </p>
+          </div>
 
           <a
             href="${GITHUB_ISSUES_URL}"
