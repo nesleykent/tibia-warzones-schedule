@@ -1,5 +1,6 @@
 {
-  "last_run_at": "2026-04-11T21:57:01.679338Z",
+  "last_run_at": "2026-04-26T06:51:49.180129Z",
+  "status": "ok",
   "snapshots": [
     [
       {
@@ -113,6 +114,34 @@
         "day_lowest_buy": 65117,
         "total_immediate_profit": -1,
         "total_immediate_profit_info": ""
+      },
+      {
+        "id": 16113,
+        "time": 1775929428.3405294,
+        "is_full_data": false,
+        "buy_offer": -1,
+        "sell_offer": -1,
+        "month_average_sell": -1,
+        "month_average_buy": -1,
+        "month_sold": -1,
+        "month_bought": -1,
+        "active_traders": -1,
+        "month_highest_sell": -1,
+        "month_lowest_buy": -1,
+        "month_lowest_sell": -1,
+        "month_highest_buy": -1,
+        "buy_offers": -1,
+        "sell_offers": -1,
+        "day_average_sell": 122999,
+        "day_average_buy": 66202,
+        "day_sold": 1,
+        "day_bought": 1,
+        "day_highest_sell": 122999,
+        "day_lowest_sell": 122999,
+        "day_highest_buy": 66202,
+        "day_lowest_buy": 66202,
+        "total_immediate_profit": -1,
+        "total_immediate_profit_info": ""
       }
     ]
   ],
@@ -125,20 +154,24 @@
       "11a2832ba9f3f685",
       "776116f74ac0ba56",
       "793fc0d143af1c67",
+      "8801181979520f01",
       "f81e9546f67def00"
     ],
     "rejected_fingerprints": [
-      "0e3f0ef0827e5b4c",
-      "0f6ae4686628ff69",
-      "19e11db9b9a027e0",
-      "19fe29000b6c9d2d",
-      "3f84a0fb01c649af",
-      "4bc8bc191c136d39",
-      "59c8d067cc174161",
-      "7a26679d170220fc",
-      "996339dc7bbc8ac4",
-      "e4745c48405598c1",
-      "e5e865152d289b97"
+      "022ecf6244437d98",
+      "1102410b03b699cc",
+      "2380566ea3b695d1",
+      "454b9bee4420b8db",
+      "4e4f9bfeb489d332",
+      "75d0498d0e0c03c0",
+      "955a9324664de6aa",
+      "a1b83dae11f8b25b",
+      "a3beddf8f7a2d29b",
+      "bc6e10bcdab5385a",
+      "cfa7e59d9a238b7e",
+      "dfa3e9ce806b7aca",
+      "e5e865152d289b97",
+      "fca2c75180511dae"
     ]
   }
 }

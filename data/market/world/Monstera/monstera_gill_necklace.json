@@ -1,5 +1,6 @@
 {
-  "last_run_at": "2026-04-11T21:56:40.581139Z",
+  "last_run_at": "2026-04-26T06:51:28.631965Z",
+  "status": "ok",
   "snapshots": [
     [
       {
@@ -88,7 +89,7 @@
       },
       {
         "id": 16108,
-        "time": 1774719847.9373524,
+        "time": 1775929428.3347704,
         "is_full_data": false,
         "buy_offer": -1,
         "sell_offer": -1,
@@ -103,42 +104,14 @@
         "month_highest_buy": -1,
         "buy_offers": -1,
         "sell_offers": -1,
-        "day_average_sell": 97219,
-        "day_average_buy": 41266,
-        "day_sold": 9,
+        "day_average_sell": 94341,
+        "day_average_buy": 41412,
+        "day_sold": 7,
         "day_bought": 1,
-        "day_highest_sell": 98999,
-        "day_lowest_sell": 94993,
-        "day_highest_buy": 41266,
-        "day_lowest_buy": 41266,
-        "total_immediate_profit": -1,
-        "total_immediate_profit_info": ""
-      },
-      {
-        "id": 16108,
-        "time": 1775238250.4154882,
-        "is_full_data": false,
-        "buy_offer": -1,
-        "sell_offer": -1,
-        "month_average_sell": -1,
-        "month_average_buy": -1,
-        "month_sold": -1,
-        "month_bought": -1,
-        "active_traders": -1,
-        "month_highest_sell": -1,
-        "month_lowest_buy": -1,
-        "month_lowest_sell": -1,
-        "month_highest_buy": -1,
-        "buy_offers": -1,
-        "sell_offers": -1,
-        "day_average_sell": 93398,
-        "day_average_buy": 41295,
-        "day_sold": 5,
-        "day_bought": 4,
-        "day_highest_sell": 94999,
-        "day_lowest_sell": 92997,
-        "day_highest_buy": 41301,
-        "day_lowest_buy": 41281,
+        "day_highest_sell": 94998,
+        "day_lowest_sell": 92900,
+        "day_highest_buy": 41412,
+        "day_lowest_buy": 41412,
         "total_immediate_profit": -1,
         "total_immediate_profit_info": ""
       }
@@ -152,20 +125,24 @@
     "accepted_fingerprints": [
       "002ef7502da123c2",
       "40674237cc712931",
-      "504904a338bb6997",
-      "56bad69a01985f49",
-      "72514e30df7df8e1"
+      "72514e30df7df8e1",
+      "a0d05fc4fdbb690e"
     ],
     "rejected_fingerprints": [
-      "0b1217a86172c219",
-      "19bf19e0c0dcaee3",
-      "4ee05917e6a3bb2e",
-      "55097654a1901be6",
-      "7338e99c038a5f7d",
+      "47338485899d3093",
+      "56eb40cf88af448d",
+      "66d9b089fcc9fcd3",
+      "71def04f6a22dff8",
+      "7be4f1ef83bc8b21",
+      "8910bb1fda8c6c3a",
+      "8a9f9176b9532a11",
+      "97ec5aca5ab9738e",
+      "a28f7e1a6e780877",
       "bd280e4697b11a8e",
-      "dea8e185d450821d",
-      "f0ed3541cf382dc1",
-      "f5f329e42ff00f49"
+      "cb7a2a02b93c78fa",
+      "cebca6b506275328",
+      "dd3f296799049cc1",
+      "f93b2255b16b4965"
     ]
   }
 }
