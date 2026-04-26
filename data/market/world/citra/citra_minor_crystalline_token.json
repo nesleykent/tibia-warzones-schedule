@@ -1,5 +1,6 @@
 {
-  "last_run_at": "2026-04-11T20:39:44.542722Z",
+  "last_run_at": "2026-04-24T18:33:06.035103Z",
+  "status": "ok",
   "snapshots": [
     [
       {
@@ -197,6 +198,34 @@
         "day_lowest_buy": 9000,
         "total_immediate_profit": -1,
         "total_immediate_profit_info": ""
+      },
+      {
+        "id": 16128,
+        "time": 1776617063.5879097,
+        "is_full_data": false,
+        "buy_offer": -1,
+        "sell_offer": -1,
+        "month_average_sell": -1,
+        "month_average_buy": -1,
+        "month_sold": -1,
+        "month_bought": -1,
+        "active_traders": -1,
+        "month_highest_sell": -1,
+        "month_lowest_buy": -1,
+        "month_lowest_sell": -1,
+        "month_highest_buy": -1,
+        "buy_offers": -1,
+        "sell_offers": -1,
+        "day_average_sell": 29992,
+        "day_average_buy": 15000,
+        "day_sold": 1,
+        "day_bought": 2,
+        "day_highest_sell": 29992,
+        "day_lowest_sell": 29992,
+        "day_highest_buy": 15001,
+        "day_lowest_buy": 15000,
+        "total_immediate_profit": -1,
+        "total_immediate_profit_info": ""
       }
     ]
   ],
@@ -212,25 +241,37 @@
       "73afe737179250a4",
       "7708d2ad0537403a",
       "af411ddb7c62bfb6",
-      "c0d39cd20d66151c"
+      "c0d39cd20d66151c",
+      "f947b88b078ea291"
     ],
     "rejected_fingerprints": [
+      "126059fe80f2d4bb",
       "1ddb641b34bd5f52",
       "26d67ee723505fe7",
       "299dbc4fa2ec65e4",
+      "563aa1058a009ffe",
       "56bb5258a5f37c78",
+      "7f6bb5923b7e9fdb",
+      "8be54f49fbae367e",
       "8efe681012ccbba9",
       "9277823225613808",
       "93c401b17ea030de",
       "94521b42e3c1a019",
+      "9c6a6d0a53b4e4e3",
       "a3dabcbc36036688",
       "a58365f1ac90b8a4",
+      "a68c6632b9512bee",
+      "ad516b1ac9c47034",
       "ad9235989cbc57d9",
+      "b78a205bdd403024",
+      "b9bd6e8dc7defd84",
       "bb167c2bbc8dd7ef",
       "c40ac5bbded8a493",
       "c59ab6c97f74363b",
       "cebf8938e0a7062c",
-      "f17a62a1d1ee0b83"
+      "eec57ca8da1456ed",
+      "f17a62a1d1ee0b83",
+      "f4425b86f4c5d4b8"
     ]
   }
 }
