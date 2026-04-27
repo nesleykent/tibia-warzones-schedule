@@ -105,17 +105,17 @@
     "warzone_executions": [
       {
         "execution_id": 1,
-        "schedule_time": "15:00",
+        "schedule_time": "+13:00",
         "warzone_sequence": "2-1-3"
       },
       {
         "execution_id": 2,
-        "schedule_time": "15:30",
+        "schedule_time": "+13:00",
         "warzone_sequence": "2-1-3"
       },
       {
         "execution_id": 3,
-        "schedule_time": "16:00",
+        "schedule_time": "+13:00",
         "warzone_sequence": "2-1-3"
       }
     ]
@@ -156,7 +156,7 @@
   "Jadebra": {
     "timezone": "America/Sao_Paulo",
     "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "19:00", "warzone_sequence": "" },
+      { "execution_id": 1, "schedule_time": "18:50", "warzone_sequence": "" },
       { "execution_id": 2, "schedule_time": "21:30", "warzone_sequence": "" }
     ]
   },
@@ -324,7 +324,7 @@
     "warzone_executions": [
       { "execution_id": 1, "schedule_time": "11:50", "warzone_sequence": "" },
       { "execution_id": 2, "schedule_time": "12:30", "warzone_sequence": "" },
-      { "execution_id": 3, "schedule_time": "15:35", "warzone_sequence": "" }
+      { "execution_id": 3, "schedule_time": "15:30", "warzone_sequence": "" }
     ]
   },
   "Serdebra": {
@@ -343,15 +343,15 @@
   "Talera": {
     "timezone": "America/Sao_Paulo",
     "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "16:25", "warzone_sequence": "" },
-      { "execution_id": 2, "schedule_time": "16:45", "warzone_sequence": "" },
+      { "execution_id": 1, "schedule_time": "16:25", "warzone_sequence": "1-2-3" },
+      { "execution_id": 2, "schedule_time": "16:45", "warzone_sequence": "1-2-3" },
       { "execution_id": 3, "schedule_time": "23:00", "warzone_sequence": "" }
     ]
   },
   "Thyria": {
     "timezone": "America/Sao_Paulo",
     "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "15:35", "warzone_sequence": "" }
+      { "execution_id": 1, "schedule_time": "15:30", "warzone_sequence": "" }
     ]
   },
   "Tornabra": {
@@ -372,7 +372,7 @@
       {
         "execution_id": 1,
         "schedule_time": "12:00",
-        "warzone_sequence": "1-2-2"
+        "warzone_sequence": "1-2-3"
       },
       {
         "execution_id": 2,
