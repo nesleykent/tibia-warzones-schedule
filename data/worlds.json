@@ -20,7 +20,6 @@
     "warzone_executions": [],
     "performs_warzone": false,
     "warzonesperday": 0,
-    "error": "The read operation timed out",
     "warzone_economic_ranking": {
       "is_ranked": false,
       "insufficient_data": true,
@@ -46,6 +45,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-04-29",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-04-28",
           "mark": "na",
           "mark_value": 0.0
@@ -62,11 +66,6 @@
         },
         {
           "date": "2026-04-25",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-04-24",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -152,16 +151,16 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "2017-08-29",
-    "tracks_warzone_service": false,
-    "warzone_services_per_day": 0,
+    "tracks_warzone_service": true,
+    "warzone_services_per_day": 3,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 0,
-      "Gnomevil": 0,
-      "Abyssador": 0
+      "Deathstrike": 3,
+      "Gnomevil": 3,
+      "Abyssador": 3
     },
-    "last_detected_services": 0,
-    "mark": "na",
+    "last_detected_services": 3,
+    "mark": "healthy",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -180,14 +179,12 @@
         "warzone_sequence": ""
       }
     ],
-    "performs_warzone": false,
-    "warzonesperday": 0,
-    "error": "The read operation timed out",
+    "performs_warzone": true,
+    "warzonesperday": 3,
     "warzone_economic_ranking": {
       "is_ranked": false,
       "insufficient_data": true,
       "insufficient_data_reasons": [
-        "excluded_na_world",
         "missing_adjusted_effective_prices",
         "missing_economic_inputs",
         "missing_market_file:gill_necklace",
@@ -199,18 +196,23 @@
       "ranking_position": null,
       "economic_score_raw": null,
       "market_liquidity_score": null,
-      "warzone_health_score": 0.42,
+      "warzone_health_score": 0.72,
       "final_score": null,
       "history_health_score": 0.6,
-      "current_operational_score": 0.0,
-      "expected_services": 1,
+      "current_operational_score": 1.0,
+      "expected_services": 3,
       "rolling_window_days_target": 7,
       "wz1_expected_value": null,
       "wz2_expected_value": null,
       "wz3_expected_value": null,
       "service_expected_value": null,
-      "current_mark_value": 0.0,
+      "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-04-29",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-04-28",
           "mark": "healthy",
@@ -228,11 +230,6 @@
         },
         {
           "date": "2026-04-25",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-04-24",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -318,16 +315,16 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "2017-09-12",
-    "tracks_warzone_service": false,
-    "warzone_services_per_day": 0,
+    "tracks_warzone_service": true,
+    "warzone_services_per_day": 4,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 0,
-      "Gnomevil": 0,
-      "Abyssador": 0
+      "Deathstrike": 4,
+      "Gnomevil": 4,
+      "Abyssador": 4
     },
-    "last_detected_services": 0,
-    "mark": "na",
+    "last_detected_services": 4,
+    "mark": "healthy",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -351,14 +348,12 @@
         "warzone_sequence": ""
       }
     ],
-    "performs_warzone": false,
-    "warzonesperday": 0,
-    "error": "The read operation timed out",
+    "performs_warzone": true,
+    "warzonesperday": 4,
     "warzone_economic_ranking": {
       "is_ranked": false,
       "insufficient_data": true,
       "insufficient_data_reasons": [
-        "excluded_na_world",
         "missing_adjusted_effective_prices",
         "missing_economic_inputs",
         "missing_market_file:gill_necklace",
@@ -370,18 +365,23 @@
       "ranking_position": null,
       "economic_score_raw": null,
       "market_liquidity_score": null,
-      "warzone_health_score": 0.28,
+      "warzone_health_score": 0.72,
       "final_score": null,
-      "history_health_score": 0.4,
-      "current_operational_score": 0.0,
-      "expected_services": 1,
+      "history_health_score": 0.6,
+      "current_operational_score": 1.0,
+      "expected_services": 4,
       "rolling_window_days_target": 7,
       "wz1_expected_value": null,
       "wz2_expected_value": null,
       "wz3_expected_value": null,
       "service_expected_value": null,
-      "current_mark_value": 0.0,
+      "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-04-29",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-04-28",
           "mark": "trolls",
@@ -401,11 +401,6 @@
           "date": "2026-04-25",
           "mark": "healthy",
           "mark_value": 1.0
-        },
-        {
-          "date": "2026-04-24",
-          "mark": "trolls",
-          "mark_value": 0.0
         }
       ],
       "market": {
@@ -489,16 +484,16 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "2017-06-22",
-    "tracks_warzone_service": false,
-    "warzone_services_per_day": 0,
+    "tracks_warzone_service": true,
+    "warzone_services_per_day": 2,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 0,
-      "Gnomevil": 0,
-      "Abyssador": 0
+      "Deathstrike": 2,
+      "Gnomevil": 2,
+      "Abyssador": 2
     },
-    "last_detected_services": 0,
-    "mark": "na",
+    "last_detected_services": 2,
+    "mark": "healthy",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -512,14 +507,12 @@
         "warzone_sequence": "1-3-2"
       }
     ],
-    "performs_warzone": false,
-    "warzonesperday": 0,
-    "error": "The read operation timed out",
+    "performs_warzone": true,
+    "warzonesperday": 2,
     "warzone_economic_ranking": {
       "is_ranked": false,
       "insufficient_data": true,
       "insufficient_data_reasons": [
-        "excluded_na_world",
         "missing_adjusted_effective_prices",
         "missing_economic_inputs",
         "missing_market_file:gill_necklace",
@@ -531,18 +524,23 @@
       "ranking_position": null,
       "economic_score_raw": null,
       "market_liquidity_score": null,
-      "warzone_health_score": 0.42,
+      "warzone_health_score": 0.86,
       "final_score": null,
-      "history_health_score": 0.6,
-      "current_operational_score": 0.0,
-      "expected_services": 1,
+      "history_health_score": 0.8,
+      "current_operational_score": 1.0,
+      "expected_services": 2,
       "rolling_window_days_target": 7,
       "wz1_expected_value": null,
       "wz2_expected_value": null,
       "wz3_expected_value": null,
       "service_expected_value": null,
-      "current_mark_value": 0.0,
+      "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-04-29",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-04-28",
           "mark": "healthy",
@@ -562,11 +560,6 @@
           "date": "2026-04-25",
           "mark": "healthy",
           "mark_value": 1.0
-        },
-        {
-          "date": "2026-04-24",
-          "mark": "trolls",
-          "mark_value": 0.0
         }
       ],
       "market": {
@@ -966,7 +959,6 @@
     "warzone_executions": [],
     "performs_warzone": false,
     "warzonesperday": 0,
-    "error": "The read operation timed out",
     "warzone_economic_ranking": {
       "is_ranked": false,
       "insufficient_data": true,
@@ -989,6 +981,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-04-29",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-04-28",
           "mark": "na",
           "mark_value": 0.0
@@ -1005,11 +1002,6 @@
         },
         {
           "date": "2026-04-25",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-04-24",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -8200,6 +8192,11 @@
       },
       {
         "execution_id": 2,
+        "schedule_time": "21:00",
+        "warzone_sequence": ""
+      },
+      {
+        "execution_id": 3,
         "schedule_time": "22:00",
         "warzone_sequence": ""
       }
