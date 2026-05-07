@@ -281,9 +281,9 @@
   "Quelibra": {
     "timezone": "America/Sao_Paulo",
     "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "18:00", "warzone_sequence": "" },
-      { "execution_id": 2, "schedule_time": "21:30", "warzone_sequence": "" },
-      { "execution_id": 3, "schedule_time": "22:40", "warzone_sequence": "" }
+      { "execution_id": 1, "schedule_time": "17:40", "warzone_sequence": "1-2-3" },
+      { "execution_id": 2, "schedule_time": "21:30", "warzone_sequence": "1-2-3" },
+      { "execution_id": 3, "schedule_time": "22:40", "warzone_sequence": "1-2-3" }
     ]
   },
   "Quidera": {
@@ -391,7 +391,7 @@
   "Venebra": {
     "timezone": "America/Sao_Paulo",
     "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "22:00", "warzone_sequence": "" }
+      { "execution_id": 1, "schedule_time": "21:00", "warzone_sequence": "" }
     ]
   },
   "Vunira": {
