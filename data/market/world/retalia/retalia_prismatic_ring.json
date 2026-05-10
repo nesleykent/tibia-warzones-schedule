@@ -1,5 +1,5 @@
 {
-  "last_run_at": "2026-04-26T07:07:17.775643Z",
+  "last_run_at": "2026-05-10T10:13:50.123273Z",
   "status": "ok",
   "snapshots": [
     [
@@ -593,34 +593,6 @@
       },
       {
         "id": 16114,
-        "time": 1776023080.1467538,
-        "is_full_data": false,
-        "buy_offer": -1,
-        "sell_offer": -1,
-        "month_average_sell": -1,
-        "month_average_buy": -1,
-        "month_sold": -1,
-        "month_bought": -1,
-        "active_traders": -1,
-        "month_highest_sell": -1,
-        "month_lowest_buy": -1,
-        "month_lowest_sell": -1,
-        "month_highest_buy": -1,
-        "buy_offers": -1,
-        "sell_offers": -1,
-        "day_average_sell": 172000,
-        "day_average_buy": 150000,
-        "day_sold": 1,
-        "day_bought": 1,
-        "day_highest_sell": 172000,
-        "day_lowest_sell": 172000,
-        "day_highest_buy": 150000,
-        "day_lowest_buy": 150000,
-        "total_immediate_profit": -1,
-        "total_immediate_profit_info": ""
-      },
-      {
-        "id": 16114,
         "time": 1776195880.1467018,
         "is_full_data": false,
         "buy_offer": -1,
@@ -674,6 +646,34 @@
         "day_lowest_buy": 125500,
         "total_immediate_profit": -1,
         "total_immediate_profit_info": ""
+      },
+      {
+        "id": 16114,
+        "time": 1777319054.795686,
+        "is_full_data": false,
+        "buy_offer": -1,
+        "sell_offer": -1,
+        "month_average_sell": -1,
+        "month_average_buy": -1,
+        "month_sold": -1,
+        "month_bought": -1,
+        "active_traders": -1,
+        "month_highest_sell": -1,
+        "month_lowest_buy": -1,
+        "month_lowest_sell": -1,
+        "month_highest_buy": -1,
+        "buy_offers": -1,
+        "sell_offers": -1,
+        "day_average_sell": 169531,
+        "day_average_buy": 150000,
+        "day_sold": 2,
+        "day_bought": 1,
+        "day_highest_sell": 169540,
+        "day_lowest_sell": 169522,
+        "day_highest_buy": 150000,
+        "day_lowest_buy": 150000,
+        "total_immediate_profit": -1,
+        "total_immediate_profit_info": ""
       }
     ]
   ],
@@ -683,6 +683,7 @@
     "upper_percentile": 98.5,
     "window_size": 0,
     "accepted_fingerprints": [
+      "1606103f0d2deee9",
       "1b07ca6449e959ac",
       "1bb2fa73ef4e0dcc",
       "3c54bded84db6bfc",
@@ -702,24 +703,19 @@
       "b3d392e216640752",
       "bec847c8deffc23f",
       "c7ced672e6a05a9a",
-      "cf9e9345c4eb27c9",
       "d5174746c80c839f",
       "dca8dcf668beabc5",
       "ede5976f30cc8957",
       "f45c88fedcff07e3"
     ],
     "rejected_fingerprints": [
-      "062dc9ec2beafc36",
-      "241f34c9b3cfbe60",
-      "4c885d0e56801f1d",
-      "732aecc9598ed4e8",
-      "8312fdc988b7b033",
-      "8cc0d25379110076",
-      "8e3c7bae6dd0020b",
-      "af6b87c893ee8ca6",
-      "cf14939b6cf2392f",
-      "d271b83cdd2ac4c6",
-      "e704b047908b51ce"
+      "1162a661fdad07d4",
+      "2a73e98828be1c9f",
+      "3099d0ccba068a09",
+      "a1124e33cc005014",
+      "d25c0bc343da5429",
+      "d50473d6bd6f9370",
+      "fa073a61d10e241a"
     ]
   }
 }

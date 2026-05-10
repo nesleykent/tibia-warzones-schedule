@@ -1,5 +1,5 @@
 {
-  "last_run_at": "2026-04-26T06:49:17.119415Z",
+  "last_run_at": "2026-05-10T03:36:57.502872Z",
   "status": "ok",
   "snapshots": [
     [
@@ -30,6 +30,34 @@
         "day_lowest_buy": 9851,
         "total_immediate_profit": -1,
         "total_immediate_profit_info": ""
+      },
+      {
+        "id": 16128,
+        "time": 1777833848.0397084,
+        "is_full_data": false,
+        "buy_offer": -1,
+        "sell_offer": -1,
+        "month_average_sell": -1,
+        "month_average_buy": -1,
+        "month_sold": -1,
+        "month_bought": -1,
+        "active_traders": -1,
+        "month_highest_sell": -1,
+        "month_lowest_buy": -1,
+        "month_lowest_sell": -1,
+        "month_highest_buy": -1,
+        "buy_offers": -1,
+        "sell_offers": -1,
+        "day_average_sell": 9940,
+        "day_average_buy": 7250,
+        "day_sold": 2,
+        "day_bought": 2,
+        "day_highest_sell": 10000,
+        "day_lowest_sell": 9880,
+        "day_highest_buy": 7251,
+        "day_lowest_buy": 7250,
+        "total_immediate_profit": -1,
+        "total_immediate_profit_info": ""
       }
     ]
   ],
@@ -39,16 +67,21 @@
     "upper_percentile": 98.5,
     "window_size": 0,
     "accepted_fingerprints": [
+      "13c9a771d0c8b84b",
       "3c967c4b0b6d5ccc"
     ],
     "rejected_fingerprints": [
+      "00874b51234a6122",
       "078c1845f46c7bbd",
+      "090e179c89392ca7",
       "0dbcded4c00bd913",
       "11c972b59c50bf6b",
+      "135a20c48b2cd09e",
       "14f1b2068c131a21",
       "15f7abf692c73534",
       "1aebd3aa674e524d",
       "1cee0ea1b60e6796",
+      "204896d45f6ad0a6",
       "218d7a84a25eda04",
       "25af1ba6b4a01d99",
       "2841edc45460c56a",
@@ -70,16 +103,21 @@
       "4b3a4ca291ddaaee",
       "4c2785b0d7f92753",
       "4c8221a959ab1a5f",
+      "4ec96fd2c9361027",
       "51d2683f130ec34b",
       "5258c35c5d7ea12e",
+      "52a5500a90a2ea1b",
       "53843646b31773d2",
+      "53dacde35842c904",
       "5668dacfd0c25c5b",
       "569e07dc018f4d66",
       "59724e9629889c10",
+      "63b392d1da796c6d",
       "63d9d69a79b48987",
       "65de24671512ed75",
       "677c2d6e7490cd65",
       "6abff8369d3add7a",
+      "6ac101eaa417dc40",
       "6c0c2924184248d2",
       "6ebd8cc625d7efde",
       "778ca34de1deb8a5",
@@ -88,6 +126,7 @@
       "810b2e992430bb67",
       "874f1ca3f52b4595",
       "87f8038675f9256c",
+      "883b8719d86af318",
       "88ba2c4aac7057bb",
       "8b86467f53d89223",
       "8f3eb06c6d750bc5",
@@ -107,8 +146,11 @@
       "e0962437c86a4d9d",
       "e37b47c1e7e99907",
       "ee79e21be39686f9",
+      "f37ca035bb77f6b9",
       "f53dca488c7b2dd4",
-      "fb4bf0034ba13706"
+      "faff083a0d2824be",
+      "fb4bf0034ba13706",
+      "fdd15bdc2671bfd6"
     ]
   }
 }

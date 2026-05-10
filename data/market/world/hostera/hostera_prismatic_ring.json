@@ -1,5 +1,5 @@
 {
-  "last_run_at": "2026-04-26T06:38:15.058775Z",
+  "last_run_at": "2026-05-10T02:46:29.909850Z",
   "status": "ok",
   "snapshots": [
     [
@@ -646,6 +646,34 @@
         "day_lowest_buy": 130000,
         "total_immediate_profit": -1,
         "total_immediate_profit_info": ""
+      },
+      {
+        "id": 16114,
+        "time": 1777223664.5436614,
+        "is_full_data": false,
+        "buy_offer": -1,
+        "sell_offer": -1,
+        "month_average_sell": -1,
+        "month_average_buy": -1,
+        "month_sold": -1,
+        "month_bought": -1,
+        "active_traders": -1,
+        "month_highest_sell": -1,
+        "month_lowest_buy": -1,
+        "month_lowest_sell": -1,
+        "month_highest_buy": -1,
+        "buy_offers": -1,
+        "sell_offers": -1,
+        "day_average_sell": 289999,
+        "day_average_buy": 151101,
+        "day_sold": 2,
+        "day_bought": 1,
+        "day_highest_sell": 299999,
+        "day_lowest_sell": 280000,
+        "day_highest_buy": 151101,
+        "day_lowest_buy": 151101,
+        "total_immediate_profit": -1,
+        "total_immediate_profit_info": ""
       }
     ]
   ],
@@ -675,28 +703,24 @@
       "b3b77a29f0ed0326",
       "b980e91cfa9d7395",
       "ba8c5420d66cba4b",
+      "c8d06a52c4768fff",
       "d917709d8866a13f",
       "e2389dda11a2a800",
       "fda8fd5e54b4379c"
     ],
     "rejected_fingerprints": [
-      "357e87fc66e8c182",
-      "39c6584f47dba7b6",
-      "46ca140d7a1c172a",
-      "6104ef140333224a",
-      "63848d8d7daf1abf",
-      "70311addcfdf91c1",
-      "85afd594e4418a0a",
-      "8d5f84a5aad23fb8",
-      "9e167dcd3d2f65ab",
-      "d199854ad71f1fc3",
-      "d74c4e63b01c3e61",
-      "d8261ef903cb3f2a",
-      "ddd3d00b39f17980",
-      "e596763841b3b9f2",
-      "ee1a405cfe02ee06",
-      "f806ca64a32aada0",
-      "f9a5be4715ebfbde"
+      "15ec9c113de09ed4",
+      "208df151adcabab8",
+      "2615479ef5af6665",
+      "392cef49b29c6653",
+      "4a8b16b5bb343dcd",
+      "61c0f86fd2023f83",
+      "6f69b525f1bc36c0",
+      "cb5d4348e1d48f36",
+      "de81c80e22269401",
+      "f4eef867ac5413fa",
+      "f9a5be4715ebfbde",
+      "fa9ad40fdc9f3df3"
     ]
   }
 }

@@ -1,5 +1,5 @@
 {
-  "last_run_at": "2026-04-26T07:10:34.327689Z",
+  "last_run_at": "2026-05-10T10:17:06.811563Z",
   "status": "ok",
   "snapshots": [
     [
@@ -86,6 +86,34 @@
         "day_lowest_buy": 100000,
         "total_immediate_profit": -1,
         "total_immediate_profit_info": ""
+      },
+      {
+        "id": 16114,
+        "time": 1777579053.4570825,
+        "is_full_data": false,
+        "buy_offer": -1,
+        "sell_offer": -1,
+        "month_average_sell": -1,
+        "month_average_buy": -1,
+        "month_sold": -1,
+        "month_bought": -1,
+        "active_traders": -1,
+        "month_highest_sell": -1,
+        "month_lowest_buy": -1,
+        "month_lowest_sell": -1,
+        "month_highest_buy": -1,
+        "buy_offers": -1,
+        "sell_offers": -1,
+        "day_average_sell": 185000,
+        "day_average_buy": 120000,
+        "day_sold": 2,
+        "day_bought": 2,
+        "day_highest_sell": 185001,
+        "day_lowest_sell": 185000,
+        "day_highest_buy": 120001,
+        "day_lowest_buy": 120000,
+        "total_immediate_profit": -1,
+        "total_immediate_profit_info": ""
       }
     ]
   ],
@@ -96,21 +124,16 @@
     "window_size": 0,
     "accepted_fingerprints": [
       "576473dbbf9d5b3d",
+      "675295e6cc2b5e76",
       "b6ca38395819f047",
       "edae582bb056ec05"
     ],
     "rejected_fingerprints": [
-      "1dfcd30c5c89227d",
-      "2a58d8596998d635",
-      "4ac62b7a7f07ac98",
-      "933f30132dcd3694",
-      "9d9841494d5aea30",
-      "a33d73cc4b878e26",
-      "a4a3c1befd5e9a7d",
-      "b160cec147ea4c50",
-      "e9ab9f91adcfd621",
-      "f60d5b5beb819dee",
-      "f8c5a1b3b18ba6b7"
+      "33dec9b0d2a4b0d0",
+      "55f5c55d069e5f9b",
+      "69262010f2b5bec4",
+      "7e22afcac992a5a1",
+      "c7340e29f326e3e4"
     ]
   }
 }
