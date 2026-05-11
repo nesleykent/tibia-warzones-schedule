@@ -265,6 +265,25 @@ function sortReports(reports) {
   return items;
 }
 
+function groupReportsByWorld(reports) {
+  const groups = new Map();
+
+  reports.forEach((report) => {
+    const key = report.world || "Unknown";
+    if (!groups.has(key)) {
+      groups.set(key, []);
+    }
+    groups.get(key).push(report);
+  });
+
+  return [...groups.entries()]
+    .sort(([leftWorld], [rightWorld]) => leftWorld.localeCompare(rightWorld))
+    .map(([world, items]) => ({
+      world,
+      items,
+    }));
+}
+
 function populateSelect(select, values, selectedValue, label) {
   const options = [`<option value="all">${escapeHtml(label)}</option>`];
   values.forEach((value) => {
@@ -296,8 +315,10 @@ function renderCards(reports) {
     return;
   }
 
-  const markup = reports
-    .map((report) => {
+  const markup = groupReportsByWorld(reports)
+    .map(({ world, items }) => {
+      const cards = items
+        .map((report) => {
       const utilities = getUtilityTags(report)
         .map((tag) => `<span class="open-house-chip">${escapeHtml(tag)}</span>`)
         .join("");
@@ -334,6 +355,18 @@ function renderCards(reports) {
           </div>
         </article>
       `;
+        })
+        .join("");
+
+      return `
+        <section class="open-house-world-group">
+          <div class="world-detail-card-header open-house-world-group-header">
+            <h2>${escapeHtml(world)}</h2>
+            <span class="world-detail-inline-note">${items.length} house${items.length === 1 ? "" : "s"}</span>
+          </div>
+          <div class="open-house-cards-grid">${cards}</div>
+        </section>
+      `;
     })
     .join("");
 
@@ -346,8 +379,10 @@ function renderTable(reports) {
     return;
   }
 
-  const rows = reports
-    .map((report) => {
+  const tables = groupReportsByWorld(reports)
+    .map(({ world, items }) => {
+      const rows = items
+        .map((report) => {
       const utilities = getUtilityTags(report).join(" | ") || "None";
       const sourceCell = report.source?.url
         ? `<a class="empty-state-link" href="${escapeHtml(report.source.url)}" target="_blank" rel="noopener noreferrer">Link</a>`
@@ -366,30 +401,36 @@ function renderTable(reports) {
           <td>${sourceCell}</td>
         </tr>
       `;
+        })
+        .join("");
+
+      return `
+        <section class="open-house-world-group open-house-world-group--table">
+          <div class="world-detail-card-header open-house-world-group-header">
+            <h2>${escapeHtml(world)}</h2>
+            <span class="world-detail-inline-note">${items.length} house${items.length === 1 ? "" : "s"}</span>
+          </div>
+          <table class="world-history-table open-house-table">
+            <thead>
+              <tr>
+                <th>House</th>
+                <th>Town</th>
+                <th>Owner</th>
+                <th>Utilities</th>
+                <th>Last seen open</th>
+                <th>Confidence</th>
+                <th>Freshness</th>
+                <th>Source</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </section>
+      `;
     })
     .join("");
 
-  setHtml(
-    elements.tableWrap,
-    `
-      <table class="world-history-table open-house-table">
-        <thead>
-          <tr>
-            <th>House</th>
-            <th>World</th>
-            <th>Town</th>
-            <th>Owner</th>
-            <th>Utilities</th>
-            <th>Last seen open</th>
-            <th>Confidence</th>
-            <th>Freshness</th>
-            <th>Source</th>
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>
-    `
-  );
+  setHtml(elements.tableWrap, tables);
 }
 
 function syncControls() {

@@ -1935,14 +1935,16 @@ body::after {
 
 .open-house-cards {
   display: grid;
-  gap: 14px;
+  gap: 18px;
 }
 
 .open-house-card {
-  border-radius: var(--r-xl);
-  border: 1px solid var(--sep-md);
-  background: var(--bg-card);
-  box-shadow: var(--shadow);
+  width: 100%;
+}
+
+.open-house-cards-grid {
+  display: grid;
+  gap: 14px;
 }
 
 .open-house-meta {
@@ -2004,6 +2006,22 @@ body::after {
   display: none;
   overflow-x: auto;
   margin-top: 18px;
+}
+
+.open-house-world-group {
+  display: grid;
+  gap: 12px;
+}
+
+.open-house-world-group--table + .open-house-world-group--table,
+.open-house-world-group + .open-house-world-group {
+  margin-top: 8px;
+}
+
+.open-house-world-group-header {
+  margin-bottom: 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--sep);
 }
 
 .open-house-table td {
