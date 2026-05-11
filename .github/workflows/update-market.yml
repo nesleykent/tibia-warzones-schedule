@@ -1,0 +1,72 @@
+name: Update Market
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - scripts/common.py
+      - scripts/fetch_item_history.py
+      - scripts/economic_ranking.py
+      - scripts/enrich_worlds_with_rankings.py
+      - data/market/items/**
+  schedule:
+    - cron: "30 8 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-market
+  cancel-in-progress: false
+
+jobs:
+  update-market:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Refresh ranking-critical market data
+        run: |
+          python3 scripts/fetch_item_history.py \
+            --item "Tibia Coins" \
+            --item "Gill Necklace" \
+            --item "Prismatic Necklace" \
+            --item "Prismatic Ring"
+
+      - name: Rebuild ranking data from refreshed market files
+        run: python3 scripts/enrich_worlds_with_rankings.py
+
+      - name: Validate Python scripts
+        run: |
+          python3 -m py_compile \
+            scripts/common.py \
+            scripts/fetch_item_history.py \
+            scripts/economic_ranking.py \
+            scripts/enrich_worlds_with_rankings.py
+
+      - name: Commit updated market and ranking data
+        env:
+          COMMIT_AUTHOR_NAME: ${{ vars.COMMIT_AUTHOR_NAME || github.repository_owner }}
+          COMMIT_AUTHOR_EMAIL: ${{ vars.COMMIT_AUTHOR_EMAIL || format('{0}@users.noreply.github.com', github.repository_owner) }}
+        run: |
+          if git diff --quiet -- data/market data/worlds.json; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git config user.name "$COMMIT_AUTHOR_NAME"
+          git config user.email "$COMMIT_AUTHOR_EMAIL"
+          git add data/market data/worlds.json
+          git commit -m "update market"
+          git pull --rebase origin main
+          git push
