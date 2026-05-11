@@ -250,10 +250,21 @@ def extract_last_run_at(payload: Any) -> str | None:
     return None
 
 
-def load_existing_state(path: Path) -> tuple[list[dict[str, Any]], str | None]:
+def extract_status(payload: Any) -> str | None:
+    if isinstance(payload, dict):
+        status = payload.get("status")
+        return status if isinstance(status, str) and status.strip() else None
+    return None
+
+
+def read_market_file_state(path: Path) -> dict[str, Any]:
     payload = parse_json_payload(path.read_bytes())
     rows = extract_rows(payload)
-    return rows, extract_last_run_at(payload)
+    return {
+        "rows": rows,
+        "last_run_at": extract_last_run_at(payload),
+        "status": extract_status(payload) or ("ok" if rows else "unknown"),
+    }
 
 
 def snapshot_sort_key(row: dict[str, Any]) -> tuple[float, float]:
@@ -285,9 +296,10 @@ def merge_rows(existing_rows: list[dict[str, Any]], incoming_rows: list[dict[str
     return sorted(merged.values(), key=snapshot_sort_key)
 
 
-def serialize_rows(rows: list[dict[str, Any]], last_run_at: str) -> bytes:
+def serialize_rows(rows: list[dict[str, Any]], last_run_at: str, status: str = "ok") -> bytes:
     payload = {
         "last_run_at": last_run_at,
+        "status": status,
         "snapshots": [rows],
     }
     return json.dumps(payload, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
@@ -544,16 +556,21 @@ def run(
             path = destination_path(world, item["slug"])
             existing_rows: list[dict[str, Any]] = []
             last_run_at: str | None = None
+            existing_status: str | None = None
             resolved_start_days_ago = start_days_ago
 
             if path.exists() and not force:
                 try:
-                    existing_rows, last_run_at = load_existing_state(path)
+                    file_state = read_market_file_state(path)
+                    existing_rows = file_state["rows"]
+                    last_run_at = file_state["last_run_at"]
+                    existing_status = file_state["status"]
                     if existing_rows:
                         resolved_start_days_ago = resolve_update_window_days(existing_rows, start_days_ago)
                 except Exception:
                     existing_rows = []
                     last_run_at = None
+                    existing_status = None
                     resolved_start_days_ago = start_days_ago
 
             if dry_run:
@@ -568,7 +585,8 @@ def run(
 
             should_fetch, refresh_reason = describe_refresh_status(last_run_at)
             if path.exists() and not force and not should_fetch:
-                print(f"[skip] {world} :: {item_name} ({refresh_reason})")
+                suffix = f", status={existing_status}" if existing_status else ""
+                print(f"[skip] {world} :: {item_name} ({refresh_reason}{suffix})")
                 write_sync_checkpoint(
                     next_index=task_index + 1,
                     total_tasks=len(task_list),
@@ -601,18 +619,29 @@ def run(
             try:
                 payload = fetch_bytes(url, headers, retries)
                 request_count += 1
+                run_marker = format_run_marker()
                 incoming_rows = extract_rows(parse_json_payload(payload))
                 if not incoming_rows:
-                    raise RuntimeError("Fetched payload did not contain market snapshots.")
+                    atomic_write_bytes(path, serialize_rows([], run_marker, status="no_data"))
+                    write_sync_checkpoint(
+                        next_index=task_index + 1,
+                        total_tasks=len(task_list),
+                        phase="after_write",
+                        status="no_data",
+                        world_name=world,
+                        item_name=item_name,
+                        message="Fetched payload did not contain market snapshots.",
+                    )
+                    print(f"[skip] {world} :: {item_name} (no data)")
+                    continue
 
-                run_marker = format_run_marker()
                 if is_update:
                     merged_rows = merge_rows(existing_rows, incoming_rows)
-                    atomic_write_bytes(path, serialize_rows(merged_rows, run_marker))
+                    atomic_write_bytes(path, serialize_rows(merged_rows, run_marker, status="ok"))
                 else:
                     atomic_write_bytes(
                         path,
-                        serialize_rows(sorted(incoming_rows, key=snapshot_sort_key), run_marker),
+                        serialize_rows(sorted(incoming_rows, key=snapshot_sort_key), run_marker, status="ok"),
                     )
                 write_sync_checkpoint(
                     next_index=task_index + 1,
@@ -627,7 +656,7 @@ def run(
             except Exception as error:  # noqa: BLE001
                 if is_ignorable_market_error(error):
                     run_marker = format_run_marker()
-                    atomic_write_bytes(path, serialize_rows([], run_marker))
+                    atomic_write_bytes(path, serialize_rows([], run_marker, status="not_found"))
                     request_count += 1
                     write_sync_checkpoint(
                         next_index=task_index + 1,
