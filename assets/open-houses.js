@@ -23,6 +23,13 @@ const DEFAULT_FILTERS = {
   imbuingShrine: false,
   sort: "newest",
 };
+const UTILITY_FILTERS = [
+  { key: "includeStale", label: "Include stale and expired" },
+  { key: "exerciseDummies", label: "Exercise dummies" },
+  { key: "mailbox", label: "Mailbox" },
+  { key: "rewardShrine", label: "Reward shrine" },
+  { key: "imbuingShrine", label: "Imbuing shrine" },
+];
 
 const elements = {};
 let allReports = [];
@@ -295,6 +302,39 @@ function populateSelect(select, values, selectedValue, label) {
   setHtml(select, options.join(""));
 }
 
+function renderUtilityFilters() {
+  const markup = `
+    <div class="filter-pills-row">
+      ${UTILITY_FILTERS.map(({ key, label }) => {
+        const isActive = Boolean(filterState[key]);
+        return `
+          <button
+            type="button"
+            class="filter-pill${isActive ? " is-active" : ""}"
+            data-utility-filter="${escapeHtml(key)}"
+            aria-pressed="${isActive ? "true" : "false"}"
+          >
+            ${escapeHtml(label)}
+          </button>
+        `;
+      }).join("")}
+    </div>
+  `;
+
+  setHtml(elements.utilityFilters, markup);
+
+  elements.utilityFilters
+    .querySelectorAll("[data-utility-filter]")
+    .forEach((button) => {
+      button.addEventListener("click", () => {
+        const key = button.dataset.utilityFilter;
+        if (!key) return;
+        filterState[key] = !filterState[key];
+        render();
+      });
+    });
+}
+
 function renderSummary(reports) {
   const fresh = reports.filter((report) => getFreshnessBucket(report) === "fresh").length;
   const stale = reports.filter((report) => getFreshnessBucket(report) === "stale").length;
@@ -319,52 +359,57 @@ function renderCards(reports) {
     .map(({ world, items }) => {
       const cards = items
         .map((report) => {
-      const utilities = getUtilityTags(report)
-        .map((tag) => `<span class="open-house-chip">${escapeHtml(tag)}</span>`)
-        .join("");
-      const freshness = formatFreshness(report);
-      const sourceUrl = report.source?.url
-        ? `<a class="empty-state-link" href="${escapeHtml(report.source.url)}" target="_blank" rel="noopener noreferrer">Source link</a>`
-        : `<span class="open-house-muted">Source link unavailable</span>`;
-      const screenshotUrl = report.source?.screenshotUrl
-        ? `<a class="empty-state-link" href="${escapeHtml(report.source.screenshotUrl)}" target="_blank" rel="noopener noreferrer">Screenshot</a>`
-        : "";
+          const utilities = getUtilityTags(report)
+            .map((tag) => `<span class="open-house-chip">${escapeHtml(tag)}</span>`)
+            .join("");
+          const freshness = formatFreshness(report);
+          const sourceUrl = report.source?.url
+            ? `<a class="history-link" href="${escapeHtml(report.source.url)}" target="_blank" rel="noopener noreferrer">Source link</a>`
+            : `<span class="open-house-muted">Source unavailable</span>`;
+          const screenshotUrl = report.source?.screenshotUrl
+            ? `<a class="history-link" href="${escapeHtml(report.source.screenshotUrl)}" target="_blank" rel="noopener noreferrer">Screenshot</a>`
+            : "";
 
-      return `
-        <article class="world-card open-house-card">
-          <h2>
-            <span class="world-name">${escapeHtml(report.houseName)}</span>
-            <span class="badge">${escapeHtml(freshness)}</span>
-          </h2>
-          <div class="world-meta open-house-meta">
-            <span><strong>World:</strong> ${escapeHtml(report.world)}</span>
-            <span><strong>Town:</strong> ${escapeHtml(report.town)}</span>
-            <span><strong>Owner:</strong> ${escapeHtml(report.ownerName)}</span>
-            <span><strong>Confidence:</strong> ${escapeHtml(formatConfidence(report.confidence))}</span>
-            <span><strong>Last seen:</strong> ${escapeHtml(formatDate(report.lastSeenOpen))}</span>
-            <span><strong>Status:</strong> ${escapeHtml(report.status)}</span>
-          </div>
-          <div class="executions open-house-utilities">
-            <h3>Utilities</h3>
-            <div class="open-house-chip-row">${utilities || `<span class="open-house-muted">No utilities listed</span>`}</div>
-          </div>
-          <div class="executions open-house-source">
-            <h3>Audit log</h3>
-            <p class="open-house-log">${escapeHtml(report.source?.log || "")}</p>
-            <div class="open-house-links">${sourceUrl}${screenshotUrl}</div>
-          </div>
-        </article>
-      `;
+          return `
+            <article class="world-card open-house-card">
+              <h2>
+                <span class="world-name">${escapeHtml(report.houseName)}</span>
+                <span class="badge">${escapeHtml(freshness)}</span>
+              </h2>
+              <div class="world-meta open-house-meta">
+                <span>${escapeHtml(report.town)}</span>
+                <span>${escapeHtml(report.ownerName)}</span>
+                <span>Confidence ${escapeHtml(formatConfidence(report.confidence))}</span>
+                <span>${escapeHtml(formatDate(report.lastSeenOpen))}</span>
+              </div>
+              <div class="executions">
+                <div class="executions-header">
+                  <h3>Utilities</h3>
+                  ${sourceUrl}
+                </div>
+                <div class="open-house-chip-row">${utilities || `<span class="open-house-muted">No utilities listed</span>`}</div>
+                <p class="open-house-log">${escapeHtml(report.source?.log || "")}</p>
+                ${screenshotUrl ? `<div class="open-house-links">${screenshotUrl}</div>` : ""}
+              </div>
+            </article>
+          `;
         })
         .join("");
 
       return `
-        <section class="open-house-world-group">
-          <div class="world-detail-card-header open-house-world-group-header">
+        <section class="world-detail-card open-house-world-group">
+          <div class="world-detail-card-header">
             <h2>${escapeHtml(world)}</h2>
-            <span class="world-detail-inline-note">${items.length} house${items.length === 1 ? "" : "s"}</span>
+            <a
+              class="history-link"
+              href="https://github.com/nesleykent/tibia-warzones-schedule/issues/new?template=open-house.yml"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              ${items.length} house${items.length === 1 ? "" : "s"}
+            </a>
           </div>
-          <div class="open-house-cards-grid">${cards}</div>
+          <div class="worlds-list open-house-worlds-list">${cards}</div>
         </section>
       `;
     })
@@ -373,83 +418,18 @@ function renderCards(reports) {
   setHtml(elements.cards, markup);
 }
 
-function renderTable(reports) {
-  if (reports.length === 0) {
-    setHtml(elements.tableWrap, "");
-    return;
-  }
-
-  const tables = groupReportsByWorld(reports)
-    .map(({ world, items }) => {
-      const rows = items
-        .map((report) => {
-      const utilities = getUtilityTags(report).join(" | ") || "None";
-      const sourceCell = report.source?.url
-        ? `<a class="empty-state-link" href="${escapeHtml(report.source.url)}" target="_blank" rel="noopener noreferrer">Link</a>`
-        : "N/A";
-
-      return `
-        <tr>
-          <td>${escapeHtml(report.houseName)}</td>
-          <td>${escapeHtml(report.world)}</td>
-          <td>${escapeHtml(report.town)}</td>
-          <td>${escapeHtml(report.ownerName)}</td>
-          <td>${escapeHtml(utilities)}</td>
-          <td>${escapeHtml(formatDate(report.lastSeenOpen))}</td>
-          <td>${escapeHtml(formatConfidence(report.confidence))}</td>
-          <td>${escapeHtml(formatFreshness(report))}</td>
-          <td>${sourceCell}</td>
-        </tr>
-      `;
-        })
-        .join("");
-
-      return `
-        <section class="open-house-world-group open-house-world-group--table">
-          <div class="world-detail-card-header open-house-world-group-header">
-            <h2>${escapeHtml(world)}</h2>
-            <span class="world-detail-inline-note">${items.length} house${items.length === 1 ? "" : "s"}</span>
-          </div>
-          <table class="world-history-table open-house-table">
-            <thead>
-              <tr>
-                <th>House</th>
-                <th>Town</th>
-                <th>Owner</th>
-                <th>Utilities</th>
-                <th>Last seen open</th>
-                <th>Confidence</th>
-                <th>Freshness</th>
-                <th>Source</th>
-              </tr>
-            </thead>
-            <tbody>${rows}</tbody>
-          </table>
-        </section>
-      `;
-    })
-    .join("");
-
-  setHtml(elements.tableWrap, tables);
-}
-
 function syncControls() {
   elements.searchInput.value = filterState.houseName;
   elements.ownerSearchInput.value = filterState.ownerName;
   elements.freshnessFilter.value = filterState.freshness;
   elements.sortFilter.value = filterState.sort;
-  elements.includeStaleFilter.checked = Boolean(filterState.includeStale);
-  elements.exerciseFilter.checked = Boolean(filterState.exerciseDummies);
-  elements.mailboxFilter.checked = Boolean(filterState.mailbox);
-  elements.rewardFilter.checked = Boolean(filterState.rewardShrine);
-  elements.imbuingFilter.checked = Boolean(filterState.imbuingShrine);
 }
 
 function render() {
   const reports = sortReports(filterReports(allReports));
   renderSummary(allReports);
+  renderUtilityFilters();
   renderCards(reports);
-  renderTable(reports);
   persistFilterState();
 }
 
@@ -506,14 +486,9 @@ function cacheElements() {
   elements.hirelingFilter = document.getElementById("hirelingFilter");
   elements.freshnessFilter = document.getElementById("freshnessFilter");
   elements.sortFilter = document.getElementById("sortFilter");
-  elements.includeStaleFilter = document.getElementById("includeStaleFilter");
-  elements.exerciseFilter = document.getElementById("exerciseFilter");
-  elements.mailboxFilter = document.getElementById("mailboxFilter");
-  elements.rewardFilter = document.getElementById("rewardFilter");
-  elements.imbuingFilter = document.getElementById("imbuingFilter");
+  elements.utilityFilters = document.getElementById("openHouseUtilityFilters");
   elements.summary = document.getElementById("openHousesSummary");
   elements.cards = document.getElementById("openHouseCards");
-  elements.tableWrap = document.getElementById("openHouseTableWrap");
 }
 
 function bindControls() {
@@ -540,18 +515,6 @@ function bindControls() {
     });
   });
 
-  [
-    ["includeStaleFilter", "includeStale"],
-    ["exerciseFilter", "exerciseDummies"],
-    ["mailboxFilter", "mailbox"],
-    ["rewardFilter", "rewardShrine"],
-    ["imbuingFilter", "imbuingShrine"],
-  ].forEach(([elementKey, stateKey]) => {
-    elements[elementKey].addEventListener("change", (event) => {
-      filterState[stateKey] = event.target.checked;
-      render();
-    });
-  });
 }
 
 function populateFilters(reports) {

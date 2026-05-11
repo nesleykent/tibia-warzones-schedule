@@ -200,33 +200,20 @@
           </div>
         </div>
 
-        <div class="control-group open-house-checkboxes" aria-label="Utility filters">
-          <label class="open-house-toggle"><input type="checkbox" id="includeStaleFilter" /> <span>Include stale and expired</span></label>
-          <label class="open-house-toggle"><input type="checkbox" id="exerciseFilter" /> <span>Exercise dummies</span></label>
-          <label class="open-house-toggle"><input type="checkbox" id="mailboxFilter" /> <span>Mailbox</span></label>
-          <label class="open-house-toggle"><input type="checkbox" id="rewardFilter" /> <span>Reward shrine</span></label>
-          <label class="open-house-toggle"><input type="checkbox" id="imbuingFilter" /> <span>Imbuing shrine</span></label>
+        <div class="control-group control-group--filters" id="filtersControlGroup">
+          <div id="filtersLabel">Utility Filters</div>
+          <div id="openHouseUtilityFilters" aria-labelledby="filtersLabel"></div>
         </div>
       </section>
 
       <section class="summary" id="openHousesSummary" aria-live="polite"></section>
 
-      <section class="world-detail-card">
-        <div class="world-detail-card-header">
-          <h2>Open House Registry</h2>
-          <a
-            class="history-link"
-            href="https://github.com/nesleykent/tibia-warzones-schedule/issues/new?template=open-house.yml"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Submit report
-          </a>
-        </div>
-
-        <div id="openHouseCards" class="open-house-cards" aria-live="polite"></div>
-        <div id="openHouseTableWrap" class="open-house-table-wrap" aria-live="polite"></div>
-      </section>
+      <section
+        id="openHouseCards"
+        class="open-house-cards"
+        aria-label="Open House registry"
+        aria-live="polite"
+      ></section>
     </main>
 
     <footer class="site-footer" role="contentinfo" data-site-footer></footer>
