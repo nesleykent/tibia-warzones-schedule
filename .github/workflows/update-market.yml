@@ -2,6 +2,12 @@ name: Update Market
 
 on:
   workflow_dispatch:
+    inputs:
+      force_refresh:
+        description: "Force refresh ranking-critical market files even if they look fresh."
+        required: false
+        default: false
+        type: boolean
   push:
     branches:
       - main
@@ -38,6 +44,7 @@ jobs:
       - name: Refresh ranking-critical market data
         run: |
           python3 scripts/fetch_item_history.py \
+            ${{ inputs.force_refresh && '--force' || '' }} \
             --item "Tibia Coins" \
             --item "Gill Necklace" \
             --item "Prismatic Necklace" \
