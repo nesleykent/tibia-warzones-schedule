@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Open Houses</title>
+    <link rel="stylesheet" href="./assets/styles.css" />
+  </head>
+  <body>
+    <div
+      id="bg-layer"
+      aria-hidden="true"
+      data-artworks="bg1.jpg,bg2.jpg,bg3.jpg,bg4.jpg"
+    ></div>
+
+    <nav class="topbar" aria-label="Site navigation">
+      <div class="container topbar-inner">
+        <div class="topbar-links">
+          <a href="./index.html">Home</a>
+          <span class="topbar-divider" aria-hidden="true"></span>
+          <a href="./open-houses.html" class="is-active" aria-current="page">
+            Open Houses
+          </a>
+          <span class="topbar-divider" aria-hidden="true"></span>
+          <a href="./ranking.html">Ranking</a>
+          <span class="topbar-divider" aria-hidden="true"></span>
+          <a href="./bigfoot.html">
+            <span class="link-full">Bigfoot's Burden Quest</span><span class="link-short">Quest</span>
+          </a>
+        </div>
+        <div class="topbar-actions">
+          <div class="lang-dropdown" id="langDropdown">
+            <button
+              type="button"
+              class="lang-menu-btn"
+              id="langMenuBtn"
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-label="Select language"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="2" y1="12" x2="22" y2="12" />
+                <path
+                  d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+                />
+              </svg>
+            </button>
+            <div
+              class="lang-menu"
+              id="langMenu"
+              role="menu"
+              aria-label="Language selector"
+            >
+              <button type="button" class="lang-flag" data-lang="en" role="menuitem">🇺🇸 <span>English</span></button>
+              <button type="button" class="lang-flag" data-lang="pt-BR" role="menuitem">🇧🇷 <span>Português</span></button>
+              <button type="button" class="lang-flag" data-lang="es-419" role="menuitem">🇦🇷 <span>Español</span></button>
+              <button type="button" class="lang-flag" data-lang="pl" role="menuitem">🇵🇱 <span>Polski</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <header class="site-header" role="banner">
+      <div class="container site-header-inner">
+        <img
+          class="header-icon"
+          src="./assets/logo/logo.png"
+          alt="Tibia Warzones logo"
+        />
+        <div class="header-text">
+          <h1 id="openHousesTitle">Open Houses</h1>
+          <p class="header-subtitle" id="openHousesSubtitle">
+            Open House Project indexes public houses reported by the Tibia community. Reports come from in-game open door inspection logs and utility checklists. The system resolves the owner world through TibiaData, matches the house against official TibiaData house data, and lists active public houses with available utilities.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <main class="container" id="main-content">
+      <section class="controls open-house-controls" aria-label="Open House filters">
+        <div class="control-group">
+          <label for="houseSearchInput">House name</label>
+          <div class="input-wrapper">
+            <span class="input-icon" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <input
+              type="search"
+              id="houseSearchInput"
+              placeholder="House name…"
+              autocomplete="off"
+              aria-label="Filter by house name"
+            />
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label for="ownerSearchInput">Owner</label>
+          <div class="input-wrapper">
+            <span class="input-icon" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <input
+              type="search"
+              id="ownerSearchInput"
+              placeholder="Owner name…"
+              autocomplete="off"
+              aria-label="Filter by owner name"
+            />
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label for="worldFilter">World</label>
+          <div class="select-wrapper">
+            <select id="worldFilter" aria-label="Filter by world"></select>
+            <span class="select-chevron" aria-hidden="true">
+              <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label for="townFilter">Town</label>
+          <div class="select-wrapper">
+            <select id="townFilter" aria-label="Filter by town"></select>
+            <span class="select-chevron" aria-hidden="true">
+              <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label for="hirelingFilter">Hireling</label>
+          <div class="select-wrapper">
+            <select id="hirelingFilter" aria-label="Filter by hireling type"></select>
+            <span class="select-chevron" aria-hidden="true">
+              <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label for="freshnessFilter">Freshness</label>
+          <div class="select-wrapper">
+            <select id="freshnessFilter" aria-label="Filter by freshness">
+              <option value="active">Active under 14 days</option>
+              <option value="fresh">Fresh under 7 days</option>
+              <option value="stale">Stale 7 to 14 days</option>
+              <option value="expired">Expired over 14 days</option>
+              <option value="all">All</option>
+            </select>
+            <span class="select-chevron" aria-hidden="true">
+              <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label for="sortFilter">Sort</label>
+          <div class="select-wrapper">
+            <select id="sortFilter" aria-label="Sort records">
+              <option value="newest">Newest first</option>
+              <option value="world">World</option>
+              <option value="town">Town</option>
+              <option value="house">House name</option>
+              <option value="confidence">Confidence</option>
+            </select>
+            <span class="select-chevron" aria-hidden="true">
+              <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+
+        <div class="control-group open-house-checkboxes" aria-label="Utility filters">
+          <label class="open-house-toggle"><input type="checkbox" id="includeStaleFilter" /> <span>Include stale and expired</span></label>
+          <label class="open-house-toggle"><input type="checkbox" id="exerciseFilter" /> <span>Exercise dummies</span></label>
+          <label class="open-house-toggle"><input type="checkbox" id="mailboxFilter" /> <span>Mailbox</span></label>
+          <label class="open-house-toggle"><input type="checkbox" id="rewardFilter" /> <span>Reward shrine</span></label>
+          <label class="open-house-toggle"><input type="checkbox" id="imbuingFilter" /> <span>Imbuing shrine</span></label>
+        </div>
+      </section>
+
+      <section class="summary" id="openHousesSummary" aria-live="polite"></section>
+
+      <section class="world-detail-card">
+        <div class="world-detail-card-header">
+          <h2>Open House Registry</h2>
+          <a
+            class="history-link"
+            href="https://github.com/nesleykent/tibia-warzones-schedule/issues/new?template=open-house.yml"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Submit report
+          </a>
+        </div>
+
+        <div id="openHouseCards" class="open-house-cards" aria-live="polite"></div>
+        <div id="openHouseTableWrap" class="open-house-table-wrap" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <footer class="site-footer" role="contentinfo" data-site-footer></footer>
+
+    <script src="./assets/shared.js" defer></script>
+    <script src="./assets/open-houses.js" defer></script>
+  </body>
+</html>

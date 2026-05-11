@@ -1902,6 +1902,130 @@ body::after {
   color: var(--text-secondary);
 }
 
+.open-house-controls {
+  align-items: stretch;
+}
+
+.open-house-checkboxes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  width: 100%;
+}
+
+.open-house-toggle {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--sep);
+  background: var(--fill-3);
+  color: var(--text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.open-house-toggle input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+}
+
+.open-house-cards {
+  display: grid;
+  gap: 14px;
+}
+
+.open-house-card {
+  border-radius: var(--r-xl);
+  border: 1px solid var(--sep-md);
+  background: var(--bg-card);
+  box-shadow: var(--shadow);
+}
+
+.open-house-meta {
+  gap: 0;
+}
+
+.open-house-meta > span {
+  color: var(--text-secondary);
+}
+
+.open-house-meta strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.open-house-utilities,
+.open-house-source {
+  display: grid;
+  gap: 10px;
+}
+
+.open-house-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.open-house-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--sep);
+  background: var(--fill-3);
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.open-house-muted {
+  color: var(--text-quaternary);
+  font-size: 12px;
+}
+
+.open-house-log {
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.open-house-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.open-house-table-wrap {
+  display: none;
+  overflow-x: auto;
+  margin-top: 18px;
+}
+
+.open-house-table td {
+  vertical-align: top;
+}
+
+@media (min-width: 900px) {
+  .open-house-cards {
+    display: none;
+  }
+
+  .open-house-table-wrap {
+    display: block;
+  }
+}
+
+@media (max-width: 899px) {
+  .open-house-table-wrap {
+    display: none !important;
+  }
+}
+
 .market-prices-table tbody tr {
   cursor: pointer;
   transition: background var(--t-fast) var(--ease-out),

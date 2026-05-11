@@ -1,0 +1,568 @@
+const {
+  escapeHtml,
+  fetchJson,
+  initSharedUi,
+  setHtml,
+} = window.TibiaTime;
+
+const OPEN_HOUSES_DATA_PATH = "./data/open-houses.json";
+const STORAGE_KEY = "openHouseFilters";
+const OPEN_DOOR_REGEX =
+  /^You see an open door\. It belongs to house '([^']+)'\. (.+?) owns this house\.$/;
+const DEFAULT_FILTERS = {
+  houseName: "",
+  ownerName: "",
+  world: "all",
+  town: "all",
+  hireling: "all",
+  freshness: "active",
+  includeStale: false,
+  exerciseDummies: false,
+  mailbox: false,
+  rewardShrine: false,
+  imbuingShrine: false,
+  sort: "newest",
+};
+
+const elements = {};
+let allReports = [];
+let filterState = loadFilterState();
+
+function loadFilterState() {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return { ...DEFAULT_FILTERS };
+    return { ...DEFAULT_FILTERS, ...JSON.parse(stored) };
+  } catch {
+    return { ...DEFAULT_FILTERS };
+  }
+}
+
+function persistFilterState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(filterState));
+  } catch {}
+}
+
+function normalizeText(value) {
+  return String(value || "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .toLowerCase();
+}
+
+function slugify(value) {
+  return normalizeText(value)
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function parseDoorLog(log) {
+  const source = String(log || "").trim();
+  const match = source.match(OPEN_DOOR_REGEX);
+  if (!match) {
+    throw new Error("Door log does not match the supported open door pattern.");
+  }
+
+  const houseName = match[1].trim();
+  const ownerName = match[2].trim();
+
+  if (!houseName) {
+    throw new Error("House name cannot be empty.");
+  }
+
+  if (!ownerName) {
+    throw new Error("Owner name cannot be empty.");
+  }
+
+  return {
+    isOpenDoor: true,
+    houseName,
+    ownerName,
+  };
+}
+
+function getAgeInDays(isoDate) {
+  const timestamp = Date.parse(isoDate);
+  if (!Number.isFinite(timestamp)) return Number.POSITIVE_INFINITY;
+  return Math.floor((Date.now() - timestamp) / 86400000);
+}
+
+function getFreshnessBucket(report) {
+  const ageInDays = getAgeInDays(report.lastSeenOpen);
+  if (ageInDays <= 6) return "fresh";
+  if (ageInDays <= 13) return "stale";
+  return "expired";
+}
+
+function isDefaultVisible(report) {
+  return getFreshnessBucket(report) !== "expired";
+}
+
+function formatFreshness(report) {
+  const bucket = getFreshnessBucket(report);
+  if (bucket === "fresh") return "Fresh";
+  if (bucket === "stale") return "Stale";
+  return "Expired";
+}
+
+function formatDate(isoDate) {
+  const timestamp = Date.parse(isoDate);
+  if (!Number.isFinite(timestamp)) return "Unknown";
+  return new Intl.DateTimeFormat("en", {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "UTC",
+  }).format(new Date(timestamp));
+}
+
+function formatConfidence(value) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return "N/A";
+  return numeric.toFixed(2);
+}
+
+function readUtilityLabel(flag, label) {
+  return flag ? label : null;
+}
+
+function getUtilityTags(report) {
+  const utilities = report.utilities || {};
+  const tags = [
+    readUtilityLabel(utilities.exerciseDummies, "Exercise dummies"),
+    readUtilityLabel(utilities.mailbox, "Mailbox"),
+    readUtilityLabel(utilities.rewardShrine, "Reward shrine"),
+    readUtilityLabel(utilities.imbuingShrine, "Imbuing shrine"),
+  ].filter(Boolean);
+
+  const hirelings = Array.isArray(utilities.hirelings)
+    ? utilities.hirelings.map((entry) => entry.type).filter(Boolean)
+    : [];
+
+  if (hirelings.length > 0) {
+    tags.push(`Hirelings: ${hirelings.join(", ")}`);
+  }
+
+  return tags;
+}
+
+function buildSearchHaystack(report) {
+  return normalizeText(
+    [
+      report.houseName,
+      report.world,
+      report.town,
+      report.ownerName,
+      report.source?.log,
+      report.source?.notes,
+    ].join(" ")
+  );
+}
+
+function matchesFreshness(report) {
+  const bucket = getFreshnessBucket(report);
+  const filter = filterState.freshness;
+
+  if (!filterState.includeStale && !isDefaultVisible(report)) {
+    return false;
+  }
+
+  if (filter === "all") return filterState.includeStale || isDefaultVisible(report);
+  if (filter === "active") return bucket === "fresh" || bucket === "stale";
+  return bucket === filter;
+}
+
+function matchesUtilityFilters(report) {
+  const utilities = report.utilities || {};
+  if (filterState.exerciseDummies && !utilities.exerciseDummies) return false;
+  if (filterState.mailbox && !utilities.mailbox) return false;
+  if (filterState.rewardShrine && !utilities.rewardShrine) return false;
+  if (filterState.imbuingShrine && !utilities.imbuingShrine) return false;
+
+  if (filterState.hireling !== "all") {
+    const hirelings = Array.isArray(utilities.hirelings) ? utilities.hirelings : [];
+    const hasMatch = hirelings.some(
+      (entry) => normalizeText(entry.type) === normalizeText(filterState.hireling)
+    );
+    if (!hasMatch) return false;
+  }
+
+  return true;
+}
+
+function filterReports(reports) {
+  return reports.filter((report) => {
+    const houseName = normalizeText(filterState.houseName);
+    if (houseName && !normalizeText(report.houseName).includes(houseName)) {
+      return false;
+    }
+
+    const ownerName = normalizeText(filterState.ownerName);
+    if (ownerName && !normalizeText(report.ownerName).includes(ownerName)) {
+      return false;
+    }
+
+    if (
+      filterState.world !== "all" &&
+      normalizeText(report.world) !== normalizeText(filterState.world)
+    ) {
+      return false;
+    }
+
+    if (
+      filterState.town !== "all" &&
+      normalizeText(report.town) !== normalizeText(filterState.town)
+    ) {
+      return false;
+    }
+
+    if (!matchesFreshness(report)) {
+      return false;
+    }
+
+    return matchesUtilityFilters(report);
+  });
+}
+
+function sortReports(reports) {
+  const items = [...reports];
+  items.sort((left, right) => {
+    if (filterState.sort === "world") {
+      return (
+        left.world.localeCompare(right.world) ||
+        left.town.localeCompare(right.town) ||
+        left.houseName.localeCompare(right.houseName)
+      );
+    }
+
+    if (filterState.sort === "town") {
+      return (
+        left.town.localeCompare(right.town) ||
+        left.world.localeCompare(right.world) ||
+        left.houseName.localeCompare(right.houseName)
+      );
+    }
+
+    if (filterState.sort === "house") {
+      return (
+        left.houseName.localeCompare(right.houseName) ||
+        left.world.localeCompare(right.world)
+      );
+    }
+
+    if (filterState.sort === "confidence") {
+      return (
+        Number(right.confidence || 0) - Number(left.confidence || 0) ||
+        Date.parse(right.lastSeenOpen || 0) - Date.parse(left.lastSeenOpen || 0)
+      );
+    }
+
+    return Date.parse(right.lastSeenOpen || 0) - Date.parse(left.lastSeenOpen || 0);
+  });
+  return items;
+}
+
+function populateSelect(select, values, selectedValue, label) {
+  const options = [`<option value="all">${escapeHtml(label)}</option>`];
+  values.forEach((value) => {
+    const selected = value === selectedValue ? ' selected="selected"' : "";
+    options.push(
+      `<option value="${escapeHtml(value)}"${selected}>${escapeHtml(value)}</option>`
+    );
+  });
+  setHtml(select, options.join(""));
+}
+
+function renderSummary(reports) {
+  const fresh = reports.filter((report) => getFreshnessBucket(report) === "fresh").length;
+  const stale = reports.filter((report) => getFreshnessBucket(report) === "stale").length;
+  const expired = reports.filter((report) => getFreshnessBucket(report) === "expired").length;
+
+  setHtml(
+    elements.summary,
+    `<p class="summary-text">${reports.length} open house reports loaded. ${fresh} fresh, ${stale} stale, ${expired} expired.</p>`
+  );
+}
+
+function renderCards(reports) {
+  if (reports.length === 0) {
+    setHtml(
+      elements.cards,
+      `<div class="empty-state">No open houses match the current filters.</div>`
+    );
+    return;
+  }
+
+  const markup = reports
+    .map((report) => {
+      const utilities = getUtilityTags(report)
+        .map((tag) => `<span class="open-house-chip">${escapeHtml(tag)}</span>`)
+        .join("");
+      const freshness = formatFreshness(report);
+      const sourceUrl = report.source?.url
+        ? `<a class="empty-state-link" href="${escapeHtml(report.source.url)}" target="_blank" rel="noopener noreferrer">Source link</a>`
+        : `<span class="open-house-muted">Source link unavailable</span>`;
+      const screenshotUrl = report.source?.screenshotUrl
+        ? `<a class="empty-state-link" href="${escapeHtml(report.source.screenshotUrl)}" target="_blank" rel="noopener noreferrer">Screenshot</a>`
+        : "";
+
+      return `
+        <article class="world-card open-house-card">
+          <h2>
+            <span class="world-name">${escapeHtml(report.houseName)}</span>
+            <span class="badge">${escapeHtml(freshness)}</span>
+          </h2>
+          <div class="world-meta open-house-meta">
+            <span><strong>World:</strong> ${escapeHtml(report.world)}</span>
+            <span><strong>Town:</strong> ${escapeHtml(report.town)}</span>
+            <span><strong>Owner:</strong> ${escapeHtml(report.ownerName)}</span>
+            <span><strong>Confidence:</strong> ${escapeHtml(formatConfidence(report.confidence))}</span>
+            <span><strong>Last seen:</strong> ${escapeHtml(formatDate(report.lastSeenOpen))}</span>
+            <span><strong>Status:</strong> ${escapeHtml(report.status)}</span>
+          </div>
+          <div class="executions open-house-utilities">
+            <h3>Utilities</h3>
+            <div class="open-house-chip-row">${utilities || `<span class="open-house-muted">No utilities listed</span>`}</div>
+          </div>
+          <div class="executions open-house-source">
+            <h3>Audit log</h3>
+            <p class="open-house-log">${escapeHtml(report.source?.log || "")}</p>
+            <div class="open-house-links">${sourceUrl}${screenshotUrl}</div>
+          </div>
+        </article>
+      `;
+    })
+    .join("");
+
+  setHtml(elements.cards, markup);
+}
+
+function renderTable(reports) {
+  if (reports.length === 0) {
+    setHtml(elements.tableWrap, "");
+    return;
+  }
+
+  const rows = reports
+    .map((report) => {
+      const utilities = getUtilityTags(report).join(" | ") || "None";
+      const sourceCell = report.source?.url
+        ? `<a class="empty-state-link" href="${escapeHtml(report.source.url)}" target="_blank" rel="noopener noreferrer">Link</a>`
+        : "N/A";
+
+      return `
+        <tr>
+          <td>${escapeHtml(report.houseName)}</td>
+          <td>${escapeHtml(report.world)}</td>
+          <td>${escapeHtml(report.town)}</td>
+          <td>${escapeHtml(report.ownerName)}</td>
+          <td>${escapeHtml(utilities)}</td>
+          <td>${escapeHtml(formatDate(report.lastSeenOpen))}</td>
+          <td>${escapeHtml(formatConfidence(report.confidence))}</td>
+          <td>${escapeHtml(formatFreshness(report))}</td>
+          <td>${sourceCell}</td>
+        </tr>
+      `;
+    })
+    .join("");
+
+  setHtml(
+    elements.tableWrap,
+    `
+      <table class="world-history-table open-house-table">
+        <thead>
+          <tr>
+            <th>House</th>
+            <th>World</th>
+            <th>Town</th>
+            <th>Owner</th>
+            <th>Utilities</th>
+            <th>Last seen open</th>
+            <th>Confidence</th>
+            <th>Freshness</th>
+            <th>Source</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `
+  );
+}
+
+function syncControls() {
+  elements.searchInput.value = filterState.houseName;
+  elements.ownerSearchInput.value = filterState.ownerName;
+  elements.freshnessFilter.value = filterState.freshness;
+  elements.sortFilter.value = filterState.sort;
+  elements.includeStaleFilter.checked = Boolean(filterState.includeStale);
+  elements.exerciseFilter.checked = Boolean(filterState.exerciseDummies);
+  elements.mailboxFilter.checked = Boolean(filterState.mailbox);
+  elements.rewardFilter.checked = Boolean(filterState.rewardShrine);
+  elements.imbuingFilter.checked = Boolean(filterState.imbuingShrine);
+}
+
+function render() {
+  const reports = sortReports(filterReports(allReports));
+  renderSummary(allReports);
+  renderCards(reports);
+  renderTable(reports);
+  persistFilterState();
+}
+
+function normalizeReport(rawReport) {
+  const parsedLog = parseDoorLog(rawReport?.source?.log || "");
+  const source = rawReport.source || {};
+  const utilities = rawReport.utilities || {};
+  const hirelings = Array.isArray(utilities.hirelings) ? utilities.hirelings : [];
+
+  return {
+    id:
+      rawReport.id ||
+      [rawReport.world, parsedLog.houseName, parsedLog.ownerName]
+        .map(slugify)
+        .filter(Boolean)
+        .join("-"),
+    houseName: rawReport.houseName || parsedLog.houseName,
+    ownerName: rawReport.ownerName || parsedLog.ownerName,
+    world: String(rawReport.world || "").trim(),
+    town: String(rawReport.town || "").trim(),
+    status: rawReport.status || "open",
+    utilities: {
+      exerciseDummies: Boolean(utilities.exerciseDummies),
+      mailbox: Boolean(utilities.mailbox),
+      rewardShrine: Boolean(utilities.rewardShrine),
+      imbuingShrine: Boolean(utilities.imbuingShrine),
+      hirelings: hirelings
+        .filter((entry) => entry && entry.type)
+        .map((entry) => ({
+          type: String(entry.type).trim(),
+          abilities: Array.isArray(entry.abilities)
+            ? entry.abilities.map((ability) => String(ability).trim()).filter(Boolean)
+            : [],
+        })),
+    },
+    lastSeenOpen: rawReport.lastSeenOpen,
+    confidence: Number(rawReport.confidence ?? 1),
+    source: {
+      type: source.type || "github",
+      url: source.url || "",
+      submitter: source.submitter || "",
+      log: source.log || "",
+      notes: source.notes || "",
+      screenshotUrl: source.screenshotUrl || "",
+    },
+  };
+}
+
+function cacheElements() {
+  elements.searchInput = document.getElementById("houseSearchInput");
+  elements.ownerSearchInput = document.getElementById("ownerSearchInput");
+  elements.worldFilter = document.getElementById("worldFilter");
+  elements.townFilter = document.getElementById("townFilter");
+  elements.hirelingFilter = document.getElementById("hirelingFilter");
+  elements.freshnessFilter = document.getElementById("freshnessFilter");
+  elements.sortFilter = document.getElementById("sortFilter");
+  elements.includeStaleFilter = document.getElementById("includeStaleFilter");
+  elements.exerciseFilter = document.getElementById("exerciseFilter");
+  elements.mailboxFilter = document.getElementById("mailboxFilter");
+  elements.rewardFilter = document.getElementById("rewardFilter");
+  elements.imbuingFilter = document.getElementById("imbuingFilter");
+  elements.summary = document.getElementById("openHousesSummary");
+  elements.cards = document.getElementById("openHouseCards");
+  elements.tableWrap = document.getElementById("openHouseTableWrap");
+}
+
+function bindControls() {
+  elements.searchInput.addEventListener("input", (event) => {
+    filterState.houseName = event.target.value;
+    render();
+  });
+
+  elements.ownerSearchInput.addEventListener("input", (event) => {
+    filterState.ownerName = event.target.value;
+    render();
+  });
+
+  [
+    ["worldFilter", "world"],
+    ["townFilter", "town"],
+    ["hirelingFilter", "hireling"],
+    ["freshnessFilter", "freshness"],
+    ["sortFilter", "sort"],
+  ].forEach(([elementKey, stateKey]) => {
+    elements[elementKey].addEventListener("change", (event) => {
+      filterState[stateKey] = event.target.value;
+      render();
+    });
+  });
+
+  [
+    ["includeStaleFilter", "includeStale"],
+    ["exerciseFilter", "exerciseDummies"],
+    ["mailboxFilter", "mailbox"],
+    ["rewardFilter", "rewardShrine"],
+    ["imbuingFilter", "imbuingShrine"],
+  ].forEach(([elementKey, stateKey]) => {
+    elements[elementKey].addEventListener("change", (event) => {
+      filterState[stateKey] = event.target.checked;
+      render();
+    });
+  });
+}
+
+function populateFilters(reports) {
+  const worlds = [...new Set(reports.map((report) => report.world).filter(Boolean))].sort();
+  const towns = [...new Set(reports.map((report) => report.town).filter(Boolean))].sort();
+  const hirelings = [
+    ...new Set(
+      reports.flatMap((report) =>
+        (report.utilities?.hirelings || []).map((entry) => entry.type).filter(Boolean)
+      )
+    ),
+  ].sort();
+
+  populateSelect(elements.worldFilter, worlds, filterState.world, "All worlds");
+  populateSelect(elements.townFilter, towns, filterState.town, "All towns");
+  populateSelect(
+    elements.hirelingFilter,
+    hirelings,
+    filterState.hireling,
+    "All hirelings"
+  );
+}
+
+async function init() {
+  initSharedUi();
+  cacheElements();
+  syncControls();
+  bindControls();
+
+  try {
+    const payload = await fetchJson(OPEN_HOUSES_DATA_PATH);
+    const records = Array.isArray(payload) ? payload : payload.records;
+    allReports = Array.isArray(records) ? records.map(normalizeReport) : [];
+    populateFilters(allReports);
+    syncControls();
+    render();
+  } catch (error) {
+    setHtml(
+      elements.cards,
+      `<div class="empty-state">Failed to load open house data.</div>`
+    );
+    setHtml(elements.tableWrap, "");
+  }
+}
+
+window.OpenHouse = {
+  OPEN_DOOR_REGEX,
+  parseDoorLog,
+  normalizeText,
+  normalizeReport,
+  getFreshnessBucket,
+  isDefaultVisible,
+};
+
+init();

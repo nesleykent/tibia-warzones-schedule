@@ -1,0 +1,112 @@
+[
+  {
+    "id": "luminera-park-lane-1a-padilharp",
+    "houseName": "Park Lane 1a",
+    "ownerName": "Padilharp",
+    "world": "Luminera",
+    "town": "Carlin",
+    "status": "open",
+    "utilities": {
+      "exerciseDummies": true,
+      "mailbox": true,
+      "rewardShrine": true,
+      "imbuingShrine": true,
+      "hirelings": [
+        {
+          "type": "Apprentice",
+          "abilities": ["Sells basic furniture"]
+        },
+        {
+          "type": "Banker",
+          "abilities": ["Deposit", "Withdraw", "Transfer"]
+        },
+        {
+          "type": "Cook",
+          "abilities": ["Cook random buff food for a fee"]
+        },
+        {
+          "type": "Steward",
+          "abilities": ["Provides access to Your Supply Stash"]
+        },
+        {
+          "type": "Trader",
+          "abilities": ["Trader", "Post clerk", "Buys and sells standard goods such as runes, potions, and tools"]
+        }
+      ]
+    },
+    "lastSeenOpen": "2026-05-11T12:00:00Z",
+    "confidence": 1,
+    "source": {
+      "type": "github",
+      "url": "https://github.com/nesleykent/tibia-warzones-schedule/issues/new?template=open-house.yml",
+      "submitter": "",
+      "log": "You see an open door. It belongs to house 'Park Lane 1a'. Padilharp owns this house.",
+      "notes": "Seed example for the public Open House registry.",
+      "screenshotUrl": ""
+    }
+  },
+  {
+    "id": "luminera-park-lane-3a-padilharp",
+    "houseName": "Park Lane 3a",
+    "ownerName": "Padilharp",
+    "world": "Luminera",
+    "town": "Carlin",
+    "status": "open",
+    "utilities": {
+      "exerciseDummies": false,
+      "mailbox": true,
+      "rewardShrine": false,
+      "imbuingShrine": true,
+      "hirelings": [
+        {
+          "type": "Banker",
+          "abilities": ["Deposit", "Withdraw", "Transfer"]
+        },
+        {
+          "type": "Steward",
+          "abilities": ["Provides access to Your Supply Stash"]
+        }
+      ]
+    },
+    "lastSeenOpen": "2026-05-03T12:00:00Z",
+    "confidence": 0.86,
+    "source": {
+      "type": "github",
+      "url": "",
+      "submitter": "",
+      "log": "You see an open door. It belongs to house 'Park Lane 3a'. Padilharp owns this house.",
+      "notes": "Example stale entry for freshness filtering.",
+      "screenshotUrl": ""
+    }
+  },
+  {
+    "id": "luminera-northern-street-7-padilharp",
+    "houseName": "Northern Street 7",
+    "ownerName": "Padilharp",
+    "world": "Luminera",
+    "town": "Carlin",
+    "status": "open",
+    "utilities": {
+      "exerciseDummies": true,
+      "mailbox": false,
+      "rewardShrine": false,
+      "imbuingShrine": false,
+      "hirelings": [
+        {
+          "type": "Apprentice",
+          "abilities": ["Sells basic furniture"]
+        }
+      ]
+    },
+    "lastSeenOpen": "2026-04-20T12:00:00Z",
+    "confidence": 0.64,
+    "source": {
+      "type": "github",
+      "url": "",
+      "submitter": "",
+      "log": "You see an open door. It belongs to house 'Northern Street 7'. Padilharp owns this house.",
+      "notes": "Example expired entry hidden by default unless include stale is enabled.",
+      "screenshotUrl": ""
+    }
+  }
+]
