@@ -593,6 +593,7 @@
               <a href="https://www.cipsoft.com" target="_blank" rel="noopener noreferrer" class="footer-link">CipSoft GmbH</a>,
               <a href="https://tibiadata.com" target="_blank" rel="noopener noreferrer" class="footer-link">TibiaData</a>,
               <a href="https://www.tibiamarket.top" target="_blank" rel="noopener noreferrer" class="footer-link">TibiaMarket.top</a>,
+              <a href="https://www.exevopan.com" target="_blank" rel="noopener noreferrer" class="footer-link">Exevo Pan</a>,
               and
               <a href="https://youtube.com/@warzoneirostibia" target="_blank" rel="noopener noreferrer" class="footer-link">Warzoneiros Tibia</a>.
               Community input sustains accuracy through continuous updates and validation. Want to fix or share a schedule? Use

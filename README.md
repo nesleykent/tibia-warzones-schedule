@@ -99,6 +99,7 @@ The project uses data or reference material from:
 - Tibia.com
 - TibiaData
 - TibiaMarket.top
+- Exevo Pan
 - Warzoneiros Tibia
 
-Tibia is a registered trademark of CipSoft GmbH. This project is independent and is not affiliated with or endorsed by CipSoft GmbH, Tibia.com, TibiaData, or TibiaMarket.top.
+Tibia is a registered trademark of CipSoft GmbH. This project is independent and is not affiliated with or endorsed by CipSoft GmbH, Tibia.com, TibiaData, TibiaMarket.top, or Exevo Pan.
