@@ -11,17 +11,13 @@ const OPEN_DOOR_REGEX =
   /^You see an open door\. It belongs to house '([^']+)'\. (.+?) owns this house\.$/;
 const DEFAULT_FILTERS = {
   houseName: "",
-  ownerName: "",
   world: "all",
-  town: "all",
-  hireling: "all",
   freshness: "active",
   includeStale: false,
   exerciseDummies: false,
   mailbox: false,
   rewardShrine: false,
   imbuingShrine: false,
-  sort: "newest",
 };
 const UTILITY_FILTERS = [
   { key: "includeStale", label: "Include stale and expired" },
@@ -189,14 +185,6 @@ function matchesUtilityFilters(report) {
   if (filterState.rewardShrine && !utilities.rewardShrine) return false;
   if (filterState.imbuingShrine && !utilities.imbuingShrine) return false;
 
-  if (filterState.hireling !== "all") {
-    const hirelings = Array.isArray(utilities.hirelings) ? utilities.hirelings : [];
-    const hasMatch = hirelings.some(
-      (entry) => normalizeText(entry.type) === normalizeText(filterState.hireling)
-    );
-    if (!hasMatch) return false;
-  }
-
   return true;
 }
 
@@ -207,21 +195,9 @@ function filterReports(reports) {
       return false;
     }
 
-    const ownerName = normalizeText(filterState.ownerName);
-    if (ownerName && !normalizeText(report.ownerName).includes(ownerName)) {
-      return false;
-    }
-
     if (
       filterState.world !== "all" &&
       normalizeText(report.world) !== normalizeText(filterState.world)
-    ) {
-      return false;
-    }
-
-    if (
-      filterState.town !== "all" &&
-      normalizeText(report.town) !== normalizeText(filterState.town)
     ) {
       return false;
     }
@@ -237,37 +213,11 @@ function filterReports(reports) {
 function sortReports(reports) {
   const items = [...reports];
   items.sort((left, right) => {
-    if (filterState.sort === "world") {
-      return (
-        left.world.localeCompare(right.world) ||
-        left.town.localeCompare(right.town) ||
-        left.houseName.localeCompare(right.houseName)
-      );
-    }
-
-    if (filterState.sort === "town") {
-      return (
-        left.town.localeCompare(right.town) ||
-        left.world.localeCompare(right.world) ||
-        left.houseName.localeCompare(right.houseName)
-      );
-    }
-
-    if (filterState.sort === "house") {
-      return (
-        left.houseName.localeCompare(right.houseName) ||
-        left.world.localeCompare(right.world)
-      );
-    }
-
-    if (filterState.sort === "confidence") {
-      return (
-        Number(right.confidence || 0) - Number(left.confidence || 0) ||
-        Date.parse(right.lastSeenOpen || 0) - Date.parse(left.lastSeenOpen || 0)
-      );
-    }
-
-    return Date.parse(right.lastSeenOpen || 0) - Date.parse(left.lastSeenOpen || 0);
+    return (
+      left.world.localeCompare(right.world) ||
+      Date.parse(right.lastSeenOpen || 0) - Date.parse(left.lastSeenOpen || 0) ||
+      left.houseName.localeCompare(right.houseName)
+    );
   });
   return items;
 }
@@ -379,8 +329,6 @@ function renderCards(reports) {
               <div class="world-meta open-house-meta">
                 <span>${escapeHtml(report.town)}</span>
                 <span>${escapeHtml(report.ownerName)}</span>
-                <span>Confidence ${escapeHtml(formatConfidence(report.confidence))}</span>
-                <span>${escapeHtml(formatDate(report.lastSeenOpen))}</span>
               </div>
               <div class="executions">
                 <div class="executions-header">
@@ -388,7 +336,7 @@ function renderCards(reports) {
                   ${sourceUrl}
                 </div>
                 <div class="open-house-chip-row">${utilities || `<span class="open-house-muted">No utilities listed</span>`}</div>
-                <p class="open-house-log">${escapeHtml(report.source?.log || "")}</p>
+                <p class="open-house-note">Last seen ${escapeHtml(formatDate(report.lastSeenOpen))}</p>
                 ${screenshotUrl ? `<div class="open-house-links">${screenshotUrl}</div>` : ""}
               </div>
             </article>
@@ -420,9 +368,7 @@ function renderCards(reports) {
 
 function syncControls() {
   elements.searchInput.value = filterState.houseName;
-  elements.ownerSearchInput.value = filterState.ownerName;
   elements.freshnessFilter.value = filterState.freshness;
-  elements.sortFilter.value = filterState.sort;
 }
 
 function render() {
@@ -480,12 +426,8 @@ function normalizeReport(rawReport) {
 
 function cacheElements() {
   elements.searchInput = document.getElementById("houseSearchInput");
-  elements.ownerSearchInput = document.getElementById("ownerSearchInput");
   elements.worldFilter = document.getElementById("worldFilter");
-  elements.townFilter = document.getElementById("townFilter");
-  elements.hirelingFilter = document.getElementById("hirelingFilter");
   elements.freshnessFilter = document.getElementById("freshnessFilter");
-  elements.sortFilter = document.getElementById("sortFilter");
   elements.utilityFilters = document.getElementById("openHouseUtilityFilters");
   elements.summary = document.getElementById("openHousesSummary");
   elements.cards = document.getElementById("openHouseCards");
@@ -497,17 +439,9 @@ function bindControls() {
     render();
   });
 
-  elements.ownerSearchInput.addEventListener("input", (event) => {
-    filterState.ownerName = event.target.value;
-    render();
-  });
-
   [
     ["worldFilter", "world"],
-    ["townFilter", "town"],
-    ["hirelingFilter", "hireling"],
     ["freshnessFilter", "freshness"],
-    ["sortFilter", "sort"],
   ].forEach(([elementKey, stateKey]) => {
     elements[elementKey].addEventListener("change", (event) => {
       filterState[stateKey] = event.target.value;
@@ -519,23 +453,7 @@ function bindControls() {
 
 function populateFilters(reports) {
   const worlds = [...new Set(reports.map((report) => report.world).filter(Boolean))].sort();
-  const towns = [...new Set(reports.map((report) => report.town).filter(Boolean))].sort();
-  const hirelings = [
-    ...new Set(
-      reports.flatMap((report) =>
-        (report.utilities?.hirelings || []).map((entry) => entry.type).filter(Boolean)
-      )
-    ),
-  ].sort();
-
   populateSelect(elements.worldFilter, worlds, filterState.world, "All worlds");
-  populateSelect(elements.townFilter, towns, filterState.town, "All towns");
-  populateSelect(
-    elements.hirelingFilter,
-    hirelings,
-    filterState.hireling,
-    "All hirelings"
-  );
 }
 
 async function init() {

@@ -1925,6 +1925,12 @@ body::after {
   flex: 0 0 50%;
 }
 
+.open-house-note {
+  color: var(--text-quaternary);
+  font-size: 11px;
+  margin-top: 4px;
+}
+
 .open-house-chip-row {
   display: flex;
   flex-wrap: wrap;
