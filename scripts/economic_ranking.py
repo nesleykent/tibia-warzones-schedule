@@ -50,13 +50,19 @@ def get_history_path(data_dir: Path, world_name: str) -> Path:
 def get_market_path(data_dir: Path, world_name: str, item_name: str) -> Path:
     world_slug = slugify_name(world_name)
     item_slug = slugify_name(item_name, separator="_")
-    return (
-        data_dir
-        / "market"
-        / "world"
-        / world_slug
-        / f"{world_slug}_{item_slug}.json"
-    )
+    market_world_dir = data_dir / "market" / "world"
+    preferred_path = market_world_dir / world_slug / f"{world_slug}_{item_slug}.json"
+    if preferred_path.exists():
+        return preferred_path
+
+    if market_world_dir.exists():
+        for child in market_world_dir.iterdir():
+            if child.is_dir() and child.name.strip().lower() == world_slug:
+                candidate = child / f"{world_slug}_{item_slug}.json"
+                if candidate.exists():
+                    return candidate
+
+    return preferred_path
 
 
 def to_float(value: Any) -> float | None:
