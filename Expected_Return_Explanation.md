@@ -15,9 +15,9 @@ The calculation begins by establishing a stable price for four essential items:
 - **Prismatic Rings**
 
 ### Rolling Average Logic
-To mitigate the impact of market manipulation or daily volatility, the system utilizes a **7-day rolling window**. 
-1.  **Daily Mean:** For each of the 7 days, the script identifies the average of the `day_average_sell` and `day_average_buy` values.
-2.  **Window Mean:** It then calculates the mean of these daily averages.
+To mitigate the impact of market manipulation or short-term volatility, the system utilizes a **last-7-entries rolling window**.
+1.  **Entry Mean:** For each market entry, the script identifies the average of the `day_average_sell` and `day_average_buy` values.
+2.  **Window Mean:** It then calculates the mean of the most recent 7 valid entry averages.
 3.  **Integrity Check:** If data for any of the four items is missing within the world's history, the world is flagged as `missing_inputs` and excluded from the final rankings.
 
 ## 2. Individual Warzone Expected Value (EV)
@@ -60,7 +60,7 @@ To determine the "real-world" value, the total gold is divided by the local mark
 ## Summary of Constants
 | Constant | Value |
 | :--- | :--- |
-| Rolling Window | 7 Days |
+| Rolling Window | 7 Entries |
 | Green Shard Probability | 0.5 |
 | WZ1 Fixed Gold | 30,000 |
 | WZ2 Fixed Gold | 40,000 |

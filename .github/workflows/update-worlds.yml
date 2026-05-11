@@ -8,7 +8,11 @@ on:
     paths:
       - data/manual-schedules.json
       - data/active_warzones.txt
+      - data/market/**
       - scripts/common.py
+      - scripts/economic_ranking.py
+      - scripts/enrich_worlds_with_rankings.py
+      - scripts/fetch_item_history.py
       - scripts/update_data.py
   schedule:
     - cron: "0 9 * * *"

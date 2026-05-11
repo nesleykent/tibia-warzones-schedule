@@ -98,7 +98,7 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
       },
       {
         term: String.raw`\(P_{TC}\)`,
-        description: "7-day rolling Tibia Coins price for that world.",
+        description: "average Tibia Coins price from the last 7 market entries for that world.",
       },
       {
         term: String.raw`\(P_{GCS}, P_{BCS}, P_{VCS}\)`,

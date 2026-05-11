@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 import re
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -14,7 +13,7 @@ RANKING_MARKET_ITEMS = [
     ("Prismatic Ring", "prismatic_ring"),
 ]
 
-ROLLING_WINDOW_DAYS = 7
+ROLLING_WINDOW_ENTRIES = 7
 GREEN_CRYSTAL_SHARD_REWARD_PROBABILITY = 0.5
 WZ1_FIXED_GOLD = 30000
 WZ1_GREEN_CRYSTAL_SHARD_VALUE = 10500
@@ -128,10 +127,6 @@ def timestamp_value(row: dict[str, Any]) -> float | None:
     return value
 
 
-def utc_day_from_timestamp(value: float) -> str:
-    return datetime.fromtimestamp(value, tz=timezone.utc).date().isoformat()
-
-
 def daily_market_price_from_row(row: dict[str, Any]) -> float | None:
     day_average_sell = positive_number(row.get("day_average_sell"))
     day_average_buy = positive_number(row.get("day_average_buy"))
@@ -142,7 +137,7 @@ def daily_market_price_from_row(row: dict[str, Any]) -> float | None:
 
 
 def rolling_window_market_price(rows: list[dict[str, Any]]) -> tuple[float | None, int]:
-    latest_row_by_day: dict[str, tuple[float, dict[str, Any]]] = {}
+    normalized_rows: list[tuple[float, float]] = []
 
     for row in rows:
         if not isinstance(row, dict):
@@ -156,21 +151,14 @@ def rolling_window_market_price(rows: list[dict[str, Any]]) -> tuple[float | Non
         if daily_price is None:
             continue
 
-        day_key = utc_day_from_timestamp(row_timestamp)
-        current = latest_row_by_day.get(day_key)
-        if current is None or row_timestamp > current[0]:
-            latest_row_by_day[day_key] = (row_timestamp, row)
+        normalized_rows.append((row_timestamp, daily_price))
 
-    if not latest_row_by_day:
+    if not normalized_rows:
         return None, 0
 
-    ordered_days = sorted(latest_row_by_day.items(), key=lambda item: item[0], reverse=True)
-    selected_days = ordered_days[:ROLLING_WINDOW_DAYS]
-    daily_prices: list[float] = []
-    for _, (_, row) in selected_days:
-        daily_price = daily_market_price_from_row(row)
-        if daily_price is not None:
-            daily_prices.append(daily_price)
+    normalized_rows.sort(key=lambda item: item[0], reverse=True)
+    selected_rows = normalized_rows[:ROLLING_WINDOW_ENTRIES]
+    daily_prices = [price for _, price in selected_rows]
 
     if not daily_prices:
         return None, 0
@@ -228,7 +216,7 @@ def load_market_models(data_dir: Path, world_name: str) -> tuple[dict[str, Any],
             reasons.append(f"missing_market_file:{item_key}")
             models[item_key] = build_price_model(item_name, item_key, None, None)
             models[item_key]["rolling_window_price"] = None
-            models[item_key]["rolling_window_days_used"] = 0
+            models[item_key]["rolling_window_entries_used"] = 0
             continue
 
         payload = load_json_file(path)
@@ -238,7 +226,7 @@ def load_market_models(data_dir: Path, world_name: str) -> tuple[dict[str, Any],
             reasons.append(f"missing_market_snapshot:{item_key}")
             models[item_key] = build_price_model(item_name, item_key, None, None)
             models[item_key]["rolling_window_price"] = None
-            models[item_key]["rolling_window_days_used"] = 0
+            models[item_key]["rolling_window_entries_used"] = 0
             continue
 
         models[item_key] = build_price_model(
@@ -247,9 +235,9 @@ def load_market_models(data_dir: Path, world_name: str) -> tuple[dict[str, Any],
             latest_entry.get("day_average_sell"),
             latest_entry.get("day_average_buy"),
         )
-        rolling_window_price, rolling_window_days_used = rolling_window_market_price(entries)
+        rolling_window_price, rolling_window_entries_used = rolling_window_market_price(entries)
         models[item_key]["rolling_window_price"] = rolling_window_price
-        models[item_key]["rolling_window_days_used"] = rolling_window_days_used
+        models[item_key]["rolling_window_entries_used"] = rolling_window_entries_used
 
         if not models[item_key]["has_required_data"]:
             reasons.append(f"missing_market_prices:{item_key}")
@@ -446,7 +434,7 @@ def compute_world_ranking_metrics(world: dict[str, Any], data_dir: Path) -> dict
         "history_health_score": round_score(history_health_score),
         "current_operational_score": round_score(current_operational_score),
         "expected_services": expected_services,
-        "rolling_window_days_target": ROLLING_WINDOW_DAYS,
+        "rolling_window_entries_target": ROLLING_WINDOW_ENTRIES,
         "wz1_expected_value": raw_score(wz1_expected_value),
         "wz2_expected_value": raw_score(wz2_expected_value),
         "wz3_expected_value": raw_score(wz3_expected_value),
