@@ -14,6 +14,7 @@ const WORLD_I18N = {
     expectedReturnTcs: "ER (xTC)",
     expectedReturnGoldCoins: "ER (xGold)",
     schedules: "Manual schedule",
+    findWzCharacter: "Find WZ Character",
     marketPrices: "Market Prices",
     loading: "Loading...",
     close: "Close",
@@ -62,6 +63,7 @@ const WORLD_I18N = {
     expectedReturnTcs: "ER (xTC)",
     expectedReturnGoldCoins: "ER (xGold)",
     schedules: "Horários manuais",
+    findWzCharacter: "Find WZ Character",
     marketPrices: "Preços de mercado",
     loading: "Carregando...",
     close: "Fechar",
@@ -110,6 +112,7 @@ const WORLD_I18N = {
     expectedReturnTcs: "ER (xTC)",
     expectedReturnGoldCoins: "ER (xGold)",
     schedules: "Horario manual",
+    findWzCharacter: "Find WZ Character",
     marketPrices: "Precios de mercado",
     loading: "Cargando...",
     close: "Cerrar",
@@ -157,6 +160,7 @@ const WORLD_I18N = {
     expectedReturnTcs: "ER (xTC)",
     expectedReturnGoldCoins: "ER (xGold)",
     schedules: "Ręczny harmonogram",
+    findWzCharacter: "Find WZ Character",
     marketPrices: "Ceny rynkowe",
     loading: "Ładowanie...",
     close: "Zamknij",
@@ -403,6 +407,26 @@ function renderSummary(world) {
         dict.expectedReturnGoldCoins
       )}</span><strong>${escapeHtml(expectedReturnGoldCoins)}</strong></div>
     </div>
+  `;
+}
+
+function getExevoPanWorldUrl(worldName) {
+  return `https://www.exevopan.com/?serverSet=${encodeURIComponent(
+    worldName
+  )}&minLevel=80&maxLevel=300`;
+}
+
+function renderBazaarActionCard(world) {
+  const dict = t();
+  const bazaarUrl = getExevoPanWorldUrl(world.name);
+
+  return `
+    <a
+      class="world-action-card-link"
+      href="${escapeAttribute(bazaarUrl)}"
+      target="_blank"
+      rel="noopener noreferrer"
+    >${escapeHtml(dict.findWzCharacter)}</a>
   `;
 }
 
@@ -1925,6 +1949,7 @@ async function loadWorldPage() {
   const worldName = params.get("name");
   const summaryCard = document.getElementById("worldSummaryCard");
   const schedulesCard = document.getElementById("worldSchedulesCard");
+  const bazaarCard = document.getElementById("worldBazaarCard");
   const marketCard = document.getElementById("worldMarketPricesCard");
   const historyCard = document.getElementById("worldHistoryCard");
 
@@ -1932,6 +1957,7 @@ async function loadWorldPage() {
     !worldName ||
     !summaryCard ||
     !schedulesCard ||
+    !bazaarCard ||
     !marketCard ||
     !historyCard
   ) {
@@ -1942,6 +1968,7 @@ async function loadWorldPage() {
 
   const clearSecondaryCards = () => {
     setHtml(schedulesCard, "");
+    setHtml(bazaarCard, "");
     setHtml(marketCard, "");
     setHtml(historyCard, "");
   };
@@ -1961,6 +1988,7 @@ async function loadWorldPage() {
     setTextContent(document.getElementById("worldTitle"), world.name);
     setHtml(summaryCard, renderSummary(world));
     setHtml(schedulesCard, renderSchedules(world));
+    setHtml(bazaarCard, renderBazaarActionCard(world));
 
     setHtml(marketCard, renderMarketPricesPlaceholder());
     setHtml(marketCard, await renderMarketPrices(world.name));

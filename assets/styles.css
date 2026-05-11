@@ -1802,6 +1802,35 @@ body::after {
   font-size: 13px;
 }
 
+.world-action-card {
+  padding: 0;
+}
+
+.world-action-card-link {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 14px 18px;
+  border-radius: inherit;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out);
+}
+
+.world-action-card-link:hover {
+  background: var(--fill-3);
+  color: var(--accent);
+}
+
+.world-action-card-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
 .empty-state-link {
   color: var(--accent);
   text-decoration: none;
