@@ -122,12 +122,6 @@ function formatDate(isoDate) {
   }).format(new Date(timestamp));
 }
 
-function formatConfidence(value) {
-  const numeric = Number(value);
-  if (!Number.isFinite(numeric)) return "N/A";
-  return numeric.toFixed(2);
-}
-
 function readUtilityLabel(flag, label) {
   return flag ? label : null;
 }
