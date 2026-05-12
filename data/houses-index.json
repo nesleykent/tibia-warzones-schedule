@@ -1,1 +1,44 @@
-[]
+[
+  {
+    "houseId": 10901,
+    "name": "Mill Avenue 1 (Shop)",
+    "world": "Gentebra",
+    "town": "Thais",
+    "type": "house",
+    "status": "rented",
+    "owner": "Profeta do Passado",
+    "raw": {
+      "houseid": 10901,
+      "world": "Gentebra",
+      "town": "Thais",
+      "name": "Mill Avenue 1 (Shop)",
+      "type": "house",
+      "beds": 1,
+      "size": 26,
+      "rent": 200000,
+      "img": "https://static.tibia.com/images/houses/house_10901.png",
+      "status": {
+        "is_auctioned": false,
+        "is_rented": true,
+        "is_moving": false,
+        "is_transfering": false,
+        "auction": {
+          "current_bid": 0,
+          "current_bidder": "",
+          "auction_ongoing": false,
+          "auction_end": ""
+        },
+        "rental": {
+          "owner": "Profeta do Passado",
+          "owner_sex": "female",
+          "paid_until": "2026-06-01T09:05:12Z",
+          "moving_date": "",
+          "transfer_receiver": "",
+          "transfer_price": 0,
+          "transfer_accept": false
+        },
+        "original": "The house has been rented by Profeta do Passado. She has paid the rent until Jun 01 2026, 11:05:12 CEST."
+      }
+    }
+  }
+]
