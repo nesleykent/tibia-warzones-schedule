@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import re
@@ -63,6 +64,17 @@ class ParsedDoorLog:
     is_open_door: bool
     house_name: str
     owner_name: str
+
+
+@dataclass
+class IssueBuildResult:
+    issue_number: int
+    status: str
+    reason: str
+    world: str | None = None
+    town: str | None = None
+    house_name: str | None = None
+    owner_name: str | None = None
 
 
 def fetch_json(url: str, headers: dict[str, str] | None = None) -> dict[str, Any] | list[Any]:
@@ -404,21 +416,40 @@ def build_open_house_record(issue: dict[str, Any]) -> tuple[dict[str, Any], dict
     return record, build_houses_index_record(official_house, house_detail)
 
 
-def build_open_house_registry() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+def build_open_house_registry(
+    report_issue_number: int | None = None,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], IssueBuildResult | None]:
     issues = get_open_house_issues()
     records: list[dict[str, Any]] = []
     index_by_house_id: dict[int, dict[str, Any]] = {}
+    issue_report: IssueBuildResult | None = None
 
     skipped: list[str] = []
     for issue in issues:
+        issue_number = int(issue.get("number") or 0)
         try:
             record, house_index_record = build_open_house_record(issue)
         except OpenHouseBuildError as exc:
-            issue_number = issue.get("number")
             skipped.append(f"issue #{issue_number}: {exc}")
+            if report_issue_number == issue_number:
+                issue_report = IssueBuildResult(
+                    issue_number=issue_number,
+                    status="rejected",
+                    reason=str(exc),
+                )
             continue
 
         records.append(record)
+        if report_issue_number == issue_number:
+            issue_report = IssueBuildResult(
+                issue_number=issue_number,
+                status="accepted",
+                reason="Open house added to the registry.",
+                world=record.get("world"),
+                town=record.get("town"),
+                house_name=record.get("houseName"),
+                owner_name=record.get("ownerName"),
+            )
 
         house_id = house_index_record.get("houseId")
         if isinstance(house_id, int):
@@ -438,13 +469,47 @@ def build_open_house_registry() -> tuple[list[dict[str, Any]], list[dict[str, An
         for message in skipped:
             print(f"[skip] {message}", file=sys.stderr)
 
-    return records, houses_index
+    if report_issue_number is not None and issue_report is None:
+        issue_report = IssueBuildResult(
+            issue_number=report_issue_number,
+            status="rejected",
+            reason="Issue was not processed. It may be missing the open-house label or was excluded by repository rules.",
+        )
+
+    return records, houses_index, issue_report
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--report-issue-number", type=int, default=None)
+    parser.add_argument("--report-path", type=str, default=None)
+    return parser.parse_args()
+
+
+def save_issue_report(path: Path, issue_report: IssueBuildResult | None) -> None:
+    payload = None
+    if issue_report is not None:
+        payload = {
+            "issue_number": issue_report.issue_number,
+            "status": issue_report.status,
+            "reason": issue_report.reason,
+            "world": issue_report.world,
+            "town": issue_report.town,
+            "house_name": issue_report.house_name,
+            "owner_name": issue_report.owner_name,
+        }
+    save_json(path, payload)
 
 
 def main() -> int:
-    records, houses_index = build_open_house_registry()
+    args = parse_args()
+    records, houses_index, issue_report = build_open_house_registry(
+        report_issue_number=args.report_issue_number
+    )
     save_json(OPEN_HOUSES_PATH, records)
     save_json(HOUSES_INDEX_PATH, houses_index)
+    if args.report_path:
+        save_issue_report(Path(args.report_path), issue_report)
     print(
         f"Built {len(records)} open house records and {len(houses_index)} house index entries."
     )

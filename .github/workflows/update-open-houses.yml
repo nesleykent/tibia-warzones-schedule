@@ -15,7 +15,7 @@ on:
 
 permissions:
   contents: write
-  issues: read
+  issues: write
 
 concurrency:
   group: update-open-houses
@@ -39,7 +39,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-        run: python3 scripts/build_open_houses.py
+        run: |
+          ISSUE_ARGS=""
+          if [ "${{ github.event_name }}" = "issues" ]; then
+            ISSUE_ARGS="--report-issue-number ${{ github.event.issue.number }} --report-path /tmp/open-house-issue-report.json"
+          fi
+          python3 scripts/build_open_houses.py $ISSUE_ARGS
 
       - name: Validate generated open house data
         run: |
@@ -92,3 +97,90 @@ jobs:
           git commit -m "chore: refresh open house registry"
           git pull --rebase origin main
           git push
+
+      - name: Comment on processed issue
+        if: github.event_name == 'issues'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import subprocess
+          from pathlib import Path
+
+          report_path = Path("/tmp/open-house-issue-report.json")
+          if not report_path.exists():
+              raise SystemExit("Missing issue report file.")
+
+          payload = json.loads(report_path.read_text(encoding="utf-8"))
+          if payload is None:
+              payload = {
+                  "issue_number": int(os.environ["ISSUE_NUMBER"]),
+                  "status": "rejected",
+                  "reason": "Issue was not processed by the registry builder.",
+              }
+
+          marker = "<!-- open-house-status -->"
+          status = payload.get("status")
+          if status == "accepted":
+              body = (
+                  f"{marker}\n"
+                  f"Open House accepted.\n\n"
+                  f"- House: {payload.get('house_name') or 'Unknown'}\n"
+                  f"- Owner: {payload.get('owner_name') or 'Unknown'}\n"
+                  f"- World: {payload.get('world') or 'Unknown'}\n"
+                  f"- Town: {payload.get('town') or 'Unknown'}\n"
+                  f"- Result: Added to the public registry on the next Pages deploy."
+              )
+          else:
+              body = (
+                  f"{marker}\n"
+                  f"Open House rejected.\n\n"
+                  f"- Reason: {payload.get('reason') or 'Unknown error'}"
+              )
+
+          repo = os.environ["REPO"]
+          issue_number = os.environ["ISSUE_NUMBER"]
+          comments_raw = subprocess.check_output(
+              [
+                  "gh",
+                  "api",
+                  f"repos/{repo}/issues/{issue_number}/comments",
+              ],
+              text=True,
+          )
+          comments = json.loads(comments_raw)
+          existing = None
+          for comment in comments:
+              if marker in str(comment.get("body") or ""):
+                  existing = comment
+                  break
+
+          if existing is not None:
+              subprocess.check_call(
+                  [
+                      "gh",
+                      "api",
+                      "--method",
+                      "PATCH",
+                      f"repos/{repo}/issues/comments/{existing['id']}",
+                      "-f",
+                      f"body={body}",
+                  ]
+              )
+          else:
+              subprocess.check_call(
+                  [
+                      "gh",
+                      "api",
+                      "--method",
+                      "POST",
+                      f"repos/{repo}/issues/{issue_number}/comments",
+                      "-f",
+                      f"body={body}",
+                  ]
+              )
+          PY
