@@ -1,5 +1,109 @@
 [
   {
+    "id": "luminera-castle-shop-1-alphaheart",
+    "houseName": "Castle Shop 1",
+    "ownerName": "Alphaheart",
+    "world": "Luminera",
+    "town": "Edron",
+    "houseId": 50101,
+    "status": "open",
+    "utilities": {
+      "exerciseDummies": true,
+      "rewardShrine": false,
+      "imbuingShrine": false,
+      "mailbox": false,
+      "hirelings": [
+        {
+          "type": "Apprentice",
+          "abilities": [
+            "Sells basic furniture"
+          ]
+        },
+        {
+          "type": "Banker",
+          "abilities": [
+            "Deposit",
+            "Withdraw",
+            "Transfer"
+          ]
+        },
+        {
+          "type": "Trader",
+          "abilities": [
+            "Trader",
+            "Post clerk",
+            "Buys and sells standard goods such as runes, potions, and tools"
+          ]
+        }
+      ]
+    },
+    "source": {
+      "type": "github",
+      "url": "https://github.com/nesleykent/tibia-warzones-schedule/issues/9",
+      "submitter": "nesleykent",
+      "log": "03:50:05 You see an open door. It belongs to house 'Castle Shop 1'. Alphaheart owns this house.",
+      "notes": "_No response_",
+      "screenshotUrl": "_No response_",
+      "issueNumber": 9,
+      "issueTitle": "[Open House]: 03:50:05 You see an open door. It belongs to house 'Castle Shop 1'. Alphaheart owns this house."
+    }
+  },
+  {
+    "id": "luzibra-the-market-4-shop-healtex",
+    "houseName": "The Market 4 (Shop)",
+    "ownerName": "Healtex",
+    "world": "Luzibra",
+    "town": "Kazordoon",
+    "houseId": 30404,
+    "status": "open",
+    "utilities": {
+      "exerciseDummies": false,
+      "rewardShrine": false,
+      "imbuingShrine": false,
+      "mailbox": false,
+      "hirelings": [
+        {
+          "type": "Apprentice",
+          "abilities": [
+            "Sells basic furniture"
+          ]
+        },
+        {
+          "type": "Banker",
+          "abilities": [
+            "Deposit",
+            "Withdraw",
+            "Transfer"
+          ]
+        },
+        {
+          "type": "Trader",
+          "abilities": [
+            "Trader",
+            "Post clerk",
+            "Buys and sells standard goods such as runes, potions, and tools"
+          ]
+        },
+        {
+          "type": "Steward",
+          "abilities": [
+            "Provides access to Your Supply Stash"
+          ]
+        }
+      ]
+    },
+    "source": {
+      "type": "github",
+      "url": "https://github.com/nesleykent/tibia-warzones-schedule/issues/8",
+      "submitter": "nesleykent",
+      "log": "03:48:00 You see an open door. It belongs to house 'The Market 4 (Shop)'. Healtex owns this house.",
+      "notes": "_No response_",
+      "screenshotUrl": "_No response_",
+      "issueNumber": 8,
+      "issueTitle": "[Open House]: 03:48:00 You see an open door. It belongs to house 'The Market 4 (Shop)'. Healtex owns this house."
+    }
+  },
+  {
     "id": "ourobra-central-plaza-3-shop-brenaorush-fearless",
     "houseName": "Central Plaza 3 (Shop)",
     "ownerName": "Brenaorush Fearless",
