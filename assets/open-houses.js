@@ -9,6 +9,7 @@ const OPEN_HOUSES_DATA_PATH = "./data/open-houses.json";
 const STORAGE_KEY = "openHouseFilters";
 const OPEN_DOOR_REGEX =
   /^You see an open door\. It belongs to house '([^']+)'\. (.+?) owns this house\.$/;
+const LEADING_LOG_TIMESTAMP_REGEX = /^\d{2}:\d{2}:\d{2}\s+/;
 const DEFAULT_FILTERS = {
   houseName: "",
   world: "all",
@@ -58,7 +59,7 @@ function slugify(value) {
 }
 
 function parseDoorLog(log) {
-  const source = String(log || "").trim();
+  const source = String(log || "").trim().replace(LEADING_LOG_TIMESTAMP_REGEX, "");
   const match = source.match(OPEN_DOOR_REGEX);
   if (!match) {
     throw new Error("Door log does not match the supported open door pattern.");
