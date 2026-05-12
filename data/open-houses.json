@@ -483,6 +483,67 @@
     }
   },
   {
+    "id": "ombra-harbour-place-1-shop-fyxz",
+    "houseName": "Harbour Place 1 (Shop)",
+    "ownerName": "Fyxz",
+    "world": "Ombra",
+    "town": "Thais",
+    "houseId": 11404,
+    "status": "open",
+    "utilities": {
+      "exerciseDummies": true,
+      "rewardShrine": true,
+      "imbuingShrine": true,
+      "mailbox": false,
+      "hirelings": [
+        {
+          "type": "Apprentice",
+          "abilities": [
+            "Sells basic furniture"
+          ]
+        },
+        {
+          "type": "Banker",
+          "abilities": [
+            "Deposit",
+            "Withdraw",
+            "Transfer"
+          ]
+        },
+        {
+          "type": "Trader",
+          "abilities": [
+            "Trader",
+            "Post clerk",
+            "Buys and sells standard goods such as runes, potions, and tools"
+          ]
+        },
+        {
+          "type": "Steward",
+          "abilities": [
+            "Provides access to Your Supply Stash"
+          ]
+        },
+        {
+          "type": "Cook",
+          "abilities": [
+            "Cook random buff food for a fee"
+          ]
+        }
+      ]
+    },
+    "source": {
+      "type": "github",
+      "url": "https://github.com/nesleykent/tibia-warzones-schedule/issues/18",
+      "submitter": "nesleykent",
+      "log": "You see an open door. It belongs to house 'Harbour Place 1 (Shop)'. Fyxz owns this house.",
+      "notes": "_No response_",
+      "screenshotUrl": "_No response_",
+      "issueNumber": 18,
+      "issueTitle": "[Open House]: You see an open door. It belongs to house 'Harbour Place 1 (Shop)'. Fyxz owns this house."
+    }
+  },
+  {
     "id": "ourobra-central-plaza-3-shop-brenaorush-fearless",
     "houseName": "Central Plaza 3 (Shop)",
     "ownerName": "Brenaorush Fearless",
