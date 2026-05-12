@@ -288,28 +288,16 @@ def apply_maintenance_issue(records: dict[str, dict[str, Any]], issue: dict[str,
     records[record["id"]] = record
 
 
-def load_existing_records() -> dict[str, dict[str, Any]]:
-    if not OPEN_HOUSES_FILE.exists():
-        return {}
-    payload = json.loads(OPEN_HOUSES_FILE.read_text(encoding="utf-8"))
-    records = payload if isinstance(payload, list) else []
-    output: dict[str, dict[str, Any]] = {}
-    for record in records:
-        if isinstance(record, dict) and record.get("id"):
-            output[str(record["id"])] = record
-    return output
-
-
-def fetch_open_issues() -> list[dict[str, Any]]:
+def fetch_all_issues() -> list[dict[str, Any]]:
     if not GITHUB_REPOSITORY or not GITHUB_TOKEN:
         raise RuntimeError("GITHUB_REPOSITORY and GITHUB_TOKEN are required.")
-    issues = github_get(f"repos/{GITHUB_REPOSITORY}/issues?state=open&per_page=100")
+    issues = github_get(f"repos/{GITHUB_REPOSITORY}/issues?state=all&per_page=100")
     return issues if isinstance(issues, list) else []
 
 
 def build_registry() -> list[dict[str, Any]]:
-    records = load_existing_records()
-    issues = fetch_open_issues()
+    records: dict[str, dict[str, Any]] = {}
+    issues = fetch_all_issues()
 
     for issue in issues:
         if "pull_request" in issue:
