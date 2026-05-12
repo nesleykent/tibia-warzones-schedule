@@ -1902,6 +1902,18 @@ body::after {
   color: var(--text-secondary);
 }
 
+.world-history-table .history-link {
+  color: #fcaf45;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.world-history-table .history-link:hover {
+  color: #ffd36b;
+  opacity: 1;
+}
+
 .open-house-card {
   width: 100%;
   cursor: default;
