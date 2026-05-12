@@ -3,28 +3,53 @@ const {
   escapeHtml,
   fetchJson,
   getWorldBattleyeKey,
+  getWorldPvpKey,
+  getWorldRegionKey,
   getWorldTransferLabel,
+  getWorldTransferKey,
   initSharedUi,
   setHtml,
+  formatTransferType,
 } = window.TibiaTime;
 
 const OPEN_HOUSES_DATA_PATH = "./data/open-houses.json";
 const STORAGE_KEY = "openHouseFilters";
 const OPEN_DOOR_REGEX =
   /You see an open door\. It belongs to house '([^']+)'\. (.+?) owns this house\./;
+const FILTER_CONFIGS = [
+  {
+    group: "region",
+    getValue: (world) => getWorldRegionKey(world),
+    getLabel: (value) => value,
+  },
+  {
+    group: "pvp",
+    getValue: (world) => getWorldPvpKey(world),
+    getLabel: (value) => value,
+  },
+  {
+    group: "transfer",
+    getValue: (world) => getWorldTransferKey(world),
+    getLabel: (value) => formatTransferType(value, value),
+  },
+  {
+    group: "battleye",
+    getValue: (world) => getWorldBattleyeKey(world),
+    getLabel: (value) => {
+      if (value === "GBE") return "Green BattlEye";
+      if (value === "YBE") return "Yellow BattlEye";
+      return "No BattlEye";
+    },
+  },
+];
+const FILTER_GROUPS = FILTER_CONFIGS.map(({ group }) => group);
+const FILTER_CONFIGS_BY_GROUP = Object.fromEntries(
+  FILTER_CONFIGS.map((config) => [config.group, config])
+);
 const DEFAULT_FILTERS = {
   search: "",
-  exerciseDummies: false,
-  mailbox: false,
-  rewardShrine: false,
-  imbuingShrine: false,
+  activeFilters: Object.fromEntries(FILTER_GROUPS.map((group) => [group, []])),
 };
-const UTILITY_FILTERS = [
-  { key: "exerciseDummies", label: "Exercise dummies" },
-  { key: "mailbox", label: "Mailbox" },
-  { key: "rewardShrine", label: "Reward shrine" },
-  { key: "imbuingShrine", label: "Imbuing shrine" },
-];
 
 const elements = {};
 let allWorlds = [];
@@ -47,7 +72,17 @@ function loadFilterState() {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) return { ...DEFAULT_FILTERS };
-    return { ...DEFAULT_FILTERS, ...JSON.parse(stored) };
+    const parsed = JSON.parse(stored);
+    return {
+      ...DEFAULT_FILTERS,
+      ...parsed,
+      activeFilters: Object.fromEntries(
+        FILTER_GROUPS.map((group) => [
+          group,
+          Array.isArray(parsed?.activeFilters?.[group]) ? parsed.activeFilters[group] : [],
+        ])
+      ),
+    };
   } catch {
     return { ...DEFAULT_FILTERS };
   }
@@ -164,34 +199,30 @@ function setPageHeader(title, subtitle) {
   elements.pageSubtitle.textContent = subtitle;
 }
 
-function matchesUtilityFilters(report) {
-  const utilities = report.utilities || {};
-  if (filterState.exerciseDummies && !utilities.exerciseDummies) return false;
-  if (filterState.mailbox && !utilities.mailbox) return false;
-  if (filterState.rewardShrine && !utilities.rewardShrine) return false;
-  if (filterState.imbuingShrine && !utilities.imbuingShrine) return false;
-  return true;
+function hasActiveWorldFilters() {
+  return FILTER_GROUPS.some((group) => (filterState.activeFilters[group] || []).length > 0);
 }
 
-function hasActiveUtilityFilters() {
-  return UTILITY_FILTERS.some(({ key }) => Boolean(filterState[key]));
-}
-
-function toggleUtilityFilter(key) {
-  if (!Object.prototype.hasOwnProperty.call(filterState, key)) return;
-  filterState[key] = !filterState[key];
+function toggleWorldFilter(group, value) {
+  const current = new Set(filterState.activeFilters[group] || []);
+  if (current.has(value)) {
+    current.delete(value);
+  } else {
+    current.add(value);
+  }
+  filterState.activeFilters[group] = [...current];
   render();
 }
 
-function clearUtilityFilters() {
-  UTILITY_FILTERS.forEach(({ key }) => {
-    filterState[key] = false;
+function clearWorldFilters() {
+  FILTER_GROUPS.forEach((group) => {
+    filterState.activeFilters[group] = [];
   });
   render();
 }
 
 function getFilteredReports() {
-  return allReports.filter((report) => matchesUtilityFilters(report));
+  return allReports;
 }
 
 function getColumnCount(container) {
@@ -237,7 +268,13 @@ function applyMasonry(container) {
 }
 
 function renderFilters() {
-  const isAllActive = !hasActiveUtilityFilters();
+  const isAllActive = !hasActiveWorldFilters();
+  const filterOptions = Object.fromEntries(
+    FILTER_CONFIGS.map(({ group, getValue }) => [
+      group,
+      new Set(allWorlds.map((world) => getValue(world)).filter(Boolean)),
+    ])
+  );
   setHtml(
     elements.filtersBar,
     `
@@ -250,19 +287,24 @@ function renderFilters() {
         >
           All
         </button>
-        ${UTILITY_FILTERS.map(({ key, label }) => {
-          const isActive = Boolean(filterState[key]);
-          return `
-            <button
-              type="button"
-              class="filter-pill${isActive ? " is-active" : ""}"
-              data-filter-group="utilities"
-              data-filter-value="${escapeHtml(key)}"
-            >
-              ${escapeHtml(label)}
-            </button>
-          `;
-        }).join("")}
+        ${FILTER_GROUPS.map((group) =>
+          [...filterOptions[group]]
+            .sort()
+            .map((value) => {
+              const isActive = (filterState.activeFilters[group] || []).includes(value);
+              return `
+                <button
+                  type="button"
+                  class="filter-pill${isActive ? " is-active" : ""}"
+                  data-filter-group="${escapeHtml(group)}"
+                  data-filter-value="${escapeHtml(value)}"
+                >
+                  ${escapeHtml(FILTER_CONFIGS_BY_GROUP[group].getLabel(value))}
+                </button>
+              `;
+            })
+            .join("")
+        ).join("")}
       </div>
     `
   );
@@ -355,6 +397,12 @@ function getVisibleWorlds(reports) {
       if (!query) return true;
       return normalizeText(world.name).includes(query);
     })
+    .filter((world) =>
+      FILTER_CONFIGS.every(({ group, getValue }) => {
+        const active = filterState.activeFilters[group] || [];
+        return active.length === 0 || active.includes(getValue(world));
+      })
+    )
     .sort((left, right) => String(left.name || "").localeCompare(String(right.name || "")));
 }
 
@@ -644,11 +692,11 @@ function bindControls() {
     const group = button.dataset.filterGroup;
     const value = button.dataset.filterValue;
     if (group === "__all__") {
-      clearUtilityFilters();
+      clearWorldFilters();
       return;
     }
-    if (group === "utilities" && value) {
-      toggleUtilityFilter(value);
+    if (group && value) {
+      toggleWorldFilter(group, value);
     }
   });
 
