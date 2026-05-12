@@ -32,6 +32,10 @@ let allReports = [];
 let filterState = loadFilterState();
 let selectedWorldName = "";
 
+function getOpenHousesWorldUrl(worldName) {
+  return `./open-houses.html?world=${encodeURIComponent(String(worldName || "").trim())}`;
+}
+
 function loadFilterState() {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -242,16 +246,18 @@ function renderWorldPreview(reports) {
 
 function renderWorldCard(world, reports) {
   const isSelected = normalizeText(world.name) === normalizeText(selectedWorldName);
+  const worldUrl = getOpenHousesWorldUrl(world.name);
   return `
     <div
       class="world-card${isSelected ? " world-card--selected" : ""}"
       data-world-name="${escapeHtml(world.name)}"
+      data-world-url="${escapeHtml(worldUrl)}"
       role="button"
       tabindex="0"
       aria-pressed="${isSelected ? "true" : "false"}"
     >
       <h2>
-        <span class="world-name">${escapeHtml(world.name)}</span>
+        <a class="world-name world-name-link" href="${escapeHtml(worldUrl)}">${escapeHtml(world.name)}</a>
         <div class="world-card-header-actions">
           <span class="badge">Open Houses: ${escapeHtml(String(reports.length))}</span>
         </div>
@@ -265,6 +271,7 @@ function renderWorldCard(world, reports) {
       <div class="executions">
         <div class="executions-header">
           <h3>Open Houses</h3>
+          <a class="history-link" href="${escapeHtml(worldUrl)}">View open houses</a>
         </div>
         ${renderWorldPreview(reports)}
       </div>
@@ -305,17 +312,22 @@ function renderWorlds(reports) {
   );
 
   elements.worldsList.querySelectorAll(".world-card").forEach((card) => {
-    const select = () => {
-      selectedWorldName = card.dataset.worldName || "";
-      render();
-      elements.selectedWorldLabel.scrollIntoView({ behavior: "smooth", block: "start" });
+    const open = () => {
+      const url = card.dataset.worldUrl;
+      if (url) {
+        window.location.href = url;
+      }
     };
 
-    card.addEventListener("click", select);
+    card.addEventListener("click", (event) => {
+      const blocked = event.target.closest(".world-name-link, .history-link, button");
+      if (blocked) return;
+      open();
+    });
     card.addEventListener("keydown", (event) => {
       if (event.key !== "Enter" && event.key !== " ") return;
       event.preventDefault();
-      select();
+      open();
     });
   });
 }
@@ -507,6 +519,7 @@ async function init() {
     const records = Array.isArray(reportsPayload) ? reportsPayload : reportsPayload.records;
     allReports = Array.isArray(records) ? records.map(normalizeReport) : [];
     selectedWorldName =
+      new URLSearchParams(window.location.search).get("world") ||
       (allReports[0] && allReports[0].world) ||
       (allWorlds[0] && allWorlds[0].name) ||
       "";
