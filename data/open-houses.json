@@ -269,6 +269,55 @@
     }
   },
   {
+    "id": "luminera-main-street-9a-2nd-floor-shop-pariah-la-venganza",
+    "houseName": "Main Street 9a, 2nd floor (Shop)",
+    "ownerName": "Pariah la venganza",
+    "world": "Luminera",
+    "town": "Thais",
+    "houseId": 10803,
+    "status": "open",
+    "utilities": {
+      "exerciseDummies": false,
+      "rewardShrine": false,
+      "imbuingShrine": false,
+      "mailbox": false,
+      "hirelings": [
+        {
+          "type": "Apprentice",
+          "abilities": [
+            "Sells basic furniture"
+          ]
+        },
+        {
+          "type": "Banker",
+          "abilities": [
+            "Deposit",
+            "Withdraw",
+            "Transfer"
+          ]
+        },
+        {
+          "type": "Trader",
+          "abilities": [
+            "Trader",
+            "Post clerk",
+            "Buys and sells standard goods such as runes, potions, and tools"
+          ]
+        }
+      ]
+    },
+    "source": {
+      "type": "github",
+      "url": "https://github.com/nesleykent/tibia-warzones-schedule/issues/15",
+      "submitter": "nesleykent",
+      "log": "16:37:00 You see an open door. It belongs to house 'Main Street 9a, 2nd floor (Shop)'. Pariah la venganza owns this house.",
+      "notes": "_No response_",
+      "screenshotUrl": "_No response_",
+      "issueNumber": 15,
+      "issueTitle": "[Open House]: 16:37:00 You see an open door. It belongs to house 'Main Street 9a, 2nd floor (Shop)'. Pariah la venganza owns this house."
+    }
+  },
+  {
     "id": "luzibra-the-market-4-shop-healtex",
     "houseName": "The Market 4 (Shop)",
     "ownerName": "Healtex",
