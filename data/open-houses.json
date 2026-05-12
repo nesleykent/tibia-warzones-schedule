@@ -373,6 +373,55 @@
     }
   },
   {
+    "id": "ombra-theater-avenue-7-flat-02-caiex-anomalia",
+    "houseName": "Theater Avenue 7, Flat 02",
+    "ownerName": "Caiex Anomalia",
+    "world": "Ombra",
+    "town": "Carlin",
+    "houseId": 20317,
+    "status": "open",
+    "utilities": {
+      "exerciseDummies": true,
+      "rewardShrine": false,
+      "imbuingShrine": false,
+      "mailbox": false,
+      "hirelings": [
+        {
+          "type": "Apprentice",
+          "abilities": [
+            "Sells basic furniture"
+          ]
+        },
+        {
+          "type": "Banker",
+          "abilities": [
+            "Deposit",
+            "Withdraw",
+            "Transfer"
+          ]
+        },
+        {
+          "type": "Trader",
+          "abilities": [
+            "Trader",
+            "Post clerk",
+            "Buys and sells standard goods such as runes, potions, and tools"
+          ]
+        }
+      ]
+    },
+    "source": {
+      "type": "github",
+      "url": "https://github.com/nesleykent/tibia-warzones-schedule/issues/16",
+      "submitter": "nesleykent",
+      "log": "16:41:33 You see an open door. It belongs to house 'Theater Avenue 7, Flat 02'. Caiex Anomalia owns this house.",
+      "notes": "_No response_",
+      "screenshotUrl": "_No response_",
+      "issueNumber": 16,
+      "issueTitle": "[Open House]: 16:41:33 You see an open door. It belongs to house 'Theater Avenue 7, Flat 02'. Caiex Anomalia owns this house."
+    }
+  },
+  {
     "id": "ourobra-central-plaza-3-shop-brenaorush-fearless",
     "houseName": "Central Plaza 3 (Shop)",
     "ownerName": "Brenaorush Fearless",
