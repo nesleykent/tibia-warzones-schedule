@@ -1739,6 +1739,10 @@ body::after {
   padding-bottom: 64px;
 }
 
+.world-page[hidden] {
+  display: none !important;
+}
+
 .world-detail-card {
   background: var(--bg-card);
   backdrop-filter: saturate(160%) blur(20px);
