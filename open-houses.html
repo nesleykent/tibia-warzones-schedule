@@ -89,52 +89,70 @@
     </header>
 
     <main class="container" id="main-content">
-      <section class="controls open-house-controls" aria-label="Open House filters">
-        <div class="control-group">
-          <label for="houseSearchInput">House name</label>
-          <div class="input-wrapper">
-            <span class="input-icon" aria-hidden="true">
-              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
-                <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-              </svg>
-            </span>
-            <input
-              type="search"
-              id="houseSearchInput"
-              placeholder="House name…"
-              autocomplete="off"
-              aria-label="Filter by house name"
-            />
-          </div>
-        </div>
-
-        <div class="control-group">
-          <label for="worldFilter">World</label>
-          <div class="select-wrapper">
-            <select id="worldFilter" aria-label="Filter by world"></select>
-            <span class="select-chevron" aria-hidden="true">
-              <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span>
-          </div>
-        </div>
-
-        <div class="control-group control-group--filters" id="filtersControlGroup">
-          <div id="filtersLabel">Utilities</div>
-          <div id="openHouseUtilityFilters" aria-labelledby="filtersLabel"></div>
-        </div>
-      </section>
-
       <section class="summary" id="openHousesSummary" aria-live="polite"></section>
 
-      <section
-        id="openHouseCards"
-        class="open-house-cards"
-        aria-label="Open House registry"
-        aria-live="polite"
-      ></section>
+      <section class="ranking-section open-house-world-browser" aria-labelledby="openHouseWorldsHeading">
+        <div class="executions-header open-house-section-header">
+          <h2 id="openHouseWorldsHeading">Worlds</h2>
+          <span class="open-house-muted">Select a world to open its houses.</span>
+        </div>
+        <div
+          id="openHouseWorldCards"
+          class="worlds-list open-house-world-selector"
+          aria-label="Available worlds"
+          aria-live="polite"
+        ></div>
+      </section>
+
+      <section class="ranking-section open-house-results" aria-labelledby="openHouseResultsHeading">
+        <div class="world-detail-card-header open-house-results-header">
+          <div>
+            <h2 id="openHouseResultsHeading">Open Houses</h2>
+            <div id="selectedWorldMeta" class="world-meta open-house-selected-meta"></div>
+          </div>
+          <a
+            class="history-link"
+            href="https://github.com/nesleykent/tibia-warzones-schedule/issues/new?template=open-house.yml"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Submit report
+          </a>
+        </div>
+
+        <section class="controls open-house-controls" aria-label="Open House filters">
+          <div class="control-group">
+            <label for="houseSearchInput">House name</label>
+            <div class="input-wrapper">
+              <span class="input-icon" aria-hidden="true">
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <input
+                type="search"
+                id="houseSearchInput"
+                placeholder="House name…"
+                autocomplete="off"
+                aria-label="Filter by house name"
+              />
+            </div>
+          </div>
+
+          <div class="control-group control-group--filters" id="filtersControlGroup">
+            <div id="filtersLabel">Utilities</div>
+            <div id="openHouseUtilityFilters" aria-labelledby="filtersLabel"></div>
+          </div>
+        </section>
+
+        <section
+          id="openHouseCards"
+          class="open-house-cards"
+          aria-label="Open House registry"
+          aria-live="polite"
+        ></section>
+      </section>
     </main>
 
     <footer class="site-footer" role="contentinfo" data-site-footer></footer>

@@ -1906,8 +1906,45 @@ body::after {
   align-items: stretch;
 }
 
+.open-house-world-browser,
+.open-house-results {
+  margin-bottom: 18px;
+}
+
+.open-house-section-header {
+  margin-bottom: 14px;
+}
+
+.open-house-world-selector {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 14px;
+}
+
+.open-house-world-card {
+  min-width: 0;
+}
+
+.open-house-world-preview {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.open-house-results-header {
+  margin-bottom: 14px;
+}
+
+.open-house-selected-meta {
+  margin-top: 6px;
+}
+
+.open-house-selected-meta > span {
+  flex: 0 0 auto;
+}
+
 .open-house-cards {
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 18px;
   padding-bottom: 64px;
 }
@@ -1970,28 +2007,14 @@ body::after {
   gap: 12px;
 }
 
-.open-house-world-group {
-  margin-top: 0;
-}
-
-.open-house-world-group + .open-house-world-group {
-  margin-top: 16px;
-}
-
-.open-house-worlds-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-}
-
-.open-house-worlds-list .world-card {
-  flex: 1 1 320px;
-  min-width: 0;
-}
-
 @media (max-width: 640px) {
   .open-house-meta > span {
     flex: 0 0 100%;
+  }
+
+  .open-house-world-selector,
+  .open-house-cards {
+    grid-template-columns: 1fr;
   }
 }
 
