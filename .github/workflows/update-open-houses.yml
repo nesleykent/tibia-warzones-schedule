@@ -1,0 +1,71 @@
+name: Update Open Houses
+
+on:
+  workflow_dispatch:
+  issues:
+    types:
+      - opened
+      - edited
+      - reopened
+      - closed
+
+permissions:
+  contents: write
+  issues: read
+
+concurrency:
+  group: update-open-houses
+  cancel-in-progress: false
+
+jobs:
+  update-open-houses:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Rebuild open houses registry
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          TIBIADATA_BASE_URL: https://api.tibiadata.com
+        run: python3 scripts/update_open_houses.py
+
+      - name: Validate registry
+        run: |
+          python3 -m py_compile scripts/update_open_houses.py
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          payload = json.loads(Path("data/open-houses.json").read_text(encoding="utf-8"))
+          assert isinstance(payload, list), "data/open-houses.json must contain a list"
+          for record in payload:
+              assert isinstance(record, dict), "Open house records must be objects"
+              for key in ("id", "houseName", "ownerName", "world", "town", "source"):
+                  assert key in record, f"Missing {key} in open house record"
+          PY
+
+      - name: Commit updated registry
+        env:
+          COMMIT_AUTHOR_NAME: ${{ vars.COMMIT_AUTHOR_NAME || github.repository_owner }}
+          COMMIT_AUTHOR_EMAIL: ${{ vars.COMMIT_AUTHOR_EMAIL || format('{0}@users.noreply.github.com', github.repository_owner) }}
+        run: |
+          if git diff --quiet -- data/open-houses.json; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git config user.name "$COMMIT_AUTHOR_NAME"
+          git config user.email "$COMMIT_AUTHOR_EMAIL"
+          git add data/open-houses.json
+          git commit -m "chore: refresh open houses data"
+          git pull --rebase origin main
+          git push
