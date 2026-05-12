@@ -89,21 +89,51 @@
     </header>
 
     <main class="container" id="main-content">
-      <section class="summary" id="openHousesSummary" aria-live="polite"></section>
+      <section class="controls" aria-label="Open House filters">
+        <div class="control-group">
+          <label for="searchInput">Search world or house</label>
+          <div class="input-wrapper">
+            <span class="input-icon" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <input
+              type="search"
+              id="searchInput"
+              placeholder="World or house name…"
+              autocomplete="off"
+              aria-label="Search world or house"
+            />
+          </div>
+        </div>
 
-      <section aria-labelledby="openHouseWorldsHeading">
-        <h2 class="section-label" id="openHouseWorldsHeading">Worlds</h2>
-        <div
-          id="openHouseWorldCards"
-          class="worlds-list open-house-world-selector"
-          aria-label="Available worlds"
-          aria-live="polite"
-        ></div>
+        <div class="control-group control-group--filters" id="filtersControlGroup">
+          <div id="filtersLabel">Utilities</div>
+          <div id="filtersBar" aria-labelledby="filtersLabel"></div>
+        </div>
       </section>
 
-      <section aria-labelledby="openHouseResultsHeading">
+      <section
+        class="summary"
+        id="summary"
+        aria-live="polite"
+        aria-label="Open house summary"
+      ></section>
+
+      <section aria-labelledby="worldsSectionLabel">
+        <h2 class="section-label" id="worldsSectionLabel">Worlds</h2>
+        <section
+          id="worldsList"
+          class="worlds-list"
+          aria-label="World list"
+        ></section>
+      </section>
+
+      <section aria-labelledby="selectedWorldLabel">
         <div class="world-detail-card-header">
-          <h2 id="openHouseResultsHeading">Open Houses</h2>
+          <h2 id="selectedWorldLabel">Open Houses</h2>
           <a
             class="history-link"
             href="https://github.com/nesleykent/tibia-warzones-schedule/issues/new?template=open-house.yml"
@@ -114,37 +144,10 @@
           </a>
         </div>
         <div id="selectedWorldMeta" class="world-meta open-house-selected-meta"></div>
-
-        <section class="controls open-house-controls" aria-label="Open House filters">
-          <div class="control-group">
-            <label for="houseSearchInput">House name</label>
-            <div class="input-wrapper">
-              <span class="input-icon" aria-hidden="true">
-                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
-                  <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-              </span>
-              <input
-                type="search"
-                id="houseSearchInput"
-                placeholder="House name…"
-                autocomplete="off"
-                aria-label="Filter by house name"
-              />
-            </div>
-          </div>
-
-          <div class="control-group control-group--filters" id="filtersControlGroup">
-            <div id="filtersLabel">Utilities</div>
-            <div id="openHouseUtilityFilters" aria-labelledby="filtersLabel"></div>
-          </div>
-        </section>
-
         <section
-          id="openHouseCards"
-          class="worlds-list open-house-cards"
-          aria-label="Open House registry"
+          id="selectedWorldHouses"
+          class="worlds-list"
+          aria-label="Selected world open houses"
           aria-live="polite"
         ></section>
       </section>

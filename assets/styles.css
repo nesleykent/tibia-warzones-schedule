@@ -1912,12 +1912,9 @@ body::after {
   min-width: 0;
 }
 
-.open-house-cards {
-  padding-bottom: 64px;
-}
-
 .open-house-card {
   width: 100%;
+  cursor: default;
 }
 
 .open-house-world-preview {
@@ -1935,64 +1932,12 @@ body::after {
   flex: 0 0 auto;
 }
 
-.open-house-meta {
-  gap: 0;
+.open-house-card .execution-item {
+  align-items: flex-start;
 }
 
-.open-house-meta > span {
-  color: var(--text-secondary);
-  flex: 0 0 50%;
-}
-
-.open-house-note {
-  color: var(--text-quaternary);
-  font-size: 11px;
-  margin-top: 4px;
-}
-
-.open-house-chip-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 2px;
-  margin-bottom: 10px;
-}
-
-.open-house-chip {
-  display: inline-flex;
-  align-items: center;
-  min-height: 30px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  border: 1px solid var(--sep);
-  background: var(--fill-3);
-  color: var(--text-secondary);
-  font-size: 12px;
-  line-height: 1.35;
-}
-
-.open-house-muted {
-  color: var(--text-quaternary);
-  font-size: 12px;
-}
-
-.open-house-log {
-  color: var(--text-secondary);
-  font-size: 12px;
-  line-height: 1.6;
-  margin-top: 10px;
-}
-
-.open-house-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-@media (max-width: 640px) {
-  .open-house-meta > span {
-    flex: 0 0 100%;
-  }
+.open-house-card .execution-time {
+  min-width: 72px;
 }
 
 .market-prices-table tbody tr {

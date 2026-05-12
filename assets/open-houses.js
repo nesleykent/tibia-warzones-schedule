@@ -13,7 +13,7 @@ const STORAGE_KEY = "openHouseFilters";
 const OPEN_DOOR_REGEX =
   /You see an open door\. It belongs to house '([^']+)'\. (.+?) owns this house\./;
 const DEFAULT_FILTERS = {
-  houseName: "",
+  search: "",
   exerciseDummies: false,
   mailbox: false,
   rewardShrine: false,
@@ -27,10 +27,10 @@ const UTILITY_FILTERS = [
 ];
 
 const elements = {};
-let allReports = [];
 let allWorlds = [];
+let allReports = [];
 let filterState = loadFilterState();
-let selectedWorld = "";
+let selectedWorldName = "";
 
 function loadFilterState() {
   try {
@@ -86,315 +86,6 @@ function parseDoorLog(log) {
   };
 }
 
-function formatDate(isoDate) {
-  const timestamp = Date.parse(isoDate);
-  if (!Number.isFinite(timestamp)) return "Unknown";
-  return new Intl.DateTimeFormat("en", {
-    year: "numeric",
-    month: "short",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZone: "UTC",
-  }).format(new Date(timestamp));
-}
-
-function readUtilityLabel(flag, label) {
-  return flag ? label : null;
-}
-
-function getBattleyeDisplayLabel(key) {
-  if (key === "GBE") return "Green BattlEye";
-  if (key === "YBE") return "Yellow BattlEye";
-  return "No BattlEye";
-}
-
-function getUtilityTags(report) {
-  const utilities = report.utilities || {};
-  const tags = [
-    readUtilityLabel(utilities.exerciseDummies, "Exercise dummies"),
-    readUtilityLabel(utilities.mailbox, "Mailbox"),
-    readUtilityLabel(utilities.rewardShrine, "Reward shrine"),
-    readUtilityLabel(utilities.imbuingShrine, "Imbuing shrine"),
-  ].filter(Boolean);
-
-  const hirelings = Array.isArray(utilities.hirelings)
-    ? utilities.hirelings.map((entry) => entry.type).filter(Boolean)
-    : [];
-
-  if (hirelings.length > 0) {
-    tags.push(`Hirelings: ${hirelings.join(", ")}`);
-  }
-
-  return tags;
-}
-
-function matchesUtilityFilters(report) {
-  const utilities = report.utilities || {};
-  if (filterState.exerciseDummies && !utilities.exerciseDummies) return false;
-  if (filterState.mailbox && !utilities.mailbox) return false;
-  if (filterState.rewardShrine && !utilities.rewardShrine) return false;
-  if (filterState.imbuingShrine && !utilities.imbuingShrine) return false;
-  return true;
-}
-
-function filterReports(reports) {
-  return reports.filter((report) => {
-    const houseName = normalizeText(filterState.houseName);
-    if (houseName && !normalizeText(report.houseName).includes(houseName)) {
-      return false;
-    }
-
-    return matchesUtilityFilters(report);
-  });
-}
-
-function sortReports(reports) {
-  const items = [...reports];
-  items.sort((left, right) => {
-    return (
-      left.world.localeCompare(right.world) ||
-      Date.parse(right.lastSeenOpen || 0) - Date.parse(left.lastSeenOpen || 0) ||
-      left.houseName.localeCompare(right.houseName)
-    );
-  });
-  return items;
-}
-
-function getWorldByName(name) {
-  const target = normalizeText(name);
-  return allWorlds.find((world) => normalizeText(world?.name) === target) || null;
-}
-
-function getFilteredReports() {
-  return sortReports(filterReports(allReports));
-}
-
-function getSelectedWorldReports() {
-  if (!selectedWorld) return [];
-
-  return getFilteredReports().filter(
-    (report) => normalizeText(report.world) === normalizeText(selectedWorld)
-  );
-}
-
-function getWorldReportCounts(reports) {
-  const counts = new Map();
-
-  reports.forEach((report) => {
-    const key = normalizeText(report.world);
-    counts.set(key, (counts.get(key) || 0) + 1);
-  });
-
-  return counts;
-}
-
-function renderUtilityFilters() {
-  const markup = `
-    <div class="filter-pills-row">
-      ${UTILITY_FILTERS.map(({ key, label }) => {
-        const isActive = Boolean(filterState[key]);
-        return `
-          <button
-            type="button"
-            class="filter-pill${isActive ? " is-active" : ""}"
-            data-utility-filter="${escapeHtml(key)}"
-            aria-pressed="${isActive ? "true" : "false"}"
-          >
-            ${escapeHtml(label)}
-          </button>
-        `;
-      }).join("")}
-    </div>
-  `;
-
-  setHtml(elements.utilityFilters, markup);
-
-  elements.utilityFilters
-    .querySelectorAll("[data-utility-filter]")
-    .forEach((button) => {
-      button.addEventListener("click", () => {
-        const key = button.dataset.utilityFilter;
-        if (!key) return;
-        filterState[key] = !filterState[key];
-        render();
-      });
-    });
-}
-
-function renderSummary(reports) {
-  const worldCount = new Set(reports.map((report) => report.world).filter(Boolean)).size;
-
-  setHtml(
-    elements.summary,
-    `<p class="summary-text">${reports.length} open house${reports.length === 1 ? "" : "s"} across ${worldCount} world${worldCount === 1 ? "" : "s"}. Tracking ${allWorlds.length} Tibia worlds.</p>`
-  );
-}
-
-function renderWorldCards(filteredReports) {
-  const reportCounts = getWorldReportCounts(filteredReports);
-  const cards = allWorlds
-    .slice()
-    .sort((left, right) => String(left.name || "").localeCompare(String(right.name || "")))
-    .map((world) => {
-      const worldName = String(world.name || "").trim();
-      const count = reportCounts.get(normalizeText(worldName)) || 0;
-      const isSelected = normalizeText(worldName) === normalizeText(selectedWorld);
-      const battleyeKey = getWorldBattleyeKey(world);
-      const transferLabel = getWorldTransferLabel(world, "N/A");
-      const previewText =
-        count === 0
-          ? "No open houses reported yet."
-          : `${count} open house${count === 1 ? "" : "s"} available.`;
-
-      return `
-        <article
-          class="world-card open-house-world-card${isSelected ? " world-card--selected" : ""}"
-          data-open-house-world="${escapeHtml(worldName)}"
-          role="button"
-          tabindex="0"
-          aria-pressed="${isSelected ? "true" : "false"}"
-        >
-          <h2>
-            <span class="world-name">${escapeHtml(worldName)}</span>
-            <div class="world-card-header-actions">
-              <span class="badge">Open Houses: ${escapeHtml(String(count))}</span>
-            </div>
-          </h2>
-          <div class="world-meta">
-            <span class="meta-plain meta-left">${escapeHtml(world.location || "N/A")}</span>
-            <span class="meta-plain meta-right">${escapeHtml(world.pvp_type || "N/A")}</span>
-            <span class="meta-left">${escapeHtml(transferLabel)}</span>
-            <span class="meta-right">${escapeHtml(getBattleyeDisplayLabel(battleyeKey))}</span>
-          </div>
-          <div class="executions">
-            <div class="executions-header">
-              <h3>Open Houses</h3>
-              <span class="history-link">Select world</span>
-            </div>
-            <div class="open-house-world-preview">${escapeHtml(previewText)}</div>
-          </div>
-        </article>
-      `;
-    })
-    .join("");
-
-  setHtml(elements.worldCards, cards);
-
-  elements.worldCards.querySelectorAll("[data-open-house-world]").forEach((card) => {
-    const select = () => {
-      selectedWorld = card.dataset.openHouseWorld || "";
-      render();
-      elements.resultsHeading.scrollIntoView({ behavior: "smooth", block: "start" });
-    };
-
-    card.addEventListener("click", select);
-    card.addEventListener("keydown", (event) => {
-      if (event.key !== "Enter" && event.key !== " ") return;
-      event.preventDefault();
-      select();
-    });
-  });
-}
-
-function renderSelectedWorldMeta(world, reports) {
-  if (!world) {
-    elements.resultsHeading.textContent = "Open Houses";
-    setHtml(
-      elements.selectedWorldMeta,
-      `<span class="open-house-muted">Select a world above to view its open houses.</span>`
-    );
-    return;
-  }
-
-  const items = [
-    world.location || "N/A",
-    world.pvp_type || "N/A",
-    getWorldTransferLabel(world, "N/A"),
-    getBattleyeDisplayLabel(getWorldBattleyeKey(world)),
-    `${reports.length} house${reports.length === 1 ? "" : "s"}`,
-  ];
-
-  elements.resultsHeading.textContent = `${world.name} Open Houses`;
-  setHtml(
-    elements.selectedWorldMeta,
-    items.map((item) => `<span>${escapeHtml(item)}</span>`).join("")
-  );
-}
-
-function renderCards(reports) {
-  const selected = getWorldByName(selectedWorld);
-  renderSelectedWorldMeta(selected, reports);
-
-  if (!selected) {
-    setHtml(
-      elements.cards,
-      `<div class="empty-state">Select a world card to view its open houses.</div>`
-    );
-    return;
-  }
-
-  if (reports.length === 0) {
-    setHtml(
-      elements.cards,
-      `<div class="empty-state">No open houses match the current filters for ${escapeHtml(selected.name || selectedWorld)}.</div>`
-    );
-    return;
-  }
-
-  const markup = reports
-    .map((report) => {
-      const utilities = getUtilityTags(report)
-        .map((tag) => `<span class="open-house-chip">${escapeHtml(tag)}</span>`)
-        .join("");
-      const sourceUrl = report.source?.url
-        ? `<a class="history-link" href="${escapeHtml(report.source.url)}" target="_blank" rel="noopener noreferrer">Source link</a>`
-        : `<span class="open-house-muted">Source unavailable</span>`;
-      const screenshotUrl =
-        report.source?.screenshotUrl && !/^_no response_$/i.test(report.source.screenshotUrl)
-          ? `<a class="history-link" href="${escapeHtml(report.source.screenshotUrl)}" target="_blank" rel="noopener noreferrer">Screenshot</a>`
-          : "";
-
-      return `
-        <article class="world-card open-house-card">
-          <h2>
-            <span class="world-name">${escapeHtml(report.houseName)}</span>
-          </h2>
-          <div class="world-meta open-house-meta">
-            <span>${escapeHtml(report.town)}</span>
-            <span>${escapeHtml(report.ownerName)}</span>
-          </div>
-          <div class="executions">
-            <div class="executions-header">
-              <h3>Utilities</h3>
-              ${sourceUrl}
-            </div>
-            <div class="open-house-chip-row">${utilities || `<span class="open-house-muted">No utilities listed</span>`}</div>
-            <p class="open-house-note">Last seen ${escapeHtml(formatDate(report.lastSeenOpen))}</p>
-            ${screenshotUrl ? `<div class="open-house-links">${screenshotUrl}</div>` : ""}
-          </div>
-        </article>
-      `;
-    })
-    .join("");
-
-  setHtml(elements.cards, markup);
-}
-
-function syncControls() {
-  elements.searchInput.value = filterState.houseName;
-}
-
-function render() {
-  const filteredReports = getFilteredReports();
-  const selectedReports = getSelectedWorldReports();
-  renderSummary(allReports);
-  renderUtilityFilters();
-  renderWorldCards(filteredReports);
-  renderCards(selectedReports);
-  persistFilterState();
-}
-
 function normalizeReport(rawReport) {
   const parsedLog = parseDoorLog(rawReport?.source?.log || "");
   const source = rawReport.source || {};
@@ -428,11 +119,8 @@ function normalizeReport(rawReport) {
         })),
     },
     lastSeenOpen: rawReport.lastSeenOpen,
-    confidence: Number(rawReport.confidence ?? 1),
     source: {
-      type: source.type || "github",
       url: source.url || "",
-      submitter: source.submitter || "",
       log: source.log || "",
       notes: source.notes || "",
       screenshotUrl: source.screenshotUrl || "",
@@ -440,19 +128,393 @@ function normalizeReport(rawReport) {
   };
 }
 
+function getSelectedWorld() {
+  return (
+    allWorlds.find((world) => normalizeText(world?.name) === normalizeText(selectedWorldName)) ||
+    null
+  );
+}
+
+function formatDate(isoDate) {
+  const timestamp = Date.parse(isoDate);
+  if (!Number.isFinite(timestamp)) return "Unknown";
+
+  return new Intl.DateTimeFormat("en", {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "UTC",
+  }).format(new Date(timestamp));
+}
+
+function getBattleyeLabel(world) {
+  const key = getWorldBattleyeKey(world);
+  if (key === "GBE") return "Green BattlEye";
+  if (key === "YBE") return "Yellow BattlEye";
+  return "No BattlEye";
+}
+
+function matchesUtilityFilters(report) {
+  const utilities = report.utilities || {};
+  if (filterState.exerciseDummies && !utilities.exerciseDummies) return false;
+  if (filterState.mailbox && !utilities.mailbox) return false;
+  if (filterState.rewardShrine && !utilities.rewardShrine) return false;
+  if (filterState.imbuingShrine && !utilities.imbuingShrine) return false;
+  return true;
+}
+
+function matchesSearch(report) {
+  const query = normalizeText(filterState.search);
+  if (!query) return true;
+
+  const haystack = normalizeText(
+    [report.world, report.houseName, report.ownerName, report.town].join(" ")
+  );
+  return haystack.includes(query);
+}
+
+function getFilteredReports() {
+  return allReports.filter((report) => matchesUtilityFilters(report) && matchesSearch(report));
+}
+
+function getWorldCounts(reports) {
+  const counts = new Map();
+  reports.forEach((report) => {
+    const key = normalizeText(report.world);
+    counts.set(key, (counts.get(key) || 0) + 1);
+  });
+  return counts;
+}
+
+function getWorldPreview(reports) {
+  if (reports.length === 0) {
+    return '<p>No open houses registered yet.</p>';
+  }
+
+  const previewItems = reports
+    .slice(0, 3)
+    .map(
+      (report) => `
+        <li class="execution-item">
+          <span class="execution-time">${escapeHtml(report.town || "Town")}</span>
+          <span class="execution-order">${escapeHtml(report.houseName)}</span>
+        </li>
+      `
+    )
+    .join("");
+
+  return `<ul class="executions-list">${previewItems}</ul>`;
+}
+
+function renderWorldCard(world, reports, isSelected) {
+  return `
+    <div class="world-card${isSelected ? " world-card--selected" : ""}" data-world-name="${escapeHtml(world.name)}">
+      <h2>
+        <span class="world-name">${escapeHtml(world.name || "")}</span>
+        <div class="world-card-header-actions">
+          <span class="badge">Open Houses: ${escapeHtml(String(reports.length))}</span>
+        </div>
+      </h2>
+      <div class="world-meta">
+        <span class="meta-plain meta-left">${escapeHtml(world.location || "N/A")}</span>
+        <span class="meta-plain meta-right">${escapeHtml(world.pvp_type || "N/A")}</span>
+        <span class="meta-left">${escapeHtml(getWorldTransferLabel(world, "N/A"))}</span>
+        <span class="meta-right">${escapeHtml(getBattleyeLabel(world))}</span>
+      </div>
+      <div class="executions">
+        <div class="executions-header">
+          <h3>Open Houses</h3>
+          <span class="history-link">${isSelected ? "Selected" : "Open world"}</span>
+        </div>
+        ${getWorldPreview(reports)}
+      </div>
+    </div>
+  `;
+}
+
+function renderWorlds(reports) {
+  const counts = getWorldCounts(reports);
+  const query = normalizeText(filterState.search);
+  const worlds = allWorlds
+    .filter((world) => {
+      if (!query) return true;
+
+      const worldName = normalizeText(world.name);
+      if (worldName.includes(query)) return true;
+
+      return reports.some(
+        (report) =>
+          normalizeText(report.world) === worldName &&
+          normalizeText([report.houseName, report.ownerName, report.town].join(" ")).includes(query)
+      );
+    })
+    .sort((left, right) => String(left.name || "").localeCompare(String(right.name || "")));
+
+  if (worlds.length === 0) {
+    setHtml(elements.worldsList, '<div class="empty-state">No worlds match the current search.</div>');
+    return;
+  }
+
+  const markup = worlds
+    .map((world) => {
+      const worldReports = reports.filter(
+        (report) => normalizeText(report.world) === normalizeText(world.name)
+      );
+      return renderWorldCard(
+        world,
+        worldReports,
+        normalizeText(world.name) === normalizeText(selectedWorldName)
+      );
+    })
+    .join("");
+
+  setHtml(elements.worldsList, markup);
+
+  elements.worldsList.querySelectorAll(".world-card").forEach((card) => {
+    const select = () => {
+      selectedWorldName = card.dataset.worldName || "";
+      render();
+      elements.selectedWorldLabel.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+
+    card.addEventListener("click", select);
+    card.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      select();
+    });
+    card.tabIndex = 0;
+    card.setAttribute("role", "button");
+    card.setAttribute(
+      "aria-pressed",
+      normalizeText(card.dataset.worldName) === normalizeText(selectedWorldName) ? "true" : "false"
+    );
+  });
+}
+
+function buildUtilityRows(report) {
+  const rows = [];
+  const utilities = report.utilities || {};
+
+  if (utilities.exerciseDummies) {
+    rows.push({ label: "Exercise", value: "Exercise dummies" });
+  }
+  if (utilities.mailbox) {
+    rows.push({ label: "Mailbox", value: "Mailbox available" });
+  }
+  if (utilities.rewardShrine) {
+    rows.push({ label: "Reward", value: "Reward shrine" });
+  }
+  if (utilities.imbuingShrine) {
+    rows.push({ label: "Imbuing", value: "Imbuing shrine" });
+  }
+
+  const hirelings = Array.isArray(utilities.hirelings) ? utilities.hirelings : [];
+  hirelings.forEach((hireling) => {
+    rows.push({
+      label: "Hireling",
+      value: hireling.type || "Unknown",
+    });
+  });
+
+  return rows;
+}
+
+function renderHouseCard(report) {
+  const utilityRows = buildUtilityRows(report);
+  const utilityMarkup =
+    utilityRows.length > 0
+      ? `
+        <ul class="executions-list">
+          ${utilityRows
+            .map(
+              (row) => `
+                <li class="execution-item">
+                  <span class="execution-time">${escapeHtml(row.label)}</span>
+                  <span class="execution-order">${escapeHtml(row.value)}</span>
+                </li>
+              `
+            )
+            .join("")}
+        </ul>
+      `
+      : "<p>No utilities listed.</p>";
+
+  const links = [
+    report.source?.url
+      ? `<a class="history-link" href="${escapeHtml(report.source.url)}" target="_blank" rel="noopener noreferrer">Source link</a>`
+      : "",
+    report.source?.screenshotUrl && !/^_no response_$/i.test(report.source.screenshotUrl)
+      ? `<a class="history-link" href="${escapeHtml(report.source.screenshotUrl)}" target="_blank" rel="noopener noreferrer">Screenshot</a>`
+      : "",
+  ]
+    .filter(Boolean)
+    .join("");
+
+  return `
+    <div class="world-card open-house-card">
+      <h2>
+        <span class="world-name">${escapeHtml(report.houseName)}</span>
+        <div class="world-card-header-actions">
+          <span class="badge">Open</span>
+        </div>
+      </h2>
+      <div class="world-meta">
+        <span class="meta-plain meta-left">${escapeHtml(report.town || "N/A")}</span>
+        <span class="meta-plain meta-right">${escapeHtml(report.ownerName || "N/A")}</span>
+      </div>
+      <div class="executions">
+        <div class="executions-header">
+          <h3>Utilities</h3>
+          ${links || '<span class="history-link">Community report</span>'}
+        </div>
+        ${utilityMarkup}
+        <div class="execution-time-note">Last seen open: ${escapeHtml(formatDate(report.lastSeenOpen))}</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderSelectedWorldMeta(world, reports) {
+  if (!world) {
+    setHtml(
+      elements.selectedWorldMeta,
+      '<span>Select a world card above to open its houses.</span>'
+    );
+    elements.selectedWorldLabel.textContent = "Open Houses";
+    return;
+  }
+
+  elements.selectedWorldLabel.textContent = `${world.name} Open Houses`;
+  setHtml(
+    elements.selectedWorldMeta,
+    [
+      world.location || "N/A",
+      world.pvp_type || "N/A",
+      getWorldTransferLabel(world, "N/A"),
+      getBattleyeLabel(world),
+      `${reports.length} house${reports.length === 1 ? "" : "s"}`,
+    ]
+      .map((value) => `<span>${escapeHtml(value)}</span>`)
+      .join("")
+  );
+}
+
+function renderSelectedWorldHouses(reports) {
+  const world = getSelectedWorld();
+  const selectedReports = world
+    ? reports
+        .filter((report) => normalizeText(report.world) === normalizeText(world.name))
+        .sort((left, right) => {
+          return (
+            Date.parse(right.lastSeenOpen || 0) - Date.parse(left.lastSeenOpen || 0) ||
+            left.houseName.localeCompare(right.houseName)
+          );
+        })
+    : [];
+
+  renderSelectedWorldMeta(world, selectedReports);
+
+  if (!world) {
+    setHtml(
+      elements.selectedWorldHouses,
+      '<div class="empty-state">Select a world card above to view its open houses.</div>'
+    );
+    return;
+  }
+
+  if (selectedReports.length === 0) {
+    setHtml(
+      elements.selectedWorldHouses,
+      `<div class="empty-state">No open houses match the current filters for ${escapeHtml(world.name)}.</div>`
+    );
+    return;
+  }
+
+  setHtml(
+    elements.selectedWorldHouses,
+    selectedReports.map((report) => renderHouseCard(report)).join("")
+  );
+}
+
+function renderFilters() {
+  const markup = `
+    <div class="filter-pills-row">
+      ${UTILITY_FILTERS.map(({ key, label }) => {
+        const isActive = Boolean(filterState[key]);
+        return `
+          <button
+            type="button"
+            class="filter-pill${isActive ? " is-active" : ""}"
+            data-utility-filter="${escapeHtml(key)}"
+            aria-pressed="${isActive ? "true" : "false"}"
+          >
+            ${escapeHtml(label)}
+          </button>
+        `;
+      }).join("")}
+    </div>
+  `;
+
+  setHtml(elements.filtersBar, markup);
+
+  elements.filtersBar.querySelectorAll("[data-utility-filter]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const key = button.dataset.utilityFilter;
+      if (!key) return;
+      filterState[key] = !filterState[key];
+      render();
+    });
+  });
+}
+
+function renderSummary(reports) {
+  const worldCount = new Set(reports.map((report) => report.world).filter(Boolean)).size;
+  setHtml(
+    elements.summary,
+    `<p class="summary-text">${reports.length} open house${reports.length === 1 ? "" : "s"} across ${worldCount} world${worldCount === 1 ? "" : "s"}.</p>`
+  );
+}
+
+function syncControls() {
+  elements.searchInput.value = filterState.search;
+}
+
+function ensureSelectedWorld() {
+  const hasSelected = getSelectedWorld();
+  if (hasSelected) return;
+
+  selectedWorldName =
+    (allReports[0] && allReports[0].world) ||
+    (allWorlds[0] && allWorlds[0].name) ||
+    "";
+}
+
+function render() {
+  ensureSelectedWorld();
+  const filteredReports = getFilteredReports();
+  renderFilters();
+  renderSummary(filteredReports);
+  renderWorlds(filteredReports);
+  renderSelectedWorldHouses(filteredReports);
+  persistFilterState();
+}
+
 function cacheElements() {
-  elements.searchInput = document.getElementById("houseSearchInput");
-  elements.utilityFilters = document.getElementById("openHouseUtilityFilters");
-  elements.summary = document.getElementById("openHousesSummary");
-  elements.worldCards = document.getElementById("openHouseWorldCards");
-  elements.resultsHeading = document.getElementById("openHouseResultsHeading");
+  elements.searchInput = document.getElementById("searchInput");
+  elements.filtersBar = document.getElementById("filtersBar");
+  elements.summary = document.getElementById("summary");
+  elements.worldsList = document.getElementById("worldsList");
+  elements.selectedWorldLabel = document.getElementById("selectedWorldLabel");
   elements.selectedWorldMeta = document.getElementById("selectedWorldMeta");
-  elements.cards = document.getElementById("openHouseCards");
+  elements.selectedWorldHouses = document.getElementById("selectedWorldHouses");
 }
 
 function bindControls() {
   elements.searchInput.addEventListener("input", (event) => {
-    filterState.houseName = event.target.value;
+    filterState.search = event.target.value;
     render();
   });
 }
@@ -460,8 +522,8 @@ function bindControls() {
 async function init() {
   initSharedUi();
   cacheElements();
-  syncControls();
   bindControls();
+  syncControls();
 
   try {
     const [worldsPayload, reportsPayload] = await Promise.all([
@@ -472,26 +534,25 @@ async function init() {
     allWorlds = Array.isArray(worldsPayload) ? worldsPayload : worldsPayload.worlds || [];
     const records = Array.isArray(reportsPayload) ? reportsPayload : reportsPayload.records;
     allReports = Array.isArray(records) ? records.map(normalizeReport) : [];
-    selectedWorld =
+    selectedWorldName =
       (allReports[0] && allReports[0].world) ||
       (allWorlds[0] && allWorlds[0].name) ||
       "";
-    syncControls();
     render();
-  } catch (error) {
+  } catch {
     setHtml(
-      elements.cards,
-      `<div class="empty-state">Failed to load open house data.</div>`
+      elements.worldsList,
+      '<div class="empty-state">Failed to load open house data.</div>'
     );
-    setHtml(elements.worldCards, "");
+    setHtml(elements.selectedWorldHouses, "");
   }
 }
 
 window.OpenHouse = {
   OPEN_DOOR_REGEX,
   parseDoorLog,
-  normalizeText,
   normalizeReport,
+  normalizeText,
 };
 
 init();
