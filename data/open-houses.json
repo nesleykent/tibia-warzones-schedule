@@ -55,5 +55,66 @@
       "issueNumber": 2,
       "issueTitle": "[Open House]: 06:17:10 You see an open door. It belongs to house 'Mill Avenue 1 (Shop)'. Profeta do Passado owns this house."
     }
+  },
+  {
+    "id": "ourobra-tunnel-gardens-1-tadeus-iros",
+    "houseName": "Tunnel Gardens 1",
+    "ownerName": "Tadeus Iros",
+    "world": "Ourobra",
+    "town": "Kazordoon",
+    "houseId": 30601,
+    "status": "open",
+    "utilities": {
+      "exerciseDummies": false,
+      "rewardShrine": true,
+      "imbuingShrine": false,
+      "mailbox": false,
+      "hirelings": [
+        {
+          "type": "Apprentice",
+          "abilities": [
+            "Sells basic furniture"
+          ]
+        },
+        {
+          "type": "Banker",
+          "abilities": [
+            "Deposit",
+            "Withdraw",
+            "Transfer"
+          ]
+        },
+        {
+          "type": "Trader",
+          "abilities": [
+            "Trader",
+            "Post clerk",
+            "Buys and sells standard goods such as runes, potions, and tools"
+          ]
+        },
+        {
+          "type": "Steward",
+          "abilities": [
+            "Provides access to Your Supply Stash"
+          ]
+        },
+        {
+          "type": "Cook",
+          "abilities": [
+            "Cook random buff food for a fee"
+          ]
+        }
+      ]
+    },
+    "source": {
+      "type": "github",
+      "url": "https://github.com/nesleykent/tibia-warzones-schedule/issues/3",
+      "submitter": "nesleykent",
+      "log": "03:31:28 You see an open door. It belongs to house 'Tunnel Gardens 1'. Tadeus Iros owns this house.",
+      "notes": "_No response_",
+      "screenshotUrl": "_No response_",
+      "issueNumber": 3,
+      "issueTitle": "[Open House]: 03:31:28 You see an open door. It belongs to house 'Tunnel Gardens 1'. Tadeus Iros owns this house."
+    }
   }
 ]
