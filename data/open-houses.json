@@ -886,6 +886,61 @@
     }
   },
   {
+    "id": "ustebra-edron-flats-flat-01-nibelor",
+    "houseName": "Edron Flats, Flat 01",
+    "ownerName": "Nibelor",
+    "world": "Ustebra",
+    "town": "Edron",
+    "houseId": 50301,
+    "status": "open",
+    "utilities": {
+      "exerciseDummies": false,
+      "rewardShrine": false,
+      "imbuingShrine": false,
+      "mailbox": false,
+      "hirelings": [
+        {
+          "type": "Apprentice",
+          "abilities": [
+            "Sells basic furniture"
+          ]
+        },
+        {
+          "type": "Banker",
+          "abilities": [
+            "Deposit",
+            "Withdraw",
+            "Transfer"
+          ]
+        },
+        {
+          "type": "Trader",
+          "abilities": [
+            "Trader",
+            "Post clerk",
+            "Buys and sells standard goods such as runes, potions, and tools"
+          ]
+        },
+        {
+          "type": "Steward",
+          "abilities": [
+            "Provides access to Your Supply Stash"
+          ]
+        }
+      ]
+    },
+    "source": {
+      "type": "github",
+      "url": "https://github.com/nesleykent/tibia-warzones-schedule/issues/22",
+      "submitter": "nesleykent",
+      "log": "You see an open door. It belongs to house 'Edron Flats, Flat 01'. Nibelor owns this house.",
+      "notes": "_No response_",
+      "screenshotUrl": "_No response_",
+      "issueNumber": 22,
+      "issueTitle": "[Open House]: You see an open door. It belongs to house 'Edron Flats, Flat 01'. Nibelor owns this house."
+    }
+  },
+  {
     "id": "ustebra-harbour-place-2-shop-ultimate-faraoh",
     "houseName": "Harbour Place 2 (Shop)",
     "ownerName": "Ultimate Faraoh",
