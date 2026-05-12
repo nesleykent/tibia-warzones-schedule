@@ -449,29 +449,6 @@ function formatUtilitySummary(report) {
   return utilityRows.map(([, value]) => value).join(" | ") || "No utilities listed";
 }
 
-function getUtilitySummary(reports) {
-  const summary = {
-    exerciseDummies: 0,
-    mailbox: 0,
-    rewardShrine: 0,
-    imbuingShrine: 0,
-    hirelings: new Set(),
-  };
-
-  reports.forEach((report) => {
-    const utilities = report.utilities || {};
-    if (utilities.exerciseDummies) summary.exerciseDummies += 1;
-    if (utilities.mailbox) summary.mailbox += 1;
-    if (utilities.rewardShrine) summary.rewardShrine += 1;
-    if (utilities.imbuingShrine) summary.imbuingShrine += 1;
-    (utilities.hirelings || []).forEach((hireling) => {
-      if (hireling?.type) summary.hirelings.add(String(hireling.type).trim());
-    });
-  });
-
-  return summary;
-}
-
 function renderWorldDetail(reports) {
   const world = getSelectedWorld();
   if (!world) {
@@ -481,8 +458,6 @@ function renderWorldDetail(reports) {
       `${renderCardHeader("Summary", '<a class="history-link" href="./open-houses.html">Back to overview</a>')}<p class="world-detail-empty">World not found.</p>`
     );
     setHtml(elements.worldHousesCard, "");
-    setHtml(elements.worldUtilitiesCard, "");
-    setHtml(elements.worldSourcesCard, "");
     return;
   }
 
@@ -494,16 +469,6 @@ function renderWorldDetail(reports) {
         left.houseName.localeCompare(right.houseName)
       );
     });
-  const utilitySummary = getUtilitySummary(worldReports);
-  const uniqueOwners = new Set(
-    worldReports.map((report) => normalizeText(report.ownerName)).filter(Boolean)
-  ).size;
-  const uniqueTowns = new Set(
-    worldReports.map((report) => normalizeText(report.town)).filter(Boolean)
-  ).size;
-  const latestSeen = worldReports[0]?.lastSeenOpen
-    ? formatDate(worldReports[0].lastSeenOpen)
-    : "Unknown";
 
   setPageHeader(
     `${world.name} Open Houses`,
@@ -518,10 +483,6 @@ function renderWorldDetail(reports) {
         <div class="world-detail-stat"><span>PvP</span><strong>${escapeHtml(world.pvp_type || "N/A")}</strong></div>
         <div class="world-detail-stat"><span>Transfer</span><strong>${escapeHtml(getWorldTransferLabel(world, "N/A"))}</strong></div>
         <div class="world-detail-stat"><span>BattlEye</span><strong>${escapeHtml(getBattleyeLabel(world))}</strong></div>
-        <div class="world-detail-stat"><span>Open houses</span><strong>${escapeHtml(String(worldReports.length))}</strong></div>
-        <div class="world-detail-stat"><span>Towns</span><strong>${escapeHtml(String(uniqueTowns))}</strong></div>
-        <div class="world-detail-stat"><span>Owners</span><strong>${escapeHtml(String(uniqueOwners))}</strong></div>
-        <div class="world-detail-stat"><span>Last seen open</span><strong>${escapeHtml(latestSeen)}</strong></div>
       </div>
     `
   );
@@ -530,14 +491,6 @@ function renderWorldDetail(reports) {
     setHtml(
       elements.worldHousesCard,
       `${renderCardHeader("Open Houses")}<p class="world-detail-empty">No open houses match the current filters for ${escapeHtml(world.name)}.</p>`
-    );
-    setHtml(
-      elements.worldUtilitiesCard,
-      `${renderCardHeader("Utilities")}<p class="world-detail-empty">No utilities available.</p>`
-    );
-    setHtml(
-      elements.worldSourcesCard,
-      `${renderCardHeader("Sources")}<p class="world-detail-empty">No source links available.</p>`
     );
     return;
   }
@@ -581,40 +534,6 @@ function renderWorldDetail(reports) {
       </div>
     `
   );
-
-  setHtml(
-    elements.worldUtilitiesCard,
-    `
-      ${renderCardHeader("Utilities")}
-      <div class="world-detail-grid">
-        <div class="world-detail-stat"><span>Exercise dummies</span><strong>${escapeHtml(String(utilitySummary.exerciseDummies))}</strong></div>
-        <div class="world-detail-stat"><span>Mailbox</span><strong>${escapeHtml(String(utilitySummary.mailbox))}</strong></div>
-        <div class="world-detail-stat"><span>Reward shrine</span><strong>${escapeHtml(String(utilitySummary.rewardShrine))}</strong></div>
-        <div class="world-detail-stat"><span>Imbuing shrine</span><strong>${escapeHtml(String(utilitySummary.imbuingShrine))}</strong></div>
-        <div class="world-detail-stat"><span>Hirelings</span><strong>${escapeHtml([...utilitySummary.hirelings].join(", ") || "None")}</strong></div>
-      </div>
-    `
-  );
-
-  const sourceRows = worldReports
-    .filter((report) => report.source?.url || report.source?.screenshotUrl)
-    .map((report) => `
-      <li class="world-schedule-item">
-        <span class="world-schedule-time">${escapeHtml(report.houseName)}</span>
-        <span class="world-schedule-seq">
-          ${report.source?.url ? `<a class="history-link" href="${escapeHtml(report.source.url)}" target="_blank" rel="noopener noreferrer">Issue</a>` : "N/A"}
-          ${report.source?.screenshotUrl && !/^_no response_$/i.test(report.source.screenshotUrl) ? ` <a class="history-link" href="${escapeHtml(report.source.screenshotUrl)}" target="_blank" rel="noopener noreferrer">Screenshot</a>` : ""}
-        </span>
-      </li>
-    `)
-    .join("");
-
-  setHtml(
-    elements.worldSourcesCard,
-    sourceRows
-      ? `${renderCardHeader("Sources")}<ul class="world-schedule-list">${sourceRows}</ul>`
-      : `${renderCardHeader("Sources")}<p class="world-detail-empty">No source links available.</p>`
-  );
 }
 
 function ensureSelectedWorld() {
@@ -639,8 +558,6 @@ function renderRouteState(reports) {
   elements.worldPage.hidden = true;
   setHtml(elements.worldSummaryCard, "");
   setHtml(elements.worldHousesCard, "");
-  setHtml(elements.worldUtilitiesCard, "");
-  setHtml(elements.worldSourcesCard, "");
 }
 
 function syncControls() {
@@ -675,8 +592,6 @@ function cacheElements() {
   elements.worldPage = document.getElementById("worldPage");
   elements.worldSummaryCard = document.getElementById("worldSummaryCard");
   elements.worldHousesCard = document.getElementById("worldHousesCard");
-  elements.worldUtilitiesCard = document.getElementById("worldUtilitiesCard");
-  elements.worldSourcesCard = document.getElementById("worldSourcesCard");
 }
 
 function bindControls() {
@@ -746,8 +661,6 @@ async function init() {
         `${renderCardHeader("Summary", '<a class="history-link" href="./open-houses.html">Back to overview</a>')}<p class="world-detail-empty">Failed to load open house data.</p>`
       );
       setHtml(elements.worldHousesCard, "");
-      setHtml(elements.worldUtilitiesCard, "");
-      setHtml(elements.worldSourcesCard, "");
     } else {
       setHtml(
         elements.worldsList,
