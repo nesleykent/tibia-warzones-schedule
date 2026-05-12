@@ -49,6 +49,61 @@
     }
   },
   {
+    "id": "collabra-mill-avenue-2-shop-volverdon",
+    "houseName": "Mill Avenue 2 (Shop)",
+    "ownerName": "Volverdon",
+    "world": "Collabra",
+    "town": "Thais",
+    "houseId": 10902,
+    "status": "open",
+    "utilities": {
+      "exerciseDummies": true,
+      "rewardShrine": true,
+      "imbuingShrine": true,
+      "mailbox": false,
+      "hirelings": [
+        {
+          "type": "Apprentice",
+          "abilities": [
+            "Sells basic furniture"
+          ]
+        },
+        {
+          "type": "Banker",
+          "abilities": [
+            "Deposit",
+            "Withdraw",
+            "Transfer"
+          ]
+        },
+        {
+          "type": "Trader",
+          "abilities": [
+            "Trader",
+            "Post clerk",
+            "Buys and sells standard goods such as runes, potions, and tools"
+          ]
+        },
+        {
+          "type": "Steward",
+          "abilities": [
+            "Provides access to Your Supply Stash"
+          ]
+        }
+      ]
+    },
+    "source": {
+      "type": "github",
+      "url": "https://github.com/nesleykent/tibia-warzones-schedule/issues/19",
+      "submitter": "nesleykent",
+      "log": "You see an open door. It belongs to house 'Mill Avenue 2 (Shop)'. Volverdon owns this house.",
+      "notes": "_No response_",
+      "screenshotUrl": "_No response_",
+      "issueNumber": 19,
+      "issueTitle": "[Open House]: You see an open door. It belongs to house 'Mill Avenue 2 (Shop)'. Volverdon owns this house."
+    }
+  },
+  {
     "id": "gentebra-mill-avenue-1-shop-profeta-do-passado",
     "houseName": "Mill Avenue 1 (Shop)",
     "ownerName": "Profeta do Passado",
