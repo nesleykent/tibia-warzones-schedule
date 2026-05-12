@@ -32,6 +32,10 @@ let allReports = [];
 let filterState = loadFilterState();
 let selectedWorldName = "";
 
+function isWorldDetailRoute() {
+  return Boolean(normalizeText(selectedWorldName));
+}
+
 function getOpenHousesWorldUrl(worldName) {
   return `./open-houses.html?world=${encodeURIComponent(String(worldName || "").trim())}`;
 }
@@ -287,16 +291,15 @@ function renderWorldPreview(reports) {
 }
 
 function renderWorldCard(world, reports) {
-  const isSelected = normalizeText(world.name) === normalizeText(selectedWorldName);
   const worldUrl = getOpenHousesWorldUrl(world.name);
   return `
     <div
-      class="world-card${isSelected ? " world-card--selected" : ""}"
+      class="world-card"
       data-world-name="${escapeHtml(world.name)}"
       data-world-url="${escapeHtml(worldUrl)}"
       role="button"
       tabindex="0"
-      aria-pressed="${isSelected ? "true" : "false"}"
+      aria-label="Open ${escapeHtml(world.name)} open houses"
     >
       <h2>
         <a class="world-name world-name-link" href="${escapeHtml(worldUrl)}">${escapeHtml(world.name)}</a>
@@ -431,11 +434,13 @@ function renderHouseCard(report) {
 function renderSelectedWorldMeta(world, reports) {
   if (!world) {
     elements.selectedWorldLabel.textContent = "Open Houses";
-    setHtml(elements.selectedWorldMeta, "<span>Select a world card above to open its houses.</span>");
+    elements.selectedWorldTitle.textContent = "World Houses";
+    setHtml(elements.selectedWorldMeta, "<span>World not found.</span>");
     return;
   }
 
   elements.selectedWorldLabel.textContent = "Open Houses";
+  elements.selectedWorldTitle.textContent = `${world.name} Open Houses`;
   setHtml(
     elements.selectedWorldMeta,
     [
@@ -489,11 +494,22 @@ function renderSelectedWorldHouses(reports) {
 }
 
 function ensureSelectedWorld() {
+  if (!isWorldDetailRoute()) return;
   if (getSelectedWorld()) return;
-  selectedWorldName =
-    (allReports[0] && allReports[0].world) ||
-    (allWorlds[0] && allWorlds[0].name) ||
-    "";
+}
+
+function renderRouteState(reports) {
+  if (isWorldDetailRoute()) {
+    elements.worldsSection.hidden = true;
+    elements.selectedWorldSection.hidden = false;
+    renderSelectedWorldHouses(reports);
+    return;
+  }
+
+  elements.worldsSection.hidden = false;
+  elements.selectedWorldSection.hidden = true;
+  setHtml(elements.selectedWorldMeta, "");
+  setHtml(elements.selectedWorldHouses, "");
 }
 
 function syncControls() {
@@ -505,8 +521,12 @@ function render() {
   const reports = getFilteredReports();
   renderFilters();
   renderSummary(reports);
-  renderWorlds(reports);
-  renderSelectedWorldHouses(reports);
+  if (isWorldDetailRoute()) {
+    renderRouteState(reports);
+  } else {
+    renderWorlds(reports);
+    renderRouteState(reports);
+  }
   persistFilterState();
 }
 
@@ -514,8 +534,11 @@ function cacheElements() {
   elements.searchInput = document.getElementById("searchInput");
   elements.filtersBar = document.getElementById("filtersBar");
   elements.summary = document.getElementById("summary");
+  elements.worldsSection = document.getElementById("worldsSection");
   elements.worldsList = document.getElementById("worldsList");
+  elements.selectedWorldSection = document.getElementById("selectedWorldSection");
   elements.selectedWorldLabel = document.getElementById("selectedWorldLabel");
+  elements.selectedWorldTitle = document.getElementById("selectedWorldTitle");
   elements.selectedWorldMeta = document.getElementById("selectedWorldMeta");
   elements.selectedWorldHouses = document.getElementById("selectedWorldHouses");
 }
@@ -558,11 +581,7 @@ async function init() {
     allWorlds = Array.isArray(worldsPayload) ? worldsPayload : worldsPayload.worlds || [];
     const records = Array.isArray(reportsPayload) ? reportsPayload : reportsPayload.records;
     allReports = Array.isArray(records) ? records.map(normalizeReport) : [];
-    selectedWorldName =
-      new URLSearchParams(window.location.search).get("world") ||
-      (allReports[0] && allReports[0].world) ||
-      (allWorlds[0] && allWorlds[0].name) ||
-      "";
+    selectedWorldName = new URLSearchParams(window.location.search).get("world") || "";
     render();
   } catch {
     setHtml(

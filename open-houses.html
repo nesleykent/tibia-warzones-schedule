@@ -105,7 +105,7 @@
         aria-label="Open house summary"
       ></section>
 
-      <section aria-labelledby="worldsSectionLabel">
+      <section id="worldsSection" aria-labelledby="worldsSectionLabel">
         <h2 class="section-label" id="worldsSectionLabel">Worlds</h2>
         <section
           id="worldsList"
@@ -114,8 +114,12 @@
         ></section>
       </section>
 
-      <section aria-labelledby="selectedWorldLabel">
+      <section id="selectedWorldSection" aria-labelledby="selectedWorldLabel" hidden>
         <h2 class="section-label" id="selectedWorldLabel">Open Houses</h2>
+        <div class="world-detail-card-header" id="selectedWorldHeader">
+          <h2 id="selectedWorldTitle">World Houses</h2>
+          <a class="history-link" href="./open-houses.html">Back to worlds</a>
+        </div>
         <div id="selectedWorldMeta" class="world-meta open-house-selected-meta"></div>
         <section
           id="selectedWorldHouses"
