@@ -63,8 +63,8 @@
           alt="Tibia Warzones logo"
         />
         <div class="header-text">
-          <h1>Open Houses</h1>
-          <p class="header-subtitle">
+          <h1 id="pageTitle">Open Houses</h1>
+          <p class="header-subtitle" id="pageSubtitle">
             Community-reported public houses grouped by world, using the same browsing model as the server overview.
           </p>
         </div>
@@ -72,7 +72,7 @@
     </header>
 
     <main class="container" id="main-content">
-      <section class="controls" aria-label="Open House filters">
+      <section class="controls" id="overviewControls" aria-label="Open House filters">
         <div class="control-group" id="searchControlGroup">
           <label for="searchInput">Search world</label>
           <div class="input-wrapper">
@@ -114,17 +114,25 @@
         ></section>
       </section>
 
-      <section id="selectedWorldSection" aria-labelledby="selectedWorldLabel" hidden>
-        <h2 class="section-label" id="selectedWorldLabel">Open Houses</h2>
-        <div class="world-detail-card-header" id="selectedWorldHeader">
-          <h2 id="selectedWorldTitle">World Houses</h2>
-          <a class="history-link" href="./open-houses.html">Back to worlds</a>
-        </div>
-        <div id="selectedWorldMeta" class="world-meta open-house-selected-meta"></div>
+      <section class="world-page" id="worldPage" hidden>
         <section
-          id="selectedWorldHouses"
-          class="worlds-list"
-          aria-label="Selected world open houses"
+          id="worldSummaryCard"
+          class="world-detail-card"
+          aria-live="polite"
+        ></section>
+        <section
+          id="worldHousesCard"
+          class="world-detail-card"
+          aria-live="polite"
+        ></section>
+        <section
+          id="worldUtilitiesCard"
+          class="world-detail-card"
+          aria-live="polite"
+        ></section>
+        <section
+          id="worldSourcesCard"
+          class="world-detail-card"
           aria-live="polite"
         ></section>
       </section>
