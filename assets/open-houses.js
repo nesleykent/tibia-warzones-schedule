@@ -265,7 +265,6 @@ function renderWorldCard(world, reports) {
       <div class="executions">
         <div class="executions-header">
           <h3>Open Houses</h3>
-          <span class="history-link">${isSelected ? "Selected" : "Open world"}</span>
         </div>
         ${renderWorldPreview(reports)}
       </div>
@@ -338,16 +337,18 @@ function getUtilityRows(report) {
 }
 
 function renderHouseCard(report) {
-  const links = [
-    report.source?.url
-      ? `<a class="history-link" href="${escapeHtml(report.source.url)}" target="_blank" rel="noopener noreferrer">Source link</a>`
-      : "",
-    report.source?.screenshotUrl && !/^_no response_$/i.test(report.source.screenshotUrl)
-      ? `<a class="history-link" href="${escapeHtml(report.source.screenshotUrl)}" target="_blank" rel="noopener noreferrer">Screenshot</a>`
-      : "",
-  ]
-    .filter(Boolean)
-    .join("");
+  const linkParts = [];
+  if (report.source?.url) {
+    linkParts.push(
+      `<a class="history-link" href="${escapeHtml(report.source.url)}" target="_blank" rel="noopener noreferrer">Source link</a>`
+    );
+  }
+  if (report.source?.screenshotUrl && !/^_no response_$/i.test(report.source.screenshotUrl)) {
+    linkParts.push(
+      `<a class="history-link" href="${escapeHtml(report.source.screenshotUrl)}" target="_blank" rel="noopener noreferrer">Screenshot</a>`
+    );
+  }
+  const links = linkParts.join(" ");
 
   const utilityRows = getUtilityRows(report);
   const utilityMarkup =
@@ -383,7 +384,7 @@ function renderHouseCard(report) {
       <div class="executions">
         <div class="executions-header">
           <h3>Utilities</h3>
-          ${links || '<span class="history-link">Community report</span>'}
+          ${links}
         </div>
         ${utilityMarkup}
         <div class="execution-time-note">Last seen open: ${escapeHtml(formatDate(report.lastSeenOpen))}</div>
@@ -399,10 +400,11 @@ function renderSelectedWorldMeta(world, reports) {
     return;
   }
 
-  elements.selectedWorldLabel.textContent = `${world.name} Open Houses`;
+  elements.selectedWorldLabel.textContent = "Open Houses";
   setHtml(
     elements.selectedWorldMeta,
     [
+      world.name,
       world.location || "N/A",
       world.pvp_type || "N/A",
       getWorldTransferLabel(world, "N/A"),
