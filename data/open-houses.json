@@ -935,6 +935,47 @@
     }
   },
   {
+    "id": "ustebra-theater-avenue-6c-fellzor-evoseeker",
+    "houseName": "Theater Avenue 6c",
+    "ownerName": "Fellzor Evoseeker",
+    "world": "Ustebra",
+    "town": "Carlin",
+    "houseId": 20306,
+    "status": "open",
+    "utilities": {
+      "exerciseDummies": false,
+      "rewardShrine": true,
+      "imbuingShrine": true,
+      "mailbox": true,
+      "hirelings": [
+        {
+          "type": "Apprentice",
+          "abilities": [
+            "Sells basic furniture"
+          ]
+        },
+        {
+          "type": "Trader",
+          "abilities": [
+            "Trader",
+            "Post clerk",
+            "Buys and sells standard goods such as runes, potions, and tools"
+          ]
+        }
+      ]
+    },
+    "source": {
+      "type": "github",
+      "url": "https://github.com/nesleykent/tibia-warzones-schedule/issues/25",
+      "submitter": "nesleykent",
+      "log": "You see an open door. It belongs to house 'Theater Avenue 6c'. Fellzor Evoseeker owns this house.",
+      "notes": "_No response_",
+      "screenshotUrl": "_No response_",
+      "issueNumber": 25,
+      "issueTitle": "[Open House]: You see an open door. It belongs to house 'Theater Avenue 6c'. Fellzor Evoseeker owns this house."
+    }
+  },
+  {
     "id": "ustebra-darashia-3-flat-02-ultimate-giuseppe",
     "houseName": "Darashia 3, Flat 02",
     "ownerName": "Ultimate Giuseppe",
