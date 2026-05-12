@@ -935,6 +935,47 @@
     }
   },
   {
+    "id": "ustebra-park-lane-1a-kaamoz",
+    "houseName": "Park Lane 1a",
+    "ownerName": "Kaamoz",
+    "world": "Ustebra",
+    "town": "Carlin",
+    "houseId": 20201,
+    "status": "open",
+    "utilities": {
+      "exerciseDummies": true,
+      "rewardShrine": true,
+      "imbuingShrine": false,
+      "mailbox": false,
+      "hirelings": [
+        {
+          "type": "Apprentice",
+          "abilities": [
+            "Sells basic furniture"
+          ]
+        },
+        {
+          "type": "Trader",
+          "abilities": [
+            "Trader",
+            "Post clerk",
+            "Buys and sells standard goods such as runes, potions, and tools"
+          ]
+        }
+      ]
+    },
+    "source": {
+      "type": "github",
+      "url": "https://github.com/nesleykent/tibia-warzones-schedule/issues/26",
+      "submitter": "nesleykent",
+      "log": "You see an open door. It belongs to house 'Park Lane 1a'. Kaamoz owns this house.",
+      "notes": "_No response_",
+      "screenshotUrl": "_No response_",
+      "issueNumber": 26,
+      "issueTitle": "[Open House]: You see an open door. It belongs to house 'Park Lane 1a'. Kaamoz owns this house."
+    }
+  },
+  {
     "id": "ustebra-theater-avenue-6c-fellzor-evoseeker",
     "houseName": "Theater Avenue 6c",
     "ownerName": "Fellzor Evoseeker",
