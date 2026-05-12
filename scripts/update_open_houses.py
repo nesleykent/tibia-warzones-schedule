@@ -21,7 +21,7 @@ GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
 OPEN_HOUSE_TITLE_PREFIX = "[Open House]:"
 MAINTENANCE_TITLE_PREFIX = "[Open House Maintenance]:"
 OPEN_DOOR_PATTERN = re.compile(
-    r"You see an (?:open|closed) door\. It belongs to house '([^']+)'\. (.+?) owns this house\."
+    r"You see (?:an open|a closed) door\. It belongs to house '([^']+)'\. (.+?) owns this house\."
 )
 SECTION_PATTERN = re.compile(r"^###\s+(.+?)\n\n(.*?)(?=^###\s+|\Z)", re.MULTILINE | re.DOTALL)
 KNOWN_TOWNS = [

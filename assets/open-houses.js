@@ -16,7 +16,7 @@ const {
 const OPEN_HOUSES_DATA_PATH = "./data/open-houses.json";
 const STORAGE_KEY = "openHouseFilters";
 const OPEN_DOOR_REGEX =
-  /You see an (?:open|closed) door\. It belongs to house '([^']+)'\. (.+?) owns this house\./;
+  /You see (?:an open|a closed) door\. It belongs to house '([^']+)'\. (.+?) owns this house\./;
 const FILTER_CONFIGS = [
   {
     group: "region",
