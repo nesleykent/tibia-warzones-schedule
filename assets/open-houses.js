@@ -395,7 +395,7 @@ function renderWorldCard(world, reports) {
       <div class="executions">
         <div class="executions-header">
           <h3>Open Houses</h3>
-          <a class="history-link" href="${escapeHtml(worldUrl)}">View open houses</a>
+          <a class="history-link" href="${GITHUB_ISSUES_URL}" target="_blank" rel="noopener noreferrer">GitHub Issues</a>
         </div>
         ${renderWorldPreview(reports)}
       </div>
