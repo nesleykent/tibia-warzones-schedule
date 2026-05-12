@@ -16,7 +16,7 @@ const {
 const OPEN_HOUSES_DATA_PATH = "./data/open-houses.json";
 const STORAGE_KEY = "openHouseFilters";
 const OPEN_DOOR_REGEX =
-  /You see an open door\. It belongs to house '([^']+)'\. (.+?) owns this house\./;
+  /You see an (?:open|closed) door\. It belongs to house '([^']+)'\. (.+?) owns this house\./;
 const FILTER_CONFIGS = [
   {
     group: "region",
@@ -114,7 +114,7 @@ function parseDoorLog(log) {
   const source = String(log || "").trim();
   const match = source.match(OPEN_DOOR_REGEX);
   if (!match) {
-    throw new Error("Door log does not match the supported open door pattern.");
+    throw new Error("Door log does not match the supported door inspection pattern.");
   }
 
   const houseName = match[1].trim();

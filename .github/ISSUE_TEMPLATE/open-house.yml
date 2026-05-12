@@ -8,7 +8,7 @@ body:
     id: door_log
     attributes:
       label: Door inspection log
-      description: Paste the in-game open door inspection log.
+      description: Paste the in-game door inspection log. Open or closed door logs are accepted.
       placeholder: "You see an open door. It belongs to house 'Mill Avenue 1 (Shop)'. Profeta do Passado owns this house."
     validations:
       required: true

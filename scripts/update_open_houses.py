@@ -21,7 +21,7 @@ GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
 OPEN_HOUSE_TITLE_PREFIX = "[Open House]:"
 MAINTENANCE_TITLE_PREFIX = "[Open House Maintenance]:"
 OPEN_DOOR_PATTERN = re.compile(
-    r"You see an open door\. It belongs to house '([^']+)'\. (.+?) owns this house\."
+    r"You see an (?:open|closed) door\. It belongs to house '([^']+)'\. (.+?) owns this house\."
 )
 SECTION_PATTERN = re.compile(r"^###\s+(.+?)\n\n(.*?)(?=^###\s+|\Z)", re.MULTILINE | re.DOTALL)
 KNOWN_TOWNS = [
@@ -111,7 +111,7 @@ def parse_sections(body: str) -> dict[str, str]:
 def parse_open_door_log(log: str) -> tuple[str, str]:
     match = OPEN_DOOR_PATTERN.search(str(log or ""))
     if not match:
-        raise ValueError("Door inspection log does not match the supported open door pattern.")
+        raise ValueError("Door inspection log does not match the supported door inspection pattern.")
     house_name = match.group(1).strip()
     owner_name = match.group(2).strip()
     if not house_name:
