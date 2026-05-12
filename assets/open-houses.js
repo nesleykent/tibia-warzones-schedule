@@ -12,15 +12,12 @@ const OPEN_DOOR_REGEX =
 const DEFAULT_FILTERS = {
   houseName: "",
   world: "all",
-  freshness: "active",
-  includeStale: false,
   exerciseDummies: false,
   mailbox: false,
   rewardShrine: false,
   imbuingShrine: false,
 };
 const UTILITY_FILTERS = [
-  { key: "includeStale", label: "Include stale and expired" },
   { key: "exerciseDummies", label: "Exercise dummies" },
   { key: "mailbox", label: "Mailbox" },
   { key: "rewardShrine", label: "Reward shrine" },
@@ -85,30 +82,6 @@ function parseDoorLog(log) {
   };
 }
 
-function getAgeInDays(isoDate) {
-  const timestamp = Date.parse(isoDate);
-  if (!Number.isFinite(timestamp)) return Number.POSITIVE_INFINITY;
-  return Math.floor((Date.now() - timestamp) / 86400000);
-}
-
-function getFreshnessBucket(report) {
-  const ageInDays = getAgeInDays(report.lastSeenOpen);
-  if (ageInDays <= 6) return "fresh";
-  if (ageInDays <= 13) return "stale";
-  return "expired";
-}
-
-function isDefaultVisible(report) {
-  return getFreshnessBucket(report) !== "expired";
-}
-
-function formatFreshness(report) {
-  const bucket = getFreshnessBucket(report);
-  if (bucket === "fresh") return "Fresh";
-  if (bucket === "stale") return "Stale";
-  return "Expired";
-}
-
 function formatDate(isoDate) {
   const timestamp = Date.parse(isoDate);
   if (!Number.isFinite(timestamp)) return "Unknown";
@@ -159,19 +132,6 @@ function buildSearchHaystack(report) {
   );
 }
 
-function matchesFreshness(report) {
-  const bucket = getFreshnessBucket(report);
-  const filter = filterState.freshness;
-
-  if (!filterState.includeStale && !isDefaultVisible(report)) {
-    return false;
-  }
-
-  if (filter === "all") return filterState.includeStale || isDefaultVisible(report);
-  if (filter === "active") return bucket === "fresh" || bucket === "stale";
-  return bucket === filter;
-}
-
 function matchesUtilityFilters(report) {
   const utilities = report.utilities || {};
   if (filterState.exerciseDummies && !utilities.exerciseDummies) return false;
@@ -193,10 +153,6 @@ function filterReports(reports) {
       filterState.world !== "all" &&
       normalizeText(report.world) !== normalizeText(filterState.world)
     ) {
-      return false;
-    }
-
-    if (!matchesFreshness(report)) {
       return false;
     }
 
@@ -280,13 +236,11 @@ function renderUtilityFilters() {
 }
 
 function renderSummary(reports) {
-  const fresh = reports.filter((report) => getFreshnessBucket(report) === "fresh").length;
-  const stale = reports.filter((report) => getFreshnessBucket(report) === "stale").length;
-  const expired = reports.filter((report) => getFreshnessBucket(report) === "expired").length;
+  const worldCount = new Set(reports.map((report) => report.world).filter(Boolean)).size;
 
   setHtml(
     elements.summary,
-    `<p class="summary-text">${reports.length} open house reports loaded. ${fresh} fresh, ${stale} stale, ${expired} expired.</p>`
+    `<p class="summary-text">${reports.length} open house${reports.length === 1 ? "" : "s"} across ${worldCount} world${worldCount === 1 ? "" : "s"}.</p>`
   );
 }
 
@@ -306,7 +260,6 @@ function renderCards(reports) {
           const utilities = getUtilityTags(report)
             .map((tag) => `<span class="open-house-chip">${escapeHtml(tag)}</span>`)
             .join("");
-          const freshness = formatFreshness(report);
           const sourceUrl = report.source?.url
             ? `<a class="history-link" href="${escapeHtml(report.source.url)}" target="_blank" rel="noopener noreferrer">Source link</a>`
             : `<span class="open-house-muted">Source unavailable</span>`;
@@ -318,7 +271,6 @@ function renderCards(reports) {
             <article class="world-card open-house-card">
               <h2>
                 <span class="world-name">${escapeHtml(report.houseName)}</span>
-                <span class="badge">${escapeHtml(freshness)}</span>
               </h2>
               <div class="world-meta open-house-meta">
                 <span>${escapeHtml(report.town)}</span>
@@ -362,7 +314,6 @@ function renderCards(reports) {
 
 function syncControls() {
   elements.searchInput.value = filterState.houseName;
-  elements.freshnessFilter.value = filterState.freshness;
 }
 
 function render() {
@@ -421,7 +372,6 @@ function normalizeReport(rawReport) {
 function cacheElements() {
   elements.searchInput = document.getElementById("houseSearchInput");
   elements.worldFilter = document.getElementById("worldFilter");
-  elements.freshnessFilter = document.getElementById("freshnessFilter");
   elements.utilityFilters = document.getElementById("openHouseUtilityFilters");
   elements.summary = document.getElementById("openHousesSummary");
   elements.cards = document.getElementById("openHouseCards");
@@ -435,7 +385,6 @@ function bindControls() {
 
   [
     ["worldFilter", "world"],
-    ["freshnessFilter", "freshness"],
   ].forEach(([elementKey, stateKey]) => {
     elements[elementKey].addEventListener("change", (event) => {
       filterState[stateKey] = event.target.value;
@@ -477,8 +426,6 @@ window.OpenHouse = {
   parseDoorLog,
   normalizeText,
   normalizeReport,
-  getFreshnessBucket,
-  isDefaultVisible,
 };
 
 init();
