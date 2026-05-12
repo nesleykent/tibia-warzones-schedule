@@ -389,5 +389,54 @@
       "issueNumber": 6,
       "issueTitle": "[Open House]: 03:42:55 You see a closed door. It belongs to house 'Harbour Place 2 (Shop)'. Rei in Quelibra owns this house."
     }
+  },
+  {
+    "id": "rasteibra-the-market-4-shop-qdox",
+    "houseName": "The Market 4 (Shop)",
+    "ownerName": "Qdox",
+    "world": "Rasteibra",
+    "town": "Kazordoon",
+    "houseId": 30404,
+    "status": "open",
+    "utilities": {
+      "exerciseDummies": true,
+      "rewardShrine": true,
+      "imbuingShrine": true,
+      "mailbox": false,
+      "hirelings": [
+        {
+          "type": "Apprentice",
+          "abilities": [
+            "Sells basic furniture"
+          ]
+        },
+        {
+          "type": "Banker",
+          "abilities": [
+            "Deposit",
+            "Withdraw",
+            "Transfer"
+          ]
+        },
+        {
+          "type": "Trader",
+          "abilities": [
+            "Trader",
+            "Post clerk",
+            "Buys and sells standard goods such as runes, potions, and tools"
+          ]
+        }
+      ]
+    },
+    "source": {
+      "type": "github",
+      "url": "https://github.com/nesleykent/tibia-warzones-schedule/issues/10",
+      "submitter": "nesleykent",
+      "log": "15:35:49 You see an open door. It belongs to house 'The Market 4 (Shop)'. Qdox owns this house.",
+      "notes": "_No response_",
+      "screenshotUrl": "_No response_",
+      "issueNumber": 10,
+      "issueTitle": "[Open House]: 15:35:49 You see an open door. It belongs to house 'The Market 4 (Shop)'. Qdox owns this house."
+    }
   }
 ]
