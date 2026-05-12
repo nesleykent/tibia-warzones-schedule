@@ -49,6 +49,67 @@
     }
   },
   {
+    "id": "gentebra-mill-avenue-1-shop-profeta-do-passado",
+    "houseName": "Mill Avenue 1 (Shop)",
+    "ownerName": "Profeta do Passado",
+    "world": "Gentebra",
+    "town": "Thais",
+    "houseId": 10901,
+    "status": "open",
+    "utilities": {
+      "exerciseDummies": true,
+      "rewardShrine": false,
+      "imbuingShrine": false,
+      "mailbox": false,
+      "hirelings": [
+        {
+          "type": "Apprentice",
+          "abilities": [
+            "Sells basic furniture"
+          ]
+        },
+        {
+          "type": "Banker",
+          "abilities": [
+            "Deposit",
+            "Withdraw",
+            "Transfer"
+          ]
+        },
+        {
+          "type": "Trader",
+          "abilities": [
+            "Trader",
+            "Post clerk",
+            "Buys and sells standard goods such as runes, potions, and tools"
+          ]
+        },
+        {
+          "type": "Steward",
+          "abilities": [
+            "Provides access to Your Supply Stash"
+          ]
+        },
+        {
+          "type": "Cook",
+          "abilities": [
+            "Cook random buff food for a fee"
+          ]
+        }
+      ]
+    },
+    "source": {
+      "type": "github",
+      "url": "https://github.com/nesleykent/tibia-warzones-schedule/issues/12",
+      "submitter": "nesleykent",
+      "log": "16:25:03 You see an open door. It belongs to house 'Mill Avenue 1 (Shop)'. Profeta do Passado owns this house.",
+      "notes": "_No response_",
+      "screenshotUrl": "_No response_",
+      "issueNumber": 12,
+      "issueTitle": "[Open House]: 16:25:03 You see an open door. It belongs to house 'Mill Avenue 1 (Shop)'. Profeta do Passado owns this house."
+    }
+  },
+  {
     "id": "luminera-castle-shop-1-alphaheart",
     "houseName": "Castle Shop 1",
     "ownerName": "Alphaheart",
