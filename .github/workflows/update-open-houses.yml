@@ -11,7 +11,7 @@ on:
 
 permissions:
   contents: write
-  issues: read
+  issues: write
 
 concurrency:
   group: update-open-houses
@@ -69,3 +69,66 @@ jobs:
           git commit -m "chore: refresh open houses data"
           git pull --rebase origin main
           git push
+
+      - name: Resolve open house issue
+        if: github.event_name == 'issues' && startsWith(github.event.issue.title, '[Open House]:') && github.event.action != 'closed'
+        id: resolve_issue
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          issue_number = int(os.environ["ISSUE_NUMBER"])
+          records = json.loads(Path("data/open-houses.json").read_text(encoding="utf-8"))
+          match = next(
+              (
+                  record
+                  for record in records
+                  if int(record.get("source", {}).get("issueNumber", 0) or 0) == issue_number
+              ),
+              None,
+          )
+
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as fh:
+              if not match:
+                  fh.write("found=false\n")
+              else:
+                  fh.write("found=true\n")
+                  fh.write(f"house_name={match.get('houseName', '')}\n")
+                  fh.write(f"owner_name={match.get('ownerName', '')}\n")
+                  fh.write(f"world={match.get('world', '')}\n")
+                  fh.write(f"town={match.get('town', '')}\n")
+          PY
+
+      - name: Comment on accepted issue
+        if: steps.resolve_issue.outputs.found == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          HOUSE_NAME: ${{ steps.resolve_issue.outputs.house_name }}
+          OWNER_NAME: ${{ steps.resolve_issue.outputs.owner_name }}
+          WORLD_NAME: ${{ steps.resolve_issue.outputs.world }}
+          TOWN_NAME: ${{ steps.resolve_issue.outputs.town }}
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/issues/${ISSUE_NUMBER}/comments" \
+            -f body="Open House added to the registry.
+
+House: ${HOUSE_NAME}
+Owner: ${OWNER_NAME}
+World: ${WORLD_NAME}
+Town: ${TOWN_NAME}
+
+This issue is being closed because the report is now recorded in the database."
+
+      - name: Close accepted issue
+        if: steps.resolve_issue.outputs.found == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/issues/${ISSUE_NUMBER}" \
+            -X PATCH \
+            -f state=closed
