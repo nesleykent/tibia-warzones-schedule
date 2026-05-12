@@ -35,6 +35,7 @@ jobs:
         run: |
           node --check assets/shared.js
           node --check assets/app.js
+          node --check assets/open-houses.js
           node --check assets/ranking.js
           node --check assets/bigfoot.js
           node --check assets/world.js
@@ -42,16 +43,18 @@ jobs:
       - name: Validate required site files
         run: |
           test -f index.html
+          test -f open-houses.html
           test -f ranking.html
           test -f bigfoot.html
           test -f world.html
           test -f assets/styles.css
           test -f data/worlds.json
+          test -f data/open-houses.json
 
       - name: Prepare Pages artifact
         run: |
           mkdir -p _site
-          cp -R assets data index.html ranking.html bigfoot.html world.html LICENSE README.md _site/
+          cp -R assets data index.html open-houses.html ranking.html bigfoot.html world.html LICENSE README.md _site/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
