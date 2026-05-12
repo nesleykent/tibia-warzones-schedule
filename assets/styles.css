@@ -1902,24 +1902,26 @@ body::after {
   color: var(--text-secondary);
 }
 
-.open-house-controls {
-  align-items: stretch;
-}
-
-.open-house-world-card,
-.open-house-card {
-  flex: 1 1 320px;
-  min-width: 0;
-}
-
 .open-house-card {
   width: 100%;
   cursor: default;
 }
 
+.open-house-card:hover {
+  transform: none;
+}
+
 .open-house-world-preview {
   color: var(--text-secondary);
   font-size: 13px;
+}
+
+.open-house-card .execution-item {
+  align-items: flex-start;
+}
+
+.open-house-card .execution-time {
+  min-width: 72px;
 }
 
 .open-house-selected-meta {
@@ -1930,14 +1932,6 @@ body::after {
 
 .open-house-selected-meta > span {
   flex: 0 0 auto;
-}
-
-.open-house-card .execution-item {
-  align-items: flex-start;
-}
-
-.open-house-card .execution-time {
-  min-width: 72px;
 }
 
 .market-prices-table tbody tr {

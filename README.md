@@ -61,7 +61,6 @@ http://127.0.0.1:4173/
 Main pages:
 
 - `index.html`: world overview, filters, and planner
-- `open-houses.html`: community-submitted open house registry and utility filters
 - `world.html`: world-specific details, schedule, market data, and history
 - `ranking.html`: expected-return ranking across worlds
 - `bigfoot.html`: Bigfoot's Burden reference links

@@ -38,30 +38,13 @@
               aria-expanded="false"
               aria-label="Select language"
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <line x1="2" y1="12" x2="22" y2="12" />
-                <path
-                  d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
-                />
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="2" y1="12" x2="22" y2="12"/>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
               </svg>
             </button>
-            <div
-              class="lang-menu"
-              id="langMenu"
-              role="menu"
-              aria-label="Language selector"
-            >
+            <div class="lang-menu" id="langMenu" role="menu" aria-label="Language selector">
               <button type="button" class="lang-flag" data-lang="en" role="menuitem">🇺🇸 <span>English</span></button>
               <button type="button" class="lang-flag" data-lang="pt-BR" role="menuitem">🇧🇷 <span>Português</span></button>
               <button type="button" class="lang-flag" data-lang="es-419" role="menuitem">🇦🇷 <span>Español</span></button>
@@ -80,9 +63,9 @@
           alt="Tibia Warzones logo"
         />
         <div class="header-text">
-          <h1 id="openHousesTitle">Open Houses</h1>
-          <p class="header-subtitle" id="openHousesSubtitle">
-            Open House Project indexes public houses reported by the Tibia community. Reports come from in-game open door inspection logs and utility checklists. The system resolves the owner world through TibiaData, matches the house against official TibiaData house data, and lists active public houses with available utilities.
+          <h1>Open Houses</h1>
+          <p class="header-subtitle">
+            Community-reported public houses grouped by world, using the same browsing model as the server overview.
           </p>
         </div>
       </div>
@@ -109,7 +92,7 @@
           </div>
         </div>
 
-        <div class="control-group control-group--filters" id="filtersControlGroup">
+        <div class="control-group control-group--filters">
           <div id="filtersLabel">Utilities</div>
           <div id="filtersBar" aria-labelledby="filtersLabel"></div>
         </div>
@@ -134,14 +117,6 @@
       <section aria-labelledby="selectedWorldLabel">
         <div class="world-detail-card-header">
           <h2 id="selectedWorldLabel">Open Houses</h2>
-          <a
-            class="history-link"
-            href="https://github.com/nesleykent/tibia-warzones-schedule/issues/new?template=open-house.yml"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Submit report
-          </a>
         </div>
         <div id="selectedWorldMeta" class="world-meta open-house-selected-meta"></div>
         <section

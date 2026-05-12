@@ -71,13 +71,8 @@ function parseDoorLog(log) {
   const houseName = match[1].trim();
   const ownerName = match[2].trim();
 
-  if (!houseName) {
-    throw new Error("House name cannot be empty.");
-  }
-
-  if (!ownerName) {
-    throw new Error("Owner name cannot be empty.");
-  }
+  if (!houseName) throw new Error("House name cannot be empty.");
+  if (!ownerName) throw new Error("Owner name cannot be empty.");
 
   return {
     isOpenDoor: true,
@@ -103,7 +98,7 @@ function normalizeReport(rawReport) {
     ownerName: rawReport.ownerName || parsedLog.ownerName,
     world: String(rawReport.world || "").trim(),
     town: String(rawReport.town || "").trim(),
-    status: rawReport.status || "open",
+    lastSeenOpen: rawReport.lastSeenOpen,
     utilities: {
       exerciseDummies: Boolean(utilities.exerciseDummies),
       mailbox: Boolean(utilities.mailbox),
@@ -118,11 +113,8 @@ function normalizeReport(rawReport) {
             : [],
         })),
     },
-    lastSeenOpen: rawReport.lastSeenOpen,
     source: {
       url: source.url || "",
-      log: source.log || "",
-      notes: source.notes || "",
       screenshotUrl: source.screenshotUrl || "",
     },
   };
@@ -135,10 +127,16 @@ function getSelectedWorld() {
   );
 }
 
-function formatDate(isoDate) {
-  const timestamp = Date.parse(isoDate);
-  if (!Number.isFinite(timestamp)) return "Unknown";
+function getBattleyeLabel(world) {
+  const key = getWorldBattleyeKey(world);
+  if (key === "GBE") return "Green BattlEye";
+  if (key === "YBE") return "Yellow BattlEye";
+  return "No BattlEye";
+}
 
+function formatDate(value) {
+  const timestamp = Date.parse(value);
+  if (!Number.isFinite(timestamp)) return "Unknown";
   return new Intl.DateTimeFormat("en", {
     year: "numeric",
     month: "short",
@@ -147,13 +145,6 @@ function formatDate(isoDate) {
     minute: "2-digit",
     timeZone: "UTC",
   }).format(new Date(timestamp));
-}
-
-function getBattleyeLabel(world) {
-  const key = getWorldBattleyeKey(world);
-  if (key === "GBE") return "Green BattlEye";
-  if (key === "YBE") return "Yellow BattlEye";
-  return "No BattlEye";
 }
 
 function matchesUtilityFilters(report) {
@@ -169,10 +160,9 @@ function matchesSearch(report) {
   const query = normalizeText(filterState.search);
   if (!query) return true;
 
-  const haystack = normalizeText(
+  return normalizeText(
     [report.world, report.houseName, report.ownerName, report.town].join(" ")
-  );
-  return haystack.includes(query);
+  ).includes(query);
 }
 
 function getFilteredReports() {
@@ -188,31 +178,80 @@ function getWorldCounts(reports) {
   return counts;
 }
 
-function getWorldPreview(reports) {
-  if (reports.length === 0) {
-    return '<p>No open houses registered yet.</p>';
-  }
+function renderFilters() {
+  setHtml(
+    elements.filtersBar,
+    `
+      <div class="filter-pills-row">
+        ${UTILITY_FILTERS.map(({ key, label }) => {
+          const isActive = Boolean(filterState[key]);
+          return `
+            <button
+              type="button"
+              class="filter-pill${isActive ? " is-active" : ""}"
+              data-utility-filter="${escapeHtml(key)}"
+              aria-pressed="${isActive ? "true" : "false"}"
+            >
+              ${escapeHtml(label)}
+            </button>
+          `;
+        }).join("")}
+      </div>
+    `
+  );
 
-  const previewItems = reports
-    .slice(0, 3)
-    .map(
-      (report) => `
-        <li class="execution-item">
-          <span class="execution-time">${escapeHtml(report.town || "Town")}</span>
-          <span class="execution-order">${escapeHtml(report.houseName)}</span>
-        </li>
-      `
-    )
-    .join("");
-
-  return `<ul class="executions-list">${previewItems}</ul>`;
+  elements.filtersBar.querySelectorAll("[data-utility-filter]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const key = button.dataset.utilityFilter;
+      if (!key) return;
+      filterState[key] = !filterState[key];
+      render();
+    });
+  });
 }
 
-function renderWorldCard(world, reports, isSelected) {
+function renderSummary(reports) {
+  const worldCount = new Set(reports.map((report) => report.world).filter(Boolean)).size;
+  setHtml(
+    elements.summary,
+    `<p class="summary-text">${reports.length} open house${reports.length === 1 ? "" : "s"} across ${worldCount} world${worldCount === 1 ? "" : "s"}.</p>`
+  );
+}
+
+function renderWorldPreview(reports) {
+  if (reports.length === 0) {
+    return "<p>No open houses registered yet.</p>";
+  }
+
   return `
-    <div class="world-card${isSelected ? " world-card--selected" : ""}" data-world-name="${escapeHtml(world.name)}">
+    <ul class="executions-list">
+      ${reports
+        .slice(0, 3)
+        .map(
+          (report) => `
+            <li class="execution-item">
+              <span class="execution-time">${escapeHtml(report.town || "Town")}</span>
+              <span class="execution-order">${escapeHtml(report.houseName)}</span>
+            </li>
+          `
+        )
+        .join("")}
+    </ul>
+  `;
+}
+
+function renderWorldCard(world, reports) {
+  const isSelected = normalizeText(world.name) === normalizeText(selectedWorldName);
+  return `
+    <div
+      class="world-card${isSelected ? " world-card--selected" : ""}"
+      data-world-name="${escapeHtml(world.name)}"
+      role="button"
+      tabindex="0"
+      aria-pressed="${isSelected ? "true" : "false"}"
+    >
       <h2>
-        <span class="world-name">${escapeHtml(world.name || "")}</span>
+        <span class="world-name">${escapeHtml(world.name)}</span>
         <div class="world-card-header-actions">
           <span class="badge">Open Houses: ${escapeHtml(String(reports.length))}</span>
         </div>
@@ -228,22 +267,19 @@ function renderWorldCard(world, reports, isSelected) {
           <h3>Open Houses</h3>
           <span class="history-link">${isSelected ? "Selected" : "Open world"}</span>
         </div>
-        ${getWorldPreview(reports)}
+        ${renderWorldPreview(reports)}
       </div>
     </div>
   `;
 }
 
 function renderWorlds(reports) {
-  const counts = getWorldCounts(reports);
   const query = normalizeText(filterState.search);
   const worlds = allWorlds
     .filter((world) => {
       if (!query) return true;
-
       const worldName = normalizeText(world.name);
       if (worldName.includes(query)) return true;
-
       return reports.some(
         (report) =>
           normalizeText(report.world) === worldName &&
@@ -257,20 +293,17 @@ function renderWorlds(reports) {
     return;
   }
 
-  const markup = worlds
-    .map((world) => {
-      const worldReports = reports.filter(
-        (report) => normalizeText(report.world) === normalizeText(world.name)
-      );
-      return renderWorldCard(
-        world,
-        worldReports,
-        normalizeText(world.name) === normalizeText(selectedWorldName)
-      );
-    })
-    .join("");
-
-  setHtml(elements.worldsList, markup);
+  setHtml(
+    elements.worldsList,
+    worlds
+      .map((world) => {
+        const worldReports = reports.filter(
+          (report) => normalizeText(report.world) === normalizeText(world.name)
+        );
+        return renderWorldCard(world, worldReports);
+      })
+      .join("")
+  );
 
   elements.worldsList.querySelectorAll(".world-card").forEach((card) => {
     const select = () => {
@@ -285,63 +318,26 @@ function renderWorlds(reports) {
       event.preventDefault();
       select();
     });
-    card.tabIndex = 0;
-    card.setAttribute("role", "button");
-    card.setAttribute(
-      "aria-pressed",
-      normalizeText(card.dataset.worldName) === normalizeText(selectedWorldName) ? "true" : "false"
-    );
   });
 }
 
-function buildUtilityRows(report) {
+function getUtilityRows(report) {
   const rows = [];
   const utilities = report.utilities || {};
 
-  if (utilities.exerciseDummies) {
-    rows.push({ label: "Exercise", value: "Exercise dummies" });
-  }
-  if (utilities.mailbox) {
-    rows.push({ label: "Mailbox", value: "Mailbox available" });
-  }
-  if (utilities.rewardShrine) {
-    rows.push({ label: "Reward", value: "Reward shrine" });
-  }
-  if (utilities.imbuingShrine) {
-    rows.push({ label: "Imbuing", value: "Imbuing shrine" });
-  }
+  if (utilities.exerciseDummies) rows.push(["Exercise", "Exercise dummies"]);
+  if (utilities.mailbox) rows.push(["Mailbox", "Mailbox available"]);
+  if (utilities.rewardShrine) rows.push(["Reward", "Reward shrine"]);
+  if (utilities.imbuingShrine) rows.push(["Imbuing", "Imbuing shrine"]);
 
-  const hirelings = Array.isArray(utilities.hirelings) ? utilities.hirelings : [];
-  hirelings.forEach((hireling) => {
-    rows.push({
-      label: "Hireling",
-      value: hireling.type || "Unknown",
-    });
+  (utilities.hirelings || []).forEach((hireling) => {
+    rows.push(["Hireling", hireling.type || "Unknown"]);
   });
 
   return rows;
 }
 
 function renderHouseCard(report) {
-  const utilityRows = buildUtilityRows(report);
-  const utilityMarkup =
-    utilityRows.length > 0
-      ? `
-        <ul class="executions-list">
-          ${utilityRows
-            .map(
-              (row) => `
-                <li class="execution-item">
-                  <span class="execution-time">${escapeHtml(row.label)}</span>
-                  <span class="execution-order">${escapeHtml(row.value)}</span>
-                </li>
-              `
-            )
-            .join("")}
-        </ul>
-      `
-      : "<p>No utilities listed.</p>";
-
   const links = [
     report.source?.url
       ? `<a class="history-link" href="${escapeHtml(report.source.url)}" target="_blank" rel="noopener noreferrer">Source link</a>`
@@ -352,6 +348,25 @@ function renderHouseCard(report) {
   ]
     .filter(Boolean)
     .join("");
+
+  const utilityRows = getUtilityRows(report);
+  const utilityMarkup =
+    utilityRows.length > 0
+      ? `
+        <ul class="executions-list">
+          ${utilityRows
+            .map(
+              ([label, value]) => `
+                <li class="execution-item">
+                  <span class="execution-time">${escapeHtml(label)}</span>
+                  <span class="execution-order">${escapeHtml(value)}</span>
+                </li>
+              `
+            )
+            .join("")}
+        </ul>
+      `
+      : "<p>No utilities listed.</p>";
 
   return `
     <div class="world-card open-house-card">
@@ -379,11 +394,8 @@ function renderHouseCard(report) {
 
 function renderSelectedWorldMeta(world, reports) {
   if (!world) {
-    setHtml(
-      elements.selectedWorldMeta,
-      '<span>Select a world card above to open its houses.</span>'
-    );
     elements.selectedWorldLabel.textContent = "Open Houses";
+    setHtml(elements.selectedWorldMeta, "<span>Select a world card above to open its houses.</span>");
     return;
   }
 
@@ -404,20 +416,8 @@ function renderSelectedWorldMeta(world, reports) {
 
 function renderSelectedWorldHouses(reports) {
   const world = getSelectedWorld();
-  const selectedReports = world
-    ? reports
-        .filter((report) => normalizeText(report.world) === normalizeText(world.name))
-        .sort((left, right) => {
-          return (
-            Date.parse(right.lastSeenOpen || 0) - Date.parse(left.lastSeenOpen || 0) ||
-            left.houseName.localeCompare(right.houseName)
-          );
-        })
-    : [];
-
-  renderSelectedWorldMeta(world, selectedReports);
-
   if (!world) {
+    renderSelectedWorldMeta(null, []);
     setHtml(
       elements.selectedWorldHouses,
       '<div class="empty-state">Select a world card above to view its open houses.</div>'
@@ -425,7 +425,18 @@ function renderSelectedWorldHouses(reports) {
     return;
   }
 
-  if (selectedReports.length === 0) {
+  const worldReports = reports
+    .filter((report) => normalizeText(report.world) === normalizeText(world.name))
+    .sort((left, right) => {
+      return (
+        Date.parse(right.lastSeenOpen || 0) - Date.parse(left.lastSeenOpen || 0) ||
+        left.houseName.localeCompare(right.houseName)
+      );
+    });
+
+  renderSelectedWorldMeta(world, worldReports);
+
+  if (worldReports.length === 0) {
     setHtml(
       elements.selectedWorldHouses,
       `<div class="empty-state">No open houses match the current filters for ${escapeHtml(world.name)}.</div>`
@@ -435,70 +446,29 @@ function renderSelectedWorldHouses(reports) {
 
   setHtml(
     elements.selectedWorldHouses,
-    selectedReports.map((report) => renderHouseCard(report)).join("")
+    worldReports.map((report) => renderHouseCard(report)).join("")
   );
-}
-
-function renderFilters() {
-  const markup = `
-    <div class="filter-pills-row">
-      ${UTILITY_FILTERS.map(({ key, label }) => {
-        const isActive = Boolean(filterState[key]);
-        return `
-          <button
-            type="button"
-            class="filter-pill${isActive ? " is-active" : ""}"
-            data-utility-filter="${escapeHtml(key)}"
-            aria-pressed="${isActive ? "true" : "false"}"
-          >
-            ${escapeHtml(label)}
-          </button>
-        `;
-      }).join("")}
-    </div>
-  `;
-
-  setHtml(elements.filtersBar, markup);
-
-  elements.filtersBar.querySelectorAll("[data-utility-filter]").forEach((button) => {
-    button.addEventListener("click", () => {
-      const key = button.dataset.utilityFilter;
-      if (!key) return;
-      filterState[key] = !filterState[key];
-      render();
-    });
-  });
-}
-
-function renderSummary(reports) {
-  const worldCount = new Set(reports.map((report) => report.world).filter(Boolean)).size;
-  setHtml(
-    elements.summary,
-    `<p class="summary-text">${reports.length} open house${reports.length === 1 ? "" : "s"} across ${worldCount} world${worldCount === 1 ? "" : "s"}.</p>`
-  );
-}
-
-function syncControls() {
-  elements.searchInput.value = filterState.search;
 }
 
 function ensureSelectedWorld() {
-  const hasSelected = getSelectedWorld();
-  if (hasSelected) return;
-
+  if (getSelectedWorld()) return;
   selectedWorldName =
     (allReports[0] && allReports[0].world) ||
     (allWorlds[0] && allWorlds[0].name) ||
     "";
 }
 
+function syncControls() {
+  elements.searchInput.value = filterState.search;
+}
+
 function render() {
   ensureSelectedWorld();
-  const filteredReports = getFilteredReports();
+  const reports = getFilteredReports();
   renderFilters();
-  renderSummary(filteredReports);
-  renderWorlds(filteredReports);
-  renderSelectedWorldHouses(filteredReports);
+  renderSummary(reports);
+  renderWorlds(reports);
+  renderSelectedWorldHouses(reports);
   persistFilterState();
 }
 
