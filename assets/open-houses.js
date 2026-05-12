@@ -507,7 +507,6 @@ function renderWorldDetail(reports) {
               <th>Town</th>
               <th>Owner</th>
               <th>Utilities</th>
-              <th>Last Seen</th>
               <th>Source</th>
             </tr>
           </thead>
@@ -523,7 +522,6 @@ function renderWorldDetail(reports) {
                     <td>${escapeHtml(report.town || "N/A")}</td>
                     <td>${escapeHtml(report.ownerName || "N/A")}</td>
                     <td>${escapeHtml(formatUtilitySummary(report))}</td>
-                    <td>${escapeHtml(formatDate(report.lastSeenOpen))}</td>
                     <td>${sourceLink}</td>
                   </tr>
                 `;
