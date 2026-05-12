@@ -399,43 +399,20 @@
     "houseId": 30404,
     "status": "open",
     "utilities": {
-      "exerciseDummies": true,
-      "rewardShrine": true,
-      "imbuingShrine": true,
+      "exerciseDummies": false,
+      "rewardShrine": false,
+      "imbuingShrine": false,
       "mailbox": false,
-      "hirelings": [
-        {
-          "type": "Apprentice",
-          "abilities": [
-            "Sells basic furniture"
-          ]
-        },
-        {
-          "type": "Banker",
-          "abilities": [
-            "Deposit",
-            "Withdraw",
-            "Transfer"
-          ]
-        },
-        {
-          "type": "Trader",
-          "abilities": [
-            "Trader",
-            "Post clerk",
-            "Buys and sells standard goods such as runes, potions, and tools"
-          ]
-        }
-      ]
+      "hirelings": []
     },
     "source": {
       "type": "github",
-      "url": "https://github.com/nesleykent/tibia-warzones-schedule/issues/10",
+      "url": "https://github.com/nesleykent/tibia-warzones-schedule/issues/11",
       "submitter": "nesleykent",
-      "log": "15:35:49 You see an open door. It belongs to house 'The Market 4 (Shop)'. Qdox owns this house.",
-      "notes": "_No response_",
-      "screenshotUrl": "_No response_",
-      "issueNumber": 10,
+      "log": "15:35:49 You see an open door. It belongs to house 'The Market 4 (Shop)'. Qdox owns this house.\\n\\n### Exercise dummies\\n\\ntrue\\n\\n### Reward shrine\\n\\ntrue\\n\\n### Imbuing shrine\\n\\ntrue\\n\\n### Mailbox\\n\\nfalse\\n\\n### Hirelings\\n\\n- [x] Apprentice\\n- [x] Banker\\n- [x] Trader\\n- [ ] Steward\\n- [ ] Cook\\n\\n### Notes\\n\\n_No response_\\n\\n### Screenshot URL\\n\\n_No response_",
+      "notes": "",
+      "screenshotUrl": "",
+      "issueNumber": 11,
       "issueTitle": "[Open House]: 15:35:49 You see an open door. It belongs to house 'The Market 4 (Shop)'. Qdox owns this house."
     }
   }
