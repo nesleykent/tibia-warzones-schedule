@@ -28,9 +28,8 @@ GITHUB_REPOSITORY = os.environ.get(
 GITHUB_TOKEN = os.environ.get("OPEN_HOUSE_GITHUB_TOKEN") or os.environ.get("GITHUB_TOKEN")
 
 OPEN_DOOR_REGEX = re.compile(
-    r"^You see an open door\. It belongs to house '([^']+)'\. (.+?) owns this house\.$"
+    r"You see an open door\. It belongs to house '([^']+)'\. (.+?) owns this house\.$"
 )
-LEADING_LOG_TIMESTAMP_REGEX = re.compile(r"^\d{2}:\d{2}:\d{2}\s+")
 
 HIRELING_ABILITIES = {
     "Apprentice": ["Sells basic furniture"],
@@ -116,8 +115,7 @@ def parse_iso_date(value: str | None) -> datetime:
 
 def parse_door_log(log: str) -> ParsedDoorLog:
     source = str(log or "").strip()
-    source = LEADING_LOG_TIMESTAMP_REGEX.sub("", source)
-    match = OPEN_DOOR_REGEX.match(source)
+    match = OPEN_DOOR_REGEX.search(source)
     if not match:
         raise OpenHouseBuildError("Door inspection log does not match the supported open door pattern.")
 
