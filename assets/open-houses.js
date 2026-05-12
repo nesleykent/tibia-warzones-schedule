@@ -285,7 +285,7 @@ function renderWorldCards(filteredReports) {
     const select = () => {
       selectedWorld = card.dataset.openHouseWorld || "";
       render();
-      elements.resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      elements.resultsHeading.scrollIntoView({ behavior: "smooth", block: "start" });
     };
 
     card.addEventListener("click", select);
@@ -447,7 +447,6 @@ function cacheElements() {
   elements.worldCards = document.getElementById("openHouseWorldCards");
   elements.resultsHeading = document.getElementById("openHouseResultsHeading");
   elements.selectedWorldMeta = document.getElementById("selectedWorldMeta");
-  elements.resultsSection = document.querySelector(".open-house-results");
   elements.cards = document.getElementById("openHouseCards");
 }
 

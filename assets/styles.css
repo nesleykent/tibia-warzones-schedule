@@ -1906,23 +1906,18 @@ body::after {
   align-items: stretch;
 }
 
-.open-house-world-browser,
-.open-house-results {
-  margin-bottom: 18px;
-}
-
-.open-house-section-header {
-  margin-bottom: 14px;
-}
-
-.open-house-world-selector {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-  gap: 14px;
-}
-
-.open-house-world-card {
+.open-house-world-card,
+.open-house-card {
+  flex: 1 1 320px;
   min-width: 0;
+}
+
+.open-house-cards {
+  padding-bottom: 64px;
+}
+
+.open-house-card {
+  width: 100%;
 }
 
 .open-house-world-preview {
@@ -1930,27 +1925,14 @@ body::after {
   font-size: 13px;
 }
 
-.open-house-results-header {
-  margin-bottom: 14px;
-}
-
 .open-house-selected-meta {
-  margin-top: 6px;
+  margin-top: -8px;
+  margin-bottom: 12px;
+  padding-inline: 0;
 }
 
 .open-house-selected-meta > span {
   flex: 0 0 auto;
-}
-
-.open-house-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 18px;
-  padding-bottom: 64px;
-}
-
-.open-house-card {
-  width: 100%;
 }
 
 .open-house-meta {
@@ -2010,11 +1992,6 @@ body::after {
 @media (max-width: 640px) {
   .open-house-meta > span {
     flex: 0 0 100%;
-  }
-
-  .open-house-world-selector,
-  .open-house-cards {
-    grid-template-columns: 1fr;
   }
 }
 

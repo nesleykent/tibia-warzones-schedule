@@ -91,11 +91,8 @@
     <main class="container" id="main-content">
       <section class="summary" id="openHousesSummary" aria-live="polite"></section>
 
-      <section class="ranking-section open-house-world-browser" aria-labelledby="openHouseWorldsHeading">
-        <div class="executions-header open-house-section-header">
-          <h2 id="openHouseWorldsHeading">Worlds</h2>
-          <span class="open-house-muted">Select a world to open its houses.</span>
-        </div>
+      <section aria-labelledby="openHouseWorldsHeading">
+        <h2 class="section-label" id="openHouseWorldsHeading">Worlds</h2>
         <div
           id="openHouseWorldCards"
           class="worlds-list open-house-world-selector"
@@ -104,12 +101,9 @@
         ></div>
       </section>
 
-      <section class="ranking-section open-house-results" aria-labelledby="openHouseResultsHeading">
-        <div class="world-detail-card-header open-house-results-header">
-          <div>
-            <h2 id="openHouseResultsHeading">Open Houses</h2>
-            <div id="selectedWorldMeta" class="world-meta open-house-selected-meta"></div>
-          </div>
+      <section aria-labelledby="openHouseResultsHeading">
+        <div class="world-detail-card-header">
+          <h2 id="openHouseResultsHeading">Open Houses</h2>
           <a
             class="history-link"
             href="https://github.com/nesleykent/tibia-warzones-schedule/issues/new?template=open-house.yml"
@@ -119,6 +113,7 @@
             Submit report
           </a>
         </div>
+        <div id="selectedWorldMeta" class="world-meta open-house-selected-meta"></div>
 
         <section class="controls open-house-controls" aria-label="Open House filters">
           <div class="control-group">
@@ -148,7 +143,7 @@
 
         <section
           id="openHouseCards"
-          class="open-house-cards"
+          class="worlds-list open-house-cards"
           aria-label="Open House registry"
           aria-live="polite"
         ></section>
