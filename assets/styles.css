@@ -1743,6 +1743,12 @@ body::after {
   display: none !important;
 }
 
+html.open-house-world-route #overviewControls,
+html.open-house-world-route #summary,
+html.open-house-world-route #worldsSection {
+  display: none !important;
+}
+
 .world-detail-card {
   background: var(--bg-card);
   backdrop-filter: saturate(160%) blur(20px);
