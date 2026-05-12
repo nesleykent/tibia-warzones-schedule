@@ -304,7 +304,10 @@ def build_registry() -> list[dict[str, Any]]:
             continue
         title = str(issue.get("title", "")).strip()
         if title.startswith(OPEN_HOUSE_TITLE_PREFIX):
-            record = build_record_from_issue(issue)
+            try:
+                record = build_record_from_issue(issue)
+            except Exception:
+                continue
             records[record["id"]] = record
 
     for issue in issues:
@@ -312,7 +315,10 @@ def build_registry() -> list[dict[str, Any]]:
             continue
         title = str(issue.get("title", "")).strip()
         if title.startswith(MAINTENANCE_TITLE_PREFIX):
-            apply_maintenance_issue(records, issue)
+            try:
+                apply_maintenance_issue(records, issue)
+            except Exception:
+                continue
 
     return sorted(
         records.values(),

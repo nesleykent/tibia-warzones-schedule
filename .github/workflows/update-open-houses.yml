@@ -113,15 +113,17 @@ jobs:
           WORLD_NAME: ${{ steps.resolve_issue.outputs.world }}
           TOWN_NAME: ${{ steps.resolve_issue.outputs.town }}
         run: |
-          gh api "repos/${GITHUB_REPOSITORY}/issues/${ISSUE_NUMBER}/comments" \
-            -f body="Open House added to the registry.
+          cat > comment.txt <<EOF
+          Open House added to the registry.
 
-House: ${HOUSE_NAME}
-Owner: ${OWNER_NAME}
-World: ${WORLD_NAME}
-Town: ${TOWN_NAME}
+          House: ${HOUSE_NAME}
+          Owner: ${OWNER_NAME}
+          World: ${WORLD_NAME}
+          Town: ${TOWN_NAME}
 
-This issue is being closed because the report is now recorded in the database."
+          This issue is being closed because the report is now recorded in the database.
+          EOF
+          gh issue comment "${ISSUE_NUMBER}" --body-file comment.txt
 
       - name: Close accepted issue
         if: steps.resolve_issue.outputs.found == 'true'
@@ -129,6 +131,4 @@ This issue is being closed because the report is now recorded in the database."
           GH_TOKEN: ${{ github.token }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
-          gh api "repos/${GITHUB_REPOSITORY}/issues/${ISSUE_NUMBER}" \
-            -X PATCH \
-            -f state=closed
+          gh issue close "${ISSUE_NUMBER}"
