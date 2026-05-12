@@ -173,6 +173,23 @@ function matchesUtilityFilters(report) {
   return true;
 }
 
+function hasActiveUtilityFilters() {
+  return UTILITY_FILTERS.some(({ key }) => Boolean(filterState[key]));
+}
+
+function toggleUtilityFilter(key) {
+  if (!Object.prototype.hasOwnProperty.call(filterState, key)) return;
+  filterState[key] = !filterState[key];
+  render();
+}
+
+function clearUtilityFilters() {
+  UTILITY_FILTERS.forEach(({ key }) => {
+    filterState[key] = false;
+  });
+  render();
+}
+
 function getFilteredReports() {
   return allReports.filter((report) => matchesUtilityFilters(report));
 }
@@ -220,18 +237,27 @@ function applyMasonry(container) {
 }
 
 function renderFilters() {
+  const isAllActive = !hasActiveUtilityFilters();
   setHtml(
     elements.filtersBar,
     `
       <div class="filter-pills-row">
+        <button
+          type="button"
+          class="filter-pill filter-pill--all${isAllActive ? " is-active" : ""}"
+          data-filter-group="__all__"
+          data-filter-value="__all__"
+        >
+          All
+        </button>
         ${UTILITY_FILTERS.map(({ key, label }) => {
           const isActive = Boolean(filterState[key]);
           return `
             <button
               type="button"
               class="filter-pill${isActive ? " is-active" : ""}"
-              data-utility-filter="${escapeHtml(key)}"
-              aria-pressed="${isActive ? "true" : "false"}"
+              data-filter-group="utilities"
+              data-filter-value="${escapeHtml(key)}"
             >
               ${escapeHtml(label)}
             </button>
@@ -240,15 +266,6 @@ function renderFilters() {
       </div>
     `
   );
-
-  elements.filtersBar.querySelectorAll("[data-utility-filter]").forEach((button) => {
-    button.addEventListener("click", () => {
-      const key = button.dataset.utilityFilter;
-      if (!key) return;
-      filterState[key] = !filterState[key];
-      render();
-    });
-  });
 }
 
 function renderSummary(reports, visibleWorlds = null) {
@@ -618,6 +635,21 @@ function bindControls() {
   elements.searchInput.addEventListener("input", (event) => {
     filterState.search = event.target.value;
     render();
+  });
+
+  elements.filtersBar.addEventListener("click", (event) => {
+    const button = event.target.closest(".filter-pill");
+    if (!button) return;
+
+    const group = button.dataset.filterGroup;
+    const value = button.dataset.filterValue;
+    if (group === "__all__") {
+      clearUtilityFilters();
+      return;
+    }
+    if (group === "utilities" && value) {
+      toggleUtilityFilter(value);
+    }
   });
 
   elements.worldsList.addEventListener("click", (event) => {
