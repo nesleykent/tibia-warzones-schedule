@@ -171,6 +171,55 @@
     }
   },
   {
+    "id": "luminera-harbour-lane-2b-shop-dronithax",
+    "houseName": "Harbour Lane 2b (Shop)",
+    "ownerName": "Dronithax",
+    "world": "Luminera",
+    "town": "Carlin",
+    "houseId": 20704,
+    "status": "open",
+    "utilities": {
+      "exerciseDummies": true,
+      "rewardShrine": true,
+      "imbuingShrine": true,
+      "mailbox": false,
+      "hirelings": [
+        {
+          "type": "Apprentice",
+          "abilities": [
+            "Sells basic furniture"
+          ]
+        },
+        {
+          "type": "Banker",
+          "abilities": [
+            "Deposit",
+            "Withdraw",
+            "Transfer"
+          ]
+        },
+        {
+          "type": "Trader",
+          "abilities": [
+            "Trader",
+            "Post clerk",
+            "Buys and sells standard goods such as runes, potions, and tools"
+          ]
+        }
+      ]
+    },
+    "source": {
+      "type": "github",
+      "url": "https://github.com/nesleykent/tibia-warzones-schedule/issues/14",
+      "submitter": "nesleykent",
+      "log": "16:35:07 You see an open door. It belongs to house 'Harbour Lane 2b (Shop)'. Dronithax owns this house.",
+      "notes": "_No response_",
+      "screenshotUrl": "_No response_",
+      "issueNumber": 14,
+      "issueTitle": "[Open House]: 16:35:07 You see an open door. It belongs to house 'Harbour Lane 2b (Shop)'. Dronithax owns this house."
+    }
+  },
+  {
     "id": "luminera-castle-shop-1-alphaheart",
     "houseName": "Castle Shop 1",
     "ownerName": "Alphaheart",
