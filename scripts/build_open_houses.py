@@ -53,6 +53,7 @@ ISSUE_FIELD_LABELS = {
     "notes": "notes",
     "screenshot url": "screenshot_url",
 }
+OPEN_HOUSE_TITLE_PREFIX = "[open house]:"
 
 
 class OpenHouseBuildError(RuntimeError):
@@ -162,6 +163,20 @@ def github_headers() -> dict[str, str]:
     return headers
 
 
+def is_open_house_issue(issue: dict[str, Any]) -> bool:
+    labels = issue.get("labels") or []
+    label_names = {
+        normalize_text(label.get("name"))
+        for label in labels
+        if isinstance(label, dict) and label.get("name")
+    }
+    if "open-house" in label_names:
+        return True
+
+    title = normalize_text(issue.get("title") or "")
+    return title.startswith(OPEN_HOUSE_TITLE_PREFIX)
+
+
 def get_open_house_issues() -> list[dict[str, Any]]:
     issues: list[dict[str, Any]] = []
     page = 1
@@ -169,7 +184,7 @@ def get_open_house_issues() -> list[dict[str, Any]]:
     while True:
         url = (
             f"{GITHUB_API_BASE_URL}/repos/{GITHUB_REPOSITORY}/issues"
-            f"?state=all&labels=open-house&per_page=100&page={page}"
+            f"?state=all&per_page=100&page={page}"
         )
         payload = fetch_json(url, headers=github_headers())
         if not isinstance(payload, list):
@@ -181,6 +196,8 @@ def get_open_house_issues() -> list[dict[str, Any]]:
             if not isinstance(item, dict):
                 continue
             if "pull_request" in item:
+                continue
+            if not is_open_house_issue(item):
                 continue
 
             labels = item.get("labels") or []

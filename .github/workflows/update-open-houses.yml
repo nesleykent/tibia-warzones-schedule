@@ -210,11 +210,26 @@ jobs:
               [
                   "gh",
                   "api",
-                  f"repos/{repo}/issues?state=all&labels=open-house&per_page=100",
+                  f"repos/{repo}/issues?state=all&per_page=100",
               ],
               text=True,
           )
           issues = json.loads(issues_raw)
+
+          def normalize(value: str) -> str:
+              return " ".join(str(value or "").strip().lower().split())
+
+          def is_open_house_issue(issue: dict) -> bool:
+              labels = issue.get("labels") or []
+              label_names = {
+                  normalize(label.get("name"))
+                  for label in labels
+                  if isinstance(label, dict) and label.get("name")
+              }
+              if "open-house" in label_names:
+                  return True
+              title = normalize(issue.get("title") or "")
+              return title.startswith("[open house]:")
 
           def build_body(payload: dict) -> str:
               if payload.get("status") == "accepted":
@@ -235,6 +250,8 @@ jobs:
 
           for issue in issues:
               if not isinstance(issue, dict) or "pull_request" in issue:
+                  continue
+              if not is_open_house_issue(issue):
                   continue
 
               issue_number = int(issue["number"])
