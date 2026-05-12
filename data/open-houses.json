@@ -1,5 +1,54 @@
 [
   {
+    "id": "belobra-harbour-place-1-shop-arc-belobra",
+    "houseName": "Harbour Place 1 (Shop)",
+    "ownerName": "Arc Belobra",
+    "world": "Belobra",
+    "town": "Thais",
+    "houseId": 11404,
+    "status": "open",
+    "utilities": {
+      "exerciseDummies": true,
+      "rewardShrine": false,
+      "imbuingShrine": false,
+      "mailbox": false,
+      "hirelings": [
+        {
+          "type": "Apprentice",
+          "abilities": [
+            "Sells basic furniture"
+          ]
+        },
+        {
+          "type": "Banker",
+          "abilities": [
+            "Deposit",
+            "Withdraw",
+            "Transfer"
+          ]
+        },
+        {
+          "type": "Trader",
+          "abilities": [
+            "Trader",
+            "Post clerk",
+            "Buys and sells standard goods such as runes, potions, and tools"
+          ]
+        }
+      ]
+    },
+    "source": {
+      "type": "github",
+      "url": "https://github.com/nesleykent/tibia-warzones-schedule/issues/7",
+      "submitter": "nesleykent",
+      "log": "03:49:08 You see a closed door. It belongs to house 'Harbour Place 1 (Shop)'. Arc Belobra owns this house.",
+      "notes": "_No response_",
+      "screenshotUrl": "_No response_",
+      "issueNumber": 7,
+      "issueTitle": "[Open House]: 03:49:08 You see a closed door. It belongs to house 'Harbour Place 1 (Shop)'. Arc Belobra owns this house."
+    }
+  },
+  {
     "id": "luminera-castle-shop-1-alphaheart",
     "houseName": "Castle Shop 1",
     "ownerName": "Alphaheart",
@@ -278,6 +327,67 @@
       "screenshotUrl": "_No response_",
       "issueNumber": 3,
       "issueTitle": "[Open House]: 03:31:28 You see an open door. It belongs to house 'Tunnel Gardens 1'. Tadeus Iros owns this house."
+    }
+  },
+  {
+    "id": "quelibra-harbour-place-2-shop-rei-in-quelibra",
+    "houseName": "Harbour Place 2 (Shop)",
+    "ownerName": "Rei in Quelibra",
+    "world": "Quelibra",
+    "town": "Thais",
+    "houseId": 11401,
+    "status": "open",
+    "utilities": {
+      "exerciseDummies": true,
+      "rewardShrine": true,
+      "imbuingShrine": true,
+      "mailbox": false,
+      "hirelings": [
+        {
+          "type": "Apprentice",
+          "abilities": [
+            "Sells basic furniture"
+          ]
+        },
+        {
+          "type": "Banker",
+          "abilities": [
+            "Deposit",
+            "Withdraw",
+            "Transfer"
+          ]
+        },
+        {
+          "type": "Trader",
+          "abilities": [
+            "Trader",
+            "Post clerk",
+            "Buys and sells standard goods such as runes, potions, and tools"
+          ]
+        },
+        {
+          "type": "Steward",
+          "abilities": [
+            "Provides access to Your Supply Stash"
+          ]
+        },
+        {
+          "type": "Cook",
+          "abilities": [
+            "Cook random buff food for a fee"
+          ]
+        }
+      ]
+    },
+    "source": {
+      "type": "github",
+      "url": "https://github.com/nesleykent/tibia-warzones-schedule/issues/6",
+      "submitter": "nesleykent",
+      "log": "03:42:55 You see a closed door. It belongs to house 'Harbour Place 2 (Shop)'. Rei in Quelibra owns this house.",
+      "notes": "_No response_",
+      "screenshotUrl": "_No response_",
+      "issueNumber": 6,
+      "issueTitle": "[Open House]: 03:42:55 You see a closed door. It belongs to house 'Harbour Place 2 (Shop)'. Rei in Quelibra owns this house."
     }
   }
 ]
