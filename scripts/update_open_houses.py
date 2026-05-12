@@ -101,9 +101,16 @@ def github_get(path: str) -> Any:
     return fetch_json(url, github_headers())
 
 
+def normalize_issue_body(body: str) -> str:
+    value = str(body or "")
+    if "\\n" in value and "\n" not in value:
+        value = value.replace("\\r\\n", "\n").replace("\\n", "\n")
+    return value
+
+
 def parse_sections(body: str) -> dict[str, str]:
     sections: dict[str, str] = {}
-    for label, value in SECTION_PATTERN.findall(body or ""):
+    for label, value in SECTION_PATTERN.findall(normalize_issue_body(body)):
         sections[label.strip()] = value.strip()
     return sections
 
