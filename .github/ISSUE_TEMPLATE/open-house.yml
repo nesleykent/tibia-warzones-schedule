@@ -1,0 +1,74 @@
+name: Submit Open House
+description: Report a new open house for the public registry.
+title: "[Open House]: "
+labels:
+  - open-house
+body:
+  - type: textarea
+    id: door_log
+    attributes:
+      label: Door inspection log
+      description: Paste the in-game open door inspection log.
+      placeholder: "You see an open door. It belongs to house 'Mill Avenue 1 (Shop)'. Profeta do Passado owns this house."
+    validations:
+      required: true
+  - type: dropdown
+    id: exercise_dummies
+    attributes:
+      label: Exercise dummies
+      options:
+        - "false"
+        - "true"
+    validations:
+      required: true
+  - type: dropdown
+    id: reward_shrine
+    attributes:
+      label: Reward shrine
+      options:
+        - "false"
+        - "true"
+    validations:
+      required: true
+  - type: dropdown
+    id: imbuing_shrine
+    attributes:
+      label: Imbuing shrine
+      options:
+        - "false"
+        - "true"
+    validations:
+      required: true
+  - type: dropdown
+    id: mailbox
+    attributes:
+      label: Mailbox
+      options:
+        - "false"
+        - "true"
+    validations:
+      required: true
+  - type: checkboxes
+    id: hirelings
+    attributes:
+      label: Hirelings
+      options:
+        - label: Apprentice
+        - label: Banker
+        - label: Trader
+        - label: Steward
+        - label: Cook
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      placeholder: Optional notes about utilities, access, or any details that matter.
+    validations:
+      required: false
+  - type: input
+    id: screenshot
+    attributes:
+      label: Screenshot URL
+      placeholder: https://...
+    validations:
+      required: false

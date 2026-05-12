@@ -1,4 +1,5 @@
 const {
+  GITHUB_ISSUES_URL,
   WORLDS_DATA_PATH,
   escapeHtml,
   fetchJson,
@@ -59,6 +60,8 @@ let selectedWorldName = "";
 const OVERVIEW_TITLE = "Open Houses";
 const OVERVIEW_SUBTITLE =
   "Community-reported public houses grouped by world, using the same browsing model as the server overview.";
+const HIRELING_WIKI_URL = "https://tibia.fandom.com/wiki/Hireling";
+const HIRELING_ORDER = ["Apprentice", "Banker", "Trader", "Steward", "Cook"];
 
 function isWorldDetailRoute() {
   return Boolean(normalizeText(selectedWorldName));
@@ -144,6 +147,7 @@ function normalizeReport(rawReport) {
     ownerName: rawReport.ownerName || parsedLog.ownerName,
     world: String(rawReport.world || "").trim(),
     town: String(rawReport.town || "").trim(),
+    houseId: Number(rawReport.houseId) || null,
     lastSeenOpen: rawReport.lastSeenOpen,
     utilities: {
       exerciseDummies: Boolean(utilities.exerciseDummies),
@@ -178,6 +182,15 @@ function getBattleyeLabel(world) {
   if (key === "GBE") return "Green BattlEye";
   if (key === "YBE") return "Yellow BattlEye";
   return "No BattlEye";
+}
+
+function getCharacterUrl(characterName) {
+  return `https://www.tibia.com/community/?name=${encodeURIComponent(String(characterName || "").trim())}`;
+}
+
+function getHouseUrl(report) {
+  if (!report?.houseId || !report?.world || !report?.town) return "";
+  return `https://www.tibia.com/community/?subtopic=houses&page=view&world=${encodeURIComponent(report.world)}&town=${encodeURIComponent(report.town)}&houseid=${encodeURIComponent(String(report.houseId))}`;
 }
 
 function formatDate(value) {
@@ -336,7 +349,7 @@ function renderCardHeader(title, extraContent = "") {
 
 function renderWorldPreview(reports) {
   if (reports.length === 0) {
-    return "<p>No open houses registered yet.</p>";
+    return `<p>No open houses registered yet. If you know any, just report it on <a href="${GITHUB_ISSUES_URL}" target="_blank" rel="noopener noreferrer" class="empty-state-link">GitHub Issues</a>.</p>`;
   }
 
   return `
@@ -433,20 +446,33 @@ function getUtilityRows(report) {
   const utilities = report.utilities || {};
 
   if (utilities.exerciseDummies) rows.push(["Exercise", "Exercise dummies"]);
-  if (utilities.mailbox) rows.push(["Mailbox", "Mailbox available"]);
   if (utilities.rewardShrine) rows.push(["Reward", "Reward shrine"]);
   if (utilities.imbuingShrine) rows.push(["Imbuing", "Imbuing shrine"]);
+  if (utilities.mailbox) rows.push(["Mailbox", "Mailbox"]);
 
-  (utilities.hirelings || []).forEach((hireling) => {
-    rows.push(["Hireling", hireling.type || "Unknown"]);
-  });
+  const hirelings = (utilities.hirelings || [])
+    .map((hireling) => String(hireling?.type || "").trim())
+    .filter(Boolean)
+    .sort((left, right) => HIRELING_ORDER.indexOf(left) - HIRELING_ORDER.indexOf(right));
+  if (hirelings.length > 0) {
+    rows.push(["Hireling", hirelings.join(", ")]);
+  }
 
   return rows;
 }
 
-function formatUtilitySummary(report) {
+function renderUtilityMarkup(report) {
   const utilityRows = getUtilityRows(report);
-  return utilityRows.map(([, value]) => value).join(" | ") || "No utilities listed";
+  if (utilityRows.length === 0) return "No utilities listed";
+
+  return utilityRows
+    .map(([label, value]) => {
+      if (label === "Hireling") {
+        return `<a class="history-link" href="${HIRELING_WIKI_URL}" target="_blank" rel="noopener noreferrer">Hireling</a> (${escapeHtml(value)})`;
+      }
+      return escapeHtml(value);
+    })
+    .join("; ");
 }
 
 function renderWorldDetail(reports) {
@@ -490,7 +516,7 @@ function renderWorldDetail(reports) {
   if (worldReports.length === 0) {
     setHtml(
       elements.worldHousesCard,
-      `${renderCardHeader("Open Houses")}<p class="world-detail-empty">No open houses match the current filters for ${escapeHtml(world.name)}.</p>`
+      `${renderCardHeader("Open Houses")}<p class="world-detail-empty">No open houses registered yet. If you know any, just report it on <a href="${GITHUB_ISSUES_URL}" target="_blank" rel="noopener noreferrer" class="empty-state-link">GitHub Issues</a>.</p>`
     );
     return;
   }
@@ -513,15 +539,21 @@ function renderWorldDetail(reports) {
           <tbody>
             ${worldReports
               .map((report) => {
+                const houseLabel = report.houseId
+                  ? `<a class="history-link" href="${escapeHtml(getHouseUrl(report))}" target="_blank" rel="noopener noreferrer">${escapeHtml(report.houseName)}</a>`
+                  : escapeHtml(report.houseName);
+                const ownerLabel = report.ownerName
+                  ? `<a class="history-link" href="${escapeHtml(getCharacterUrl(report.ownerName))}" target="_blank" rel="noopener noreferrer">${escapeHtml(report.ownerName)}</a>`
+                  : "N/A";
                 const sourceLink = report.source?.url
                   ? `<a class="history-link" href="${escapeHtml(report.source.url)}" target="_blank" rel="noopener noreferrer">Link</a>`
                   : "N/A";
                 return `
                   <tr>
-                    <td>${escapeHtml(report.houseName)}</td>
+                    <td>${houseLabel}</td>
                     <td>${escapeHtml(report.town || "N/A")}</td>
-                    <td>${escapeHtml(report.ownerName || "N/A")}</td>
-                    <td>${escapeHtml(formatUtilitySummary(report))}</td>
+                    <td>${ownerLabel}</td>
+                    <td>${renderUtilityMarkup(report)}</td>
                     <td>${sourceLink}</td>
                   </tr>
                 `;

@@ -761,6 +761,7 @@
   ) {
     if (!scheduleTime || !sourceTimezone || !targetTimezone)
       return scheduleTime || "";
+    if (String(scheduleTime).includes("?")) return String(scheduleTime);
     const resolvedSourceTimezone = resolveTimezoneValue(sourceTimezone);
     const resolvedTargetTimezone = resolveTimezoneValue(targetTimezone);
     const parts = String(scheduleTime).split(":");

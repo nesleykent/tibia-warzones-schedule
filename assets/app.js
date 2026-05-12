@@ -534,6 +534,7 @@ function nowSecondsInTZ(tz) {
 }
 
 function hhmm2min(hhmm) {
+  if (String(hhmm).includes("?")) return Number.POSITIVE_INFINITY;
   const [h, m] = String(hhmm).split(":").map(Number);
   return h * 60 + m;
 }
@@ -568,6 +569,7 @@ function buildScheduleEntries() {
         sequence: ex.warzone_sequence || "",
         timeStr: converted,
         totalMin: hhmm2min(converted),
+        isSecret: String(converted).includes("?"),
         execId: ex.execution_id,
       });
     }
@@ -598,6 +600,7 @@ function checkNotifications() {
 }
 
 function fireIfDue(entry, offsetMin, nowMin) {
+  if (!Number.isFinite(entry.totalMin)) return;
   const triggerMin = entry.totalMin - offsetMin;
   if (triggerMin < 0) return;
   if (nowMin !== triggerMin) return;
@@ -671,9 +674,10 @@ function updateCountdownPanel() {
   const nowMin = nowMinutesInTZ(timezone);
   const nowSec = nowSecondsInTZ(timezone);
   const dict = t();
+  const timedEntries = entries.filter((entry) => Number.isFinite(entry.totalMin));
 
   // Separate into happening-now (within 0..59s after scheduled minute) and upcoming
-  const upcoming = entries.filter((e) => e.totalMin >= nowMin);
+  const upcoming = timedEntries.filter((e) => e.totalMin >= nowMin);
   let current = null;
   let next = null;
 
@@ -882,7 +886,7 @@ function renderSchedulePanel() {
 
   const rows = entries
     .map((entry) => {
-      const isPast = entry.totalMin < nowMin;
+      const isPast = Number.isFinite(entry.totalMin) && entry.totalMin < nowMin;
       const seq = entry.sequence ? ` (${escapeHtml(entry.sequence)})` : "";
       const statusDot = isPast
         ? `<span class="schedule-status past-dot" title="${escapeHtml(
@@ -950,7 +954,7 @@ function refreshScheduleRowStates() {
   rows.forEach((row, i) => {
     const entry = entries[i];
     if (!entry) return;
-    row.classList.toggle("is-past", entry.totalMin < nowMin);
+    row.classList.toggle("is-past", Number.isFinite(entry.totalMin) && entry.totalMin < nowMin);
   });
 }
 
@@ -1080,6 +1084,9 @@ function checkScheduleConflicts() {
   // Find any pair with gap < 20 min (including exact same time)
   let hasConflict = false;
   for (let i = 0; i < entries.length - 1; i++) {
+    if (!Number.isFinite(entries[i].totalMin) || !Number.isFinite(entries[i + 1].totalMin)) {
+      continue;
+    }
     const gap = entries[i + 1].totalMin - entries[i].totalMin;
     if (gap < 20) {
       hasConflict = true;

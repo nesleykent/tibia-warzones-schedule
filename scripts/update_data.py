@@ -4,6 +4,7 @@ import json
 import re
 import sys
 from datetime import datetime
+import re
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
@@ -13,6 +14,7 @@ from economic_ranking import attach_ranking_metrics
 
 BASE_URL = "https://api.tibiadata.com/v4"
 BOSSES = ("Deathstrike", "Gnomevil", "Abyssador")
+SCHEDULE_TIME_PATTERN = re.compile(r"^[0-2?][0-9?]:[0-5?][0-9?]$")
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT_DIR / "data"
@@ -297,8 +299,7 @@ def validate_world_record(record: dict[str, Any]) -> list[str]:
         schedule_time = execution.get("schedule_time")
         if (
             not isinstance(schedule_time, str)
-            or len(schedule_time) != 5
-            or schedule_time[2] != ":"
+            or not SCHEDULE_TIME_PATTERN.fullmatch(schedule_time)
         ):
             errors.append(f"schedule_time inválido em warzone_executions[{index}]")
 
