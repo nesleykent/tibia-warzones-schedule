@@ -164,26 +164,8 @@ function matchesUtilityFilters(report) {
   return true;
 }
 
-function matchesSearch(report) {
-  const query = normalizeText(filterState.search);
-  if (!query) return true;
-
-  return normalizeText(
-    [report.world, report.houseName, report.ownerName, report.town].join(" ")
-  ).includes(query);
-}
-
 function getFilteredReports() {
-  return allReports.filter((report) => matchesUtilityFilters(report) && matchesSearch(report));
-}
-
-function getWorldCounts(reports) {
-  const counts = new Map();
-  reports.forEach((report) => {
-    const key = normalizeText(report.world);
-    counts.set(key, (counts.get(key) || 0) + 1);
-  });
-  return counts;
+  return allReports.filter((report) => matchesUtilityFilters(report));
 }
 
 function getColumnCount(container) {
@@ -260,11 +242,18 @@ function renderFilters() {
   });
 }
 
-function renderSummary(reports) {
-  const worldCount = new Set(reports.map((report) => report.world).filter(Boolean)).size;
+function renderSummary(reports, visibleWorlds = null) {
+  const scopedReports = Array.isArray(visibleWorlds)
+    ? reports.filter((report) =>
+        visibleWorlds.some((world) => normalizeText(world.name) === normalizeText(report.world))
+      )
+    : reports;
+  const worldCount = Array.isArray(visibleWorlds)
+    ? visibleWorlds.length
+    : new Set(scopedReports.map((report) => report.world).filter(Boolean)).size;
   setHtml(
     elements.summary,
-    `<p class="summary-text">${reports.length} open house${reports.length === 1 ? "" : "s"} across ${worldCount} world${worldCount === 1 ? "" : "s"}.</p>`
+    `<p class="summary-text">${scopedReports.length} open house${scopedReports.length === 1 ? "" : "s"} across ${worldCount} world${worldCount === 1 ? "" : "s"}.</p>`
   );
 }
 
@@ -324,29 +313,27 @@ function renderWorldCard(world, reports) {
   `;
 }
 
-function renderWorlds(reports) {
+function getVisibleWorlds(reports) {
   const query = normalizeText(filterState.search);
-  const worlds = allWorlds
+  return allWorlds
     .filter((world) => {
       if (!query) return true;
-      const worldName = normalizeText(world.name);
-      if (worldName.includes(query)) return true;
-      return reports.some(
-        (report) =>
-          normalizeText(report.world) === worldName &&
-          normalizeText([report.houseName, report.ownerName, report.town].join(" ")).includes(query)
-      );
+      return normalizeText(world.name).includes(query);
     })
     .sort((left, right) => String(left.name || "").localeCompare(String(right.name || "")));
+}
 
-  if (worlds.length === 0) {
+function renderWorlds(reports, worlds) {
+  const visibleWorlds = Array.isArray(worlds) ? worlds : [];
+
+  if (visibleWorlds.length === 0) {
     setHtml(elements.worldsList, '<div class="empty-state">No worlds match the current search.</div>');
     return;
   }
 
   setHtml(
     elements.worldsList,
-    worlds
+    visibleWorlds
       .map((world) => {
         const worldReports = reports.filter(
           (report) => normalizeText(report.world) === normalizeText(world.name)
@@ -500,12 +487,14 @@ function ensureSelectedWorld() {
 
 function renderRouteState(reports) {
   if (isWorldDetailRoute()) {
+    elements.searchControlGroup.hidden = true;
     elements.worldsSection.hidden = true;
     elements.selectedWorldSection.hidden = false;
     renderSelectedWorldHouses(reports);
     return;
   }
 
+  elements.searchControlGroup.hidden = false;
   elements.worldsSection.hidden = false;
   elements.selectedWorldSection.hidden = true;
   setHtml(elements.selectedWorldMeta, "");
@@ -519,18 +508,20 @@ function syncControls() {
 function render() {
   ensureSelectedWorld();
   const reports = getFilteredReports();
+  const visibleWorlds = getVisibleWorlds(reports);
   renderFilters();
-  renderSummary(reports);
+  renderSummary(reports, isWorldDetailRoute() ? null : visibleWorlds);
   if (isWorldDetailRoute()) {
     renderRouteState(reports);
   } else {
-    renderWorlds(reports);
+    renderWorlds(reports, visibleWorlds);
     renderRouteState(reports);
   }
   persistFilterState();
 }
 
 function cacheElements() {
+  elements.searchControlGroup = document.getElementById("searchControlGroup");
   elements.searchInput = document.getElementById("searchInput");
   elements.filtersBar = document.getElementById("filtersBar");
   elements.summary = document.getElementById("summary");
