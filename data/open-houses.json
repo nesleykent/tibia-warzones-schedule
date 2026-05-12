@@ -884,5 +884,60 @@
       "issueNumber": 11,
       "issueTitle": "[Open House]: 15:35:49 You see an open door. It belongs to house 'The Market 4 (Shop)'. Qdox owns this house."
     }
+  },
+  {
+    "id": "venebra-darashia-2-flat-01-bedin-falido-denovo",
+    "houseName": "Darashia 2, Flat 01",
+    "ownerName": "Bedin Falido Denovo",
+    "world": "Venebra",
+    "town": "Darashia",
+    "houseId": 61009,
+    "status": "open",
+    "utilities": {
+      "exerciseDummies": true,
+      "rewardShrine": true,
+      "imbuingShrine": false,
+      "mailbox": true,
+      "hirelings": [
+        {
+          "type": "Apprentice",
+          "abilities": [
+            "Sells basic furniture"
+          ]
+        },
+        {
+          "type": "Banker",
+          "abilities": [
+            "Deposit",
+            "Withdraw",
+            "Transfer"
+          ]
+        },
+        {
+          "type": "Trader",
+          "abilities": [
+            "Trader",
+            "Post clerk",
+            "Buys and sells standard goods such as runes, potions, and tools"
+          ]
+        },
+        {
+          "type": "Cook",
+          "abilities": [
+            "Cook random buff food for a fee"
+          ]
+        }
+      ]
+    },
+    "source": {
+      "type": "github",
+      "url": "https://github.com/nesleykent/tibia-warzones-schedule/issues/20",
+      "submitter": "nesleykent",
+      "log": "You see an open door. It belongs to house 'Darashia 2, Flat 01'. Bedin Falido Denovo owns this house.",
+      "notes": "_No response_",
+      "screenshotUrl": "_No response_",
+      "issueNumber": 20,
+      "issueTitle": "[Open House]: You see an open door. It belongs to house 'Darashia 2, Flat 01'. Bedin Falido Denovo owns this house."
+    }
   }
 ]
