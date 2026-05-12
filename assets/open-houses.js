@@ -29,11 +29,6 @@ const FILTER_CONFIGS = [
     getLabel: (value) => value,
   },
   {
-    group: "transfer",
-    getValue: (world) => getWorldTransferKey(world),
-    getLabel: (value) => formatTransferType(value, value),
-  },
-  {
     group: "battleye",
     getValue: (world) => getWorldBattleyeKey(world),
     getLabel: (value) => {
@@ -41,6 +36,11 @@ const FILTER_CONFIGS = [
       if (value === "YBE") return "Yellow BattlEye";
       return "No BattlEye";
     },
+  },
+  {
+    group: "transfer",
+    getValue: (world) => getWorldTransferKey(world),
+    getLabel: (value) => formatTransferType(value, value),
   },
 ];
 const FILTER_GROUPS = FILTER_CONFIGS.map(({ group }) => group);
