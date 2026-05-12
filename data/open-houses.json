@@ -886,6 +886,61 @@
     }
   },
   {
+    "id": "ustebra-darashia-3-flat-02-ultimate-giuseppe",
+    "houseName": "Darashia 3, Flat 02",
+    "ownerName": "Ultimate Giuseppe",
+    "world": "Ustebra",
+    "town": "Darashia",
+    "houseId": 61025,
+    "status": "open",
+    "utilities": {
+      "exerciseDummies": true,
+      "rewardShrine": true,
+      "imbuingShrine": true,
+      "mailbox": false,
+      "hirelings": [
+        {
+          "type": "Apprentice",
+          "abilities": [
+            "Sells basic furniture"
+          ]
+        },
+        {
+          "type": "Banker",
+          "abilities": [
+            "Deposit",
+            "Withdraw",
+            "Transfer"
+          ]
+        },
+        {
+          "type": "Trader",
+          "abilities": [
+            "Trader",
+            "Post clerk",
+            "Buys and sells standard goods such as runes, potions, and tools"
+          ]
+        },
+        {
+          "type": "Steward",
+          "abilities": [
+            "Provides access to Your Supply Stash"
+          ]
+        }
+      ]
+    },
+    "source": {
+      "type": "github",
+      "url": "https://github.com/nesleykent/tibia-warzones-schedule/issues/23",
+      "submitter": "nesleykent",
+      "log": "You see an open door. It belongs to house 'Darashia 3, Flat 02'. Ultimate Giuseppe owns this house.",
+      "notes": "_No response_",
+      "screenshotUrl": "_No response_",
+      "issueNumber": 23,
+      "issueTitle": "[Open House]: You see an open door. It belongs to house 'Darashia 3, Flat 02'. Ultimate Giuseppe owns this house."
+    }
+  },
+  {
     "id": "ustebra-edron-flats-flat-01-nibelor",
     "houseName": "Edron Flats, Flat 01",
     "ownerName": "Nibelor",
