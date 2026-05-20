@@ -28,8 +28,19 @@ jobs:
     timeout-minutes: 15
 
     steps:
+      - name: Require user token
+        env:
+          OPEN_HOUSE_GITHUB_TOKEN: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
+        run: |
+          if [ -z "$OPEN_HOUSE_GITHUB_TOKEN" ]; then
+            echo "Missing required secret: OPEN_HOUSE_GITHUB_TOKEN" >&2
+            exit 1
+          fi
+
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -69,6 +80,7 @@ jobs:
         env:
           COMMIT_AUTHOR_NAME: ${{ vars.COMMIT_AUTHOR_NAME || github.repository_owner }}
           COMMIT_AUTHOR_EMAIL: ${{ vars.COMMIT_AUTHOR_EMAIL || format('{0}@users.noreply.github.com', github.repository_owner) }}
+          OPEN_HOUSE_GITHUB_TOKEN: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
         run: |
           if git diff --quiet -- data/worlds.json data/history; then
             echo "No changes to commit."
@@ -77,6 +89,7 @@ jobs:
 
           git config user.name "$COMMIT_AUTHOR_NAME"
           git config user.email "$COMMIT_AUTHOR_EMAIL"
+          git remote set-url origin "https://x-access-token:${OPEN_HOUSE_GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git add data/worlds.json data/history
           git commit -m "chore: refresh worlds and history data"
           git pull --rebase origin main

@@ -68,6 +68,7 @@ jobs:
         env:
           COMMIT_AUTHOR_NAME: ${{ vars.COMMIT_AUTHOR_NAME || github.repository_owner }}
           COMMIT_AUTHOR_EMAIL: ${{ vars.COMMIT_AUTHOR_EMAIL || format('{0}@users.noreply.github.com', github.repository_owner) }}
+          OPEN_HOUSE_GITHUB_TOKEN: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
         run: |
           if git diff --quiet -- data/open-houses.json; then
             echo "No changes to commit."
@@ -76,6 +77,7 @@ jobs:
 
           git config user.name "$COMMIT_AUTHOR_NAME"
           git config user.email "$COMMIT_AUTHOR_EMAIL"
+          git remote set-url origin "https://x-access-token:${OPEN_HOUSE_GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git add data/open-houses.json
           git commit -m "chore: refresh open houses data"
           git pull --rebase origin main
