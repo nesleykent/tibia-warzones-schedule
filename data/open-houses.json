@@ -165,6 +165,61 @@
     }
   },
   {
+    "id": "gentebra-castle-shop-1-padre-quemedo",
+    "houseName": "Castle Shop 1",
+    "ownerName": "Padre-quemedo",
+    "world": "Gentebra",
+    "town": "Edron",
+    "houseId": 50101,
+    "status": "open",
+    "utilities": {
+      "exerciseDummies": true,
+      "rewardShrine": true,
+      "imbuingShrine": true,
+      "mailbox": false,
+      "hirelings": [
+        {
+          "type": "Apprentice",
+          "abilities": [
+            "Sells basic furniture"
+          ]
+        },
+        {
+          "type": "Banker",
+          "abilities": [
+            "Deposit",
+            "Withdraw",
+            "Transfer"
+          ]
+        },
+        {
+          "type": "Trader",
+          "abilities": [
+            "Trader",
+            "Post clerk",
+            "Buys and sells standard goods such as runes, potions, and tools"
+          ]
+        },
+        {
+          "type": "Steward",
+          "abilities": [
+            "Provides access to Your Supply Stash"
+          ]
+        }
+      ]
+    },
+    "source": {
+      "type": "github",
+      "url": "https://github.com/nesleykent/tibia-warzones-schedule/issues/33",
+      "submitter": "nesleykent",
+      "log": "02:42:21 You see an open door. It belongs to house 'Castle Shop 1'. Padre-quemedo owns this house.",
+      "notes": "_No response_",
+      "screenshotUrl": "_No response_",
+      "issueNumber": 33,
+      "issueTitle": "[Open House]: 02:42:21 You see an open door. It belongs to house 'Castle Shop 1'. Padre-quemedo owns this house."
+    }
+  },
+  {
     "id": "gentebra-castle-shop-2-padre-quemedo",
     "houseName": "Castle Shop 2",
     "ownerName": "Padre-quemedo",
