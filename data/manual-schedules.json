@@ -267,9 +267,9 @@
   "Ourobra": {
     "timezone": "America/Sao_Paulo",
     "warzone_executions": [
-      { "execution_id": 1, "schedule_time": "20:20", "warzone_sequence": "" },
-      { "execution_id": 2, "schedule_time": "21:00", "warzone_sequence": "" },
-      { "execution_id": 2, "schedule_time": "22:00", "warzone_sequence": "" }
+      { "execution_id": 1, "schedule_time": "20:20", "warzone_sequence": "1-2-3" },
+      { "execution_id": 2, "schedule_time": "20:50", "warzone_sequence": "1-2-3" },
+      { "execution_id": 2, "schedule_time": "22:00", "warzone_sequence": "1-2-3" }
     ]
   },
   "Pacera": {
