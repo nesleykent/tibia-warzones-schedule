@@ -226,6 +226,55 @@
     }
   },
   {
+    "id": "gladera-harbour-lane-2b-shop-imma-flirt",
+    "houseName": "Harbour Lane 2b (Shop)",
+    "ownerName": "Imma Flirt",
+    "world": "Gladera",
+    "town": "Carlin",
+    "houseId": 20704,
+    "status": "open",
+    "utilities": {
+      "exerciseDummies": true,
+      "rewardShrine": true,
+      "imbuingShrine": true,
+      "mailbox": false,
+      "hirelings": [
+        {
+          "type": "Apprentice",
+          "abilities": [
+            "Sells basic furniture"
+          ]
+        },
+        {
+          "type": "Banker",
+          "abilities": [
+            "Deposit",
+            "Withdraw",
+            "Transfer"
+          ]
+        },
+        {
+          "type": "Trader",
+          "abilities": [
+            "Trader",
+            "Post clerk",
+            "Buys and sells standard goods such as runes, potions, and tools"
+          ]
+        }
+      ]
+    },
+    "source": {
+      "type": "github",
+      "url": "https://github.com/nesleykent/tibia-warzones-schedule/issues/29",
+      "submitter": "nesleykent",
+      "log": "23:52:05 You see an open door. It belongs to house 'Harbour Lane 2b (Shop)'. Imma Flirt owns this house.",
+      "notes": "_No response_",
+      "screenshotUrl": "_No response_",
+      "issueNumber": 29,
+      "issueTitle": "[Open House]: 23:52:05 You see an open door. It belongs to house 'Harbour Lane 2b (Shop)'. Imma Flirt owns this house."
+    }
+  },
+  {
     "id": "luminera-harbour-lane-2b-shop-dronithax",
     "houseName": "Harbour Lane 2b (Shop)",
     "ownerName": "Dronithax",
