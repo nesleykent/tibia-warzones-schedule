@@ -355,7 +355,6 @@ function renderWorldPreview(reports) {
   return `
     <ul class="executions-list">
       ${reports
-        .slice(0, 3)
         .map(
           (report) => `
             <li class="execution-item">
@@ -395,7 +394,7 @@ function renderWorldCard(world, reports) {
       <div class="executions">
         <div class="executions-header">
           <h3>Open Houses</h3>
-          <a class="history-link" href="${escapeHtml(worldUrl)}">View open houses</a>
+          <a class="history-link" href="${escapeHtml(worldUrl)}">View details</a>
         </div>
         ${renderWorldPreview(reports)}
       </div>
