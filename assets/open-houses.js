@@ -329,14 +329,14 @@ function renderSummary(reports, visibleWorlds = null) {
         visibleWorlds.some((world) => normalizeText(world.name) === normalizeText(report.world))
       )
     : reports;
-  const visibleWorldCount = Array.isArray(visibleWorlds)
+  const coveredWorldCount = Array.isArray(visibleWorlds)
     ? visibleWorlds.length
     : new Set(scopedReports.map((report) => report.world).filter(Boolean)).size;
   const totalWorldCount = allWorlds.length;
-  const worldsWithOpenHouses = new Set(allReports.map((report) => report.world).filter(Boolean)).size;
+  const openHouseCount = scopedReports.length;
   setHtml(
     elements.summary,
-    `<p class="summary-text">Tibia currently has ${totalWorldCount} world${totalWorldCount === 1 ? "" : "s"}, and we know that ${worldsWithOpenHouses} of them have open houses for ${visibleWorldCount} world${visibleWorldCount === 1 ? "" : "s"}.</p>`
+    `<p class="summary-text">Tibia currently has ${totalWorldCount} world${totalWorldCount === 1 ? "" : "s"}, and we know of ${openHouseCount} open house${openHouseCount === 1 ? "" : "s"} across ${coveredWorldCount} world${coveredWorldCount === 1 ? "" : "s"}.</p>`
   );
 }
 
