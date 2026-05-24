@@ -46,10 +46,11 @@ def parse_args() -> argparse.Namespace:
         description="Fetch or backfill item history from TibiaMarket into data/market/world/."
     )
     parser.add_argument(
+        "--world",
         "--server",
-        dest="servers",
+        dest="worlds",
         action="append",
-        help="World/server to fetch. Repeat for multiple values. Defaults to all tracked worlds.",
+        help="World to fetch. Repeat for multiple values. Defaults to all tracked worlds.",
     )
     parser.add_argument(
         "--item",
@@ -142,10 +143,10 @@ def request_headers(token: str) -> dict[str, str]:
     return headers
 
 
-def build_url(server: str, item_id: int, start_days_ago: int, end_days_ago: int) -> str:
+def build_url(world: str, item_id: int, start_days_ago: int, end_days_ago: int) -> str:
     query = urlencode(
         {
-            "server": server,
+            "server": world,
             "item_id": item_id,
             "start_days_ago": start_days_ago,
             "end_days_ago": end_days_ago,
@@ -700,7 +701,7 @@ def run(
 def main() -> int:
     args = parse_args()
     try:
-        worlds = resolve_worlds(args.servers)
+        worlds = resolve_worlds(args.worlds)
         items = resolve_items(args.items)
     except ValueError as error:
         print(error)

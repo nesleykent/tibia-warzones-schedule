@@ -59,7 +59,7 @@ let filterState = loadFilterState();
 let selectedWorldName = "";
 const OVERVIEW_TITLE = "Open Houses";
 const OVERVIEW_SUBTITLE =
-  "Community-reported public houses grouped by world, using the same browsing model as the server overview.";
+  "Community-reported public houses grouped by world, using the same browsing model as the world overview.";
 const HIRELING_WIKI_URL = "https://tibia.fandom.com/wiki/Hireling";
 const HIRELING_ORDER = ["Apprentice", "Banker", "Trader", "Steward", "Cook"];
 
