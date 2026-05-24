@@ -329,9 +329,9 @@ function renderSummary(reports, visibleWorlds = null) {
         visibleWorlds.some((world) => normalizeText(world.name) === normalizeText(report.world))
       )
     : reports;
-  const coveredWorldCount = Array.isArray(visibleWorlds)
-    ? visibleWorlds.length
-    : new Set(scopedReports.map((report) => report.world).filter(Boolean)).size;
+  const coveredWorldCount = new Set(
+    scopedReports.map((report) => report.world).filter(Boolean)
+  ).size;
   const totalWorldCount = allWorlds.length;
   const openHouseCount = scopedReports.length;
   setHtml(
