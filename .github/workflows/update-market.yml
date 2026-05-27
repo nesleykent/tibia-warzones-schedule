@@ -52,14 +52,10 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Refresh ranking-critical market data
+      - name: Refresh tracked market data
         run: |
           python3 scripts/fetch_item_history.py \
-            ${{ inputs.force_refresh && '--force' || '' }} \
-            --item "Tibia Coins" \
-            --item "Gill Necklace" \
-            --item "Prismatic Necklace" \
-            --item "Prismatic Ring"
+            ${{ inputs.force_refresh && '--force' || '' }}
 
       - name: Rebuild ranking data from refreshed market files
         run: python3 scripts/enrich_worlds_with_rankings.py
