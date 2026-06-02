@@ -1457,18 +1457,37 @@ function bindMarketChartInteractions(scope) {
   });
 }
 
+function getMarketModalSections(modalRoot) {
+  return {
+    chartsSection: modalRoot.querySelector(
+      "[data-market-chart-section='supply-demand']"
+    ),
+    equilibriumSection: modalRoot.querySelector(
+      "[data-market-chart-section='equilibrium']"
+    ),
+    metricsSection: modalRoot.querySelector("[data-market-metrics]"),
+  };
+}
+
+function renderMarketModalLoadingState(modalRoot, loadingText) {
+  const { chartsSection, equilibriumSection, metricsSection } =
+    getMarketModalSections(modalRoot);
+  const loadingMarkup = `<p class="market-item-chart-empty">${escapeHtml(
+    loadingText
+  )}</p>`;
+
+  if (chartsSection) chartsSection.innerHTML = loadingMarkup;
+  if (equilibriumSection) equilibriumSection.innerHTML = loadingMarkup;
+  if (metricsSection) metricsSection.innerHTML = loadingMarkup;
+}
+
 function updateMarketItemModalContent(modalRoot, entries, rangeKey) {
   const rangeContext = getMarketRangeContext(entries, rangeKey);
   const rangeEntries = rangeContext.rangeEntries;
   const dailyEntries = getDailyMarketEntries(rangeEntries);
   const metrics = computeMarketMetrics(rangeContext);
-  const chartsSection = modalRoot.querySelector(
-    "[data-market-chart-section='supply-demand']"
-  );
-  const equilibriumSection = modalRoot.querySelector(
-    "[data-market-chart-section='equilibrium']"
-  );
-  const metricsSection = modalRoot.querySelector("[data-market-metrics]");
+  const { chartsSection, equilibriumSection, metricsSection } =
+    getMarketModalSections(modalRoot);
   const dict = t();
   modalRoot.dataset.marketRange = rangeKey;
 
@@ -1664,30 +1683,8 @@ async function openMarketItemModal(worldName, itemName) {
   };
   document.addEventListener("keydown", onKeyDown);
 
-  const chartsSection = modalRoot.querySelector(
-    "[data-market-chart-section='supply-demand']"
-  );
-  const equilibriumSection = modalRoot.querySelector(
-    "[data-market-chart-section='equilibrium']"
-  );
-  const metricsSection = modalRoot.querySelector("[data-market-metrics]");
   const dict = t();
-
-  if (chartsSection) {
-    chartsSection.innerHTML = `<p class="market-item-chart-empty">${escapeHtml(
-      dict.loading
-    )}</p>`;
-  }
-  if (equilibriumSection) {
-    equilibriumSection.innerHTML = `<p class="market-item-chart-empty">${escapeHtml(
-      dict.loading
-    )}</p>`;
-  }
-  if (metricsSection) {
-    metricsSection.innerHTML = `<p class="market-item-chart-empty">${escapeHtml(
-      dict.loading
-    )}</p>`;
-  }
+  renderMarketModalLoadingState(modalRoot, dict.loading);
 
   try {
     const entries = await loadMarketEntries(worldName, itemName);

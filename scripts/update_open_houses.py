@@ -60,12 +60,12 @@ HIRELING_ORDER = ["Apprentice", "Banker", "Trader", "Steward", "Cook"]
 def fetch_json(url: str, headers: dict[str, str] | None = None) -> dict[str, Any] | list[Any]:
     request = Request(url, headers=headers or {})
     try:
-      with urlopen(request, timeout=30) as response:
-          return json.load(response)
+        with urlopen(request, timeout=30) as response:
+            return json.load(response)
     except HTTPError as exc:
-      raise RuntimeError(f"HTTP {exc.code} for {url}") from exc
+        raise RuntimeError(f"HTTP {exc.code} for {url}") from exc
     except URLError as exc:
-      raise RuntimeError(f"Network error for {url}: {exc.reason}") from exc
+        raise RuntimeError(f"Network error for {url}: {exc.reason}") from exc
 
 
 def save_json(path: Path, payload: Any) -> None:
@@ -302,30 +302,33 @@ def fetch_all_issues() -> list[dict[str, Any]]:
     return issues if isinstance(issues, list) else []
 
 
+def iter_matching_issues(
+    issues: list[dict[str, Any]], title_prefix: str
+) -> list[dict[str, Any]]:
+    return [
+        issue
+        for issue in issues
+        if "pull_request" not in issue
+        and str(issue.get("title", "")).strip().startswith(title_prefix)
+    ]
+
+
 def build_registry() -> list[dict[str, Any]]:
     records: dict[str, dict[str, Any]] = {}
     issues = fetch_all_issues()
 
-    for issue in issues:
-        if "pull_request" in issue:
+    for issue in iter_matching_issues(issues, OPEN_HOUSE_TITLE_PREFIX):
+        try:
+            record = build_record_from_issue(issue)
+        except Exception:
             continue
-        title = str(issue.get("title", "")).strip()
-        if title.startswith(OPEN_HOUSE_TITLE_PREFIX):
-            try:
-                record = build_record_from_issue(issue)
-            except Exception:
-                continue
-            records[record["id"]] = record
+        records[record["id"]] = record
 
-    for issue in issues:
-        if "pull_request" in issue:
+    for issue in iter_matching_issues(issues, MAINTENANCE_TITLE_PREFIX):
+        try:
+            apply_maintenance_issue(records, issue)
+        except Exception:
             continue
-        title = str(issue.get("title", "")).strip()
-        if title.startswith(MAINTENANCE_TITLE_PREFIX):
-            try:
-                apply_maintenance_issue(records, issue)
-            except Exception:
-                continue
 
     return sorted(
         records.values(),

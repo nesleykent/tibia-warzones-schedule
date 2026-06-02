@@ -448,6 +448,22 @@ let lastTickMin = -1;
 
 let _soundPickerCloseHandler = null;
 
+function clampNumber(value, minValue, maxValue) {
+  return Math.min(maxValue, Math.max(minValue, value));
+}
+
+function loadStoredFiniteNumber(key, parser, minValue, maxValue) {
+  const storedValue = readStorage(key);
+  if (storedValue === null) return null;
+  const parsedValue = parser(storedValue);
+  if (!Number.isFinite(parsedValue)) return null;
+  return clampNumber(parsedValue, minValue, maxValue);
+}
+
+function saveSelectedExecutions() {
+  writeJsonStorage(STORAGE_KEYS.selectedExecutions, [...selectedExecutions]);
+}
+
 // ─── Audio ───────────────────────────────────────────
 let audioCtx = null;
 let audioBuffer = null;
@@ -927,7 +943,7 @@ function renderSchedulePanel() {
     .getElementById("scheduleClearBtn")
     ?.addEventListener("click", () => {
       selectedExecutions.clear();
-      writeStorage(STORAGE_KEYS.selectedExecutions, JSON.stringify([]));
+      saveSelectedExecutions();
       renderSchedulePanel();
       updateCountdownPanel();
       renderSelectedBadges();
@@ -959,10 +975,8 @@ function refreshScheduleRowStates() {
 }
 
 function changeAlertOffset(delta) {
-  alertOffsetMinutes = Math.max(0, Math.min(60, alertOffsetMinutes + delta));
-  try {
-    writeStorage(STORAGE_KEYS.alertOffset, String(alertOffsetMinutes));
-  } catch {}
+  alertOffsetMinutes = clampNumber(alertOffsetMinutes + delta, 0, 60);
+  writeStorage(STORAGE_KEYS.alertOffset, String(alertOffsetMinutes));
   const el = document.getElementById("offsetDisplay");
   if (el) el.textContent = alertOffsetMinutes;
   const unitEl = document.getElementById("alertOffsetUnit");
@@ -973,12 +987,7 @@ function changeAlertOffset(delta) {
 
 function toggleNotifications() {
   notificationsEnabled = !notificationsEnabled;
-  try {
-    writeStorage(
-      STORAGE_KEYS.notificationsEnabled,
-      String(notificationsEnabled)
-    );
-  } catch {}
+  writeStorage(STORAGE_KEYS.notificationsEnabled, String(notificationsEnabled));
   if (notificationsEnabled) {
     loadAudio();
     const ctx = getAudioContext();
@@ -1035,12 +1044,7 @@ function toggleExecutionSelection(worldName, execId) {
     selectedExecutions.add(key);
     loadAudio();
   }
-  try {
-    writeStorage(
-      STORAGE_KEYS.selectedExecutions,
-      JSON.stringify([...selectedExecutions])
-    );
-  } catch {}
+  saveSelectedExecutions();
   renderSchedulePanel();
   updateCountdownPanel();
   renderSelectedBadges();
@@ -1123,51 +1127,42 @@ function checkScheduleConflicts() {
 // ─── Persistence ─────────────────────────────────────
 
 function loadSelectedWorlds() {
-  try {
-    const saved = readStorage(STORAGE_KEYS.selectedExecutions);
-    if (saved) {
-      const arr = JSON.parse(saved);
-      if (Array.isArray(arr)) selectedExecutions = new Set(arr);
-    }
-  } catch {}
+  const saved = readJsonStorage(STORAGE_KEYS.selectedExecutions, null);
+  if (Array.isArray(saved)) selectedExecutions = new Set(saved);
 }
 
 function loadNotificationsPref() {
-  try {
-    notificationsEnabled =
-      readStorage(STORAGE_KEYS.notificationsEnabled) === "true";
-  } catch {}
+  notificationsEnabled = readStorage(STORAGE_KEYS.notificationsEnabled) === "true";
 }
 
 function loadAlertOffset() {
-  try {
-    const v = readStorage(STORAGE_KEYS.alertOffset);
-    if (v !== null) {
-      const n = parseInt(v, 10);
-      if (!isNaN(n)) alertOffsetMinutes = Math.max(0, Math.min(60, n));
-    }
-  } catch {}
+  const storedValue = loadStoredFiniteNumber(
+    STORAGE_KEYS.alertOffset,
+    (value) => parseInt(value, 10),
+    0,
+    60
+  );
+  if (storedValue !== null) alertOffsetMinutes = storedValue;
 }
 
 function loadSelectedSound() {
-  try {
-    const v = readStorage(STORAGE_KEYS.selectedSound);
-    if (v && SOUNDS.some((s) => s.id === v)) selectedSound = v;
-  } catch {}
-  try {
-    const vol = readStorage(STORAGE_KEYS.masterVolume);
-    if (vol !== null) {
-      const n = parseFloat(vol);
-      if (!isNaN(n)) masterVolume = Math.min(1, Math.max(0, n));
-    }
-  } catch {}
+  const storedSound = readStorage(STORAGE_KEYS.selectedSound);
+  if (storedSound && SOUNDS.some((sound) => sound.id === storedSound)) {
+    selectedSound = storedSound;
+  }
+
+  const storedVolume = loadStoredFiniteNumber(
+    STORAGE_KEYS.masterVolume,
+    (value) => parseFloat(value),
+    0,
+    1
+  );
+  if (storedVolume !== null) masterVolume = storedVolume;
 }
 
 function saveSelectedSound(id) {
   selectedSound = id;
-  try {
-    writeStorage(STORAGE_KEYS.selectedSound, id);
-  } catch {}
+  writeStorage(STORAGE_KEYS.selectedSound, id);
   loadAudio(true); // reload audio with new sound
 }
 

@@ -4,7 +4,6 @@ import json
 import re
 import sys
 from datetime import datetime
-import re
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
@@ -21,6 +20,7 @@ DATA_DIR = ROOT_DIR / "data"
 OUTPUT_FILE = DATA_DIR / "worlds.json"
 MANUAL_SCHEDULE_FILE = DATA_DIR / "manual-schedules.json"
 HISTORY_DIR = DATA_DIR / "history"
+DEFAULT_MANUAL_SCHEDULE = {"timezone": None, "warzone_executions": []}
 
 
 def fetch_json(url: str) -> dict[str, Any]:
@@ -116,6 +116,31 @@ def history_path(world_name: str) -> Path:
     return HISTORY_DIR / f"{history_slug(world_name)}.json"
 
 
+def normalize_execution(execution: dict[str, Any], execution_id: int) -> dict[str, Any]:
+    return {
+        "execution_id": execution_id,
+        "schedule_time": str(execution.get("schedule_time", "")).strip(),
+        "warzone_sequence": str(execution.get("warzone_sequence", "")).strip(),
+    }
+
+
+def normalize_manual_schedule(schedule_data: dict[str, Any]) -> dict[str, Any]:
+    executions = schedule_data.get("warzone_executions", [])
+    fixed_executions: list[dict[str, Any]] = []
+
+    if isinstance(executions, list):
+        for index, execution in enumerate(executions, start=1):
+            if not isinstance(execution, dict):
+                continue
+            fixed_executions.append(normalize_execution(execution, index))
+
+    timezone_name = schedule_data.get("timezone")
+    return {
+        "timezone": timezone_name if isinstance(timezone_name, str) else None,
+        "warzone_executions": fixed_executions,
+    }
+
+
 def load_manual_schedules() -> dict[str, dict[str, Any]]:
     if not MANUAL_SCHEDULE_FILE.exists():
         return {}
@@ -131,30 +156,7 @@ def load_manual_schedules() -> dict[str, dict[str, Any]]:
     for world_name, schedule_data in payload.items():
         if not isinstance(schedule_data, dict):
             continue
-
-        executions = schedule_data.get("warzone_executions", [])
-        fixed_executions: list[dict[str, Any]] = []
-
-        if isinstance(executions, list):
-            for index, execution in enumerate(executions, start=1):
-                if not isinstance(execution, dict):
-                    continue
-
-                fixed_executions.append(
-                    {
-                        "execution_id": index,
-                        "schedule_time": str(execution.get("schedule_time", "")).strip(),
-                        "warzone_sequence": str(
-                            execution.get("warzone_sequence", "")
-                        ).strip(),
-                    }
-                )
-
-        timezone_name = schedule_data.get("timezone")
-        normalized[str(world_name).strip()] = {
-            "timezone": timezone_name if isinstance(timezone_name, str) else None,
-            "warzone_executions": fixed_executions,
-        }
+        normalized[str(world_name).strip()] = normalize_manual_schedule(schedule_data)
 
     return normalized
 
@@ -257,6 +259,32 @@ def build_world_summary(
     }
 
 
+def build_error_world_summary(
+    world: dict[str, Any], world_name: str, manual_schedule: dict[str, Any], error: Exception
+) -> dict[str, Any]:
+    timezone_name = manual_schedule.get("timezone")
+    history_data = load_world_history(world_name, timezone_name)
+    return {
+        "name": world_name,
+        "location": world.get("location"),
+        "pvp_type": world.get("pvp_type"),
+        "transfer_type": world.get("transfer_type"),
+        "battleye_protected": world.get("battleye_protected"),
+        "battleye_date": world.get("battleye_date"),
+        "tracks_warzone_service": False,
+        "warzone_services_per_day": 0,
+        "timezone": timezone_name,
+        "last_detected_kills": {boss: 0 for boss in BOSSES},
+        "last_detected_services": 0,
+        "mark": "na",
+        "has_service_history": has_service_history(history_data),
+        "warzone_executions": manual_schedule.get("warzone_executions", []),
+        "performs_warzone": False,
+        "warzonesperday": 0,
+        "error": str(error),
+    }
+
+
 def validate_world_record(record: dict[str, Any]) -> list[str]:
     errors: list[str] = []
 
@@ -339,9 +367,7 @@ def main() -> int:
 
     for world in worlds:
         world_name = str(world.get("name", "")).strip()
-        manual_schedule = manual_schedules.get(
-            world_name, {"timezone": None, "warzone_executions": []}
-        )
+        manual_schedule = manual_schedules.get(world_name, DEFAULT_MANUAL_SCHEDULE)
 
         try:
             kill_statistics = get_kill_statistics(world_name)
@@ -377,31 +403,7 @@ def main() -> int:
             )
         except Exception as exc:
             print(f"ERRO {world_name}: {exc}", file=sys.stderr)
-            output.append(
-                {
-                    "name": world_name,
-                    "location": world.get("location"),
-                    "pvp_type": world.get("pvp_type"),
-                    "transfer_type": world.get("transfer_type"),
-                    "battleye_protected": world.get("battleye_protected"),
-                    "battleye_date": world.get("battleye_date"),
-                    "tracks_warzone_service": False,
-                    "warzone_services_per_day": 0,
-                    "timezone": manual_schedule.get("timezone"),
-                    "last_detected_kills": {boss: 0 for boss in BOSSES},
-                    "last_detected_services": 0,
-                    "mark": "na",
-                    "has_service_history": has_service_history(
-                        load_world_history(world_name, manual_schedule.get("timezone"))
-                    ),
-                    "warzone_executions": manual_schedule.get(
-                        "warzone_executions", []
-                    ),
-                    "performs_warzone": False,
-                    "warzonesperday": 0,
-                    "error": str(exc),
-                }
-            )
+            output.append(build_error_world_summary(world, world_name, manual_schedule, exc))
 
     output.sort(key=lambda item: str(item.get("name", "")).lower())
     output = attach_ranking_metrics(output, DATA_DIR)
