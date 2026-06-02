@@ -47,34 +47,20 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
       - name: Refresh worlds data
         run: python scripts/update_data.py
 
       - name: Validate generated data
         run: |
-          python3 -m py_compile scripts/update_data.py
-          python3 - <<'PY'
-          import json
-          from pathlib import Path
-
-          worlds_path = Path("data/worlds.json")
-          payload = json.loads(worlds_path.read_text(encoding="utf-8"))
-          assert isinstance(payload, list), "data/worlds.json must contain a list"
-          assert payload, "data/worlds.json must not be empty"
-          required_keys = {
-              "name",
-              "tracks_warzone_service",
-              "warzone_services_per_day",
-              "last_detected_kills",
-              "last_detected_services",
-              "mark",
-              "has_service_history",
-              "warzone_executions",
-          }
-          for record in payload:
-              missing = required_keys.difference(record)
-              assert not missing, f"Missing keys for {record.get('name')}: {sorted(missing)}"
-          PY
+          python3 -m py_compile scripts/*.py
+          python3 -m unittest discover -s tests -v
+          python3 scripts/validate_content.py
+          node --check assets/*.js
 
       - name: Commit updated data
         env:

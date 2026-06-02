@@ -52,6 +52,11 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
       - name: Refresh tracked market data
         run: |
           python3 scripts/fetch_item_history.py \
@@ -62,11 +67,10 @@ jobs:
 
       - name: Validate Python scripts
         run: |
-          python3 -m py_compile \
-            scripts/common.py \
-            scripts/fetch_item_history.py \
-            scripts/economic_ranking.py \
-            scripts/enrich_worlds_with_rankings.py
+          python3 -m py_compile scripts/*.py
+          python3 -m unittest discover -s tests -v
+          python3 scripts/validate_content.py
+          node --check assets/*.js
 
       - name: Commit updated market and ranking data
         env:

@@ -42,6 +42,11 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
       - name: Rebuild open houses registry
         env:
           GITHUB_TOKEN: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
@@ -51,18 +56,10 @@ jobs:
 
       - name: Validate registry
         run: |
-          python3 -m py_compile scripts/update_open_houses.py
-          python3 - <<'PY'
-          import json
-          from pathlib import Path
-
-          payload = json.loads(Path("data/open-houses.json").read_text(encoding="utf-8"))
-          assert isinstance(payload, list), "data/open-houses.json must contain a list"
-          for record in payload:
-              assert isinstance(record, dict), "Open house records must be objects"
-              for key in ("id", "houseName", "ownerName", "world", "town", "source"):
-                  assert key in record, f"Missing {key} in open house record"
-          PY
+          python3 -m py_compile scripts/*.py
+          python3 -m unittest discover -s tests -v
+          python3 scripts/validate_content.py
+          node --check assets/*.js
 
       - name: Commit updated registry
         env:

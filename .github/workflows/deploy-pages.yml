@@ -31,14 +31,22 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate Python scripts
+        run: python3 -m py_compile scripts/*.py
+
+      - name: Run tests
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Validate repository content
+        run: python3 scripts/validate_content.py
+
       - name: Validate static site assets
-        run: |
-          node --check assets/shared.js
-          node --check assets/app.js
-          node --check assets/open-houses.js
-          node --check assets/ranking.js
-          node --check assets/bigfoot.js
-          node --check assets/world.js
+        run: node --check assets/*.js
 
       - name: Validate required site files
         run: |
