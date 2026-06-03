@@ -8,7 +8,7 @@
     "battleye_date": "release",
     "tracks_warzone_service": false,
     "warzone_services_per_day": 0,
-    "timezone": null,
+    "timezone": "America/Sao_Paulo#Curitiba",
     "last_detected_kills": {
       "Deathstrike": 0,
       "Gnomevil": 0,
@@ -618,7 +618,7 @@
     "battleye_date": "release",
     "tracks_warzone_service": true,
     "warzone_services_per_day": 1,
-    "timezone": null,
+    "timezone": "America/Sao_Paulo#Curitiba",
     "last_detected_kills": {
       "Deathstrike": 1,
       "Gnomevil": 1,
@@ -11778,8 +11778,13 @@
       },
       {
         "execution_id": 3,
-        "schedule_time": "23:00",
+        "schedule_time": "21:30",
         "warzone_sequence": "1-2-3"
+      },
+      {
+        "execution_id": 4,
+        "schedule_time": "23:00",
+        "warzone_sequence": ""
       }
     ],
     "performs_warzone": true,
