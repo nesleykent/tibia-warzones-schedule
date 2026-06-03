@@ -505,7 +505,7 @@ body::after {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 12px;
+  gap: 14px;
 }
 
 .planner-section-heading .section-label {
@@ -513,30 +513,22 @@ body::after {
 }
 
 .planner-print-trigger {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border: none;
-  background: transparent;
-  color: var(--text-secondary);
-  font-family: var(--font-system);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  text-shadow: var(--text-shadow-strong);
-  cursor: pointer;
-  transition: color var(--t-fast) var(--ease-out),
-    transform var(--t-fast) var(--ease-spr);
+  min-height: 30px;
+  padding-inline: 12px;
+  margin-bottom: 2px;
+  color: var(--text-primary);
+  border-color: rgba(252, 175, 69, 0.28);
+  background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0.02) 100%
+    ),
+    rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .planner-print-trigger:hover {
-  color: #ffffff;
-}
-
-.planner-print-trigger:active {
-  transform: scale(0.96);
+  border-color: rgba(252, 175, 69, 0.44);
 }
 
 .input-wrapper {
@@ -2031,10 +2023,10 @@ body.print-list-modal-open {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  background: rgba(5, 4, 12, 0.72);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
 }
 
 .print-list-modal-backdrop[hidden] {
@@ -2042,48 +2034,96 @@ body.print-list-modal-open {
 }
 
 .print-list-modal {
-  width: min(760px, 100%);
+  width: min(880px, 100%);
+  max-height: min(900px, calc(100vh - 48px));
+  overflow: auto;
+  position: relative;
+  isolation: isolate;
   display: grid;
-  gap: 14px;
-  padding: 20px;
-  border-radius: 20px;
+  gap: 18px;
+  padding: 18px;
+  border-radius: var(--r-xl);
   border: 1px solid var(--sep-md);
   background: var(--bg-card);
-  box-shadow: var(--shadow-hover);
+  backdrop-filter: saturate(105%) blur(24px);
+  -webkit-backdrop-filter: saturate(105%) blur(24px);
+  box-shadow: 0 15px 100px rgba(0, 0, 0, 0.78),
+    0 0 0 1px rgba(255, 255, 255, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.print-list-modal::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+      circle at 18% 0%,
+      rgba(255, 255, 255, 0.26),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 84% 8%,
+      rgba(255, 255, 255, 0.12),
+      transparent 24%
+    ),
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.14), transparent 38%),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0.02) 28%,
+      transparent 54%
+    );
+  pointer-events: none;
 }
 
 .print-list-modal-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 12px;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.print-list-modal-heading {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
 }
 
 .print-list-modal-header h2 {
-  font-size: 16px;
+  margin: 0;
+  font-size: clamp(20px, 2.8vw, 28px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
   color: var(--text-primary);
 }
 
 .print-list-modal-close {
-  width: 34px;
-  height: 34px;
+  min-width: 36px;
+  min-height: 36px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border: 1px solid var(--sep-md);
-  border-radius: 999px;
+  border-radius: var(--r-md);
   background: var(--fill-3);
-  color: var(--text-secondary);
+  color: var(--text-primary);
   font-size: 16px;
   cursor: pointer;
   transition: background var(--t-fast) var(--ease-out),
-    color var(--t-fast) var(--ease-out),
-    transform var(--t-fast) var(--ease-spr);
+    color var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-spr),
+    border-color var(--t-fast) var(--ease-out),
+    box-shadow var(--t-fast) var(--ease-out);
 }
 
 .print-list-modal-close:hover {
   background: var(--fill-2);
-  color: var(--text-primary);
+  border-color: var(--sep-md);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.03);
 }
 
 .print-list-modal-close:active {
@@ -2092,8 +2132,10 @@ body.print-list-modal-open {
 
 .print-list-modal-status {
   min-height: 18px;
+  margin: 0;
   font-size: 12px;
-  color: var(--text-quaternary);
+  color: var(--text-tertiary);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 0 12px rgba(0, 0, 0, 0.7);
 }
 
 .print-list-modal-status[data-state="success"] {
@@ -2110,29 +2152,66 @@ body.print-list-modal-open {
 
 .print-list-textarea {
   width: 100%;
-  min-height: 340px;
+  min-height: 380px;
   resize: vertical;
-  padding: 16px;
+  position: relative;
+  z-index: 1;
+  padding: 16px 18px;
   border-radius: var(--r-md);
   border: 1px solid var(--sep-md);
-  background: rgba(10, 6, 20, 0.78);
+  background: var(--bg-input);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   color: var(--text-primary);
   font-family: var(--font-mono);
   font-size: 13px;
-  line-height: 1.55;
+  line-height: 1.6;
   white-space: pre;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .print-list-textarea:focus {
-  outline: 2px solid rgba(252, 175, 69, 0.42);
-  outline-offset: 2px;
+  outline: none;
+  border-color: var(--text-secondary);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 0 0 3px rgba(255, 255, 255, 0.12);
 }
 
 .print-list-modal-actions {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: flex-start;
   gap: 8px;
   flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+.print-list-modal-btn {
+  min-height: 32px;
+  padding-inline: 14px;
+}
+
+.print-list-modal-btn--primary {
+  border-color: transparent;
+  background: var(--ig);
+  color: #ffffff;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+}
+
+.print-list-modal-btn--primary:hover {
+  background: var(--ig);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.print-list-modal-btn--primary:active {
+  transform: scale(0.94);
+}
+
+.print-list-modal-btn--dismiss {
+  margin-left: auto;
+  color: var(--text-quaternary);
 }
 
 .market-item-modal-backdrop {
@@ -2536,6 +2615,41 @@ body.print-list-modal-open {
 }
 
 @media (max-width: 520px) {
+  .print-list-modal-backdrop {
+    padding: 12px;
+  }
+
+  .print-list-modal {
+    padding: 16px;
+    max-height: calc(100vh - 24px);
+  }
+
+  .print-list-modal-header {
+    gap: 12px;
+    padding-bottom: 12px;
+  }
+
+  .print-list-modal-header h2 {
+    font-size: 18px;
+  }
+
+  .print-list-textarea {
+    min-height: 300px;
+  }
+
+  .print-list-modal-actions {
+    width: 100%;
+  }
+
+  .print-list-modal-btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .print-list-modal-btn--dismiss {
+    margin-left: 0;
+  }
+
   .market-item-modal-backdrop {
     padding: 12px;
   }
