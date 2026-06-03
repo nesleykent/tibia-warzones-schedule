@@ -22,7 +22,6 @@ MARKET_WORLD_DIR = DATA_DIR / "market" / "world"
 ALLOWED_MARKS = {"healthy", "inconclusive", "trolls", "na"}
 VALID_WARZONE_ORDERS = {"", "1-2-3", "1-3-2", "2-1-3"}
 TIME_PATTERN = re.compile(r"^\d{2}:\d{2}$")
-LEGACY_SCHEDULE_PLACEHOLDERS = {("Gentebra", "??:00")}
 KNOWN_MISSING_MARKET_WORLDS = {"Floribra", "Junera", "Maligna"}
 RANKING_MARKET_KEYS = {
     "tibia_coin",
@@ -216,12 +215,6 @@ def validate_schedule_time(
             report.error(
                 f"manual-schedules.json: {world_name} execution {execution_id} has invalid time {schedule_time!r}"
             )
-        return
-
-    if (world_name, schedule_time) in LEGACY_SCHEDULE_PLACEHOLDERS:
-        report.warn(
-            f"manual-schedules.json: {world_name} execution {execution_id} uses legacy placeholder time {schedule_time!r}"
-        )
         return
 
     report.error(
@@ -422,10 +415,13 @@ def validate_tracked_items_payload(
 
         item_slug = re.sub(r"[^a-z0-9]+", "_", item_name.strip().lower()).strip("_")
         for world_dir in market_world_dirs:
-            expected_path = world_dir / f"{world_dir.name}_{item_slug}.json"
-            if not expected_path.exists():
-                report.error(
-                    f"tracked_items.json: missing market file for item {item_name!r} in world directory {world_dir.name!r}"
+            expected_paths = (
+                world_dir / f"{world_dir.name}_{item_slug}.json",
+                world_dir / f"{world_dir.name.lower()}_{item_slug}.json",
+            )
+            if not any(path.exists() for path in expected_paths):
+                report.warn(
+                    f"market coverage: missing market file for item {item_name!r} in world directory {world_dir.name!r}"
                 )
 
     for world_name in sorted(KNOWN_MISSING_MARKET_WORLDS):

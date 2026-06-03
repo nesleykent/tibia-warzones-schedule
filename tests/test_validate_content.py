@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -137,6 +138,22 @@ class ValidateMarketDefinitionsTest(unittest.TestCase):
         )
 
         self.assertTrue(any("missing from data/market/items/items.csv" in message for message in report.errors))
+
+    def test_missing_market_coverage_is_warning_only(self) -> None:
+        rows = [{"name": "Tibia Coins", "id": 22118}]
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            market_world_dir = Path(tmpdir)
+            (market_world_dir / "antica").mkdir()
+
+            report = validate_content.validate_tracked_items_payload(
+                ["Tibia Coins"],
+                rows,
+                market_world_dir,
+            )
+
+        self.assertEqual(report.errors, [])
+        self.assertTrue(any("market coverage: missing market file" in message for message in report.warnings))
 
 
 class ValidateOpenHousesTest(unittest.TestCase):

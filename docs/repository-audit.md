@@ -324,7 +324,7 @@ Notes:
 - `manual-schedules.json` contains 55 worlds and 93 schedule entries.
 - All worlds with manual schedules also have tracked warzone activity.
 - There are 7 tracked-service worlds without manual schedules.
-- One manual schedule entry contains an unknown time: `Gentebra -> ??:00`.
+- Manual schedules now use concrete `HH:MM` values for all entries, including `Gentebra -> 22:00`.
 
 ### Open Houses
 
@@ -504,7 +504,7 @@ Notes:
 - Risks:
   - manual JSON editing
   - weak validation of semantic correctness
-  - schedule times can be placeholder-like and still pass current regex, such as `??:00`
+- schedule edits still rely on manual JSON changes, so semantic correctness depends on maintainer review
 
 ### Editing Warzone Schedules
 

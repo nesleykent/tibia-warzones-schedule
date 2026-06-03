@@ -172,12 +172,6 @@ Do not:
 - introduce duplicate times in the same world
 - introduce unsupported order strings
 
-Special case:
-
-- `Gentebra` currently contains the legacy placeholder `??:00`
-- the validator treats that single existing placeholder as a warning, not a failure
-- do not copy that pattern to new entries
-
 Safe workflow:
 
 1. Edit `data/manual-schedules.json`
