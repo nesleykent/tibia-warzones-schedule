@@ -503,32 +503,22 @@ body::after {
 
 .planner-section-heading {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 14px;
-}
-
-.planner-section-heading .section-label {
-  padding-bottom: 8px;
+  gap: 12px;
 }
 
 .planner-print-trigger {
-  min-height: 30px;
-  padding-inline: 12px;
-  margin-bottom: 2px;
-  color: var(--text-primary);
-  border-color: rgba(252, 175, 69, 0.28);
-  background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.08) 0%,
-      rgba(255, 255, 255, 0.02) 100%
-    ),
-    rgba(255, 255, 255, 0.08);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-}
-
-.planner-print-trigger:hover {
-  border-color: rgba(252, 175, 69, 0.44);
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  line-height: inherit;
+  text-align: right;
+  text-shadow: var(--text-shadow-strong);
 }
 
 .input-wrapper {
