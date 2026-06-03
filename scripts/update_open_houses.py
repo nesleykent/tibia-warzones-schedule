@@ -10,6 +10,8 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import quote
 from urllib.request import Request, urlopen
 
+from common import normalize_open_houses_payload
+
 ROOT_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT_DIR / "data"
 OPEN_HOUSES_FILE = DATA_DIR / "open-houses.json"
@@ -330,14 +332,7 @@ def build_registry() -> list[dict[str, Any]]:
         except Exception:
             continue
 
-    return sorted(
-        records.values(),
-        key=lambda record: (
-            normalize_text(record.get("world")),
-            normalize_text(record.get("town")),
-            normalize_text(record.get("houseName")),
-        ),
-    )
+    return normalize_open_houses_payload(records.values())
 
 
 def main() -> int:

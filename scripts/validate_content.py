@@ -9,6 +9,13 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
+from common import (
+    is_known_schedule_time,
+    is_unknown_friendly_schedule_time,
+    normalize_sort_text,
+    schedule_time_sort_key,
+)
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = REPO_ROOT / "data"
 WORLDS_PATH = DATA_DIR / "worlds.json"
@@ -199,6 +206,15 @@ def parse_iso_date(value: str) -> bool:
     return True
 
 
+def find_first_out_of_order_pair(
+    values: list[Any], key: Any
+) -> tuple[Any, Any] | None:
+    for previous, current in zip(values, values[1:]):
+        if key(previous) > key(current):
+            return previous, current
+    return None
+
+
 def validate_schedule_time(
     report: ValidationReport, world_name: str, execution_id: Any, schedule_time: Any
 ) -> None:
@@ -208,13 +224,9 @@ def validate_schedule_time(
         )
         return
 
-    if TIME_PATTERN.fullmatch(schedule_time):
-        hour = int(schedule_time[:2])
-        minute = int(schedule_time[3:])
-        if hour > 23 or minute > 59:
-            report.error(
-                f"manual-schedules.json: {world_name} execution {execution_id} has invalid time {schedule_time!r}"
-            )
+    if is_known_schedule_time(schedule_time) or is_unknown_friendly_schedule_time(
+        schedule_time
+    ):
         return
 
     report.error(
@@ -234,6 +246,7 @@ def validate_schedule_list(
         return
 
     seen_times: set[str] = set()
+    schedule_times: list[str] = []
 
     for index, execution in enumerate(schedules, start=1):
         if not isinstance(execution, dict):
@@ -256,12 +269,13 @@ def validate_schedule_list(
         schedule_time = execution.get("schedule_time")
         validate_schedule_time(report, world_name, execution_id, schedule_time)
 
-        if isinstance(schedule_time, str) and TIME_PATTERN.fullmatch(schedule_time):
+        if isinstance(schedule_time, str) and is_unknown_friendly_schedule_time(schedule_time):
             if schedule_time in seen_times:
                 report.error(
                     f"{source_name}: {world_name} has duplicate schedule_time {schedule_time!r}"
                 )
             seen_times.add(schedule_time)
+            schedule_times.append(schedule_time)
 
         warzone_sequence = execution.get("warzone_sequence")
         if not isinstance(warzone_sequence, str):
@@ -283,6 +297,14 @@ def validate_schedule_list(
                     f"{source_name}: {world_name} execution {execution_id} has impossible warzone count in {warzone_sequence!r}"
                 )
 
+    out_of_order_pair = find_first_out_of_order_pair(
+        schedule_times, schedule_time_sort_key
+    )
+    if out_of_order_pair is not None:
+        report.warn(
+            f"{source_name}: {world_name} schedule times are out of order; {out_of_order_pair[0]!r} appears before {out_of_order_pair[1]!r}"
+        )
+
 
 def validate_manual_schedules_payload(
     payload: Any, valid_world_names: set[str]
@@ -292,6 +314,14 @@ def validate_manual_schedules_payload(
     if not isinstance(payload, dict):
         report.error("manual-schedules.json: root value must be an object")
         return report
+
+    world_names = list(payload)
+    out_of_order_worlds = find_first_out_of_order_pair(world_names, normalize_sort_text)
+    if out_of_order_worlds is not None:
+        report.warn(
+            "manual-schedules.json: world keys are out of order; "
+            f"{out_of_order_worlds[0]!r} appears before {out_of_order_worlds[1]!r}"
+        )
 
     for world_name, schedule_data in payload.items():
         if not isinstance(world_name, str) or not world_name.strip():
@@ -438,6 +468,24 @@ def validate_open_houses_payload(payload: Any, valid_world_names: set[str]) -> V
     if not isinstance(payload, list):
         report.error("open-houses.json: root value must be a list")
         return report
+
+    open_house_order = [
+        (
+            record.get("world") if isinstance(record, dict) else None,
+            record.get("town") if isinstance(record, dict) else None,
+            record.get("houseName") if isinstance(record, dict) else None,
+        )
+        for record in payload
+    ]
+    out_of_order_record = find_first_out_of_order_pair(
+        open_house_order,
+        lambda item: tuple(normalize_sort_text(part) for part in item),
+    )
+    if out_of_order_record is not None:
+        report.warn(
+            "open-houses.json: records are out of order; "
+            f"{out_of_order_record[0]!r} appears before {out_of_order_record[1]!r}"
+        )
 
     seen_house_ids: set[tuple[str, int]] = set()
 
@@ -604,6 +652,16 @@ def validate_worlds_payload(payload: Any) -> ValidationReport:
     if not isinstance(payload, list):
         report.error("worlds.json: root value must be a list")
         return report
+
+    world_names = [
+        world.get("name") if isinstance(world, dict) else None for world in payload
+    ]
+    out_of_order_worlds = find_first_out_of_order_pair(world_names, normalize_sort_text)
+    if out_of_order_worlds is not None:
+        report.warn(
+            "worlds.json: world list is out of order; "
+            f"{out_of_order_worlds[0]!r} appears before {out_of_order_worlds[1]!r}"
+        )
 
     seen_names: set[str] = set()
     seen_slugs: set[str] = set()

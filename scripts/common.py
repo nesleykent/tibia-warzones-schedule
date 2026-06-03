@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -14,10 +15,130 @@ TRACKED_ITEMS_JSON_CANDIDATES = [
     BASE_DIR / "data" / "market" / "items" / "tracked_items.json",
     BASE_DIR / "tracked_items.json",
 ]
+KNOWN_TIME_PATTERN = re.compile(r"^\d{2}:\d{2}$")
+UNKNOWN_FRIENDLY_TIME_PATTERN = re.compile(r"^[0-2?][0-9?]:[0-5?][0-9?]$")
 
 
 def slugify(value: str) -> str:
     return value.strip().lower().replace(" ", "_")
+
+
+def normalize_sort_text(value: Any) -> str:
+    return " ".join(str(value or "").strip().split()).casefold()
+
+
+def is_known_schedule_time(value: Any) -> bool:
+    if not isinstance(value, str) or not KNOWN_TIME_PATTERN.fullmatch(value):
+        return False
+
+    hour = int(value[:2])
+    minute = int(value[3:])
+    return hour <= 23 and minute <= 59
+
+
+def is_unknown_friendly_schedule_time(value: Any) -> bool:
+    return isinstance(value, str) and UNKNOWN_FRIENDLY_TIME_PATTERN.fullmatch(value) is not None
+
+
+def schedule_time_sort_key(value: Any) -> tuple[int, int, int, str]:
+    if is_known_schedule_time(value):
+        return (0, int(value[:2]), int(value[3:]), str(value))
+
+    return (1, 99, 99, str(value or "").strip().casefold())
+
+
+def normalize_schedule_executions(executions: Any) -> list[dict[str, Any]]:
+    normalized: list[dict[str, Any]] = []
+
+    if not isinstance(executions, list):
+        return normalized
+
+    for execution in executions:
+        if not isinstance(execution, dict):
+            continue
+
+        row = dict(execution)
+        row["schedule_time"] = str(execution.get("schedule_time", "")).strip()
+        row["warzone_sequence"] = str(execution.get("warzone_sequence", "")).strip()
+        normalized.append(row)
+
+    normalized.sort(
+        key=lambda entry: (
+            schedule_time_sort_key(entry.get("schedule_time")),
+            int(entry.get("execution_id") or 0),
+        )
+    )
+
+    for index, execution in enumerate(normalized, start=1):
+        execution["execution_id"] = index
+
+    return normalized
+
+
+def normalize_manual_schedule_payload(schedule_data: Any) -> dict[str, Any]:
+    if not isinstance(schedule_data, dict):
+        return {"timezone": None, "warzone_executions": []}
+
+    normalized = dict(schedule_data)
+    timezone_name = schedule_data.get("timezone")
+    normalized["timezone"] = timezone_name if isinstance(timezone_name, str) else None
+    normalized["warzone_executions"] = normalize_schedule_executions(
+        schedule_data.get("warzone_executions")
+    )
+    return normalized
+
+
+def normalize_manual_schedules_payload(payload: Any) -> dict[str, dict[str, Any]]:
+    if not isinstance(payload, dict):
+        return {}
+
+    normalized: dict[str, dict[str, Any]] = {}
+    for world_name, schedule_data in sorted(
+        payload.items(), key=lambda item: normalize_sort_text(item[0])
+    ):
+        normalized[str(world_name).strip()] = normalize_manual_schedule_payload(schedule_data)
+    return normalized
+
+
+def normalize_world_record(world: Any) -> Any:
+    if not isinstance(world, dict):
+        return world
+
+    normalized = dict(world)
+    normalized["warzone_executions"] = normalize_schedule_executions(
+        world.get("warzone_executions")
+    )
+    return normalized
+
+
+def normalize_worlds_payload(payload: Any) -> list[Any]:
+    if not isinstance(payload, list):
+        return []
+
+    normalized = [normalize_world_record(world) for world in payload]
+    normalized.sort(
+        key=lambda world: normalize_sort_text(world.get("name")) if isinstance(world, dict) else ""
+    )
+    return normalized
+
+
+def normalize_open_house_record(record: Any) -> Any:
+    return dict(record) if isinstance(record, dict) else record
+
+
+def normalize_open_houses_payload(payload: Any) -> list[Any]:
+    if not isinstance(payload, list):
+        return []
+
+    normalized = [normalize_open_house_record(record) for record in payload]
+    normalized.sort(
+        key=lambda record: (
+            normalize_sort_text(record.get("world")) if isinstance(record, dict) else "",
+            normalize_sort_text(record.get("town")) if isinstance(record, dict) else "",
+            normalize_sort_text(record.get("houseName")) if isinstance(record, dict) else "",
+        )
+    )
+    return normalized
 
 
 def _first_existing_path(paths: list[Path]) -> Path | None:

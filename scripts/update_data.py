@@ -9,6 +9,7 @@ from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
 
+from common import normalize_manual_schedule_payload, normalize_manual_schedules_payload, normalize_worlds_payload
 from economic_ranking import attach_ranking_metrics
 
 BASE_URL = "https://api.tibiadata.com/v4"
@@ -125,20 +126,7 @@ def normalize_execution(execution: dict[str, Any], execution_id: int) -> dict[st
 
 
 def normalize_manual_schedule(schedule_data: dict[str, Any]) -> dict[str, Any]:
-    executions = schedule_data.get("warzone_executions", [])
-    fixed_executions: list[dict[str, Any]] = []
-
-    if isinstance(executions, list):
-        for index, execution in enumerate(executions, start=1):
-            if not isinstance(execution, dict):
-                continue
-            fixed_executions.append(normalize_execution(execution, index))
-
-    timezone_name = schedule_data.get("timezone")
-    return {
-        "timezone": timezone_name if isinstance(timezone_name, str) else None,
-        "warzone_executions": fixed_executions,
-    }
+    return normalize_manual_schedule_payload(schedule_data)
 
 
 def load_manual_schedules() -> dict[str, dict[str, Any]]:
@@ -158,7 +146,7 @@ def load_manual_schedules() -> dict[str, dict[str, Any]]:
             continue
         normalized[str(world_name).strip()] = normalize_manual_schedule(schedule_data)
 
-    return normalized
+    return normalize_manual_schedules_payload(normalized)
 
 
 def load_world_history(world_name: str, timezone_name: str | None) -> dict[str, Any]:
@@ -405,8 +393,9 @@ def main() -> int:
             print(f"ERRO {world_name}: {exc}", file=sys.stderr)
             output.append(build_error_world_summary(world, world_name, manual_schedule, exc))
 
-    output.sort(key=lambda item: str(item.get("name", "")).lower())
+    output = normalize_worlds_payload(output)
     output = attach_ranking_metrics(output, DATA_DIR)
+    output = normalize_worlds_payload(output)
     validate_worlds(output)
     save_json(OUTPUT_FILE, output)
 
