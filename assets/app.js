@@ -72,6 +72,15 @@ const PAGE_ELEMENT_IDS = {
   searchInput: "searchInput",
   filtersLabel: "filtersLabel",
   plannerLabel: "warzonePlannerLabel",
+  printListTrigger: "printListTrigger",
+  printListModalBackdrop: "printListModalBackdrop",
+  printListModalTitle: "printListModalTitle",
+  printListTextarea: "printListTextarea",
+  printListStatus: "printListStatus",
+  printListCopyBtn: "printListCopyBtn",
+  printListPrintBtn: "printListPrintBtn",
+  printListCloseBtn: "printListCloseBtn",
+  printListCloseActionBtn: "printListCloseActionBtn",
   timezoneSelect: "timezoneSelect",
   filtersBar: "filtersBar",
   summary: "summary",
@@ -134,6 +143,15 @@ const I18N = {
     filterAll: "All",
     filterLabel: "Filters",
     warzonePlannerLabel: "Warzone Planner",
+    printList: "Print List",
+    printListTitle: "Print List",
+    printListCopy: "Copy",
+    printListPrint: "Print",
+    printListClose: "Close",
+    printListCopied: "Copied!",
+    printListReady: "Plain-text schedule ready.",
+    printListEmpty: "No visible schedules available for printing.",
+    printListError: "Could not build the print list from the visible planner data.",
     clearFilters: "Clear filters",
     bgeLabel: "Green BattlEye",
     ybeLabel: "Yellow BattlEye",
@@ -214,6 +232,16 @@ const I18N = {
     filterAll: "Todos",
     filterLabel: "Filtros",
     warzonePlannerLabel: "Warzone Planner",
+    printList: "Print List",
+    printListTitle: "Print List",
+    printListCopy: "Copiar",
+    printListPrint: "Imprimir",
+    printListClose: "Fechar",
+    printListCopied: "Copiado!",
+    printListReady: "Lista em texto pronta.",
+    printListEmpty: "Nenhum horário visível disponível para impressão.",
+    printListError:
+      "Não foi possível montar a lista de impressão a partir dos horários visíveis.",
     clearFilters: "Limpar filtros",
     bgeLabel: "Green BattlEye",
     ybeLabel: "Yellow BattlEye",
@@ -294,6 +322,16 @@ const I18N = {
     filterAll: "Todos",
     filterLabel: "Filtros",
     warzonePlannerLabel: "Warzone Planner",
+    printList: "Print List",
+    printListTitle: "Print List",
+    printListCopy: "Copiar",
+    printListPrint: "Imprimir",
+    printListClose: "Cerrar",
+    printListCopied: "¡Copiado!",
+    printListReady: "Lista de texto lista.",
+    printListEmpty: "No hay horarios visibles para imprimir.",
+    printListError:
+      "No se pudo generar la lista de impresión a partir de los horarios visibles.",
     bgeLabel: "Green BattlEye",
     ybeLabel: "Yellow BattlEye",
     noneLabel: "Ninguno",
@@ -373,6 +411,16 @@ const I18N = {
     filterAll: "Wszystkie",
     filterLabel: "Filtry",
     warzonePlannerLabel: "Warzone Planner",
+    printList: "Print List",
+    printListTitle: "Print List",
+    printListCopy: "Kopiuj",
+    printListPrint: "Drukuj",
+    printListClose: "Zamknij",
+    printListCopied: "Skopiowano!",
+    printListReady: "Lista tekstowa jest gotowa.",
+    printListEmpty: "Brak widocznych harmonogramów do wydruku.",
+    printListError:
+      "Nie udało się zbudować listy wydruku z aktualnie widocznych danych.",
     clearFilters: "Wyczyść filtry",
     bgeLabel: "Green BattlEye",
     ybeLabel: "Yellow BattlEye",
@@ -960,6 +1008,243 @@ function renderSchedulePanel() {
   });
 }
 
+function isElementVisible(element) {
+  if (!(element instanceof HTMLElement)) return false;
+  if (element.hidden) return false;
+
+  const style = window.getComputedStyle(element);
+  if (
+    style.display === "none" ||
+    style.visibility === "hidden" ||
+    style.visibility === "collapse"
+  ) {
+    return false;
+  }
+
+  return element.getClientRects().length > 0;
+}
+
+function getLocalDateStamp() {
+  const now = new Date();
+  const year = String(now.getFullYear());
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function printListTimeSortKey(value) {
+  const text = String(value || "").trim();
+  if (/^\d{2}:\d{2}$/.test(text)) {
+    const hour = Number(text.slice(0, 2));
+    const minute = Number(text.slice(3, 5));
+    if (hour <= 23 && minute <= 59) {
+      return [0, hour, minute, text];
+    }
+  }
+
+  return [1, 99, 99, text.toLowerCase()];
+}
+
+function comparePrintTimes(left, right) {
+  const leftKey = printListTimeSortKey(left);
+  const rightKey = printListTimeSortKey(right);
+  for (let index = 0; index < leftKey.length; index += 1) {
+    if (leftKey[index] < rightKey[index]) return -1;
+    if (leftKey[index] > rightKey[index]) return 1;
+  }
+  return 0;
+}
+
+function getVisibleScheduleCards() {
+  return Array.from(document.querySelectorAll(".world-card")).filter((card) =>
+    isElementVisible(card)
+  );
+}
+
+function validatePrintListPayload(groups) {
+  const timezoneSelect = pageElements.timezoneSelect;
+  if (!(timezoneSelect instanceof HTMLSelectElement) || !timezoneSelect.value) {
+    throw new Error("Timezone selector is not ready.");
+  }
+
+  for (let index = 0; index < groups.length; index += 1) {
+    const group = groups[index];
+    if (!group.time) {
+      throw new Error("Encountered an empty time group.");
+    }
+    if (!Array.isArray(group.names) || group.names.length === 0) {
+      throw new Error(`Encountered an empty world group for ${group.time}.`);
+    }
+
+    const dedupedNames = new Set(group.names);
+    if (dedupedNames.size !== group.names.length) {
+      throw new Error(`Duplicate world names detected in ${group.time}.`);
+    }
+
+    for (let nameIndex = 1; nameIndex < group.names.length; nameIndex += 1) {
+      if (
+        group.names[nameIndex - 1].localeCompare(group.names[nameIndex], lang) > 0
+      ) {
+        throw new Error(`World names are out of order in ${group.time}.`);
+      }
+    }
+
+    if (
+      index > 0 &&
+      comparePrintTimes(groups[index - 1].time, group.time) > 0
+    ) {
+      throw new Error("Time groups are out of order.");
+    }
+  }
+}
+
+function buildPrintListPayload() {
+  const cards = getVisibleScheduleCards();
+  const grouped = new Map();
+  const seenPairs = new Set();
+
+  cards.forEach((card) => {
+    const worldName = String(card.dataset.worldName || "")
+      .trim()
+      .replace(/\s+/g, " ");
+    if (!worldName) return;
+
+    const items = Array.from(card.querySelectorAll(".execution-item")).filter((item) =>
+      isElementVisible(item)
+    );
+    if (!items.length) return;
+
+    items.forEach((item) => {
+      const time = String(item.querySelector(".execution-time")?.textContent || "").trim();
+      if (!time) return;
+
+      const pairKey = `${time}\u0000${worldName}`;
+      if (seenPairs.has(pairKey)) {
+        throw new Error(`Duplicate world entry detected for ${worldName} at ${time}.`);
+      }
+      seenPairs.add(pairKey);
+
+      if (!grouped.has(time)) grouped.set(time, []);
+      grouped.get(time).push(worldName);
+    });
+  });
+
+  const groups = Array.from(grouped.entries())
+    .map(([time, names]) => ({
+      time,
+      names: [...names].sort((left, right) => left.localeCompare(right, lang)),
+    }))
+    .sort((left, right) => comparePrintTimes(left.time, right.time));
+
+  validatePrintListPayload(groups);
+  return groups;
+}
+
+function formatPrintListText(groups) {
+  const lines = [`# Warzones Schedule (${getLocalDateStamp()})`];
+
+  groups.forEach((group) => {
+    lines.push("");
+    lines.push(group.time);
+    lines.push(group.names.join("; "));
+  });
+
+  return lines.join("\n");
+}
+
+function setPrintListStatus(message, type = "muted") {
+  const status = pageElements.printListStatus;
+  if (!status) return;
+  status.textContent = message;
+  status.dataset.state = type;
+}
+
+function openPrintListModal() {
+  const dict = t();
+  const backdrop = pageElements.printListModalBackdrop;
+  const textarea = pageElements.printListTextarea;
+  if (!backdrop || !textarea) return;
+
+  try {
+    const groups = buildPrintListPayload();
+    if (!groups.length) {
+      textarea.value = "";
+      setPrintListStatus(dict.printListEmpty, "warning");
+    } else {
+      textarea.value = formatPrintListText(groups);
+      setPrintListStatus(dict.printListReady, "success");
+    }
+  } catch (error) {
+    textarea.value = "";
+    setPrintListStatus(
+      `${dict.printListError} ${error instanceof Error ? error.message : ""}`.trim(),
+      "error"
+    );
+  }
+
+  backdrop.hidden = false;
+  document.body.classList.add("print-list-modal-open");
+  requestAnimationFrame(() => {
+    textarea.focus();
+    textarea.select();
+  });
+}
+
+function closePrintListModal() {
+  const backdrop = pageElements.printListModalBackdrop;
+  if (!backdrop) return;
+  backdrop.hidden = true;
+  document.body.classList.remove("print-list-modal-open");
+}
+
+function copyPrintListText() {
+  const dict = t();
+  const textarea = pageElements.printListTextarea;
+  if (!textarea || !textarea.value.trim()) return;
+
+  navigator.clipboard
+    .writeText(textarea.value)
+    .then(() => {
+      setPrintListStatus(dict.printListCopied, "success");
+    })
+    .catch(() => {
+      textarea.focus();
+      textarea.select();
+      document.execCommand("copy");
+      setPrintListStatus(dict.printListCopied, "success");
+    });
+}
+
+function printPrintListText() {
+  const textarea = pageElements.printListTextarea;
+  if (!textarea || !textarea.value.trim()) return;
+
+  const popup = window.open("", "_blank", "noopener,noreferrer,width=640,height=720");
+  if (!popup) return;
+
+  popup.document.write(`<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Warzones Schedule</title>
+    <style>
+      body { margin: 24px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+      pre { margin: 0; white-space: pre-wrap; word-break: break-word; font-size: 14px; line-height: 1.5; }
+    </style>
+  </head>
+  <body>
+    <pre>${escapeHtml(textarea.value)}</pre>
+    <script>
+      window.addEventListener("load", () => {
+        window.focus();
+        window.print();
+      });
+    <\/script>
+  </body>
+</html>`);
+  popup.document.close();
+}
+
 function refreshScheduleRowStates() {
   const container = document.getElementById("scheduleRows");
   if (!container) return;
@@ -1289,6 +1574,17 @@ function applyStaticLabels() {
     pageElements.plannerLabel,
     d.warzonePlannerLabel || "Warzone Planner"
   );
+  setTextContent(pageElements.printListTrigger, d.printList || "Print List");
+  setTextContent(pageElements.printListModalTitle, d.printListTitle || "Print List");
+  setTextContent(pageElements.printListCopyBtn, d.printListCopy || "Copy");
+  setTextContent(pageElements.printListPrintBtn, d.printListPrint || "Print");
+  setTextContent(pageElements.printListCloseActionBtn, d.printListClose || "Close");
+  if (pageElements.printListCloseBtn) {
+    pageElements.printListCloseBtn.setAttribute(
+      "aria-label",
+      d.printListClose || "Close"
+    );
+  }
 }
 
 function convertTimeBetweenTimezones(scheduleTime, sourceTimezone, targetTimezone) {
@@ -1741,6 +2037,28 @@ async function init() {
   applyStaticLabels();
   bindLanguageButtons();
   bindFilterBar();
+  pageElements.printListTrigger?.addEventListener("click", openPrintListModal);
+  pageElements.printListCopyBtn?.addEventListener("click", copyPrintListText);
+  pageElements.printListPrintBtn?.addEventListener("click", printPrintListText);
+  pageElements.printListCloseBtn?.addEventListener("click", closePrintListModal);
+  pageElements.printListCloseActionBtn?.addEventListener(
+    "click",
+    closePrintListModal
+  );
+  pageElements.printListModalBackdrop?.addEventListener("click", (event) => {
+    if (event.target === pageElements.printListModalBackdrop) {
+      closePrintListModal();
+    }
+  });
+  document.addEventListener("keydown", (event) => {
+    if (
+      event.key === "Escape" &&
+      pageElements.printListModalBackdrop &&
+      !pageElements.printListModalBackdrop.hidden
+    ) {
+      closePrintListModal();
+    }
+  });
   updateLanguageButtons();
   populateTimezoneSelect();
 

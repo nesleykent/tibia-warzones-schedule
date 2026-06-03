@@ -111,7 +111,16 @@
       </section>
 
       <section aria-labelledby="warzonePlannerLabel">
-        <h2 class="section-label" id="warzonePlannerLabel">Warzone Planner</h2>
+        <div class="planner-section-heading">
+          <h2 class="section-label" id="warzonePlannerLabel">Warzone Planner</h2>
+          <button
+            type="button"
+            class="planner-print-trigger"
+            id="printListTrigger"
+          >
+            Print List
+          </button>
+        </div>
         <div id="nextWarzoneBar" style="display:none" aria-live="polite" aria-label="Next warzone"></div>
 
         <section
@@ -137,6 +146,42 @@
     </main>
 
     <footer class="site-footer" role="contentinfo" data-site-footer></footer>
+
+    <div
+      class="print-list-modal-backdrop"
+      id="printListModalBackdrop"
+      hidden
+    >
+      <div
+        class="print-list-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="printListModalTitle"
+      >
+        <div class="print-list-modal-header">
+          <h2 id="printListModalTitle">Print List</h2>
+          <button
+            type="button"
+            class="print-list-modal-close"
+            id="printListCloseBtn"
+            aria-label="Close"
+          >
+            ✕
+          </button>
+        </div>
+        <p class="print-list-modal-status" id="printListStatus" aria-live="polite"></p>
+        <textarea
+          class="print-list-textarea"
+          id="printListTextarea"
+          spellcheck="false"
+        ></textarea>
+        <div class="print-list-modal-actions">
+          <button type="button" class="schedule-btn" id="printListCopyBtn">Copy</button>
+          <button type="button" class="schedule-btn" id="printListPrintBtn">Print</button>
+          <button type="button" class="schedule-btn" id="printListCloseActionBtn">Close</button>
+        </div>
+      </div>
+    </div>
 
     <script src="./assets/shared.js" defer></script>
     <script src="./assets/app.js" defer></script>

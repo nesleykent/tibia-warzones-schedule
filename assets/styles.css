@@ -501,6 +501,44 @@ body::after {
   padding-bottom: 5px;
 }
 
+.planner-section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.planner-section-heading .section-label {
+  padding-bottom: 8px;
+}
+
+.planner-print-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-system);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-shadow: var(--text-shadow-strong);
+  cursor: pointer;
+  transition: color var(--t-fast) var(--ease-out),
+    transform var(--t-fast) var(--ease-spr);
+}
+
+.planner-print-trigger:hover {
+  color: #ffffff;
+}
+
+.planner-print-trigger:active {
+  transform: scale(0.96);
+}
+
 .input-wrapper {
   position: relative;
   display: flex;
@@ -1982,6 +2020,117 @@ html.open-house-world-route #worldsSection {
   box-shadow: var(--shadow), 0 0 0 2px rgba(193, 53, 132, 0.12) !important;
 }
 
+body.print-list-modal-open {
+  overflow: hidden;
+}
+
+.print-list-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 220;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(5, 4, 12, 0.72);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.print-list-modal {
+  width: min(760px, 100%);
+  display: grid;
+  gap: 14px;
+  padding: 20px;
+  border-radius: 20px;
+  border: 1px solid var(--sep-md);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-hover);
+}
+
+.print-list-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.print-list-modal-header h2 {
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+.print-list-modal-close {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--sep-md);
+  border-radius: 999px;
+  background: var(--fill-3);
+  color: var(--text-secondary);
+  font-size: 16px;
+  cursor: pointer;
+  transition: background var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out),
+    transform var(--t-fast) var(--ease-spr);
+}
+
+.print-list-modal-close:hover {
+  background: var(--fill-2);
+  color: var(--text-primary);
+}
+
+.print-list-modal-close:active {
+  transform: scale(0.94);
+}
+
+.print-list-modal-status {
+  min-height: 18px;
+  font-size: 12px;
+  color: var(--text-quaternary);
+}
+
+.print-list-modal-status[data-state="success"] {
+  color: #fcaf45;
+}
+
+.print-list-modal-status[data-state="warning"] {
+  color: #ee9b5b;
+}
+
+.print-list-modal-status[data-state="error"] {
+  color: #ff9db6;
+}
+
+.print-list-textarea {
+  width: 100%;
+  min-height: 340px;
+  resize: vertical;
+  padding: 16px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--sep-md);
+  background: rgba(10, 6, 20, 0.78);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.55;
+  white-space: pre;
+}
+
+.print-list-textarea:focus {
+  outline: 2px solid rgba(252, 175, 69, 0.42);
+  outline-offset: 2px;
+}
+
+.print-list-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .market-item-modal-backdrop {
   position: fixed;
   inset: 0;
@@ -3223,6 +3372,7 @@ html.open-house-world-route #worldsSection {
 
 @media (max-width: 540px) {
   .site-header-inner,
+  .planner-section-heading,
   .market-item-modal-header,
   .executions-header,
   .world-detail-card-header,
