@@ -9,12 +9,17 @@ from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
 
+from common import (
+    is_known_schedule_time,
+    is_unknown_friendly_schedule_time,
+    normalize_manual_schedule_payload,
+    normalize_manual_schedules_payload,
+    normalize_worlds_payload,
+)
 from economic_ranking import attach_ranking_metrics
 
 BASE_URL = "https://api.tibiadata.com/v4"
 BOSSES = ("Deathstrike", "Gnomevil", "Abyssador")
-SCHEDULE_TIME_PATTERN = re.compile(r"^[0-2?][0-9?]:[0-5?][0-9?]$")
-
 ROOT_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT_DIR / "data"
 OUTPUT_FILE = DATA_DIR / "worlds.json"
@@ -125,20 +130,7 @@ def normalize_execution(execution: dict[str, Any], execution_id: int) -> dict[st
 
 
 def normalize_manual_schedule(schedule_data: dict[str, Any]) -> dict[str, Any]:
-    executions = schedule_data.get("warzone_executions", [])
-    fixed_executions: list[dict[str, Any]] = []
-
-    if isinstance(executions, list):
-        for index, execution in enumerate(executions, start=1):
-            if not isinstance(execution, dict):
-                continue
-            fixed_executions.append(normalize_execution(execution, index))
-
-    timezone_name = schedule_data.get("timezone")
-    return {
-        "timezone": timezone_name if isinstance(timezone_name, str) else None,
-        "warzone_executions": fixed_executions,
-    }
+    return normalize_manual_schedule_payload(schedule_data)
 
 
 def load_manual_schedules() -> dict[str, dict[str, Any]]:
@@ -158,7 +150,7 @@ def load_manual_schedules() -> dict[str, dict[str, Any]]:
             continue
         normalized[str(world_name).strip()] = normalize_manual_schedule(schedule_data)
 
-    return normalized
+    return normalize_manual_schedules_payload(normalized)
 
 
 def load_world_history(world_name: str, timezone_name: str | None) -> dict[str, Any]:
@@ -325,9 +317,9 @@ def validate_world_record(record: dict[str, Any]) -> list[str]:
             errors.append(f"execution_id inválido em warzone_executions[{index}]")
 
         schedule_time = execution.get("schedule_time")
-        if (
-            not isinstance(schedule_time, str)
-            or not SCHEDULE_TIME_PATTERN.fullmatch(schedule_time)
+        if not (
+            is_known_schedule_time(schedule_time)
+            or is_unknown_friendly_schedule_time(schedule_time)
         ):
             errors.append(f"schedule_time inválido em warzone_executions[{index}]")
 
@@ -405,8 +397,9 @@ def main() -> int:
             print(f"ERRO {world_name}: {exc}", file=sys.stderr)
             output.append(build_error_world_summary(world, world_name, manual_schedule, exc))
 
-    output.sort(key=lambda item: str(item.get("name", "")).lower())
+    output = normalize_worlds_payload(output)
     output = attach_ranking_metrics(output, DATA_DIR)
+    output = normalize_worlds_payload(output)
     validate_worlds(output)
     save_json(OUTPUT_FILE, output)
 

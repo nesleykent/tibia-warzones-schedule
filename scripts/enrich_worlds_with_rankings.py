@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from common import normalize_worlds_payload
 from economic_ranking import attach_ranking_metrics
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
@@ -17,7 +18,8 @@ def main() -> int:
     if not isinstance(worlds, list):
         raise ValueError("data/worlds.json must contain a list of worlds")
 
-    enriched = attach_ranking_metrics(worlds, DATA_DIR)
+    enriched = attach_ranking_metrics(normalize_worlds_payload(worlds), DATA_DIR)
+    enriched = normalize_worlds_payload(enriched)
 
     with WORLDS_PATH.open("w", encoding="utf-8") as file:
         json.dump(enriched, file, ensure_ascii=False, indent=2)

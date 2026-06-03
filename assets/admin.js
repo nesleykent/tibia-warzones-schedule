@@ -232,8 +232,9 @@
     state.originalFiles.trackedItems = trackedItemsText;
     state.originalFiles.openHouses = openHousesText;
 
-    state.schedules = buildScheduleDrafts(JSON.parse(schedulesText));
-    state.scheduleOrder = Object.keys(JSON.parse(schedulesText));
+    const schedulePayload = JSON.parse(schedulesText);
+    state.schedules = buildScheduleDrafts(schedulePayload);
+    state.scheduleOrder = Object.keys(schedulePayload).sort(compareNormalizedText);
     state.selectedScheduleWorld = state.scheduleOrder[0] || "";
 
     parseItemsCatalog(itemsCatalogText);
@@ -246,17 +247,24 @@
   function buildScheduleDrafts(payload) {
     const drafts = {};
     Object.entries(payload || {}).forEach(([worldName, schedule]) => {
-      drafts[worldName] = {
-        timezone: String(schedule?.timezone || DEFAULT_TIMEZONE),
-        entries: Array.isArray(schedule?.warzone_executions)
-          ? schedule.warzone_executions.map((entry, index) => ({
+      const entries = Array.isArray(schedule?.warzone_executions)
+        ? schedule.warzone_executions
+            .map((entry, index) => ({
               executionId: Number(entry?.execution_id) || index + 1,
               time: String(entry?.schedule_time || "").trim(),
               order: String(entry?.warzone_sequence || "").trim(),
               source: "",
               notes: "",
             }))
-          : [],
+            .sort(compareScheduleEntries)
+            .map((entry, index) => ({
+              ...entry,
+              executionId: index + 1,
+            }))
+        : [];
+      drafts[worldName] = {
+        timezone: String(schedule?.timezone || DEFAULT_TIMEZONE),
+        entries,
       };
     });
     return drafts;
@@ -278,7 +286,8 @@
 
   function buildOpenHouseDrafts(payload) {
     return Array.isArray(payload)
-      ? payload.map((record) => ({
+      ? payload
+          .map((record) => ({
           id: String(record?.id || "").trim(),
           houseName: String(record?.houseName || "").trim(),
           ownerName: String(record?.ownerName || "").trim(),
@@ -321,6 +330,7 @@
           createdAt: normalizeOptionalString(record?.createdAt),
           updatedAt: normalizeOptionalString(record?.updatedAt),
         }))
+          .sort(compareOpenHouseRecords)
       : [];
   }
 
@@ -374,7 +384,9 @@
   }
 
   function renderScheduleWorldSelects() {
-    const scheduledWorlds = state.scheduleOrder.filter((worldName) => state.schedules[worldName]);
+    const scheduledWorlds = state.scheduleOrder
+      .filter((worldName) => state.schedules[worldName])
+      .sort(compareNormalizedText);
     if (!scheduledWorlds.includes(state.selectedScheduleWorld)) {
       state.selectedScheduleWorld = scheduledWorlds[0] || "";
     }
@@ -394,7 +406,8 @@
     const unscheduledWorlds = state.worlds
       .map((world) => String(world?.name || "").trim())
       .filter(Boolean)
-      .filter((worldName) => !state.schedules[worldName]);
+      .filter((worldName) => !state.schedules[worldName])
+      .sort(compareNormalizedText);
 
     setHtml(
       elements.scheduleWorldAddSelect,
@@ -807,6 +820,7 @@
       entries: [],
     };
     state.scheduleOrder.push(worldName);
+    state.scheduleOrder.sort(compareNormalizedText);
     state.selectedScheduleWorld = worldName;
     renderScheduleWorldSelects();
     renderScheduleEditor();
@@ -1081,7 +1095,9 @@
       const seenTimes = new Set();
       draft.entries.forEach((entry, index) => {
         const executionLabel = `${worldName} execution ${index + 1}`;
-        if (!TIME_PATTERN.test(entry.time)) {
+        if (entry.time === UNKNOWN_SCHEDULE_PLACEHOLDER) {
+          // Keep the known placeholder valid while sorting it after concrete times.
+        } else if (!TIME_PATTERN.test(entry.time)) {
           errors.push(`Schedule: ${executionLabel} must use HH:MM.`);
         } else {
           const [hour, minute] = entry.time.split(":").map(Number);
@@ -1307,16 +1323,19 @@
 
   function buildManualSchedulesPayload() {
     const payload = {};
-    for (const worldName of state.scheduleOrder) {
+    for (const worldName of [...state.scheduleOrder].sort(compareNormalizedText)) {
       const draft = state.schedules[worldName];
       if (!draft) continue;
-      payload[worldName] = {
-        timezone: String(draft.timezone || DEFAULT_TIMEZONE).trim() || DEFAULT_TIMEZONE,
-        warzone_executions: draft.entries.map((entry, index) => ({
+      const sortedEntries = [...draft.entries]
+        .sort(compareScheduleEntries)
+        .map((entry, index) => ({
           execution_id: index + 1,
           schedule_time: String(entry.time || "").trim(),
           warzone_sequence: String(entry.order || "").trim(),
-        })),
+        }));
+      payload[worldName] = {
+        timezone: String(draft.timezone || DEFAULT_TIMEZONE).trim() || DEFAULT_TIMEZONE,
+        warzone_executions: sortedEntries,
       };
     }
     return payload;
@@ -1336,51 +1355,53 @@
   }
 
   function buildOpenHousesPayload() {
-    return state.openHouses.map((record) => {
-      const normalized = {
-        id:
-          String(record.id || "").trim() ||
-          buildOpenHouseId(record.world, record.houseName, record.ownerName),
-        houseName: String(record.houseName || "").trim(),
-        ownerName: String(record.ownerName || "").trim(),
-        world: String(record.world || "").trim(),
-        town: String(record.town || "").trim(),
-        houseId: record.houseId == null ? null : Number(record.houseId),
-        status: String(record.status || "").trim(),
-        utilities: {
-          exerciseDummies: Boolean(record.utilities.exerciseDummies),
-          rewardShrine: Boolean(record.utilities.rewardShrine),
-          imbuingShrine: Boolean(record.utilities.imbuingShrine),
-          mailbox: Boolean(record.utilities.mailbox),
-          hirelings: Array.isArray(record.utilities.hirelings)
-            ? record.utilities.hirelings.map((hireling) => ({
-                type: String(hireling.type || "").trim(),
-                abilities: Array.isArray(hireling.abilities)
-                  ? hireling.abilities.map((ability) => String(ability || "").trim()).filter(Boolean)
-                  : [],
-              }))
-            : [],
-        },
-        source: {
-          type: String(record.source.type || "manual").trim(),
-          url: String(record.source.url || "").trim(),
-          submitter: String(record.source.submitter || "").trim(),
-          log: String(record.source.log || "").trim(),
-          notes: String(record.source.notes || "").trim(),
-          screenshotUrl: String(record.source.screenshotUrl || "").trim(),
-          issueNumber: Number.isInteger(record.source.issueNumber) ? record.source.issueNumber : 0,
-          issueTitle:
-            String(record.source.issueTitle || "").trim() || "Manual maintainer update",
-        },
-      };
+    return state.openHouses
+      .map((record) => {
+        const normalized = {
+          id:
+            String(record.id || "").trim() ||
+            buildOpenHouseId(record.world, record.houseName, record.ownerName),
+          houseName: String(record.houseName || "").trim(),
+          ownerName: String(record.ownerName || "").trim(),
+          world: String(record.world || "").trim(),
+          town: String(record.town || "").trim(),
+          houseId: record.houseId == null ? null : Number(record.houseId),
+          status: String(record.status || "").trim(),
+          utilities: {
+            exerciseDummies: Boolean(record.utilities.exerciseDummies),
+            rewardShrine: Boolean(record.utilities.rewardShrine),
+            imbuingShrine: Boolean(record.utilities.imbuingShrine),
+            mailbox: Boolean(record.utilities.mailbox),
+            hirelings: Array.isArray(record.utilities.hirelings)
+              ? record.utilities.hirelings.map((hireling) => ({
+                  type: String(hireling.type || "").trim(),
+                  abilities: Array.isArray(hireling.abilities)
+                    ? hireling.abilities.map((ability) => String(ability || "").trim()).filter(Boolean)
+                    : [],
+                }))
+              : [],
+          },
+          source: {
+            type: String(record.source.type || "manual").trim(),
+            url: String(record.source.url || "").trim(),
+            submitter: String(record.source.submitter || "").trim(),
+            log: String(record.source.log || "").trim(),
+            notes: String(record.source.notes || "").trim(),
+            screenshotUrl: String(record.source.screenshotUrl || "").trim(),
+            issueNumber: Number.isInteger(record.source.issueNumber) ? record.source.issueNumber : 0,
+            issueTitle:
+              String(record.source.issueTitle || "").trim() || "Manual maintainer update",
+          },
+        };
 
-      for (const maybeDateKey of ["lastSeenOpen", "createdAt", "updatedAt"]) {
-        const value = String(record[maybeDateKey] || "").trim();
-        if (value) normalized[maybeDateKey] = value;
-      }
+        for (const maybeDateKey of ["lastSeenOpen", "createdAt", "updatedAt"]) {
+          const value = String(record[maybeDateKey] || "").trim();
+          if (value) normalized[maybeDateKey] = value;
+        }
 
-      return normalized;
-    });
+        return normalized;
+      })
+      .sort(compareOpenHouseRecords);
   }
 
   async function createPullRequestWorkflow() {
@@ -1655,6 +1676,46 @@
       .toLowerCase();
   }
 
+  function compareNormalizedText(left, right) {
+    return normalizeText(left).localeCompare(normalizeText(right));
+  }
+
+  function scheduleTimeSortKey(value) {
+    const text = String(value || "").trim();
+    if (text === UNKNOWN_SCHEDULE_PLACEHOLDER) {
+      return [1, 99, 99, text];
+    }
+
+    if (TIME_PATTERN.test(text)) {
+      const hour = Number(text.slice(0, 2));
+      const minute = Number(text.slice(3));
+      if (hour <= 23 && minute <= 59) {
+        return [0, hour, minute, text];
+      }
+    }
+
+    return [1, 99, 99, text.toLowerCase()];
+  }
+
+  function compareScheduleEntries(left, right) {
+    const leftKey = scheduleTimeSortKey(left?.time);
+    const rightKey = scheduleTimeSortKey(right?.time);
+    for (let index = 0; index < leftKey.length; index += 1) {
+      if (leftKey[index] < rightKey[index]) return -1;
+      if (leftKey[index] > rightKey[index]) return 1;
+    }
+    return Number(left?.executionId || 0) - Number(right?.executionId || 0);
+  }
+
+  function compareOpenHouseRecords(left, right) {
+    const fields = ["world", "town", "houseName"];
+    for (const fieldName of fields) {
+      const result = compareNormalizedText(left?.[fieldName], right?.[fieldName]);
+      if (result !== 0) return result;
+    }
+    return compareNormalizedText(left?.ownerName, right?.ownerName);
+  }
+
   function normalizeOptionalString(value) {
     return value == null ? "" : String(value).trim();
   }
@@ -1785,5 +1846,6 @@
   }
 
   const TIME_PATTERN = /^\d{2}:\d{2}$/;
+  const UNKNOWN_SCHEDULE_PLACEHOLDER = "??:00";
   const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}(?:[T ][^ ]+)?$/;
 })();
