@@ -115,7 +115,7 @@
           <h2 class="section-label" id="warzonePlannerLabel">Warzone Planner</h2>
           <button
             type="button"
-            class="planner-print-trigger"
+            class="section-label planner-print-trigger"
             id="printListTrigger"
           >
             Print List
@@ -159,7 +159,10 @@
         aria-labelledby="printListModalTitle"
       >
         <div class="print-list-modal-header">
-          <h2 id="printListModalTitle">Print List</h2>
+          <div class="print-list-modal-heading">
+            <h2 id="printListModalTitle">Print List</h2>
+            <p class="print-list-modal-status" id="printListStatus" aria-live="polite"></p>
+          </div>
           <button
             type="button"
             class="print-list-modal-close"
@@ -169,16 +172,15 @@
             ✕
           </button>
         </div>
-        <p class="print-list-modal-status" id="printListStatus" aria-live="polite"></p>
         <textarea
           class="print-list-textarea"
           id="printListTextarea"
           spellcheck="false"
         ></textarea>
         <div class="print-list-modal-actions">
-          <button type="button" class="schedule-btn" id="printListCopyBtn">Copy</button>
-          <button type="button" class="schedule-btn" id="printListPrintBtn">Print</button>
-          <button type="button" class="schedule-btn" id="printListCloseActionBtn">Close</button>
+          <button type="button" class="schedule-btn print-list-modal-btn" id="printListCopyBtn">Copy</button>
+          <button type="button" class="schedule-btn print-list-modal-btn print-list-modal-btn--primary" id="printListPrintBtn">Print</button>
+          <button type="button" class="schedule-btn print-list-modal-btn print-list-modal-btn--dismiss" id="printListCloseActionBtn">Close</button>
         </div>
       </div>
     </div>
