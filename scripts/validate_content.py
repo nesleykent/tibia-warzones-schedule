@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from common import (
+    UNKNOWN_SCHEDULE_PLACEHOLDER,
     is_known_schedule_time,
     is_unknown_friendly_schedule_time,
     normalize_sort_text,
@@ -230,7 +231,9 @@ def validate_schedule_time(
         return
 
     report.error(
-        f"manual-schedules.json: {world_name} execution {execution_id} has invalid time {schedule_time!r}"
+        "manual-schedules.json: "
+        f"{world_name} execution {execution_id} has invalid time {schedule_time!r} "
+        f"(allowed: HH:MM or {UNKNOWN_SCHEDULE_PLACEHOLDER})"
     )
 
 
@@ -269,7 +272,10 @@ def validate_schedule_list(
         schedule_time = execution.get("schedule_time")
         validate_schedule_time(report, world_name, execution_id, schedule_time)
 
-        if isinstance(schedule_time, str) and is_unknown_friendly_schedule_time(schedule_time):
+        if isinstance(schedule_time, str) and (
+            is_known_schedule_time(schedule_time)
+            or is_unknown_friendly_schedule_time(schedule_time)
+        ):
             if schedule_time in seen_times:
                 report.error(
                     f"{source_name}: {world_name} has duplicate schedule_time {schedule_time!r}"

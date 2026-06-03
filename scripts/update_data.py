@@ -9,13 +9,17 @@ from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
 
-from common import normalize_manual_schedule_payload, normalize_manual_schedules_payload, normalize_worlds_payload
+from common import (
+    is_known_schedule_time,
+    is_unknown_friendly_schedule_time,
+    normalize_manual_schedule_payload,
+    normalize_manual_schedules_payload,
+    normalize_worlds_payload,
+)
 from economic_ranking import attach_ranking_metrics
 
 BASE_URL = "https://api.tibiadata.com/v4"
 BOSSES = ("Deathstrike", "Gnomevil", "Abyssador")
-SCHEDULE_TIME_PATTERN = re.compile(r"^[0-2?][0-9?]:[0-5?][0-9?]$")
-
 ROOT_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT_DIR / "data"
 OUTPUT_FILE = DATA_DIR / "worlds.json"
@@ -313,9 +317,9 @@ def validate_world_record(record: dict[str, Any]) -> list[str]:
             errors.append(f"execution_id inválido em warzone_executions[{index}]")
 
         schedule_time = execution.get("schedule_time")
-        if (
-            not isinstance(schedule_time, str)
-            or not SCHEDULE_TIME_PATTERN.fullmatch(schedule_time)
+        if not (
+            is_known_schedule_time(schedule_time)
+            or is_unknown_friendly_schedule_time(schedule_time)
         ):
             errors.append(f"schedule_time inválido em warzone_executions[{index}]")
 

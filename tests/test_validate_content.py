@@ -78,24 +78,33 @@ class ValidateManualSchedulesTest(unittest.TestCase):
         self.assertTrue(any("unknown world" in message for message in report.errors))
 
     def test_invalid_time(self) -> None:
-        payload = {
-            "Antica": {
-                "timezone": "America/Sao_Paulo",
-                "warzone_executions": [
-                    {
-                        "execution_id": 1,
-                        "schedule_time": "25:61",
-                        "warzone_sequence": "1-2-3",
+        invalid_times = ["24:00", "29:59", "20:?0", "2?:59", "??:30", "ab:cd"]
+
+        for invalid_time in invalid_times:
+            with self.subTest(invalid_time=invalid_time):
+                payload = {
+                    "Antica": {
+                        "timezone": "America/Sao_Paulo",
+                        "warzone_executions": [
+                            {
+                                "execution_id": 1,
+                                "schedule_time": invalid_time,
+                                "warzone_sequence": "1-2-3",
+                            }
+                        ],
                     }
-                ],
-            }
-        }
+                }
 
-        report = validate_content.validate_manual_schedules_payload(
-            payload, self.valid_worlds
-        )
+                report = validate_content.validate_manual_schedules_payload(
+                    payload, self.valid_worlds
+                )
 
-        self.assertTrue(any("invalid time" in message for message in report.errors))
+                self.assertTrue(
+                    any(
+                        "invalid time" in message and repr(invalid_time) in message
+                        for message in report.errors
+                    )
+                )
 
     def test_duplicate_schedule_time(self) -> None:
         payload = {

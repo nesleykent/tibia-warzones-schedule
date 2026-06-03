@@ -1095,7 +1095,9 @@
       const seenTimes = new Set();
       draft.entries.forEach((entry, index) => {
         const executionLabel = `${worldName} execution ${index + 1}`;
-        if (!TIME_PATTERN.test(entry.time)) {
+        if (entry.time === UNKNOWN_SCHEDULE_PLACEHOLDER) {
+          // Keep the known placeholder valid while sorting it after concrete times.
+        } else if (!TIME_PATTERN.test(entry.time)) {
           errors.push(`Schedule: ${executionLabel} must use HH:MM.`);
         } else {
           const [hour, minute] = entry.time.split(":").map(Number);
@@ -1680,6 +1682,10 @@
 
   function scheduleTimeSortKey(value) {
     const text = String(value || "").trim();
+    if (text === UNKNOWN_SCHEDULE_PLACEHOLDER) {
+      return [1, 99, 99, text];
+    }
+
     if (TIME_PATTERN.test(text)) {
       const hour = Number(text.slice(0, 2));
       const minute = Number(text.slice(3));
@@ -1840,5 +1846,6 @@
   }
 
   const TIME_PATTERN = /^\d{2}:\d{2}$/;
+  const UNKNOWN_SCHEDULE_PLACEHOLDER = "??:00";
   const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}(?:[T ][^ ]+)?$/;
 })();

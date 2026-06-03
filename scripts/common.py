@@ -16,7 +16,7 @@ TRACKED_ITEMS_JSON_CANDIDATES = [
     BASE_DIR / "tracked_items.json",
 ]
 KNOWN_TIME_PATTERN = re.compile(r"^\d{2}:\d{2}$")
-UNKNOWN_FRIENDLY_TIME_PATTERN = re.compile(r"^[0-2?][0-9?]:[0-5?][0-9?]$")
+UNKNOWN_SCHEDULE_PLACEHOLDER = "??:00"
 
 
 def slugify(value: str) -> str:
@@ -37,7 +37,7 @@ def is_known_schedule_time(value: Any) -> bool:
 
 
 def is_unknown_friendly_schedule_time(value: Any) -> bool:
-    return isinstance(value, str) and UNKNOWN_FRIENDLY_TIME_PATTERN.fullmatch(value) is not None
+    return isinstance(value, str) and value.strip() == UNKNOWN_SCHEDULE_PLACEHOLDER
 
 
 def schedule_time_sort_key(value: Any) -> tuple[int, int, int, str]:

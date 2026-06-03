@@ -119,6 +119,57 @@ class UpdateDataHelpersTest(unittest.TestCase):
             ["18:00", "22:00"],
         )
 
+    def test_validate_world_record_allows_exact_unknown_placeholder(self) -> None:
+        record = {
+            "name": "Antica",
+            "tracks_warzone_service": True,
+            "warzone_services_per_day": 1,
+            "mark": "healthy",
+            "has_service_history": True,
+            "last_detected_kills": {"Deathstrike": 1, "Gnomevil": 1, "Abyssador": 1},
+            "warzone_executions": [
+                {
+                    "execution_id": 1,
+                    "schedule_time": "??:00",
+                    "warzone_sequence": "1-2-3",
+                }
+            ],
+        }
+
+        self.assertEqual(update_data.validate_world_record(record), [])
+
+    def test_validate_world_record_rejects_malformed_placeholder_times(self) -> None:
+        invalid_times = ["24:00", "29:59", "20:?0", "2?:59", "??:30", "ab:cd"]
+
+        for invalid_time in invalid_times:
+            with self.subTest(invalid_time=invalid_time):
+                record = {
+                    "name": "Antica",
+                    "tracks_warzone_service": True,
+                    "warzone_services_per_day": 1,
+                    "mark": "healthy",
+                    "has_service_history": True,
+                    "last_detected_kills": {
+                        "Deathstrike": 1,
+                        "Gnomevil": 1,
+                        "Abyssador": 1,
+                    },
+                    "warzone_executions": [
+                        {
+                            "execution_id": 1,
+                            "schedule_time": invalid_time,
+                            "warzone_sequence": "1-2-3",
+                        }
+                    ],
+                }
+
+                self.assertTrue(
+                    any(
+                        "schedule_time inválido" in message
+                        for message in update_data.validate_world_record(record)
+                    )
+                )
+
 
 class UpdateOpenHousesHelpersTest(unittest.TestCase):
     def test_parse_sections_normalizes_escaped_newlines(self) -> None:
