@@ -107,12 +107,70 @@ Main pages:
 - `world.html?name=Antica`
 - `ranking.html`
 - `open-houses.html`
+- `admin.html`
+
+## Browser Data Editor
+
+Preferred maintainer workflow for source-data edits:
+
+1. Open `http://127.0.0.1:4173/admin.html` locally, or the deployed `/admin.html` route on GitHub Pages.
+2. Paste a GitHub fine-grained personal access token into the authentication panel.
+3. Use `Test connection` to verify the token can reach `nesleykent/tibia-warzones-schedule`.
+4. Edit schedules, tracked market items, or open houses directly in the browser.
+5. Use `Review pending file changes` to validate and preview the exact files that will change.
+6. Use `Create branch, commit files, and open PR` to create a maintainer branch and open a pull request against `main`.
+7. Clear the token when finished.
+
+Important limits:
+
+- token usage stays in the browser only
+- the token is never committed
+- token persistence is opt-in and uses `sessionStorage`, not `localStorage`
+- the editor only writes:
+  - `data/manual-schedules.json`
+  - `data/market/items/tracked_items.json`
+  - `data/open-houses.json`
+- generated files such as `data/worlds.json`, `data/history/*.json`, and `data/market/world/**/*.json` are intentionally untouched by the editor
+
+### Fine-grained token requirements
+
+Create a fine-grained personal access token with:
+
+- repository access limited to `nesleykent/tibia-warzones-schedule`
+- `Contents: Read and write`
+- `Pull requests: Read and write`
+
+GitHub also exposes repository metadata automatically for the connection test.
+
+### PR creation behavior
+
+The browser editor:
+
+- loads source data from the current static site
+- validates edits in JavaScript before submit
+- creates a branch named `maintainer-update-YYYYMMDD-HHMMSS`
+- commits changed source files through the GitHub REST API
+- opens a pull request against `main`
+
+The editor does not bypass existing refresh automation. After merge, the current GitHub Actions workflow still owns generated-file updates.
 
 ## Add A Warzone Schedule
 
 Source file:
 
 - [`data/manual-schedules.json`](/Users/nesleykent/Code/tibia-warzones-schedule/data/manual-schedules.json)
+
+Preferred browser workflow:
+
+1. Open `admin.html`
+2. Go to `Warzone schedule editor`
+3. Add a world schedule or select an existing world
+4. Edit `time`, `order`, and `timezone`
+5. Use `source` and `notes` for PR context
+6. Review pending file changes
+7. Create the PR
+
+`source` and `notes` help reviewers but are not persisted into `manual-schedules.json`, because the existing JSON contract only stores timezone plus execution rows.
 
 Rules:
 
@@ -186,6 +244,22 @@ Source files:
 - [`data/market/items/items.csv`](/Users/nesleykent/Code/tibia-warzones-schedule/data/market/items/items.csv)
 - [`data/market/items/tracked_items.json`](/Users/nesleykent/Code/tibia-warzones-schedule/data/market/items/tracked_items.json)
 
+Preferred browser workflow:
+
+1. Open `admin.html`
+2. Go to `Tracked market item editor`
+3. Add or edit a row using item id or exact item name from `items.csv`
+4. Toggle `enabled` to keep or drop the item from `tracked_items.json`
+5. Use `category` and `notes` for PR context
+6. Review pending changes
+7. Create the PR
+
+Contract note:
+
+- the repository contract still stores tracked items as names only in `tracked_items.json`
+- `category` and `notes` are PR metadata only
+- `enabled` controls whether the item name is written into `tracked_items.json`
+
 Workflow:
 
 1. Confirm the item exists in `items.csv`
@@ -215,23 +289,47 @@ Current caveat:
 - `Floribra`, `Junera`, and `Maligna` do not currently have market directories
 - validator reports those as warnings, not failures
 
-## Add An Open House Through GitHub Issues
+## Add Or Edit An Open House
 
-Preferred flow:
+Preferred browser workflow:
 
-1. Open a GitHub issue using the `Submit Open House` issue template
-2. Paste the door inspection log
-3. Fill utility fields
-4. Submit the issue
+1. Open `admin.html`
+2. Go to `Open house editor`
+3. Add a new record or select an existing record
+4. Edit required fields:
+   - `id`
+   - `houseName`
+   - `ownerName`
+   - `world`
+   - `town`
+   - `status`
+   - `utilities`
+   - `source`
+5. Review pending changes
+6. Create the PR
 
-Automation behavior:
+Validation rules enforced in-browser:
 
-- `scripts/update_open_houses.py` reads matching issues
-- owner and house are resolved through TibiaData
-- `data/open-houses.json` is rebuilt
-- the accepted issue is commented and closed by workflow automation
+- world must exist in `data/worlds.json`
+- required fields must be present
+- `houseId` must be numeric or blank
+- duplicate `houseId` values for the same world are rejected
 
-The canonical source of truth for open houses is the GitHub issue stream plus the generated `data/open-houses.json` registry.
+Manual-entry source guidance:
+
+- use `source.type = "manual"` for direct maintainer edits
+- use `issueNumber = 0` when there is no GitHub issue
+- keep `issueTitle` descriptive, such as `Manual maintainer update`
+
+The older GitHub issue flow still exists for community submissions, but it is no longer the primary maintainer workflow.
+
+## Clear The Token
+
+When the editing session ends:
+
+1. Click `Clear token` in `admin.html`
+2. If session persistence was enabled, confirm the token input is blank
+3. Close the tab if you want to drop the remaining session state immediately
 
 ## Correct World Metadata Safely
 
