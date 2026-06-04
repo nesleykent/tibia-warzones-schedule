@@ -513,12 +513,8 @@ body::after {
   -webkit-appearance: none;
   background: transparent;
   border: none;
-  color: #ffffff;
   cursor: pointer;
-  font: inherit;
-  line-height: inherit;
   text-align: right;
-  text-shadow: var(--text-shadow-strong);
 }
 
 .input-wrapper {
