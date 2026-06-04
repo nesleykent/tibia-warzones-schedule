@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 from pathlib import Path
@@ -32,8 +33,8 @@ UPPER_PERCENTILE = 98.5
 # Set to a positive integer like 90 or 180 if you want a rolling window.
 WINDOW_SIZE = 0
 
-# True prints what would happen and writes nothing.
-DRY_RUN = False
+# False keeps the command in dry-run mode unless the maintainer opts into writes.
+DEFAULT_WRITE_CHANGES = False
 
 # 8 bytes gives a short compact fingerprint with very low collision risk here.
 FINGERPRINT_SIZE_BYTES = 8
@@ -191,6 +192,19 @@ def iter_json_files() -> list[Path]:
     return sorted(RAW_WORLD_DIR.rglob("*.json"))
 
 
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Detect market-history outliers and optionally rewrite files in place."
+    )
+    parser.add_argument(
+        "--write",
+        action="store_true",
+        default=DEFAULT_WRITE_CHANGES,
+        help="Persist cleaned payloads. Defaults to dry-run mode.",
+    )
+    return parser.parse_args(argv)
+
+
 def split_rows(
     rows: list[dict[str, Any]],
     accepted_fingerprints: set[str],
@@ -211,7 +225,7 @@ def split_rows(
     return accepted_rows, unseen_rows
 
 
-def process_file(path: Path) -> tuple[int, int]:
+def process_file(path: Path, *, write_changes: bool = DEFAULT_WRITE_CHANGES) -> tuple[int, int]:
     payload = json.loads(path.read_text(encoding="utf-8"))
     rows = extract_rows(payload)
     if not rows:
@@ -267,7 +281,7 @@ def process_file(path: Path) -> tuple[int, int]:
 
     final_rows = accepted_rows + accepted_new_rows
 
-    if DRY_RUN:
+    if not write_changes:
         print(
             f"[dry-run] {path}: new_rows={len(unseen_rows)}, "
             f"accepted={len(accepted_new_rows)}, rejected={rejected_new_count}"
@@ -293,7 +307,8 @@ def process_file(path: Path) -> tuple[int, int]:
     return len(rows), rejected_new_count
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(argv)
     files = iter_json_files()
     if not files:
         print(f"No JSON files found under {RAW_WORLD_DIR}")
@@ -304,7 +319,10 @@ def main() -> int:
 
     for path in files:
         try:
-            original_count, rejected_count = process_file(path)
+            original_count, rejected_count = process_file(
+                path,
+                write_changes=args.write,
+            )
         except Exception as error:
             print(f"Failed {path}: {error}")
             continue
@@ -319,6 +337,8 @@ def main() -> int:
         f"Done. Processed {processed_files} files. "
         f"Rejected {total_rejected} new outliers."
     )
+    if not args.write:
+        print("Dry run only. Re-run with --write to persist cleaned files.")
     return 0
 
 

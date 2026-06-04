@@ -1707,9 +1707,7 @@ function renderWorld(world) {
     k.startsWith(world.name + "|")
   );
   const kills = getBossKills(world);
-  const serviceCount = Number(
-    world.last_detected_services ?? world.warzone_services_per_day ?? 0
-  );
+  const serviceCount = Number(world.last_detected_services ?? 0);
   const badgeTitle = dict.servicesTooltip(
     kills.deathstrike,
     kills.gnomevil,

@@ -239,15 +239,12 @@ def build_world_summary(
         "battleye_protected": world.get("battleye_protected"),
         "battleye_date": world.get("battleye_date"),
         "tracks_warzone_service": tracks_warzone_service,
-        "warzone_services_per_day": services_completed,
         "timezone": manual_schedule.get("timezone"),
         "last_detected_kills": boss_kills,
         "last_detected_services": services_completed,
         "mark": computed_data["mark"],
         "has_service_history": has_service_history_value,
         "warzone_executions": manual_schedule.get("warzone_executions", []),
-        "performs_warzone": tracks_warzone_service,
-        "warzonesperday": services_completed,
     }
 
 
@@ -264,15 +261,12 @@ def build_error_world_summary(
         "battleye_protected": world.get("battleye_protected"),
         "battleye_date": world.get("battleye_date"),
         "tracks_warzone_service": False,
-        "warzone_services_per_day": 0,
         "timezone": timezone_name,
         "last_detected_kills": {boss: 0 for boss in BOSSES},
         "last_detected_services": 0,
         "mark": "na",
         "has_service_history": has_service_history(history_data),
         "warzone_executions": manual_schedule.get("warzone_executions", []),
-        "performs_warzone": False,
-        "warzonesperday": 0,
         "error": str(error),
     }
 
@@ -286,8 +280,8 @@ def validate_world_record(record: dict[str, Any]) -> list[str]:
     if not isinstance(record.get("tracks_warzone_service"), bool):
         errors.append("tracks_warzone_service inválido")
 
-    if not isinstance(record.get("warzone_services_per_day"), int):
-        errors.append("warzone_services_per_day inválido")
+    if not isinstance(record.get("last_detected_services"), int):
+        errors.append("last_detected_services inválido")
 
     if record.get("mark") not in {"healthy", "inconclusive", "trolls", "na"}:
         errors.append("mark inválido")
@@ -355,6 +349,7 @@ def main() -> int:
 
     manual_schedules = load_manual_schedules()
     output: list[dict[str, Any]] = []
+    failed_worlds: list[tuple[str, str]] = []
     current_date = today_iso_date()
 
     for world in worlds:
@@ -395,7 +390,16 @@ def main() -> int:
             )
         except Exception as exc:
             print(f"ERRO {world_name}: {exc}", file=sys.stderr)
-            output.append(build_error_world_summary(world, world_name, manual_schedule, exc))
+            failed_worlds.append((world_name, str(exc)))
+
+    if failed_worlds:
+        print(
+            f"Falha ao atualizar worlds.json. {len(failed_worlds)} servidor(es) não puderam ser processados:",
+            file=sys.stderr,
+        )
+        for world_name, error_message in failed_worlds:
+            print(f"- {world_name}: {error_message}", file=sys.stderr)
+        return 1
 
     output = normalize_worlds_payload(output)
     output = attach_ranking_metrics(output, DATA_DIR)

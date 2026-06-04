@@ -294,10 +294,7 @@ def compute_world_ranking_metrics(world: dict[str, Any], data_dir: Path) -> dict
     deathstrike = int(current_kills.get("Deathstrike", 0) or 0)
     gnomevil = int(current_kills.get("Gnomevil", 0) or 0)
     abyssador = int(current_kills.get("Abyssador", 0) or 0)
-    services_completed = int(
-        world.get("last_detected_services", world.get("warzone_services_per_day", 0))
-        or 0
-    )
+    services_completed = int(world.get("last_detected_services", 0) or 0)
     expected_services = max(
         deathstrike,
         gnomevil,

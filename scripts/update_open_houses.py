@@ -4,6 +4,7 @@ import json
 import os
 import re
 import sys
+from copy import deepcopy
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
@@ -19,6 +20,7 @@ TIBIADATA_BASE_URL = os.environ.get("TIBIADATA_BASE_URL", "https://api.tibiadata
 GITHUB_API_URL = os.environ.get("GITHUB_API_URL", "https://api.github.com")
 GITHUB_REPOSITORY = os.environ.get("GITHUB_REPOSITORY", "")
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
+GITHUB_PER_PAGE = 100
 
 OPEN_HOUSE_TITLE_PREFIX = "[Open House]:"
 MAINTENANCE_TITLE_PREFIX = "[Open House Maintenance]:"
@@ -101,6 +103,18 @@ def github_headers() -> dict[str, str]:
 def github_get(path: str) -> Any:
     url = f"{GITHUB_API_URL.rstrip('/')}/{path.lstrip('/')}"
     return fetch_json(url, github_headers())
+
+
+def format_issue_reference(issue: dict[str, Any]) -> str:
+    number = int(issue.get("number") or 0)
+    title = str(issue.get("title", "")).strip()
+    if number and title:
+        return f"issue #{number} ({title})"
+    if number:
+        return f"issue #{number}"
+    if title:
+        return f"issue ({title})"
+    return "issue"
 
 
 def normalize_issue_body(body: str) -> str:
@@ -247,21 +261,29 @@ def apply_maintenance_issue(records: dict[str, dict[str, Any]], issue: dict[str,
     world = sections.get("World", "").strip()
     house_name = sections.get("House name", "").strip()
     if not world or not house_name:
-        return
+        raise ValueError("Maintenance issue must include both World and House name.")
 
+    if action not in {"Edit existing open house", "Remove existing open house"}:
+        raise ValueError(f"Unsupported maintenance request type: {action or '<blank>'}.")
+
+    matched_records: list[dict[str, Any]] = []
     for record_id, record in list(records.items()):
         if (
             normalize_text(record.get("world")) == normalize_text(world)
             and normalize_text(record.get("houseName")) == normalize_text(house_name)
         ):
+            matched_records.append(deepcopy(record))
             del records[record_id]
+
+    if not matched_records:
+        raise ValueError(f"No existing open house matched {world} / {house_name}.")
 
     if action != "Edit existing open house":
         return
 
     replacement_log = sections.get("Updated door inspection log", "").strip()
     if not replacement_log:
-        return
+        raise ValueError("Edit requests must include Updated door inspection log.")
 
     synthetic_issue = {
         **issue,
@@ -294,14 +316,43 @@ def apply_maintenance_issue(records: dict[str, dict[str, Any]], issue: dict[str,
         ),
     }
     record = build_record_from_issue(synthetic_issue)
+    existing_record = matched_records[-1]
+    utilities = existing_record.get("utilities")
+    if isinstance(utilities, dict):
+        record["utilities"] = deepcopy(utilities)
+
+    status = str(existing_record.get("status", "")).strip()
+    if status:
+        record["status"] = status
+
+    for field_name in ("lastSeenOpen", "createdAt", "updatedAt"):
+        value = str(existing_record.get(field_name, "")).strip()
+        if value:
+            record[field_name] = value
+
     records[record["id"]] = record
 
 
 def fetch_all_issues() -> list[dict[str, Any]]:
     if not GITHUB_REPOSITORY or not GITHUB_TOKEN:
         raise RuntimeError("GITHUB_REPOSITORY and GITHUB_TOKEN are required.")
-    issues = github_get(f"repos/{GITHUB_REPOSITORY}/issues?state=all&per_page=100")
-    return issues if isinstance(issues, list) else []
+
+    issues: list[dict[str, Any]] = []
+    page = 1
+
+    while True:
+        payload = github_get(
+            f"repos/{GITHUB_REPOSITORY}/issues?state=all&per_page={GITHUB_PER_PAGE}&page={page}"
+        )
+        if not isinstance(payload, list):
+            raise RuntimeError(f"GitHub issues API returned an invalid payload for page {page}.")
+
+        issues.extend(issue for issue in payload if isinstance(issue, dict))
+        if len(payload) < GITHUB_PER_PAGE:
+            break
+        page += 1
+
+    return issues
 
 
 def iter_matching_issues(
@@ -318,19 +369,25 @@ def iter_matching_issues(
 def build_registry() -> list[dict[str, Any]]:
     records: dict[str, dict[str, Any]] = {}
     issues = fetch_all_issues()
+    errors: list[str] = []
 
     for issue in iter_matching_issues(issues, OPEN_HOUSE_TITLE_PREFIX):
         try:
             record = build_record_from_issue(issue)
-        except Exception:
+        except Exception as exc:
+            errors.append(f"{format_issue_reference(issue)}: {exc}")
             continue
         records[record["id"]] = record
 
     for issue in iter_matching_issues(issues, MAINTENANCE_TITLE_PREFIX):
         try:
             apply_maintenance_issue(records, issue)
-        except Exception:
-            continue
+        except Exception as exc:
+            errors.append(f"{format_issue_reference(issue)}: {exc}")
+
+    if errors:
+        details = "\n".join(f"- {message}" for message in errors)
+        raise RuntimeError(f"Open house rebuild failed:\n{details}")
 
     return normalize_open_houses_payload(records.values())
 

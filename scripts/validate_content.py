@@ -46,15 +46,12 @@ REQUIRED_WORLD_FIELDS = {
     "battleye_protected",
     "battleye_date",
     "tracks_warzone_service",
-    "warzone_services_per_day",
     "timezone",
     "last_detected_kills",
     "last_detected_services",
     "mark",
     "has_service_history",
     "warzone_executions",
-    "performs_warzone",
-    "warzonesperday",
     "warzone_economic_ranking",
 }
 REQUIRED_RANKING_FIELDS = {
@@ -705,11 +702,11 @@ def validate_worlds_payload(payload: Any) -> ValidationReport:
         if world.get("mark") not in ALLOWED_MARKS:
             report.error(f"worlds.json: {world_name} has invalid mark {world.get('mark')!r}")
 
-        for field_name in ("battleye_protected", "tracks_warzone_service", "has_service_history", "performs_warzone"):
+        for field_name in ("battleye_protected", "tracks_warzone_service", "has_service_history"):
             if not isinstance(world.get(field_name), bool):
                 report.error(f"worlds.json: {world_name} field {field_name} must be a boolean")
 
-        for field_name in ("warzone_services_per_day", "last_detected_services", "warzonesperday"):
+        for field_name in ("last_detected_services",):
             if not is_int(world.get(field_name)):
                 report.error(f"worlds.json: {world_name} field {field_name} must be an integer")
 

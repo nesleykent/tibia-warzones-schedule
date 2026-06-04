@@ -184,36 +184,18 @@
       <section class="admin-card" aria-labelledby="openHouseTitle">
         <div class="admin-card-header">
           <div>
-            <h2 id="openHouseTitle">Open house editor</h2>
+            <h2 id="openHouseTitle">Open house updates</h2>
             <p class="admin-card-copy">
-              Directly edits <code>data/open-houses.json</code>. Existing source fields stay intact, and manual entries can use source type <code>manual</code>.
+              <code>data/open-houses.json</code> is regenerated from GitHub issues by
+              <code>scripts/update_open_houses.py</code>. Browser edits are disabled here so
+              maintainers do not create changes that the rebuild workflow will overwrite.
             </p>
           </div>
-          <button id="addOpenHouseButton" type="button" class="admin-button admin-button--secondary">
-            Add open house
-          </button>
         </div>
-
-        <div class="admin-grid admin-grid--two">
-          <label class="admin-field">
-            <span>Search open houses</span>
-            <input id="openHouseSearchInput" type="search" placeholder="World, owner, house name…" />
-          </label>
-
-          <label class="admin-field">
-            <span>Select record</span>
-            <select id="openHouseSelect"></select>
-          </label>
+        <div class="admin-empty">
+          Submit new listings with the repository open-house issue template. Use the maintenance
+          issue template for edits or removals so the generated registry stays durable.
         </div>
-
-        <div class="admin-actions admin-actions--compact">
-          <button id="removeOpenHouseButton" type="button" class="admin-button admin-button--danger">
-            Remove selected open house
-          </button>
-        </div>
-
-        <div id="openHouseEditor" class="admin-stack"></div>
-        <div id="openHouseValidation" class="admin-status admin-status--muted" aria-live="polite"></div>
       </section>
 
       <section class="admin-card" aria-labelledby="pullRequestTitle">

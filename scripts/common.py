@@ -10,6 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 LOGS_DIR = BASE_DIR / "logs"
 
 RAW_WORLD_DIR = BASE_DIR / "data" / "market" / "world"
+WORLDS_JSON = BASE_DIR / "data" / "worlds.json"
 ITEMS_CSV = BASE_DIR / "data" / "market" / "items" / "items.csv"
 TRACKED_ITEMS_JSON_CANDIDATES = [
     BASE_DIR / "data" / "market" / "items" / "tracked_items.json",
@@ -255,7 +256,33 @@ def discover_tracked_items() -> list[dict[str, Any]]:
 
 
 def get_tracked_worlds() -> list[str]:
+    try:
+        payload = json.loads(WORLDS_JSON.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        payload = None
+
+    if isinstance(payload, list):
+        names: list[str] = []
+        seen: set[str] = set()
+        for world in payload:
+            if not isinstance(world, dict):
+                continue
+            name = str(world.get("name", "")).strip()
+            if not name:
+                continue
+            key = normalize_sort_text(name)
+            if key in seen:
+                continue
+            seen.add(key)
+            names.append(name)
+
+        if names:
+            return sorted(names, key=normalize_sort_text)
+
     if not RAW_WORLD_DIR.exists():
         return []
 
-    return sorted(path.name for path in RAW_WORLD_DIR.iterdir() if path.is_dir())
+    return sorted(
+        (path.name for path in RAW_WORLD_DIR.iterdir() if path.is_dir()),
+        key=normalize_sort_text,
+    )

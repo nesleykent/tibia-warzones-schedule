@@ -16,6 +16,7 @@
   const BASE_BRANCH = "main";
   const GITHUB_API_BASE = "https://api.github.com";
   const VALID_WARZONE_ORDERS = ["", "1-2-3", "1-3-2", "2-1-3"];
+  const OPEN_HOUSE_EDITOR_ENABLED = false;
   const TOKEN_SESSION_KEY = "adminGithubToken";
   const TOKEN_REMEMBER_KEY = "adminGithubTokenRemember";
   const FILE_PATHS = {
@@ -142,19 +143,21 @@
     elements.trackedItemsTable.addEventListener("input", handleTrackedItemInput);
     elements.trackedItemsTable.addEventListener("click", handleTrackedItemClick);
 
-    elements.openHouseSearchInput.addEventListener("input", () => {
-      state.openHouseSearch = elements.openHouseSearchInput.value.trim();
-      renderOpenHouseSelect();
-    });
-    elements.openHouseSelect.addEventListener("change", () => {
-      state.selectedOpenHouseIndex = Number(elements.openHouseSelect.value) || 0;
-      renderOpenHouseEditor();
-      updateValidationStatuses();
-    });
-    elements.addOpenHouseButton.addEventListener("click", addOpenHouse);
-    elements.removeOpenHouseButton.addEventListener("click", removeSelectedOpenHouse);
-    elements.openHouseEditor.addEventListener("input", handleOpenHouseInput);
-    elements.openHouseEditor.addEventListener("click", handleOpenHouseClick);
+    if (OPEN_HOUSE_EDITOR_ENABLED) {
+      elements.openHouseSearchInput.addEventListener("input", () => {
+        state.openHouseSearch = elements.openHouseSearchInput.value.trim();
+        renderOpenHouseSelect();
+      });
+      elements.openHouseSelect.addEventListener("change", () => {
+        state.selectedOpenHouseIndex = Number(elements.openHouseSelect.value) || 0;
+        renderOpenHouseEditor();
+        updateValidationStatuses();
+      });
+      elements.addOpenHouseButton.addEventListener("click", addOpenHouse);
+      elements.removeOpenHouseButton.addEventListener("click", removeSelectedOpenHouse);
+      elements.openHouseEditor.addEventListener("input", handleOpenHouseInput);
+      elements.openHouseEditor.addEventListener("click", handleOpenHouseClick);
+    }
 
     elements.reviewChangesButton.addEventListener("click", reviewPendingChanges);
     elements.createPullRequestButton.addEventListener("click", createPullRequestWorkflow);
@@ -371,8 +374,10 @@
     renderScheduleWorldSelects();
     renderScheduleEditor();
     renderTrackedItems();
-    renderOpenHouseSelect();
-    renderOpenHouseEditor();
+    if (OPEN_HOUSE_EDITOR_ENABLED) {
+      renderOpenHouseSelect();
+      renderOpenHouseEditor();
+    }
     renderPendingChanges();
     updateValidationStatuses();
   }
@@ -1054,11 +1059,13 @@
   function updateValidationStatuses() {
     const scheduleErrors = validateSchedules();
     const trackedItemErrors = validateTrackedItems();
-    const openHouseErrors = validateOpenHouses();
 
     renderValidationList(elements.scheduleValidation, scheduleErrors, "No schedule validation errors.");
     renderValidationList(elements.marketValidation, trackedItemErrors, "No tracked item validation errors.");
-    renderValidationList(elements.openHouseValidation, openHouseErrors, "No open house validation errors.");
+    if (OPEN_HOUSE_EDITOR_ENABLED) {
+      const openHouseErrors = validateOpenHouses();
+      renderValidationList(elements.openHouseValidation, openHouseErrors, "No open house validation errors.");
+    }
   }
 
   function renderValidationList(element, errors, successMessage) {
@@ -1279,20 +1286,16 @@
     const errors = [
       ...validateSchedules(),
       ...validateTrackedItems(),
-      ...validateOpenHouses(),
     ];
     const files = [];
     const schedulePayload = buildManualSchedulesPayload();
     const trackedItemsPayload = buildTrackedItemsPayload();
-    const openHousesPayload = buildOpenHousesPayload();
 
     const nextScheduleText = stringifyManualSchedules(schedulePayload);
     const nextTrackedItemsText = `${JSON.stringify(trackedItemsPayload, null, 2)}\n`;
-    const nextOpenHousesText = `${JSON.stringify(openHousesPayload, null, 2)}\n`;
 
     const originalSchedulePayload = tryParseJson(state.originalFiles.schedules);
     const originalTrackedItemsPayload = tryParseJson(state.originalFiles.trackedItems);
-    const originalOpenHousesPayload = tryParseJson(state.originalFiles.openHouses);
 
     if (!jsonDeepEqual(schedulePayload, originalSchedulePayload)) {
       files.push({
@@ -1307,14 +1310,6 @@
         path: FILE_PATHS.trackedItems,
         content: nextTrackedItemsText,
         summary: `${trackedItemsPayload.items.length} enabled items`,
-      });
-    }
-
-    if (!jsonDeepEqual(openHousesPayload, originalOpenHousesPayload)) {
-      files.push({
-        path: FILE_PATHS.openHouses,
-        content: nextOpenHousesText,
-        summary: `${openHousesPayload.length} records`,
       });
     }
 
@@ -1531,7 +1526,6 @@
     const summary = String(elements.prSummaryInput.value || "").trim();
     const scheduleNotes = collectScheduleNotes();
     const trackedItemNotes = collectTrackedItemNotes();
-    const openHouseStats = collectOpenHouseStats();
 
     return [
       "## Maintainer Data Update",
@@ -1551,15 +1545,9 @@
         ? trackedItemNotes.map((line) => `- ${line}`)
         : ["- No extra tracked-item notes supplied."]),
       "",
-      "## Open House Summary",
-      `- Added: ${openHouseStats.added}`,
-      `- Removed: ${openHouseStats.removed}`,
-      `- Total records after edit: ${openHouseStats.total}`,
-      "",
       "## Source File Scope",
       `- \`${FILE_PATHS.schedules}\``,
       `- \`${FILE_PATHS.trackedItems}\``,
-      `- \`${FILE_PATHS.openHouses}\``,
       "",
       "Generated files remain untouched in this PR and should refresh through the existing GitHub Actions workflow after merge.",
     ].join("\n");
