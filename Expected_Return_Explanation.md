@@ -1,67 +1,99 @@
-# Expected Return Calculation Methodology
+# Ranking Methodology
 
-Related project documentation:
+This document describes the ranking logic proven in `scripts/economic_ranking.py`.
 
-- [README.md](./README.md)
+## Inputs
 
-This document outlines the systematic process for calculating the **Expected Return** of the Warzone Service across various game worlds. The calculation standardizes the value of rewards into Tibia Coins (TC) to facilitate cross-world profitability analysis.
+The ranking code loads five market models per world:
 
-## 1. Market Data Acquisition and Normalization
+- Tibia Coins
+- Minor Crystalline Token
+- Gill Necklace
+- Prismatic Necklace
+- Prismatic Ring
 
-The calculation begins by establishing a stable price for four essential items:
-- **Tibia Coins**
-- **Gill Necklaces**
-- **Prismatic Necklaces**
-- **Prismatic Rings**
+It also loads the last five history rows for the world from `data/history/<world>.json` and current kill counters from the world record in `data/worlds.json`.
 
-### Rolling Average Logic
-To mitigate the impact of market manipulation or short-term volatility, the system utilizes a **last-7-entries rolling window**.
-1.  **Entry Mean:** For each market entry, the script identifies the average of the `day_average_sell` and `day_average_buy` values.
-2.  **Window Mean:** It then calculates the mean of the most recent 7 valid entry averages.
-3.  **Integrity Check:** If data for any of the four items is missing within the world's history, the world is flagged as `missing_inputs` and excluded from the final rankings.
+## Market Price Normalization
 
-## 2. Individual Warzone Expected Value (EV)
+For each market snapshot row:
 
-Each Warzone reward structure is calculated independently based on fixed gold rewards, constant shard values, and dynamic market prices for equipment.
+1. Take the positive values from `day_average_sell` and `day_average_buy`.
+2. Average those values for the row.
+3. Sort rows by `time` descending.
+4. Average the most recent 7 valid rows.
 
-### Warzone 1 (WZ1)
-The value includes a fixed gold payment and a 50% probability of receiving a Green Crystal Shard.
-- **Fixed Gold:** 30,000
-- **Shard Factor:** 10,500 * 0.5 (Probability-weighted)
-- **Variable:** Market Price of Gill Necklace
-- **Equation:** `WZ1_EV = 30,000 + 5,250 + Price_GillNecklace`
+That 7-row mean is the preferred price input for the ranking formulas.
 
-### Warzone 2 (WZ2)
-This calculation includes fixed gold and the guaranteed value of Blue Crystal Shards.
-- **Fixed Gold:** 40,000
-- **Shard Factor:** 15,000 (Constant)
-- **Variable:** Market Price of Prismatic Necklace
-- **Equation:** `WZ2_EV = 40,000 + 15,000 + Price_PrismaticNecklace`
+The code also computes supply, demand, midpoint, spread, spread ratio, liquidity factor, and adjusted effective price for every tracked ranking item. Those values are stored in the embedded ranking block, but the main ranking order still uses expected return only.
 
-### Warzone 3 (WZ3)
-The final run includes fixed gold and the guaranteed value of Violet Crystal Shards.
-- **Fixed Gold:** 50,000
-- **Shard Factor:** 18,000 (Constant)
-- **Variable:** Market Price of Prismatic Ring
-- **Equation:** `WZ3_EV = 50,000 + 18,000 + Price_PrismaticRing`
+## Expected Value Formulas
 
-## 3. Final Expected Return Calculation
+Constants:
 
-The final metric is derived by aggregating the value of the full circuit and converting it into Tibia Coins.
+- rolling window size: `7`
+- green crystal shard probability: `0.5`
+- warzone 1 fixed gold: `30000`
+- warzone 1 green shard value: `10500`
+- warzone 2 fixed gold: `40000`
+- warzone 2 blue shard value: `15000`
+- warzone 3 fixed gold: `50000`
+- warzone 3 violet shard value: `18000`
 
-### Step A: Service Expected Value
-The total gold value of the service is the sum of the three individual Warzone values.
-`Service_EV = WZ1_EV + WZ2_EV + WZ3_EV`
+Formulas:
 
-### Step B: The Return Metric
-To determine the "real-world" value, the total gold is divided by the local market price of Tibia Coins.
-`Expected_Return = Service_EV / Price_Tibia_Coin`
+```text
+WZ1 = 30000 + (10500 * 0.5) + GillNecklacePrice
+WZ2 = 40000 + 15000 + PrismaticNecklacePrice
+WZ3 = 50000 + 18000 + PrismaticRingPrice
+ServiceExpectedValue = WZ1 + WZ2 + WZ3
+EconomicScoreRaw = ServiceExpectedValue / TibiaCoinPrice
+```
 
-## Summary of Constants
-| Constant | Value |
-| :--- | :--- |
-| Rolling Window | 7 Entries |
-| Green Shard Probability | 0.5 |
-| WZ1 Fixed Gold | 30,000 |
-| WZ2 Fixed Gold | 40,000 |
-| WZ3 Fixed Gold | 50,000 |
+`TibiaCoinPrice`, `GillNecklacePrice`, `PrismaticNecklacePrice`, and `PrismaticRingPrice` are taken from the first positive value in this fallback order:
+
+1. `rolling_window_price`
+2. `adjusted_effective_price`
+3. `mid_price`
+4. `supply_price`
+5. `demand_price`
+
+## Health And Liquidity Metrics
+
+The ranking block also stores:
+
+- `history_health_score`: average of the last five history marks
+- `current_operational_score`: ratio of current boss kills and detected services
+- `warzone_health_score`: `history_health_score * 0.7 + current_operational_score * 0.3`
+- `market_liquidity_score`: average liquidity factor across all five ranking market items, including Minor Crystalline Token
+
+These metrics are informative, but they do not currently change rank order.
+
+## Rank Order
+
+The code sets:
+
+```text
+final_score = economic_score_raw
+```
+
+Then it sorts ranked worlds by:
+
+1. `economic_score_raw` descending
+2. world name ascending
+
+`ranking_position` is assigned after that sort.
+
+## Exclusion Rules
+
+A world is not ranked when any of these conditions are true:
+
+- the world name is empty
+- `economic_score_raw` could not be computed
+- the current world mark is `na`
+
+When a world is excluded because its mark is `na`, the code may still keep computed market and expected-value fields in the ranking block. The world simply does not receive a rank position.
+
+## Stored Output
+
+The ranking data is embedded in each world record under `warzone_economic_ranking` inside `data/worlds.json`.

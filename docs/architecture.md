@@ -1,200 +1,285 @@
-# Architecture Overview
+# Architecture
 
-This repository is a static GitHub Pages site backed by committed generated JSON files. The site has no backend, no SSR, and no database. The browser loads JSON directly from the repository output.
+This repository is a static GitHub Pages application. Browsers fetch committed JSON files directly. Python scripts refresh those files, and GitHub Actions commit the refreshed outputs back to `main`.
 
-Use [`docs/repository-audit.md`](/Users/nesleykent/Code/tibia-warzones-schedule/docs/repository-audit.md) for the full audit; this document is the operational architecture reference.
+## High-Level Shape
+
+- Frontend: plain HTML, CSS, and browser JavaScript in the repo root and `assets/`
+- Data: committed JSON and CSV files in `data/`
+- Automation: Python scripts in `scripts/` and workflows in `.github/workflows/`
+- Deployment: GitHub Pages publishes a copied `_site` artifact built from committed files
+
+There is no backend server, database, bundler, or JavaScript package build step.
 
 ## Frontend Entry Points
 
-- [`index.html`](/Users/nesleykent/Code/tibia-warzones-schedule/index.html)
-  - `assets/shared.js`
-  - `assets/app.js`
-  - world list, planner, filters, notifications
+### `index.html`
 
-- [`world.html`](/Users/nesleykent/Code/tibia-warzones-schedule/world.html)
-  - `assets/shared.js`
-  - `assets/world.js`
-  - per-world summary, schedules, ranking summary, market, history
+- Controller: `assets/app.js`
+- Shared runtime: `assets/shared.js`
+- Purpose: world discovery, planner selections, countdowns, filters, and notifications
+- Evidence: `assets/app.js:init()`, `renderWorld()`, `renderSchedulePanel()`, `updateCountdownPanel()`
 
-- [`ranking.html`](/Users/nesleykent/Code/tibia-warzones-schedule/ranking.html)
-  - `assets/shared.js`
-  - `assets/ranking.js`
-  - ranking table from `data/worlds.json`
+### `world.html`
 
-- [`open-houses.html`](/Users/nesleykent/Code/tibia-warzones-schedule/open-houses.html)
-  - `assets/shared.js`
-  - `assets/open-houses.js`
-  - open-house overview and world detail
+- Controller: `assets/world.js`
+- Shared runtime: `assets/shared.js`
+- Purpose: one-world summary, schedules, market tables and charts, history table, and external links
+- Evidence: `assets/world.js:loadWorldPage()`, `renderMarketPrices()`, `renderHistory()`
 
-- [`bigfoot.html`](/Users/nesleykent/Code/tibia-warzones-schedule/bigfoot.html)
-  - `assets/shared.js`
-  - `assets/bigfoot.js`
-  - static reference page
+### `ranking.html`
 
-## Source vs Generated Files
+- Controller: `assets/ranking.js`
+- Shared runtime: `assets/shared.js`
+- Purpose: sortable ranking table built from `worlds.json`
+- Evidence: `assets/ranking.js:init()`, `render()`, `renderTable()`
 
-### Source
+### `open-houses.html`
 
-- HTML in repository root
-- JavaScript and CSS in `assets/`
-- Python scripts in `scripts/`
-- issue templates and workflows in `.github/`
-- `data/manual-schedules.json`
-- `data/market/items/items.csv`
-- `data/market/items/tracked_items.json`
+- Controller: `assets/open-houses.js`
+- Shared runtime: `assets/shared.js`
+- Purpose: world overview and per-world detail for open-house records
+- Evidence: `assets/open-houses.js:init()`, `getVisibleWorlds()`, `renderWorldDetail()`
 
-### Generated
+### `bigfoot.html`
 
-- `data/worlds.json`
-- `data/history/*.json`
-- `data/open-houses.json`
-- `data/market/world/**/*.json`
-- `data/market/sync_state.json`
+- Controller: `assets/bigfoot.js`
+- Shared runtime: `assets/shared.js`
+- Purpose: static quest reference page
+- Evidence: `assets/bigfoot.js`
 
-### Local Artifacts
+### `admin.html`
 
-- `.DS_Store`
-- `__pycache__/`
-- `.venv/`
+- Controller: `assets/admin.js`
+- Shared runtime: `assets/shared.js`
+- Purpose: browser maintainer editor that opens GitHub branches, commits, and pull requests
+- Evidence: `assets/admin.js:init()`, `buildPendingReview()`, `createPullRequestWorkflow()`
 
-## Data Flow
+## Shared Frontend Runtime
 
-```text
-TibiaData APIs
-  + manual schedule source
-    -> scripts/update_data.py
-      -> data/worlds.json
-      -> data/history/*.json
-        -> frontend pages
+`assets/shared.js` defines `window.TibiaTime`, which all page controllers use for:
 
-TibiaMarket API
-  + tracked item catalog
-    -> scripts/fetch_item_history.py
-      -> data/market/world/**/*.json
-        -> scripts/economic_ranking.py
-          -> ranking block in data/worlds.json
-            -> ranking.html + world.html
+- fetching JSON
+- storage helpers
+- timezone conversion
+- language controls
+- world metadata labels
+- footer rendering
 
-GitHub Issues
-  + TibiaData house/character lookups
-    -> scripts/update_open_houses.py
-      -> data/open-houses.json
-        -> open-houses.html
-```
+The page scripts are independent files that read helpers from that shared global.
 
-## Python Pipeline
+## Data Model
+
+### `data/worlds.json`
+
+Primary site dataset. It is consumed by the home page, world page, ranking page, open-houses page, and admin page.
+
+Each world record includes:
+
+- upstream world metadata
+- current kill counts
+- current service counters
+- merged manual schedule data
+- history presence flags
+- embedded `warzone_economic_ranking`
+
+Produced by:
+
+- `scripts/update_data.py`
+- `scripts/enrich_worlds_with_rankings.py`
+
+### `data/history/*.json`
+
+One file per world. Each file stores dated kill counts, service counts, and marks.
+
+Consumed by:
+
+- `assets/world.js`
+- `scripts/economic_ranking.py`
+
+Produced by:
+
+- `scripts/update_data.py`
+
+### `data/market/world/<World>/<world>_<item>.json`
+
+One file per world and tracked item. Files store `last_run_at`, `status`, and `snapshots`.
+
+Consumed by:
+
+- `assets/world.js`
+- `scripts/economic_ranking.py`
+
+Produced by:
+
+- `scripts/fetch_item_history.py`
+- optionally rewritten by `scripts/remove_outliers.py`
+
+### `data/manual-schedules.json`
+
+Manual source input for schedule and timezone data. Merged into `data/worlds.json` by `scripts/update_data.py`.
+
+### `data/market/items/items.csv`
+
+Market item catalog used by `scripts/common.py` and `assets/admin.js`.
+
+### `data/market/items/tracked_items.json`
+
+List of enabled tracked market items. Used by `scripts/common.py` and `assets/admin.js`.
+
+### `data/open-houses.json`
+
+Materialized registry consumed by `assets/open-houses.js` and `assets/admin.js`.
+
+Produced by:
+
+- `scripts/update_open_houses.py`
+
+Important constraint:
+
+- this file is output, not the durable source of truth
+- the durable source is GitHub issues parsed by `scripts/update_open_houses.py`
+
+## Script Layer
 
 ### `scripts/update_data.py`
 
-- fetches world list from TibiaData
-- fetches kill statistics per world
-- merges `data/manual-schedules.json`
-- updates `data/history/*.json`
-- rebuilds `data/worlds.json`
-- attaches economic ranking metrics
+Pipeline:
+
+1. fetch world metadata from TibiaData
+2. fetch per-world kill statistics from TibiaData
+3. merge manual schedules from `data/manual-schedules.json`
+4. append or replace today’s history row in `data/history/*.json`
+5. build world summaries
+6. attach ranking metrics through `attach_ranking_metrics()`
+7. validate and write `data/worlds.json`
+
+Key functions:
+
+- `get_worlds()`
+- `get_kill_statistics()`
+- `build_world_summary()`
+- `main()`
 
 ### `scripts/economic_ranking.py`
 
-- reads `data/history/*.json`
-- reads `data/market/world/**/*.json`
-- computes expected return and ranking fields
-- writes data indirectly through `update_data.py` or `enrich_worlds_with_rankings.py`
+Responsibilities:
+
+- load market files and history files
+- compute expected return and supporting metrics
+- embed `warzone_economic_ranking` into each world record
+- assign `ranking_position`
+
+Key functions:
+
+- `load_market_models()`
+- `load_recent_history_marks()`
+- `compute_world_ranking_metrics()`
+- `attach_ranking_metrics()`
 
 ### `scripts/enrich_worlds_with_rankings.py`
 
-- rebuilds only ranking fields into `data/worlds.json`
+Standalone ranking rebuild using existing local data. It rewrites only `data/worlds.json`.
 
 ### `scripts/fetch_item_history.py`
 
-- resolves tracked items from `items.csv` and `tracked_items.json`
-- fetches market history from TibiaMarket
-- writes per-world item files
-- persists sync checkpoint
+Responsibilities:
+
+- discover tracked worlds from directories under `data/market/world/`
+- discover tracked items from `items.csv` filtered by `tracked_items.json`
+- fetch TibiaMarket item history
+- merge rows by `(id, time)`
+- update `data/market/sync_state.json`
+
+Key functions:
+
+- `resolve_worlds()`
+- `resolve_items()`
+- `merge_rows()`
+- `write_sync_checkpoint()`
+- `run()`
 
 ### `scripts/update_open_houses.py`
 
-- reads GitHub issues
-- resolves world/town/house data using TibiaData
-- rebuilds `data/open-houses.json`
+Pipeline:
+
+1. fetch GitHub issues
+2. keep issues whose titles match the open-house prefixes
+3. parse issue body sections
+4. resolve owner and house metadata through TibiaData
+5. apply maintenance issues
+6. normalize and write `data/open-houses.json`
+
+Key functions:
+
+- `parse_sections()`
+- `build_record_from_issue()`
+- `apply_maintenance_issue()`
+- `build_registry()`
+
+### `scripts/validate_content.py`
+
+Repository contract validator for:
+
+- schedules
+- world records
+- ranking blocks
+- market files
+- open-house payloads
 
 ### `scripts/remove_outliers.py`
 
-- cleans market history files using percentile-based filtering
-- requires `numpy`
-
-## Ranking Flow
-
-Ranking does not have its own top-level dataset. It is embedded into each world record inside `data/worlds.json` under `warzone_economic_ranking`.
-
-Inputs:
-
-- world metadata and observed service state
-- last five history marks
-- market rolling window prices
-- fixed formula constants in `scripts/economic_ranking.py`
-
-Outputs:
-
-- ranking position
-- service expected value
-- expected return in Tibia Coins terms
-- liquidity and health scores
-
-## Market Flow
-
-Source inputs:
-
-- `data/market/items/items.csv`
-- `data/market/items/tracked_items.json`
-
-Generated outputs:
-
-- `data/market/world/<world>/<world>_<item>.json`
-- ranking fields in `data/worlds.json`
-
-Frontend consumers:
-
-- `assets/world.js`
-- `assets/ranking.js` through embedded ranking data
-
-## Open Houses Flow
-
-Source inputs:
-
-- GitHub issues using the open-house templates
-
-Generated output:
-
-- `data/open-houses.json`
-
-Frontend consumer:
-
-- `assets/open-houses.js`
+Manual maintenance utility that rewrites market files in place after percentile-based filtering. It is not part of any GitHub Actions workflow.
 
 ## Deployment Flow
 
-### Data-refresh workflows
+`deploy-pages.yml` does four things:
 
-- `update-worlds.yml`
-  - rebuilds `data/worlds.json` and `data/history`
-- `update-market.yml`
-  - refreshes tracked market files
-  - rebuilds ranking fields in `data/worlds.json`
-- `update-open-houses.yml`
-  - rebuilds `data/open-houses.json`
+1. validate Python syntax
+2. run unit tests
+3. run repository content validation and JavaScript syntax validation
+4. copy `assets`, `data`, the HTML entry points, `LICENSE`, and `README.md` into `_site` and deploy that artifact
 
-These workflows commit generated data back to `main`.
+Deployment does not rebuild data. It publishes whatever is already committed.
 
-### Pages deployment workflow
+## Automation Flow
 
-- `deploy-pages.yml`
-  - syntax-checks frontend JS
-  - validates required files
-  - packages the site into `_site`
-  - deploys to GitHub Pages
+### World refresh
 
-### Hosting model
+`.github/workflows/update-worlds.yml` runs `scripts/update_data.py`, validates the repo, and commits `data/worlds.json` plus `data/history/`.
 
-- static GitHub Pages
-- no runtime server owned by this repository
-- frontend reads committed JSON assets directly
+### Market refresh
+
+`.github/workflows/update-market.yml` runs `scripts/fetch_item_history.py`, then `scripts/enrich_worlds_with_rankings.py`, validates the repo, and commits `data/market/` plus `data/worlds.json`.
+
+### Open-house refresh
+
+`.github/workflows/update-open-houses.yml` runs `scripts/update_open_houses.py`, validates the repo, commits `data/open-houses.json`, and comments on and closes accepted issue submissions.
+
+## External Services
+
+### TibiaData
+
+Used for:
+
+- world list
+- kill statistics
+- character lookup
+- house lookup
+
+### TibiaMarket
+
+Used for tracked item history snapshots.
+
+### GitHub
+
+Used for:
+
+- issue-backed open-house input
+- Actions automation
+- Pages deployment
+- browser-side maintainer PR creation from `admin.html`
+
+### Other outbound links
+
+The frontend links users to Tibia.com, Exevo Pan, and project GitHub pages, but those services are not part of the data refresh pipeline.
