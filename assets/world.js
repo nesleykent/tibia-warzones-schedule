@@ -43,7 +43,7 @@ const WORLD_I18N = {
     reportIssueCta: "If you know any, just report it on",
     noHistory: "No history recorded yet.",
     historyDateNote:
-      "Dates below show the observed kill day. Kill statistics refresh daily at 04:00 CET/CEST and are usually published by 23:05 BRT, so timezone differences can shift the calendar date.",
+      "Dates below show the observed kill day. Source refresh timing and timezone differences can shift the calendar date shown on the site.",
     notAvailable: "N/A",
     healthy: "Healthy",
     inconclusive: "Inconclusive",
@@ -94,7 +94,7 @@ const WORLD_I18N = {
     reportIssueCta: "Se souber de algum, reporte no",
     noHistory: "Ainda não há histórico registrado.",
     historyDateNote:
-      "As datas abaixo mostram o dia observado das kills. As estatísticas são atualizadas diariamente às 04:00 CET/CEST e normalmente publicadas até 23:05 BRT, então diferenças de fuso podem mudar a data do calendário.",
+      "As datas abaixo mostram o dia observado das kills. O horário de atualização da fonte e as diferenças de fuso podem mudar a data do calendário exibida no site.",
     notAvailable: "N/D",
     healthy: "Healthy",
     inconclusive: "Inconclusivo",
@@ -145,7 +145,7 @@ const WORLD_I18N = {
     reportIssueCta: "Si sabes alguno, repórtalo en",
     noHistory: "Todavía no hay historial registrado.",
     historyDateNote:
-      "Las fechas de abajo muestran el día observado de las kills. Las estadísticas se actualizan diariamente a las 04:00 CET/CEST y normalmente se publican antes de las 23:05 BRT, por lo que las diferencias horarias pueden cambiar la fecha del calendario.",
+      "Las fechas de abajo muestran el día observado de las kills. El horario de actualización de la fuente y las diferencias horarias pueden cambiar la fecha del calendario mostrada en el sitio.",
     notAvailable: "N/D",
     healthy: "Healthy",
     inconclusive: "Inconcluso",
@@ -195,7 +195,7 @@ const WORLD_I18N = {
     reportIssueCta: "Jesli znasz jakis termin, zglos go na",
     noHistory: "Nie ma jeszcze zapisanej historii.",
     historyDateNote:
-      "Poniższe daty pokazują obserwowany dzień zabójstw. Statystyki odświeżają się codziennie o 04:00 CET/CEST i zwykle są publikowane do 23:05 BRT, więc różnice stref czasowych mogą zmienić datę kalendarzową.",
+      "Poniższe daty pokazują obserwowany dzień zabójstw. Godzina odświeżenia źródła i różnice stref czasowych mogą zmienić datę kalendarzową widoczną w serwisie.",
     notAvailable: "Brak",
     healthy: "Healthy",
     inconclusive: "Niejednoznaczne",
