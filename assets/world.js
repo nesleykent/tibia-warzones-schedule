@@ -43,7 +43,12 @@ const WORLD_I18N = {
     reportIssueCta: "If you know any, just report it on",
     noHistory: "No history recorded yet.",
     historyDateNote:
-      "Dates below show the observed kill day in {timezone}. Source refresh timing can shift the calendar date shown on the site.",
+      "Daily source refresh: {sourceTime} in {sourceTimezone} / {targetTime} in {targetTimezone}. Dates below show the observed kill day.{dayShift}",
+    historyDateShiftPrevious:
+      " In your timezone, that falls on the previous calendar day.",
+    historyDateShiftNext:
+      " In your timezone, that falls on the next calendar day.",
+    historyDateShiftSame: "",
     notAvailable: "N/A",
     healthy: "Healthy",
     inconclusive: "Inconclusive",
@@ -94,7 +99,12 @@ const WORLD_I18N = {
     reportIssueCta: "Se souber de algum, reporte no",
     noHistory: "Ainda não há histórico registrado.",
     historyDateNote:
-      "As datas abaixo mostram o dia observado das kills em {timezone}. O horário de atualização da fonte pode mudar a data do calendário exibida no site.",
+      "Atualização diária da fonte: {sourceTime} em {sourceTimezone} / {targetTime} em {targetTimezone}. As datas abaixo mostram o dia observado das kills.{dayShift}",
+    historyDateShiftPrevious:
+      " No seu fuso, isso cai no dia anterior do calendário.",
+    historyDateShiftNext:
+      " No seu fuso, isso cai no dia seguinte do calendário.",
+    historyDateShiftSame: "",
     notAvailable: "N/D",
     healthy: "Healthy",
     inconclusive: "Inconclusivo",
@@ -145,7 +155,12 @@ const WORLD_I18N = {
     reportIssueCta: "Si sabes alguno, repórtalo en",
     noHistory: "Todavía no hay historial registrado.",
     historyDateNote:
-      "Las fechas de abajo muestran el día observado de las kills en {timezone}. El horario de actualización de la fuente puede cambiar la fecha del calendario mostrada en el sitio.",
+      "Actualización diaria de la fuente: {sourceTime} en {sourceTimezone} / {targetTime} en {targetTimezone}. Las fechas de abajo muestran el día observado de las kills.{dayShift}",
+    historyDateShiftPrevious:
+      " En tu zona horaria, eso cae en el día calendario anterior.",
+    historyDateShiftNext:
+      " En tu zona horaria, eso cae en el día calendario siguiente.",
+    historyDateShiftSame: "",
     notAvailable: "N/D",
     healthy: "Healthy",
     inconclusive: "Inconcluso",
@@ -195,7 +210,12 @@ const WORLD_I18N = {
     reportIssueCta: "Jesli znasz jakis termin, zglos go na",
     noHistory: "Nie ma jeszcze zapisanej historii.",
     historyDateNote:
-      "Poniższe daty pokazują obserwowany dzień zabójstw w strefie {timezone}. Godzina odświeżenia źródła może zmienić datę kalendarzową widoczną w serwisie.",
+      "Codzienne odświeżenie źródła: {sourceTime} w {sourceTimezone} / {targetTime} w {targetTimezone}. Poniższe daty pokazują obserwowany dzień zabójstw.{dayShift}",
+    historyDateShiftPrevious:
+      " W Twojej strefie czasowej wypada to poprzedniego dnia kalendarzowego.",
+    historyDateShiftNext:
+      " W Twojej strefie czasowej wypada to następnego dnia kalendarzowego.",
+    historyDateShiftSame: "",
     notAvailable: "Brak",
     healthy: "Healthy",
     inconclusive: "Niejednoznaczne",
@@ -223,6 +243,7 @@ const {
   resolveTimezoneValue,
   WORLDS_DATA_PATH,
   writeStorage,
+  buildRecurringTimeConversion,
   convertTimeBetweenTimezones: convertSharedTimeBetweenTimezones,
   formatObservedKillStatisticsDate,
 } = window.TibiaTime;
@@ -236,6 +257,8 @@ const TRACKED_ITEMS_PATHS = [
   "./data/market/tracked_items.json",
 ];
 const NOT_AVAILABLE = "N/A";
+const HISTORY_REFRESH_SOURCE_TIME = "04:00";
+const HISTORY_REFRESH_SOURCE_TIMEZONE = "Europe/Berlin";
 
 let worldLang = "pt-BR";
 let pageTimezone = "UTC";
@@ -1927,11 +1950,27 @@ function renderHistory(historyData) {
     )
     .join("");
 
-  const timezoneLabel = getTimezoneDisplayLabel(pageTimezone);
-  const historyDateNote = String(dict.historyDateNote || "").replace(
-    "{timezone}",
-    timezoneLabel
+  const sourceTimezoneLabel = getTimezoneDisplayLabel(
+    HISTORY_REFRESH_SOURCE_TIMEZONE
   );
+  const targetTimezoneLabel = getTimezoneDisplayLabel(pageTimezone);
+  const refreshConversion = buildRecurringTimeConversion(
+    HISTORY_REFRESH_SOURCE_TIME,
+    HISTORY_REFRESH_SOURCE_TIMEZONE,
+    pageTimezone
+  );
+  const dayShift =
+    refreshConversion?.dayOffset < 0
+      ? dict.historyDateShiftPrevious
+      : refreshConversion?.dayOffset > 0
+        ? dict.historyDateShiftNext
+        : dict.historyDateShiftSame;
+  const historyDateNote = String(dict.historyDateNote || "")
+    .replace("{sourceTime}", HISTORY_REFRESH_SOURCE_TIME)
+    .replace("{sourceTimezone}", sourceTimezoneLabel)
+    .replace("{targetTime}", refreshConversion?.targetTime || NOT_AVAILABLE)
+    .replace("{targetTimezone}", targetTimezoneLabel)
+    .replace("{dayShift}", dayShift || "");
 
   return `
     <div class="world-detail-card-header">

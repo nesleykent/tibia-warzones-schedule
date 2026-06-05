@@ -500,13 +500,31 @@
     return labels.inconclusive || "Inconclusive";
   }
 
-  function getTimezoneOffsetLabel(tz) {
+  function getDateTimeParts(date, timeZone, options = {}) {
+    return new Intl.DateTimeFormat("en-CA", {
+      timeZone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      ...options,
+    }).formatToParts(date);
+  }
+
+  function getPartsMap(parts) {
+    return Object.fromEntries(
+      parts
+        .filter((part) => part.type !== "literal")
+        .map((part) => [part.type, part.value])
+    );
+  }
+
+  function getTimezoneOffsetLabel(tz, referenceDate = new Date()) {
     const resolvedTimezone = resolveTimezoneValue(tz);
     try {
       const parts = new Intl.DateTimeFormat("en", {
         timeZone: resolvedTimezone,
         timeZoneName: "longOffset",
-      }).formatToParts(new Date());
+      }).formatToParts(referenceDate);
       const value =
         parts.find((part) => part.type === "timeZoneName")?.value || "GMT";
       return value.replace("GMT", "UTC");
@@ -515,18 +533,38 @@
     }
   }
 
-  function getTimezoneDisplayLabel(tz) {
-    const entry = findSupportedTimezoneEntry(tz);
-    if (entry) {
-      return entry.short
-        ? `${entry.label} (${entry.short}, ${entry.offset})`
-        : `${entry.label} (${entry.offset})`;
+  function getTimezoneShortLabel(tz, referenceDate = new Date()) {
+    const resolvedTimezone = resolveTimezoneValue(tz);
+    try {
+      const parts = new Intl.DateTimeFormat("en", {
+        timeZone: resolvedTimezone,
+        timeZoneName: "short",
+      }).formatToParts(referenceDate);
+      const value = parts.find((part) => part.type === "timeZoneName")?.value || "";
+      return value.replace(/^GMT([+-]\d{1,2})(?::\d{2})?$/, "UTC$1");
+    } catch {
+      return "";
     }
-    const offsetRaw = getTimezoneOffsetLabel(tz);
+  }
+
+  function getTimezoneDisplayLabel(tz, referenceDate = new Date()) {
+    const entry = findSupportedTimezoneEntry(tz);
+    const shortLabel = getTimezoneShortLabel(tz, referenceDate);
+    const offsetRaw = getTimezoneOffsetLabel(tz, referenceDate);
     const offsetCompact = offsetRaw
       .replace("UTC", "GMT")
       .replace(/:00$/, "")
       .replace(/([+-])0(\d)$/, "$1$2");
+    const normalizedShort = shortLabel
+      .replace("UTC", "GMT")
+      .replace(/:00$/, "")
+      .replace(/([+-])0(\d)$/, "$1$2");
+
+    if (entry) {
+      return shortLabel && normalizedShort !== offsetCompact
+        ? `${entry.label} (${shortLabel}, ${offsetCompact})`
+        : `${entry.label} (${offsetCompact})`;
+    }
     return `${tz} (${offsetCompact})`;
   }
 
@@ -753,69 +791,118 @@
     initBackLinks();
   }
 
-  function convertTimeBetweenTimezones(
+  function buildRecurringTimeConversion(
     scheduleTime,
     sourceTimezone,
     targetTimezone,
-    locale
+    referenceDate = new Date()
   ) {
-    if (!scheduleTime || !sourceTimezone || !targetTimezone)
-      return scheduleTime || "";
-    if (String(scheduleTime).includes("?")) return String(scheduleTime);
+    if (!scheduleTime || !sourceTimezone || !targetTimezone) return null;
+    if (String(scheduleTime).includes("?")) return null;
+
     const resolvedSourceTimezone = resolveTimezoneValue(sourceTimezone);
     const resolvedTargetTimezone = resolveTimezoneValue(targetTimezone);
     const parts = String(scheduleTime).split(":");
-    if (parts.length !== 2) return scheduleTime;
+    if (parts.length !== 2) return null;
     const hour = Number(parts[0]);
     const minute = Number(parts[1]);
-    if (Number.isNaN(hour) || Number.isNaN(minute)) return scheduleTime;
+    if (Number.isNaN(hour) || Number.isNaN(minute)) return null;
 
-    try {
-      const ref = new Date(Date.UTC(2025, 0, 15, 12, 0, 0));
-      const srcParts = new Intl.DateTimeFormat("en-CA", {
-        timeZone: resolvedSourceTimezone,
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
+    const sourceReferenceParts = getPartsMap(
+      getDateTimeParts(referenceDate, resolvedSourceTimezone, {
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit",
         hourCycle: "h23",
-      }).formatToParts(ref);
-      const map = {};
-      for (const part of srcParts) {
-        if (part.type !== "literal") map[part.type] = part.value;
-      }
-      const wallClockUtc = Date.UTC(
-        Number(map.year),
-        Number(map.month) - 1,
-        Number(map.day),
-        hour,
-        minute,
-        0
-      );
-      const probeDate = new Date(wallClockUtc);
-      const offParts = new Intl.DateTimeFormat("en", {
+      })
+    );
+    const sourceWallClockUtc = Date.UTC(
+      Number(sourceReferenceParts.year),
+      Number(sourceReferenceParts.month) - 1,
+      Number(sourceReferenceParts.day),
+      hour,
+      minute,
+      0
+    );
+    const probeDate = new Date(sourceWallClockUtc);
+    const offsetText =
+      new Intl.DateTimeFormat("en", {
         timeZone: resolvedSourceTimezone,
         timeZoneName: "longOffset",
-      }).formatToParts(probeDate);
-      const offsetText =
-        offParts.find((part) => part.type === "timeZoneName")?.value ||
-        "GMT+00:00";
-      const normalized = offsetText.replace("GMT", "");
-      const match = normalized.match(/^([+-])(\d{2}):(\d{2})$/);
-      let offMin = 0;
-      if (match) {
-        const sign = match[1] === "-" ? -1 : 1;
-        offMin = sign * (Number(match[2]) * 60 + Number(match[3]));
-      }
-      const actualDate = new Date(wallClockUtc - offMin * 60 * 1000);
+      })
+        .formatToParts(probeDate)
+        .find((part) => part.type === "timeZoneName")?.value || "GMT+00:00";
+    const normalized = offsetText.replace("GMT", "");
+    const match = normalized.match(/^([+-])(\d{2}):(\d{2})$/);
+    let offMin = 0;
+    if (match) {
+      const sign = match[1] === "-" ? -1 : 1;
+      offMin = sign * (Number(match[2]) * 60 + Number(match[3]));
+    }
+
+    const actualDate = new Date(sourceWallClockUtc - offMin * 60 * 1000);
+    const sourceParts = getPartsMap(
+      getDateTimeParts(actualDate, resolvedSourceTimezone, {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hourCycle: "h23",
+      })
+    );
+    const targetParts = getPartsMap(
+      getDateTimeParts(actualDate, resolvedTargetTimezone, {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hourCycle: "h23",
+      })
+    );
+    const sourceDayUtc = Date.UTC(
+      Number(sourceParts.year),
+      Number(sourceParts.month) - 1,
+      Number(sourceParts.day)
+    );
+    const targetDayUtc = Date.UTC(
+      Number(targetParts.year),
+      Number(targetParts.month) - 1,
+      Number(targetParts.day)
+    );
+
+    return {
+      actualDate,
+      dayOffset: Math.round((targetDayUtc - sourceDayUtc) / 86400000),
+      sourceTime: `${sourceParts.hour}:${sourceParts.minute}`,
+      targetTime: `${targetParts.hour}:${targetParts.minute}`,
+    };
+  }
+
+  function convertTimeBetweenTimezones(
+    scheduleTime,
+    sourceTimezone,
+    targetTimezone,
+    locale,
+    options = {}
+  ) {
+    if (!scheduleTime || !sourceTimezone || !targetTimezone)
+      return scheduleTime || "";
+    if (String(scheduleTime).includes("?")) return String(scheduleTime);
+    const conversion = buildRecurringTimeConversion(
+      scheduleTime,
+      sourceTimezone,
+      targetTimezone,
+      options.referenceDate
+    );
+    if (!conversion) return scheduleTime;
+
+    const resolvedTargetTimezone = resolveTimezoneValue(targetTimezone);
+
+    try {
       return new Intl.DateTimeFormat(locale || "en", {
         timeZone: resolvedTargetTimezone,
         hour: "2-digit",
         minute: "2-digit",
         hourCycle: "h23",
-      }).format(actualDate);
+      }).format(conversion.actualDate);
     } catch {
       return scheduleTime;
     }
@@ -856,6 +943,7 @@
     getBrowserTimezone,
     loadSavedTimezone,
     getTimezoneOffsetLabel,
+    getTimezoneShortLabel,
     getTimezoneDisplayLabel,
     resolveTimezoneValue,
     getWorldBattleyeKey,
@@ -868,6 +956,7 @@
     getNormalizedBossKills,
     getEffectiveWorldMark,
     getWorldMarkLabel,
+    buildRecurringTimeConversion,
     convertTimeBetweenTimezones,
     formatObservedKillStatisticsDate,
     initBackgroundArtwork,
