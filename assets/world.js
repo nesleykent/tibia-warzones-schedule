@@ -43,11 +43,11 @@ const WORLD_I18N = {
     reportIssueCta: "If you know any, just report it on",
     noHistory: "No history recorded yet.",
     historyDateNote:
-      "Daily source refresh: {sourceTime} in {sourceTimezone} / {targetTime} in {targetTimezone}. Dates below show the observed kill day.{dayShift}",
+      "Refreshes daily at {sourceTime} {sourceTimezone} time and {targetTime} in {targetTimezone}. Dates are shown by observed kill day.{dayShift}",
     historyDateShiftPrevious:
-      " In your timezone, that falls on the previous calendar day.",
+      " In your timezone, that is the previous calendar day.",
     historyDateShiftNext:
-      " In your timezone, that falls on the next calendar day.",
+      " In your timezone, that is the next calendar day.",
     historyDateShiftSame: "",
     notAvailable: "N/A",
     healthy: "Healthy",
@@ -99,11 +99,11 @@ const WORLD_I18N = {
     reportIssueCta: "Se souber de algum, reporte no",
     noHistory: "Ainda não há histórico registrado.",
     historyDateNote:
-      "Atualização diária da fonte: {sourceTime} em {sourceTimezone} / {targetTime} em {targetTimezone}. As datas abaixo mostram o dia observado das kills.{dayShift}",
+      "Atualiza diariamente às {sourceTime} no horário de {sourceTimezone} e às {targetTime} em {targetTimezone}. As datas mostram o dia observado das kills.{dayShift}",
     historyDateShiftPrevious:
-      " No seu fuso, isso cai no dia anterior do calendário.",
+      " No seu fuso, isso fica no dia anterior do calendário.",
     historyDateShiftNext:
-      " No seu fuso, isso cai no dia seguinte do calendário.",
+      " No seu fuso, isso fica no dia seguinte do calendário.",
     historyDateShiftSame: "",
     notAvailable: "N/D",
     healthy: "Healthy",
@@ -155,11 +155,11 @@ const WORLD_I18N = {
     reportIssueCta: "Si sabes alguno, repórtalo en",
     noHistory: "Todavía no hay historial registrado.",
     historyDateNote:
-      "Actualización diaria de la fuente: {sourceTime} en {sourceTimezone} / {targetTime} en {targetTimezone}. Las fechas de abajo muestran el día observado de las kills.{dayShift}",
+      "Se actualiza todos los días a las {sourceTime} hora de {sourceTimezone} y a las {targetTime} en {targetTimezone}. Las fechas muestran el día observado de las kills.{dayShift}",
     historyDateShiftPrevious:
-      " En tu zona horaria, eso cae en el día calendario anterior.",
+      " En tu zona horaria, eso corresponde al día calendario anterior.",
     historyDateShiftNext:
-      " En tu zona horaria, eso cae en el día calendario siguiente.",
+      " En tu zona horaria, eso corresponde al día calendario siguiente.",
     historyDateShiftSame: "",
     notAvailable: "N/D",
     healthy: "Healthy",
@@ -210,11 +210,11 @@ const WORLD_I18N = {
     reportIssueCta: "Jesli znasz jakis termin, zglos go na",
     noHistory: "Nie ma jeszcze zapisanej historii.",
     historyDateNote:
-      "Codzienne odświeżenie źródła: {sourceTime} w {sourceTimezone} / {targetTime} w {targetTimezone}. Poniższe daty pokazują obserwowany dzień zabójstw.{dayShift}",
+      "Codzienne odświeżenie następuje o {sourceTime} czasu {sourceTimezone} i o {targetTime} w {targetTimezone}. Daty pokazują obserwowany dzień zabójstw.{dayShift}",
     historyDateShiftPrevious:
-      " W Twojej strefie czasowej wypada to poprzedniego dnia kalendarzowego.",
+      " W Twojej strefie czasowej jest to poprzedni dzień kalendarzowy.",
     historyDateShiftNext:
-      " W Twojej strefie czasowej wypada to następnego dnia kalendarzowego.",
+      " W Twojej strefie czasowej jest to następny dzień kalendarzowy.",
     historyDateShiftSame: "",
     notAvailable: "Brak",
     healthy: "Healthy",
@@ -236,9 +236,11 @@ const {
   setHtml,
   setTextContent,
   updateLanguageButtons: updateSharedLanguageButtons,
+  getTimezoneContextLabel,
   getWorldBattleyeLabel,
   getWorldMarkLabel,
   getTimezoneDisplayLabel,
+  getTimezoneLocationLabel,
   getWorldTransferLabel,
   resolveTimezoneValue,
   WORLDS_DATA_PATH,
@@ -1950,14 +1952,18 @@ function renderHistory(historyData) {
     )
     .join("");
 
-  const sourceTimezoneLabel = getTimezoneDisplayLabel(
-    HISTORY_REFRESH_SOURCE_TIMEZONE
-  );
-  const targetTimezoneLabel = getTimezoneDisplayLabel(pageTimezone);
   const refreshConversion = buildRecurringTimeConversion(
     HISTORY_REFRESH_SOURCE_TIME,
     HISTORY_REFRESH_SOURCE_TIMEZONE,
     pageTimezone
+  );
+  const noteReferenceDate = refreshConversion?.actualDate || new Date();
+  const sourceTimezoneLabel = getTimezoneLocationLabel(
+    HISTORY_REFRESH_SOURCE_TIMEZONE
+  );
+  const targetTimezoneLabel = getTimezoneContextLabel(
+    pageTimezone,
+    noteReferenceDate
   );
   const dayShift =
     refreshConversion?.dayOffset < 0

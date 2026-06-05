@@ -116,3 +116,17 @@ test("getTimezoneDisplayLabel reflects the reference date instead of a static ab
     "Berlin (GMT+1)"
   );
 });
+
+test("timezone context helpers keep narrative copy concise", async () => {
+  const shared = await loadSharedExports();
+  const summerReference = new Date(Date.UTC(2026, 5, 5, 12, 0, 0));
+
+  assert.equal(
+    shared.getTimezoneLocationLabel("Europe/Berlin"),
+    "Berlin"
+  );
+  assert.equal(
+    shared.getTimezoneContextLabel("America/Sao_Paulo#Curitiba", summerReference),
+    "Curitiba (GMT-3)"
+  );
+});

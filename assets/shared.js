@@ -547,14 +547,30 @@
     }
   }
 
+  function formatCompactGmtOffset(value) {
+    return String(value || "UTC")
+      .replace("UTC", "GMT")
+      .replace(/:00$/, "")
+      .replace(/([+-])0(\d)$/, "$1$2");
+  }
+
+  function getTimezoneLocationLabel(tz) {
+    const entry = findSupportedTimezoneEntry(tz);
+    if (entry?.label) return entry.label;
+    return resolveTimezoneValue(tz) || String(tz || "UTC");
+  }
+
+  function getTimezoneContextLabel(tz, referenceDate = new Date()) {
+    return `${getTimezoneLocationLabel(tz)} (${formatCompactGmtOffset(
+      getTimezoneOffsetLabel(tz, referenceDate)
+    )})`;
+  }
+
   function getTimezoneDisplayLabel(tz, referenceDate = new Date()) {
     const entry = findSupportedTimezoneEntry(tz);
     const shortLabel = getTimezoneShortLabel(tz, referenceDate);
     const offsetRaw = getTimezoneOffsetLabel(tz, referenceDate);
-    const offsetCompact = offsetRaw
-      .replace("UTC", "GMT")
-      .replace(/:00$/, "")
-      .replace(/([+-])0(\d)$/, "$1$2");
+    const offsetCompact = formatCompactGmtOffset(offsetRaw);
     const normalizedShort = shortLabel
       .replace("UTC", "GMT")
       .replace(/:00$/, "")
@@ -944,6 +960,8 @@
     loadSavedTimezone,
     getTimezoneOffsetLabel,
     getTimezoneShortLabel,
+    getTimezoneLocationLabel,
+    getTimezoneContextLabel,
     getTimezoneDisplayLabel,
     resolveTimezoneValue,
     getWorldBattleyeKey,
