@@ -821,6 +821,23 @@
     }
   }
 
+  function formatObservedKillStatisticsDate(isoDate) {
+    if (typeof isoDate !== "string") return "";
+    const trimmed = isoDate.trim();
+    if (!trimmed) return "";
+    const match = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!match) return trimmed;
+
+    const year = Number(match[1]);
+    const monthIndex = Number(match[2]) - 1;
+    const day = Number(match[3]);
+    const date = new Date(Date.UTC(year, monthIndex, day));
+    if (Number.isNaN(date.getTime())) return trimmed;
+
+    date.setUTCDate(date.getUTCDate() - 1);
+    return date.toISOString().slice(0, 10);
+  }
+
   window.TibiaTime = {
     GITHUB_ISSUES_URL,
     WORLDS_DATA_PATH,
@@ -852,6 +869,7 @@
     getEffectiveWorldMark,
     getWorldMarkLabel,
     convertTimeBetweenTimezones,
+    formatObservedKillStatisticsDate,
     initBackgroundArtwork,
     initSiteFooter,
     initLanguageDropdown,

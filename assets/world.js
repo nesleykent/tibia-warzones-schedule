@@ -42,6 +42,8 @@ const WORLD_I18N = {
     noSchedules: "No manual schedules registered yet.",
     reportIssueCta: "If you know any, just report it on",
     noHistory: "No history recorded yet.",
+    historyDateNote:
+      "Dates below show the observed kill day. Kill statistics refresh daily at 04:00 CET/CEST and are usually published by 23:05 BRT, so timezone differences can shift the calendar date.",
     notAvailable: "N/A",
     healthy: "Healthy",
     inconclusive: "Inconclusive",
@@ -91,6 +93,8 @@ const WORLD_I18N = {
     noSchedules: "Ainda não há horários manuais cadastrados.",
     reportIssueCta: "Se souber de algum, reporte no",
     noHistory: "Ainda não há histórico registrado.",
+    historyDateNote:
+      "As datas abaixo mostram o dia observado das kills. As estatísticas são atualizadas diariamente às 04:00 CET/CEST e normalmente publicadas até 23:05 BRT, então diferenças de fuso podem mudar a data do calendário.",
     notAvailable: "N/D",
     healthy: "Healthy",
     inconclusive: "Inconclusivo",
@@ -140,6 +144,8 @@ const WORLD_I18N = {
     noSchedules: "Todavía no hay horarios manuales registrados.",
     reportIssueCta: "Si sabes alguno, repórtalo en",
     noHistory: "Todavía no hay historial registrado.",
+    historyDateNote:
+      "Las fechas de abajo muestran el día observado de las kills. Las estadísticas se actualizan diariamente a las 04:00 CET/CEST y normalmente se publican antes de las 23:05 BRT, por lo que las diferencias horarias pueden cambiar la fecha del calendario.",
     notAvailable: "N/D",
     healthy: "Healthy",
     inconclusive: "Inconcluso",
@@ -188,6 +194,8 @@ const WORLD_I18N = {
     noSchedules: "Nie ma jeszcze zapisanych ręcznych harmonogramów.",
     reportIssueCta: "Jesli znasz jakis termin, zglos go na",
     noHistory: "Nie ma jeszcze zapisanej historii.",
+    historyDateNote:
+      "Poniższe daty pokazują obserwowany dzień zabójstw. Statystyki odświeżają się codziennie o 04:00 CET/CEST i zwykle są publikowane do 23:05 BRT, więc różnice stref czasowych mogą zmienić datę kalendarzową.",
     notAvailable: "Brak",
     healthy: "Healthy",
     inconclusive: "Niejednoznaczne",
@@ -216,6 +224,7 @@ const {
   WORLDS_DATA_PATH,
   writeStorage,
   convertTimeBetweenTimezones: convertSharedTimeBetweenTimezones,
+  formatObservedKillStatisticsDate,
 } = window.TibiaTime;
 
 const STORAGE_KEYS = {
@@ -1899,7 +1908,7 @@ function renderHistory(historyData) {
     .map(
       (item) => `
         <tr>
-          <td>${escapeHtml(item.date || "")}</td>
+          <td>${escapeHtml(formatObservedKillStatisticsDate(item.date || ""))}</td>
           <td>${escapeHtml(String(item.deathstrike_kills || 0))}</td>
           <td>${escapeHtml(String(item.gnomevil_kills || 0))}</td>
           <td>${escapeHtml(String(item.abyssador_kills || 0))}</td>
@@ -1922,6 +1931,7 @@ function renderHistory(historyData) {
     <div class="world-detail-card-header">
       <h2>${escapeHtml(dict.history)}</h2>
     </div>
+    <p class="world-history-note">${escapeHtml(dict.historyDateNote)}</p>
     <div class="world-history-table-wrap">
       <table class="world-history-table">
         <thead>
