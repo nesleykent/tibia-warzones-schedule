@@ -13,7 +13,9 @@ on:
       - scripts/enrich_worlds_with_rankings.py
       - scripts/update_data.py
   schedule:
-    - cron: "0 8 * * *"
+    # GitHub Actions cron uses UTC. 02:05 UTC aligns with the 23:05 BRT
+    # refresh deadline while Germany is observing CEST.
+    - cron: "5 2 * * *"
 
 permissions:
   contents: write
