@@ -255,7 +255,7 @@ Deployment does not rebuild data. It publishes whatever is already committed.
 
 ### Market refresh
 
-`.github/workflows/update-market.yml` queues an hourly retry window from `08:30` through `15:30` UTC because GitHub scheduled runs drift by hours, builds a tracked-item matrix, refreshes market files in per-item shards, stages repo-relative shard artifacts, downloads those refreshed artifacts into a final job, then runs `scripts/enrich_worlds_with_rankings.py`, validates the repo, and commits `data/market/world/` plus `data/worlds.json`.
+`.github/workflows/update-market.yml` queues an hourly retry window from `08:30` through `15:30` UTC because GitHub scheduled runs drift by hours, builds a tracked-item matrix, refreshes market files in per-item shards, downloads those refreshed artifacts back into `data/market/world/` for the final job, then runs `scripts/enrich_worlds_with_rankings.py`, validates the repo, and commits `data/market/world/` plus `data/worlds.json`.
 
 ### Open-house refresh
 

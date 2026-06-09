@@ -279,14 +279,13 @@ class UpdateDataHelpersTest(unittest.TestCase):
 
 
 class WorkflowContractsTest(unittest.TestCase):
-    def test_update_market_workflow_stages_repo_relative_artifacts(self) -> None:
+    def test_update_market_workflow_downloads_shards_into_market_tree(self) -> None:
         workflow_text = (
             Path(__file__).resolve().parent.parent / ".github" / "workflows" / "update-market.yml"
         ).read_text()
 
-        self.assertIn("mkdir -p artifact/data/market/world", workflow_text)
-        self.assertIn('find data/market/world -type f -name "*_${{ matrix.item_slug }}.json" -print0', workflow_text)
-        self.assertIn("path: artifact/data/market/world", workflow_text)
+        self.assertIn('path: data/market/world/*/*_${{ matrix.item_slug }}.json', workflow_text)
+        self.assertIn("path: data/market/world", workflow_text)
 
 
 class UpdateOpenHousesHelpersTest(unittest.TestCase):

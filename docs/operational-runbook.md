@@ -115,7 +115,7 @@ GitHub Actions behavior:
 
 - `.github/workflows/update-worlds.yml` schedules an hourly retry window from `23:17` through `06:17` UTC because GitHub scheduled runs can drift by hours
 - scheduled workflow runs call `python3 scripts/update_data.py --scheduled`, which skips until the TibiaData refresh window has opened in Berlin
-- `.github/workflows/update-market.yml` now shards the market refresh by tracked item, stages repo-relative artifacts for each shard, and queues an hourly retry window from `08:30` through `15:30` UTC because GitHub scheduled runs can drift by hours there as well
+- `.github/workflows/update-market.yml` now shards the market refresh by tracked item, downloads shard artifacts directly back into `data/market/world/`, and queues an hourly retry window from `08:30` through `15:30` UTC because GitHub scheduled runs can drift by hours there as well
 - the workflow rebuilds rankings only after all market shards finish successfully
 - the workflow commits `data/market/world/**/*.json` and `data/worlds.json`; it does not rely on `data/market/sync_state.json` as a committed artifact
 
