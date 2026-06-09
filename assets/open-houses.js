@@ -1,9 +1,9 @@
 const {
   GITHUB_ISSUES_URL,
-  WORLDS_DATA_PATH,
   escapeHtml,
   fetchJson,
   getWorldBattleyeKey,
+  loadWorldsData,
   getWorldPvpKey,
   getWorldRegionKey,
   getWorldTransferLabel,
@@ -671,7 +671,7 @@ async function init() {
 
   try {
     const [worldsPayload, reportsPayload] = await Promise.all([
-      fetchJson(WORLDS_DATA_PATH),
+      loadWorldsData(),
       fetchJson(OPEN_HOUSES_DATA_PATH),
     ]);
 

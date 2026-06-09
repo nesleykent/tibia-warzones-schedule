@@ -232,6 +232,7 @@ const {
   SHARED_STORAGE_KEYS,
   bindLanguageButtons: bindSharedLanguageButtons,
   initSharedUi,
+  loadWorldsData,
   loadSavedTimezone,
   setHtml,
   setTextContent,
@@ -243,7 +244,6 @@ const {
   getTimezoneLocationLabel,
   getWorldTransferLabel,
   resolveTimezoneValue,
-  WORLDS_DATA_PATH,
   writeStorage,
   buildRecurringTimeConversion,
   convertTimeBetweenTimezones: convertSharedTimeBetweenTimezones,
@@ -2032,7 +2032,7 @@ async function loadWorldPage() {
   };
 
   try {
-    const worlds = await fetchJson(WORLDS_DATA_PATH);
+    const worlds = await loadWorldsData();
     const world = Array.isArray(worlds)
       ? worlds.find((item) => item && item.name === worldName)
       : null;

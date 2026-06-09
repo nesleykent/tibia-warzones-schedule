@@ -5,11 +5,10 @@
 const {
   DEFAULT_TIMEZONE,
   GITHUB_ISSUES_URL,
+  loadWorldsData,
   SHARED_STORAGE_KEYS,
   SUPPORTED_TIMEZONES,
-  WORLDS_DATA_PATH,
   escapeHtml,
-  fetchJson,
   formatTransferType,
   getEffectiveWorldMark,
   getInitialLanguage: getSharedInitialLanguage,
@@ -2094,7 +2093,7 @@ async function init() {
   if (searchInput) searchInput.addEventListener("input", render);
 
   try {
-    const worldsData = await fetchJson(WORLDS_DATA_PATH).catch((error) => {
+    const worldsData = await loadWorldsData().catch((error) => {
       throw new Error(`${t().loadError}: ${error.message}`);
     });
     worlds = Array.isArray(worldsData) ? worldsData : [];

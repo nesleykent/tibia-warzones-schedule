@@ -79,7 +79,7 @@ Each world record includes:
 - upstream world metadata
 - current kill counts
 - current service counters
-- merged manual schedule data
+- generated schedule fallback data
 - history presence flags
 - embedded `warzone_economic_ranking`
 
@@ -87,6 +87,10 @@ Produced by:
 
 - `scripts/update_data.py`
 - `scripts/enrich_worlds_with_rankings.py`
+
+Public runtime note:
+
+- `assets/shared.js` overlays `data/manual-schedules.json` onto these records at page load, so schedule and timezone fields are owned by the manual source file instead of the generated copy
 
 ### `data/history/*.json`
 
@@ -117,7 +121,7 @@ Produced by:
 
 ### `data/manual-schedules.json`
 
-Manual source input for schedule and timezone data. Merged into `data/worlds.json` by `scripts/update_data.py`.
+Manual source input for schedule and timezone data. Public pages overlay this file onto `data/worlds.json` at runtime, and `scripts/update_data.py` also copies the same fields into `data/worlds.json` for generated consumers and fallback continuity.
 
 ### `data/market/items/items.csv`
 
@@ -148,7 +152,7 @@ Pipeline:
 
 1. fetch world metadata from TibiaData
 2. fetch per-world kill statistics from TibiaData
-3. merge manual schedules from `data/manual-schedules.json`
+3. copy manual schedules from `data/manual-schedules.json` into the generated world records
 4. append or replace the current UTC collection-day row in `data/history/*.json`
 5. build world summaries
 6. attach ranking metrics through `attach_ranking_metrics()`
@@ -251,7 +255,7 @@ Deployment does not rebuild data. It publishes whatever is already committed.
 
 ### Market refresh
 
-`.github/workflows/update-market.yml` builds a tracked-item matrix, refreshes market files in per-item shards, downloads those refreshed artifacts into a final job, then runs `scripts/enrich_worlds_with_rankings.py`, validates the repo, and commits `data/market/world/` plus `data/worlds.json`.
+`.github/workflows/update-market.yml` queues an hourly retry window from `08:30` through `15:30` UTC because GitHub scheduled runs drift by hours, builds a tracked-item matrix, refreshes market files in per-item shards, downloads those refreshed artifacts into a final job, then runs `scripts/enrich_worlds_with_rankings.py`, validates the repo, and commits `data/market/world/` plus `data/worlds.json`.
 
 ### Open-house refresh
 

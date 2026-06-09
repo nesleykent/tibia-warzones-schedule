@@ -19,7 +19,10 @@ on:
       - scripts/enrich_worlds_with_rankings.py
       - data/market/items/**
   schedule:
-    - cron: "30 8 * * *"
+    # GitHub scheduled runs drift by hours in practice. Queue an hourly retry
+    # window and let fetch_item_history.py skip fresh files after the first
+    # successful refresh.
+    - cron: "30 8-15 * * *"
 
 permissions:
   contents: write

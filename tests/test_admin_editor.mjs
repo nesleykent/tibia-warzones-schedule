@@ -166,7 +166,7 @@ test("getTriggeredWorkflowNames maps source files to downstream automation", asy
     toPlainJson(admin.getTriggeredWorkflowNames([
       { path: "data/manual-schedules.json" },
     ])),
-    ["Update Worlds", "Deploy Pages"]
+    ["Deploy Pages"]
   );
   assert.deepEqual(
     toPlainJson(admin.getTriggeredWorkflowNames([
@@ -179,6 +179,6 @@ test("getTriggeredWorkflowNames maps source files to downstream automation", asy
       { path: "data/manual-schedules.json" },
       { path: "data/market/items/tracked_items.json" },
     ])),
-    ["Update Worlds", "Update Market", "Deploy Pages"]
+    ["Update Market", "Deploy Pages"]
   );
 });

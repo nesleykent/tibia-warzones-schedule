@@ -115,7 +115,7 @@ GitHub Actions behavior:
 
 - `.github/workflows/update-worlds.yml` schedules an hourly retry window from `23:17` through `06:17` UTC because GitHub scheduled runs can drift by hours
 - scheduled workflow runs call `python3 scripts/update_data.py --scheduled`, which skips until the TibiaData refresh window has opened in Berlin
-- `.github/workflows/update-market.yml` now shards the market refresh by tracked item so the scheduled automation stays within the job runtime budget
+- `.github/workflows/update-market.yml` now shards the market refresh by tracked item and queues an hourly retry window from `08:30` through `15:30` UTC because GitHub scheduled runs can drift by hours there as well
 - the workflow rebuilds rankings only after all market shards finish successfully
 - the workflow commits `data/market/world/**/*.json` and `data/worlds.json`; it does not rely on `data/market/sync_state.json` as a committed artifact
 
@@ -175,9 +175,13 @@ After editing:
 
 ```bash
 python3 scripts/validate_content.py
-python3 scripts/update_data.py
-python3 scripts/validate_content.py
 ```
+
+Live-site note:
+
+- schedule-only edits publish through `Deploy Pages`
+- `Update Worlds` is no longer required for the site to display the new schedule
+- run `python3 scripts/update_data.py` only when you also want to refresh the generated `data/worlds.json` fallback locally
 
 ### Tracked market items
 
@@ -234,7 +238,7 @@ Observed workflow:
 2. validate edits in browser JavaScript
 3. preview only the changed durable source files
 4. write one atomic commit directly to `main` through the GitHub Git Data API
-5. wait for the existing `Update Worlds`, `Update Market`, and `Deploy Pages` workflows to regenerate and publish derived outputs as needed
+5. wait for `Deploy Pages`, plus `Update Market` when tracked items changed; schedule-only edits do not require `Update Worlds`
 
 Token handling:
 

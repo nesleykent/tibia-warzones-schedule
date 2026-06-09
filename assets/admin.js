@@ -1607,9 +1607,6 @@
     const changedPaths = new Set((files || []).map((file) => file.path));
     const workflows = [];
 
-    if (changedPaths.has(FILE_PATHS.schedules)) {
-      workflows.push("Update Worlds");
-    }
     if (changedPaths.has(FILE_PATHS.trackedItems)) {
       workflows.push("Update Market");
     }

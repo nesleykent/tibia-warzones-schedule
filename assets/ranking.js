@@ -1,8 +1,6 @@
 const {
   SHARED_STORAGE_KEYS,
-  WORLDS_DATA_PATH,
   escapeHtml,
-  fetchJson,
   formatTransferType,
   getInitialLanguage: getSharedInitialLanguage,
   bindLanguageButtons: bindSharedLanguageButtons,
@@ -11,6 +9,7 @@ const {
   getWorldRegionKey,
   getWorldTransferKey,
   initSharedUi,
+  loadWorldsData,
   readJsonStorage,
   readStorage,
   setHtml,
@@ -730,7 +729,7 @@ async function init() {
   const searchInput = pageElements.searchInput;
   if (searchInput) searchInput.addEventListener("input", render);
 
-  const worldsData = await fetchJson(WORLDS_DATA_PATH);
+  const worldsData = await loadWorldsData();
   worlds = Array.isArray(worldsData) ? worldsData : [];
   render();
 }

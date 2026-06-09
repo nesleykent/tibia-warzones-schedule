@@ -18,6 +18,7 @@
     timezone: STORAGE_KEY_TIMEZONE,
   };
   const WORLDS_DATA_PATH = "./data/worlds.json";
+  const MANUAL_SCHEDULES_PATH = "./data/manual-schedules.json";
   const SUPPORTED_TIMEZONES = [
     {
       group: "Americas",
@@ -330,6 +331,84 @@
     }
 
     return response.json();
+  }
+
+  function normalizeScheduleTimezone(value) {
+    if (value == null) return null;
+    const trimmed = String(value).trim();
+    return trimmed || null;
+  }
+
+  function normalizeScheduleExecutions(executions) {
+    if (!Array.isArray(executions)) return [];
+
+    return executions
+      .filter((entry) => entry && typeof entry === "object" && !Array.isArray(entry))
+      .map((entry, index) => ({
+        execution_id: Number(entry.execution_id) || index + 1,
+        schedule_time: String(entry.schedule_time || "").trim(),
+        warzone_sequence: String(entry.warzone_sequence || "").trim(),
+      }));
+  }
+
+  function overlayWorldSchedules(worldsPayload, manualSchedulesPayload) {
+    const worlds = Array.isArray(worldsPayload) ? worldsPayload : [];
+    const schedules =
+      manualSchedulesPayload &&
+      typeof manualSchedulesPayload === "object" &&
+      !Array.isArray(manualSchedulesPayload)
+        ? manualSchedulesPayload
+        : null;
+
+    if (!schedules) return worlds;
+
+    return worlds.map((world) => {
+      if (!world || typeof world !== "object" || Array.isArray(world)) {
+        return world;
+      }
+
+      const worldName = String(world.name || "").trim();
+      const manualSchedule = schedules[worldName];
+      if (
+        !worldName ||
+        !manualSchedule ||
+        typeof manualSchedule !== "object" ||
+        Array.isArray(manualSchedule)
+      ) {
+        return world;
+      }
+
+      const nextWorld = { ...world };
+      if (Object.prototype.hasOwnProperty.call(manualSchedule, "timezone")) {
+        nextWorld.timezone = normalizeScheduleTimezone(manualSchedule.timezone);
+      }
+      if (Object.prototype.hasOwnProperty.call(manualSchedule, "warzone_executions")) {
+        nextWorld.warzone_executions = normalizeScheduleExecutions(
+          manualSchedule.warzone_executions
+        );
+      }
+      return nextWorld;
+    });
+  }
+
+  async function loadWorldsData(options = {}) {
+    const worldsPath = options.worldsPath || WORLDS_DATA_PATH;
+    const schedulesPath = options.schedulesPath || MANUAL_SCHEDULES_PATH;
+    const worldsPayload = await fetchJson(worldsPath);
+
+    let manualSchedulesPayload = null;
+    try {
+      manualSchedulesPayload = await fetchJson(schedulesPath);
+    } catch (error) {
+      if (typeof console !== "undefined" && typeof console.warn === "function") {
+        console.warn(
+          `Failed to load ${schedulesPath}; falling back to schedule data embedded in ${worldsPath}.`,
+          error
+        );
+      }
+    }
+
+    return overlayWorldSchedules(worldsPayload, manualSchedulesPayload);
   }
 
   function readStorage(key, fallbackValue = null) {
@@ -944,6 +1023,7 @@
   window.TibiaTime = {
     GITHUB_ISSUES_URL,
     WORLDS_DATA_PATH,
+    MANUAL_SCHEDULES_PATH,
     SUPPORTED_TIMEZONES,
     DEFAULT_TIMEZONE,
     SHARED_STORAGE_KEYS,
@@ -951,6 +1031,8 @@
     setTextContent,
     setHtml,
     fetchJson,
+    loadWorldsData,
+    overlayWorldSchedules,
     readStorage,
     writeStorage,
     readJsonStorage,
