@@ -1,13 +1,15 @@
 from __future__ import annotations
 
+import argparse
 import json
 import re
 import sys
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
+from zoneinfo import ZoneInfo
 
 from common import (
     is_known_schedule_time,
@@ -26,6 +28,9 @@ OUTPUT_FILE = DATA_DIR / "worlds.json"
 MANUAL_SCHEDULE_FILE = DATA_DIR / "manual-schedules.json"
 HISTORY_DIR = DATA_DIR / "history"
 DEFAULT_MANUAL_SCHEDULE = {"timezone": None, "warzone_executions": []}
+HISTORY_REFRESH_SOURCE_TIMEZONE = "Europe/Berlin"
+HISTORY_REFRESH_READY_HOUR = 4
+HISTORY_REFRESH_READY_MINUTE = 5
 
 
 def fetch_json(url: str) -> dict[str, Any]:
@@ -86,6 +91,21 @@ def extract_boss_kills(payload: dict[str, Any]) -> dict[str, int]:
             kills[race] = to_int(entry.get("last_day_killed", 0))
 
     return kills
+
+
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Refresh Tibia world metadata, kill statistics, and history."
+    )
+    parser.add_argument(
+        "--scheduled",
+        action="store_true",
+        help=(
+            "Exit successfully until the TibiaData refresh window has opened in "
+            f"{HISTORY_REFRESH_SOURCE_TIMEZONE}."
+        ),
+    )
+    return parser.parse_args(argv)
 
 
 def compute_services_and_mark(
@@ -336,11 +356,56 @@ def validate_worlds(worlds: list[dict[str, Any]]) -> None:
         raise ValueError("\n".join(all_errors))
 
 
-def today_iso_date() -> str:
-    return datetime.now().date().isoformat()
+def utc_now() -> datetime:
+    return datetime.now(UTC)
 
 
-def main() -> int:
+def normalize_utc_datetime(value: datetime | None = None) -> datetime:
+    current = value or utc_now()
+    if current.tzinfo is None:
+        return current.replace(tzinfo=UTC)
+    return current.astimezone(UTC)
+
+
+def today_iso_date(now: datetime | None = None) -> str:
+    return normalize_utc_datetime(now).date().isoformat()
+
+
+def get_scheduled_refresh_gate(
+    now: datetime | None = None,
+) -> tuple[bool, datetime, datetime]:
+    current_utc = normalize_utc_datetime(now)
+    source_now = current_utc.astimezone(ZoneInfo(HISTORY_REFRESH_SOURCE_TIMEZONE))
+    refresh_ready_at = source_now.replace(
+        hour=HISTORY_REFRESH_READY_HOUR,
+        minute=HISTORY_REFRESH_READY_MINUTE,
+        second=0,
+        microsecond=0,
+    )
+    return source_now >= refresh_ready_at, source_now, refresh_ready_at
+
+
+def should_skip_scheduled_refresh(now: datetime | None = None) -> bool:
+    refresh_window_open, source_now, refresh_ready_at = get_scheduled_refresh_gate(now)
+
+    if refresh_window_open:
+        return False
+
+    print(
+        "Skipping scheduled refresh: "
+        f"TibiaData refresh window opens at "
+        f"{refresh_ready_at.strftime('%Y-%m-%d %H:%M %Z')} "
+        f"(current source time {source_now.strftime('%Y-%m-%d %H:%M %Z')})."
+    )
+    return True
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(argv if argv is not None else [])
+
+    if args.scheduled and should_skip_scheduled_refresh():
+        return 0
+
     worlds = get_worlds()
 
     if not worlds:
@@ -419,4 +484,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(main(sys.argv[1:]))

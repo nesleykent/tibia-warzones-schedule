@@ -92,6 +92,7 @@ GITHUB_TOKEN=... GITHUB_REPOSITORY=owner/repo python3 scripts/update_open_houses
 - The admin page can also edit `data/open-houses.json`, but `scripts/update_open_houses.py` regenerates that file from GitHub issues. Open-house edits that do not exist in issue form can be overwritten later.
 - `data/active_warzones.txt` is not consumed by the current codebase.
 - World history dates on `world.html` are intentionally adjusted one day earlier at render time because TibiaData kill statistics are refreshed after the observation day. Do not rewrite the committed data files just to change the displayed calendar date.
+- The scheduled world refresh workflow uses an hourly retry window plus a Berlin-time gate because GitHub cron is not minute-accurate enough to rely on a single daily trigger.
 
 ## Source Of Truth
 

@@ -13,9 +13,11 @@ on:
       - scripts/enrich_worlds_with_rankings.py
       - scripts/update_data.py
   schedule:
-    # GitHub Actions cron uses UTC. 02:05 UTC aligns with the 23:05 BRT
-    # refresh deadline while Germany is observing CEST.
-    - cron: "5 2 * * *"
+    # GitHub scheduled runs drift by hours in practice. Queue an off-peak hourly
+    # retry window and let scripts/update_data.py --scheduled no-op until the
+    # TibiaData refresh window has actually opened in Berlin.
+    - cron: "17 23 * * *"
+    - cron: "17 0-6 * * *"
 
 permissions:
   contents: write
@@ -54,7 +56,12 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Refresh worlds data for scheduled window
+        if: github.event_name == 'schedule'
+        run: python scripts/update_data.py --scheduled
+
       - name: Refresh worlds data
+        if: github.event_name != 'schedule'
         run: python scripts/update_data.py
 
       - name: Validate generated data

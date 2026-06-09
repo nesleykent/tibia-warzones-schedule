@@ -149,7 +149,7 @@ Pipeline:
 1. fetch world metadata from TibiaData
 2. fetch per-world kill statistics from TibiaData
 3. merge manual schedules from `data/manual-schedules.json`
-4. append or replace today’s history row in `data/history/*.json`
+4. append or replace the current UTC collection-day row in `data/history/*.json`
 5. build world summaries
 6. attach ranking metrics through `attach_ranking_metrics()`
 7. validate and write `data/worlds.json`
@@ -158,6 +158,7 @@ Key functions:
 
 - `get_worlds()`
 - `get_kill_statistics()`
+- `get_scheduled_refresh_gate()`
 - `build_world_summary()`
 - `main()`
 
@@ -246,7 +247,7 @@ Deployment does not rebuild data. It publishes whatever is already committed.
 
 ### World refresh
 
-`.github/workflows/update-worlds.yml` runs `scripts/update_data.py`, validates the repo, and commits `data/worlds.json` plus `data/history/`.
+`.github/workflows/update-worlds.yml` queues an hourly retry window from `23:17` through `06:17` UTC, runs `scripts/update_data.py --scheduled` for scheduled events, lets the script no-op until TibiaData's `04:05` Berlin refresh window opens, then validates the repo and commits `data/worlds.json` plus `data/history/`.
 
 ### Market refresh
 

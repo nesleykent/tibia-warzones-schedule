@@ -50,6 +50,12 @@ Command:
 python3 scripts/update_data.py
 ```
 
+Scheduled-safe mode used by GitHub Actions:
+
+```bash
+python3 scripts/update_data.py --scheduled
+```
+
 Requires:
 
 - network access to TibiaData
@@ -61,9 +67,9 @@ Writes:
 
 Notes:
 
-- the script catches per-world failures and writes fallback `na` records instead of aborting the whole run
-- because of that behavior, a successful exit does not guarantee every world refreshed cleanly
-- review stdout and stderr for `ERRO` lines
+- the script aborts the run if any world refresh fails
+- scheduled-safe mode exits `0` before TibiaData's `04:05` Berlin refresh window so retry workflows can no-op without writing stale rows
+- history rows are stamped with the UTC collection day; `world.html` intentionally renders them one day earlier to show the observed kill day
 
 Safe follow-up:
 
@@ -104,6 +110,8 @@ Checkpoint behavior:
 
 GitHub Actions behavior:
 
+- `.github/workflows/update-worlds.yml` schedules an hourly retry window from `23:17` through `06:17` UTC because GitHub scheduled runs can drift by hours
+- scheduled workflow runs call `python3 scripts/update_data.py --scheduled`, which skips until the TibiaData refresh window has opened in Berlin
 - `.github/workflows/update-market.yml` now shards the market refresh by tracked item so the scheduled automation stays within the job runtime budget
 - the workflow rebuilds rankings only after all market shards finish successfully
 - the workflow commits `data/market/world/**/*.json` and `data/worlds.json`; it does not rely on `data/market/sync_state.json` as a committed artifact

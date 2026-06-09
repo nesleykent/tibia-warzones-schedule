@@ -6,6 +6,7 @@ import sys
 import tempfile
 import types
 import unittest
+from datetime import UTC, datetime, timedelta, timezone
 from pathlib import Path
 from unittest.mock import patch
 
@@ -247,6 +248,35 @@ class UpdateDataHelpersTest(unittest.TestCase):
             self.assertEqual(update_data.main(), 1)
 
         save_json.assert_not_called()
+
+    def test_today_iso_date_normalizes_to_utc_calendar_day(self) -> None:
+        local_now = datetime(2026, 6, 7, 21, 30, tzinfo=timezone(timedelta(hours=-3)))
+
+        self.assertEqual(update_data.today_iso_date(local_now), "2026-06-08")
+
+    def test_get_scheduled_refresh_gate_uses_berlin_dst_rules(self) -> None:
+        before_summer_cutoff = datetime(2026, 6, 8, 1, 59, tzinfo=UTC)
+        after_summer_cutoff = datetime(2026, 6, 8, 2, 5, tzinfo=UTC)
+        before_winter_cutoff = datetime(2026, 1, 8, 3, 4, tzinfo=UTC)
+        after_winter_cutoff = datetime(2026, 1, 8, 3, 5, tzinfo=UTC)
+
+        self.assertFalse(update_data.get_scheduled_refresh_gate(before_summer_cutoff)[0])
+        self.assertTrue(update_data.get_scheduled_refresh_gate(after_summer_cutoff)[0])
+        self.assertFalse(update_data.get_scheduled_refresh_gate(before_winter_cutoff)[0])
+        self.assertTrue(update_data.get_scheduled_refresh_gate(after_winter_cutoff)[0])
+
+    def test_main_skips_scheduled_runs_before_refresh_window(self) -> None:
+        with (
+            patch.object(
+                update_data,
+                "utc_now",
+                return_value=datetime(2026, 6, 8, 1, 59, tzinfo=UTC),
+            ),
+            patch.object(update_data, "get_worlds") as get_worlds,
+        ):
+            self.assertEqual(update_data.main(["--scheduled"]), 0)
+
+        get_worlds.assert_not_called()
 
 
 class UpdateOpenHousesHelpersTest(unittest.TestCase):
