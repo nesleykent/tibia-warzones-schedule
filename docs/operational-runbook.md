@@ -102,6 +102,12 @@ Checkpoint behavior:
 - `--reset-progress` clears that checkpoint before the run
 - `--force` bypasses checkpoint reuse and rewrites files instead of merging
 
+GitHub Actions behavior:
+
+- `.github/workflows/update-market.yml` now shards the market refresh by tracked item so the scheduled automation stays within the job runtime budget
+- the workflow rebuilds rankings only after all market shards finish successfully
+- the workflow commits `data/market/world/**/*.json` and `data/worlds.json`; it does not rely on `data/market/sync_state.json` as a committed artifact
+
 ### Rebuild rankings only
 
 Command:

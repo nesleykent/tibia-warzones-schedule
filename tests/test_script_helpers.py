@@ -14,6 +14,7 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 import common
+import build_market_workflow_matrix
 import fetch_item_history
 import update_data
 import update_open_houses
@@ -432,6 +433,26 @@ class UpdateOpenHousesHelpersTest(unittest.TestCase):
 
 
 class MarketHelpersTest(unittest.TestCase):
+    def test_build_market_workflow_matrix_uses_name_and_slug_pairs(self) -> None:
+        matrix = build_market_workflow_matrix.build_market_workflow_matrix(
+            [
+                {"name": "Tibia Coins", "slug": "tibia_coins", "id": 22118},
+                {"name": "Gold Token", "slug": "gold_token", "id": 22721},
+                {"name": "", "slug": "skip-me"},
+                {"name": "Missing Slug", "slug": ""},
+            ]
+        )
+
+        self.assertEqual(
+            matrix,
+            {
+                "include": [
+                    {"item_name": "Tibia Coins", "item_slug": "tibia_coins"},
+                    {"item_name": "Gold Token", "item_slug": "gold_token"},
+                ]
+            },
+        )
+
     def test_get_tracked_worlds_prefers_world_catalog(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             tmp_path = Path(tmpdir)

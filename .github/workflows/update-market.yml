@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       force_refresh:
-        description: "Force refresh ranking-critical market files even if they look fresh."
+        description: "Force refresh tracked market files even if they look fresh."
         required: false
         default: false
         type: boolean
@@ -13,6 +13,7 @@ on:
       - main
     paths:
       - scripts/common.py
+      - scripts/build_market_workflow_matrix.py
       - scripts/fetch_item_history.py
       - scripts/economic_ranking.py
       - scripts/enrich_worlds_with_rankings.py
@@ -28,9 +29,80 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  update-market:
+  prepare-market-matrix:
     runs-on: ubuntu-latest
-    timeout-minutes: 75
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+
+    steps:
+      - name: Require user token
+        env:
+          OPEN_HOUSE_GITHUB_TOKEN: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
+        run: |
+          if [ -z "$OPEN_HOUSE_GITHUB_TOKEN" ]; then
+            echo "Missing required secret: OPEN_HOUSE_GITHUB_TOKEN" >&2
+            exit 1
+          fi
+
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build tracked-item shard matrix
+        id: matrix
+        run: |
+          matrix="$(python3 scripts/build_market_workflow_matrix.py)"
+          echo "matrix=${matrix}" >> "$GITHUB_OUTPUT"
+
+  refresh-market-shards:
+    needs: prepare-market-matrix
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      # One tracked item per shard keeps each job well below the 75-minute workflow budget.
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJson(needs.prepare-market-matrix.outputs.matrix) }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Refresh tracked market shard
+        run: |
+          python3 scripts/fetch_item_history.py \
+            --item "${{ matrix.item_name }}" \
+            --reset-progress \
+            ${{ inputs.force_refresh && '--force' || '' }}
+
+      - name: Remove transient sync checkpoint
+        run: python3 -c "from pathlib import Path; Path('data/market/sync_state.json').unlink(missing_ok=True)"
+
+      - name: Upload refreshed shard artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: market-${{ matrix.item_slug }}
+          path: data/market/world/*/*_${{ matrix.item_slug }}.json
+          if-no-files-found: error
+
+  update-market:
+    needs:
+      - prepare-market-matrix
+      - refresh-market-shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Require user token
@@ -57,10 +129,12 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Refresh tracked market data
-        run: |
-          python3 scripts/fetch_item_history.py \
-            ${{ inputs.force_refresh && '--force' || '' }}
+      - name: Download refreshed market shard artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: market-*
+          path: .
+          merge-multiple: true
 
       - name: Rebuild ranking data from refreshed market files
         run: python3 scripts/enrich_worlds_with_rankings.py
@@ -78,7 +152,7 @@ jobs:
           COMMIT_AUTHOR_EMAIL: ${{ vars.COMMIT_AUTHOR_EMAIL || format('{0}@users.noreply.github.com', github.repository_owner) }}
           OPEN_HOUSE_GITHUB_TOKEN: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
         run: |
-          if git diff --quiet -- data/market data/worlds.json; then
+          if git diff --quiet -- data/market/world data/worlds.json; then
             echo "No changes to commit."
             exit 0
           fi
@@ -86,7 +160,7 @@ jobs:
           git config user.name "$COMMIT_AUTHOR_NAME"
           git config user.email "$COMMIT_AUTHOR_EMAIL"
           git remote set-url origin "https://x-access-token:${OPEN_HOUSE_GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git add data/market data/worlds.json
+          git add data/market/world data/worlds.json
           git commit -m "update market"
           git pull --rebase origin main
           git push

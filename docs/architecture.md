@@ -250,7 +250,7 @@ Deployment does not rebuild data. It publishes whatever is already committed.
 
 ### Market refresh
 
-`.github/workflows/update-market.yml` runs `scripts/fetch_item_history.py`, then `scripts/enrich_worlds_with_rankings.py`, validates the repo, and commits `data/market/` plus `data/worlds.json`.
+`.github/workflows/update-market.yml` builds a tracked-item matrix, refreshes market files in per-item shards, downloads those refreshed artifacts into a final job, then runs `scripts/enrich_worlds_with_rankings.py`, validates the repo, and commits `data/market/world/` plus `data/worlds.json`.
 
 ### Open-house refresh
 
