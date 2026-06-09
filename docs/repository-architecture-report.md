@@ -143,7 +143,7 @@ Evidence:
 | `assets/world.js` | per-world summary, market cards, history, market modal | `loadWorldPage()`, `renderMarketPrices()`, `openMarketItemModal()` |
 | `assets/ranking.js` | ranking filters, summary, ranking table | `render()`, `renderTable()` |
 | `assets/open-houses.js` | world list/detail routing and filters for open houses | `render()`, `getVisibleWorlds()`, `renderRouteState()` |
-| `assets/admin.js` | maintainer editor and browser-driven GitHub PR flow | `init()`, `buildPendingReview()`, `createPullRequestWorkflow()` |
+| `assets/admin.js` | maintainer editor and browser-driven GitHub direct-commit flow | `init()`, `buildPendingReview()`, `commitSourceFilesToMain()` |
 | `assets/bigfoot.js` | shared UI initialization only | file contents |
 
 ## Data Model And Data Flows
@@ -206,7 +206,7 @@ Flow:
 | --- | --- | --- |
 | TibiaData | world list, kill stats, character lookup, house lookup | `scripts/update_data.py:21`, `47-59`; `scripts/update_open_houses.py:19`, `169-211` |
 | TibiaMarket | item history | `scripts/fetch_item_history.py:28`, `146-155`, `484-698` |
-| GitHub REST API | issue ingestion and browser-based maintainer PR flow | `scripts/update_open_houses.py:20-23`, `93-105`; `assets/admin.js:14-27`, `1475-1523` |
+| GitHub REST API | issue ingestion and browser-based maintainer direct-commit flow | `scripts/update_open_houses.py:20-23`, `93-105`; `assets/admin.js:14-27`, `1533-1590` |
 | GitHub Pages | static site hosting | `.github/workflows/deploy-pages.yml:63-89` |
 
 ## Build, Test, Deployment, And CI/CD

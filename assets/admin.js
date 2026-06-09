@@ -49,8 +49,8 @@
       openHouses: "",
     },
     pendingReview: null,
-    currentWorkingBranch: "",
-    createdPullRequestUrl: "",
+    lastCommittedSha: "",
+    lastCommittedUrl: "",
   };
 
   document.addEventListener("DOMContentLoaded", init);
@@ -69,7 +69,7 @@
     [
       "repoDisplay",
       "baseBranchDisplay",
-      "workingBranchDisplay",
+      "writeTargetDisplay",
       "tokenInput",
       "rememberTokenCheckbox",
       "testConnectionButton",
@@ -92,9 +92,9 @@
       "removeOpenHouseButton",
       "openHouseEditor",
       "openHouseValidation",
-      "prSummaryInput",
+      "commitSummaryInput",
       "reviewChangesButton",
-      "createPullRequestButton",
+      "commitChangesButton",
       "workflowStatus",
       "pendingChanges",
       "timezoneOptions",
@@ -160,7 +160,7 @@
     }
 
     elements.reviewChangesButton.addEventListener("click", reviewPendingChanges);
-    elements.createPullRequestButton.addEventListener("click", createPullRequestWorkflow);
+    elements.commitChangesButton.addEventListener("click", commitSourceFilesToMain);
   }
 
   function restoreTokenState() {
@@ -380,12 +380,15 @@
     }
     renderPendingChanges();
     updateValidationStatuses();
+    if (!state.pendingReview && !state.lastCommittedSha) {
+      setStatus(elements.workflowStatus, "No pending review yet.", "muted");
+    }
   }
 
   function renderAuth() {
     elements.repoDisplay.value = `${REPO_OWNER}/${REPO_NAME}`;
     elements.baseBranchDisplay.value = BASE_BRANCH;
-    elements.workingBranchDisplay.value = state.currentWorkingBranch || "Not created yet";
+    elements.writeTargetDisplay.value = BASE_BRANCH;
   }
 
   function renderScheduleWorldSelects() {
@@ -486,7 +489,7 @@
             </select>
           </label>
           <label class="admin-field">
-            <span>Source (PR note only)</span>
+            <span>Source (commit note only)</span>
             <input
               type="text"
               data-index="${index}"
@@ -496,7 +499,7 @@
             />
           </label>
           <label class="admin-field admin-field--wide">
-            <span>Notes (PR note only)</span>
+            <span>Notes (commit note only)</span>
             <textarea
               rows="2"
               data-index="${index}"
@@ -537,7 +540,7 @@
                 type="text"
                 data-index="${index}"
                 data-field="category"
-                placeholder="PR note only"
+                placeholder="Commit note only"
                 value="${escapeAttribute(row.category)}"
               />
             </td>
@@ -554,7 +557,7 @@
                 type="text"
                 data-index="${index}"
                 data-field="notes"
-                placeholder="PR note only"
+                placeholder="Commit note only"
                 value="${escapeAttribute(row.notes)}"
               />
             </td>
@@ -772,7 +775,7 @@
     if (!review) {
       setHtml(
         elements.pendingChanges,
-        `<div class="admin-empty">Run “Review pending file changes” to validate the editor state and preview the files that will be committed.</div>`
+        `<div class="admin-empty">Run “Review pending file changes” to validate the editor state and preview the source files that would be committed directly to main.</div>`
       );
       return;
     }
@@ -793,7 +796,7 @@
     if (!review.files.length) {
       setHtml(
         elements.pendingChanges,
-        `<div class="admin-empty">No file content changed. The editor would not create a branch or PR.</div>`
+        `<div class="admin-empty">No file content changed. The editor would not create a direct commit.</div>`
       );
       return;
     }
@@ -1275,9 +1278,9 @@
 
     setStatus(
       elements.workflowStatus,
-      `Ready to create a PR with ${state.pendingReview.files.length} changed file${
+      `Ready to commit ${state.pendingReview.files.length} changed file${
         state.pendingReview.files.length === 1 ? "" : "s"
-      }.`,
+      } directly to main.`,
       "success"
     );
   }
@@ -1399,7 +1402,7 @@
       .sort(compareOpenHouseRecords);
   }
 
-  async function createPullRequestWorkflow() {
+  async function commitSourceFilesToMain() {
     reviewPendingChanges();
     const review = state.pendingReview;
 
@@ -1409,35 +1412,41 @@
 
     const token = state.token || elements.tokenInput.value.trim();
     if (!token) {
-      setStatus(elements.workflowStatus, "Enter a GitHub token before creating a pull request.", "error");
+      setStatus(
+        elements.workflowStatus,
+        "Enter a GitHub token before committing directly to main.",
+        "error"
+      );
       return;
     }
 
     setBusy(true);
     try {
       await ensureGithubConnection(token);
-      const branchName = `maintainer-update-${formatBranchTimestamp(new Date())}`;
-      state.currentWorkingBranch = branchName;
-      renderAuth();
-
-      await createGithubBranch(token, branchName);
-
-      for (const file of review.files) {
-        await updateGithubFile(token, branchName, file);
-      }
-
-      const pullRequest = await createGithubPullRequest(token, branchName, review.files);
-      state.createdPullRequestUrl = pullRequest.html_url || pullRequest.url || "";
+      const commitMessage = buildDirectCommitMessage({
+        summary: elements.commitSummaryInput.value,
+        files: review.files,
+        scheduleNotes: collectScheduleNotes(),
+        trackedItemNotes: collectTrackedItemNotes(),
+      });
+      const commitResult = await commitFilesToBaseBranch(token, review.files, commitMessage);
+      state.lastCommittedSha = commitResult.sha;
+      state.lastCommittedUrl = commitResult.url;
+      syncCommittedFiles(review.files);
+      state.pendingReview = buildPendingReview();
+      renderPendingChanges();
 
       setStatus(
         elements.workflowStatus,
-        state.createdPullRequestUrl
-          ? `Pull request created successfully: ${state.createdPullRequestUrl}`
-          : "Pull request created successfully.",
+        buildDirectCommitSuccessMessage(commitResult, review.files),
         "success"
       );
     } catch (error) {
-      setStatus(elements.workflowStatus, error.message || "GitHub workflow failed.", "error");
+      setStatus(
+        elements.workflowStatus,
+        getDirectCommitErrorMessage(error),
+        "error"
+      );
     } finally {
       setBusy(false);
     }
@@ -1472,85 +1481,166 @@
     return { user, repo };
   }
 
-  async function createGithubBranch(token, branchName) {
-    const ref = await githubRequest(
-      `/repos/${REPO_OWNER}/${REPO_NAME}/git/ref/heads/${encodeURIComponent(BASE_BRANCH)}`,
+  function buildDirectCommitMessage({
+    summary = "",
+    files = [],
+    scheduleNotes = [],
+    trackedItemNotes = [],
+  } = {}) {
+    const sections = [];
+    const subject = buildDirectCommitSubject(files);
+    const trimmedSummary = String(summary || "").trim();
+
+    if (trimmedSummary) {
+      sections.push(trimmedSummary);
+    }
+
+    sections.push("Changed files:");
+    files.forEach((file) => {
+      sections.push(`- ${file.path} (${file.summary})`);
+    });
+
+    if (scheduleNotes.length) {
+      sections.push("", "Schedule notes:");
+      scheduleNotes.forEach((line) => sections.push(`- ${line}`));
+    }
+
+    if (trackedItemNotes.length) {
+      sections.push("", "Tracked item notes:");
+      trackedItemNotes.forEach((line) => sections.push(`- ${line}`));
+    }
+
+    return `${subject}\n\n${sections.join("\n")}`;
+  }
+
+  function buildDirectCommitSubject(files) {
+    const changedPaths = new Set((files || []).map((file) => file.path));
+    if (changedPaths.size === 1 && changedPaths.has(FILE_PATHS.schedules)) {
+      return "chore(admin): update manual schedules";
+    }
+    if (changedPaths.size === 1 && changedPaths.has(FILE_PATHS.trackedItems)) {
+      return "chore(admin): update tracked market items";
+    }
+    return "chore(admin): update maintainer source data";
+  }
+
+  function buildGitTreeEntries(files) {
+    return files.map((file) => ({
+      path: file.path,
+      mode: "100644",
+      type: "blob",
+      content: file.content,
+    }));
+  }
+
+  async function commitFilesToBaseBranch(
+    token,
+    files,
+    commitMessage,
+    request = githubRequest
+  ) {
+    const refPath = `/repos/${REPO_OWNER}/${REPO_NAME}/git/ref/heads/${encodeURIComponent(
+      BASE_BRANCH
+    )}`;
+    const updateRefPath = `/repos/${REPO_OWNER}/${REPO_NAME}/git/refs/heads/${encodeURIComponent(
+      BASE_BRANCH
+    )}`;
+    const ref = await request(refPath, { token });
+    const headSha = ref?.object?.sha;
+    if (!headSha) {
+      throw new Error(`Unable to resolve the current ${BASE_BRANCH} head SHA.`);
+    }
+
+    const headCommit = await request(
+      `/repos/${REPO_OWNER}/${REPO_NAME}/git/commits/${headSha}`,
       { token }
     );
+    const baseTreeSha = headCommit?.tree?.sha;
+    if (!baseTreeSha) {
+      throw new Error(`Unable to resolve the current ${BASE_BRANCH} tree SHA.`);
+    }
 
-    await githubRequest(`/repos/${REPO_OWNER}/${REPO_NAME}/git/refs`, {
+    const tree = await request(`/repos/${REPO_OWNER}/${REPO_NAME}/git/trees`, {
       method: "POST",
       token,
       body: {
-        ref: `refs/heads/${branchName}`,
-        sha: ref.object.sha,
+        base_tree: baseTreeSha,
+        tree: buildGitTreeEntries(files),
       },
     });
-  }
 
-  async function updateGithubFile(token, branchName, file) {
-    const path = toGitHubContentPath(file.path);
-    const current = await githubRequest(
-      `/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}?ref=${encodeURIComponent(branchName)}`,
-      { token }
-    );
-
-    await githubRequest(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`, {
-      method: "PUT",
-      token,
-      body: {
-        message: `chore(admin): update ${file.path}`,
-        content: toBase64Utf8(file.content),
-        branch: branchName,
-        sha: current.sha,
-      },
-    });
-  }
-
-  async function createGithubPullRequest(token, branchName, files) {
-    const title = `chore: maintainer data update ${branchName.replace("maintainer-update-", "")}`;
-    const body = buildPullRequestBody(branchName, files);
-    return githubRequest(`/repos/${REPO_OWNER}/${REPO_NAME}/pulls`, {
+    const commit = await request(`/repos/${REPO_OWNER}/${REPO_NAME}/git/commits`, {
       method: "POST",
       token,
       body: {
-        title,
-        head: branchName,
-        base: BASE_BRANCH,
-        body,
+        message: commitMessage,
+        tree: tree.sha,
+        parents: [headSha],
       },
+    });
+
+    await request(updateRefPath, {
+      method: "PATCH",
+      token,
+      body: {
+        sha: commit.sha,
+        force: false,
+      },
+    });
+
+    return {
+      sha: commit.sha,
+      url: buildCommitUrl(commit.sha),
+    };
+  }
+
+  function buildDirectCommitSuccessMessage(commitResult, files) {
+    const workflows = getTriggeredWorkflowNames(files);
+    const workflowText = joinWithAnd(workflows);
+    const commitTarget = commitResult?.url || buildCommitUrl(commitResult?.sha || "");
+    return commitTarget
+      ? `Committed source files directly to main: ${commitTarget}. GitHub Actions will now run ${workflowText}.`
+      : `Committed source files directly to main. GitHub Actions will now run ${workflowText}.`;
+  }
+
+  function getTriggeredWorkflowNames(files) {
+    const changedPaths = new Set((files || []).map((file) => file.path));
+    const workflows = [];
+
+    if (changedPaths.has(FILE_PATHS.schedules)) {
+      workflows.push("Update Worlds");
+    }
+    if (changedPaths.has(FILE_PATHS.trackedItems)) {
+      workflows.push("Update Market");
+    }
+    workflows.push("Deploy Pages");
+    return workflows;
+  }
+
+  function getDirectCommitErrorMessage(error) {
+    const rawMessage = String(error?.message || "GitHub workflow failed.");
+    if (/Reference update failed|fast.?forward|is at .* but expected/i.test(rawMessage)) {
+      return `Direct commit failed because ${BASE_BRANCH} changed underneath this editor. Reload admin.html, review the changes again, and retry the commit.`;
+    }
+    return rawMessage;
+  }
+
+  function syncCommittedFiles(files) {
+    files.forEach((file) => {
+      if (file.path === FILE_PATHS.schedules) {
+        state.originalFiles.schedules = file.content;
+      } else if (file.path === FILE_PATHS.trackedItems) {
+        state.originalFiles.trackedItems = file.content;
+      } else if (file.path === FILE_PATHS.openHouses) {
+        state.originalFiles.openHouses = file.content;
+      }
     });
   }
 
-  function buildPullRequestBody(branchName, files) {
-    const summary = String(elements.prSummaryInput.value || "").trim();
-    const scheduleNotes = collectScheduleNotes();
-    const trackedItemNotes = collectTrackedItemNotes();
-
-    return [
-      "## Maintainer Data Update",
-      summary || "Updated repository source data through the browser-based maintainer editor.",
-      "",
-      "## Branch",
-      `- ${branchName}`,
-      "",
-      "## Changed Files",
-      ...files.map((file) => `- \`${file.path}\` (${file.summary})`),
-      "",
-      "## Schedule Notes",
-      ...(scheduleNotes.length ? scheduleNotes.map((line) => `- ${line}`) : ["- No extra schedule notes supplied."]),
-      "",
-      "## Tracked Item Notes",
-      ...(trackedItemNotes.length
-        ? trackedItemNotes.map((line) => `- ${line}`)
-        : ["- No extra tracked-item notes supplied."]),
-      "",
-      "## Source File Scope",
-      `- \`${FILE_PATHS.schedules}\``,
-      `- \`${FILE_PATHS.trackedItems}\``,
-      "",
-      "Generated files remain untouched in this PR and should refresh through the existing GitHub Actions workflow after merge.",
-    ].join("\n");
+  function buildCommitUrl(sha) {
+    return sha
+      ? `https://github.com/${REPO_OWNER}/${REPO_NAME}/commit/${sha}`
+      : "";
   }
 
   function collectScheduleNotes() {
@@ -1581,29 +1671,6 @@
         }`;
       })
       .filter(Boolean);
-  }
-
-  function collectOpenHouseStats() {
-    const currentIds = new Set(
-      buildOpenHousesPayload()
-        .map((record) => record.id)
-        .filter(Boolean)
-    );
-    const originalIds = new Set(
-      JSON.parse(state.originalFiles.openHouses)
-        .map((record) => record.id)
-        .filter(Boolean)
-    );
-
-    let added = 0;
-    let removed = 0;
-    currentIds.forEach((id) => {
-      if (!originalIds.has(id)) added += 1;
-    });
-    originalIds.forEach((id) => {
-      if (!currentIds.has(id)) removed += 1;
-    });
-    return { added, removed, total: currentIds.size };
   }
 
   async function githubRequest(path, { method = "GET", token, body } = {}) {
@@ -1765,7 +1832,7 @@
       elements.addOpenHouseButton,
       elements.removeOpenHouseButton,
       elements.reviewChangesButton,
-      elements.createPullRequestButton,
+      elements.commitChangesButton,
     ].forEach((button) => {
       if (button) button.disabled = isBusy;
     });
@@ -1799,30 +1866,15 @@
     return JSON.stringify(left) === JSON.stringify(right);
   }
 
-  function toBase64Utf8(value) {
-    const bytes = new TextEncoder().encode(value);
-    let binary = "";
-    bytes.forEach((byte) => {
-      binary += String.fromCharCode(byte);
-    });
-    return btoa(binary);
-  }
-
-  function toGitHubContentPath(path) {
-    return path
-      .split("/")
-      .map((segment) => encodeURIComponent(segment))
-      .join("/");
-  }
-
-  function formatBranchTimestamp(date) {
-    const year = date.getUTCFullYear();
-    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-    const day = String(date.getUTCDate()).padStart(2, "0");
-    const hour = String(date.getUTCHours()).padStart(2, "0");
-    const minute = String(date.getUTCMinutes()).padStart(2, "0");
-    const second = String(date.getUTCSeconds()).padStart(2, "0");
-    return `${year}${month}${day}-${hour}${minute}${second}`;
+  function joinWithAnd(items) {
+    const normalized = items.filter(Boolean);
+    if (normalized.length <= 1) {
+      return normalized[0] || "no workflows";
+    }
+    if (normalized.length === 2) {
+      return `${normalized[0]} and ${normalized[1]}`;
+    }
+    return `${normalized.slice(0, -1).join(", ")}, and ${normalized.at(-1)}`;
   }
 
   function escapeAttribute(value) {
@@ -1836,4 +1888,13 @@
   const TIME_PATTERN = /^\d{2}:\d{2}$/;
   const UNKNOWN_SCHEDULE_PLACEHOLDER = "??:00";
   const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}(?:[T ][^ ]+)?$/;
+
+  window.TibiaAdmin = {
+    buildDirectCommitMessage,
+    buildDirectCommitSubject,
+    buildGitTreeEntries,
+    buildCommitUrl,
+    commitFilesToBaseBranch,
+    getTriggeredWorkflowNames,
+  };
 })();

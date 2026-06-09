@@ -11,6 +11,8 @@ python3 -m py_compile scripts/*.py
 python3 -m unittest discover -s tests -v
 python3 scripts/validate_content.py
 node --check assets/*.js
+node --test tests/test_admin_editor.mjs
+node --test tests/test_frontend_dates.mjs
 ```
 
 Expected result:
@@ -19,6 +21,7 @@ Expected result:
 - unit tests pass
 - `validate_content.py` exits `0`
 - JavaScript syntax check succeeds
+- frontend Node tests pass
 
 Known non-blocking warnings:
 
@@ -221,17 +224,17 @@ Verified durable uses:
 - schedules
 - tracked items
 
-Risky use:
+Not supported:
 
-- open-house editing, because the next issue-driven rebuild can replace it
+- open-house editing, because the next issue-driven rebuild would replace it
 
 Observed workflow:
 
 1. load source files from the static site
 2. validate edits in browser JavaScript
-3. create a branch named `maintainer-update-YYYYMMDD-HHMMSS`
-4. commit changed files through the GitHub contents API
-5. open a pull request against `main`
+3. preview only the changed durable source files
+4. write one atomic commit directly to `main` through the GitHub Git Data API
+5. wait for the existing `Update Worlds`, `Update Market`, and `Deploy Pages` workflows to regenerate and publish derived outputs as needed
 
 Token handling:
 

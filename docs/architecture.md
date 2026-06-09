@@ -52,8 +52,8 @@ There is no backend server, database, bundler, or JavaScript package build step.
 
 - Controller: `assets/admin.js`
 - Shared runtime: `assets/shared.js`
-- Purpose: browser maintainer editor that opens GitHub branches, commits, and pull requests
-- Evidence: `assets/admin.js:init()`, `buildPendingReview()`, `createPullRequestWorkflow()`
+- Purpose: browser maintainer editor that reviews source changes, commits durable source files directly to `main`, and relies on GitHub Actions to rebuild generated outputs
+- Evidence: `assets/admin.js:init()`, `buildPendingReview()`, `commitSourceFilesToMain()`
 
 ## Shared Frontend Runtime
 
@@ -279,7 +279,7 @@ Used for:
 - issue-backed open-house input
 - Actions automation
 - Pages deployment
-- browser-side maintainer PR creation from `admin.html`
+- browser-side maintainer direct commits from `admin.html`
 
 ### Other outbound links
 

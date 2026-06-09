@@ -41,7 +41,7 @@
         <div class="header-text">
           <h1>Maintainer Data Editor</h1>
           <p class="header-subtitle">
-            Edit source data in the browser, create a Git branch through the GitHub API, and open a pull request without leaving the static site.
+            Edit source data in the browser and commit durable source files straight to <code>main</code> without leaving the static site.
           </p>
         </div>
       </div>
@@ -60,7 +60,7 @@
           <div>
             <h2 id="authTitle">Authentication</h2>
             <p class="admin-card-copy">
-              The editor reads local site data anonymously, then uses the GitHub REST API only when you test the token or create a pull request.
+              The editor reads local site data anonymously, then uses the GitHub REST API only when you test the token or commit source changes to <code>main</code>.
             </p>
           </div>
           <div class="admin-badge-group">
@@ -81,8 +81,8 @@
           </label>
 
           <label class="admin-field">
-            <span>Working branch</span>
-            <input id="workingBranchDisplay" type="text" value="Not created yet" readonly />
+            <span>Commit target</span>
+            <input id="writeTargetDisplay" type="text" value="main" readonly />
           </label>
 
           <label class="admin-field admin-field--wide">
@@ -121,7 +121,7 @@
           <div>
             <h2 id="scheduleTitle">Warzone schedule editor</h2>
             <p class="admin-card-copy">
-              Edits <code>data/manual-schedules.json</code>. Source and notes fields help document the PR but are not written into the JSON contract.
+              Edits <code>data/manual-schedules.json</code>. Source and notes fields help document the commit but are not written into the JSON contract.
             </p>
           </div>
           <button id="addScheduleWorldButton" type="button" class="admin-button admin-button--secondary">
@@ -169,7 +169,7 @@
           <div>
             <h2 id="marketTitle">Tracked market item editor</h2>
             <p class="admin-card-copy">
-              Reads <code>data/market/items/items.csv</code> and updates <code>data/market/items/tracked_items.json</code>. Category and notes are PR metadata only. Enabled controls whether the item remains in the tracked list.
+              Reads <code>data/market/items/items.csv</code> and updates <code>data/market/items/tracked_items.json</code>. Category and notes are commit metadata only. Enabled controls whether the item remains in the tracked list.
             </p>
           </div>
           <button id="addTrackedItemButton" type="button" class="admin-button admin-button--secondary">
@@ -198,22 +198,22 @@
         </div>
       </section>
 
-      <section class="admin-card" aria-labelledby="pullRequestTitle">
+      <section class="admin-card" aria-labelledby="commitWorkflowTitle">
         <div class="admin-card-header">
           <div>
-            <h2 id="pullRequestTitle">Pull request workflow</h2>
+            <h2 id="commitWorkflowTitle">Direct Commit Workflow</h2>
             <p class="admin-card-copy">
-              The editor creates a branch named <code>maintainer-update-YYYYMMDD-HHMMSS</code>, commits only changed source files, and opens a PR against <code>main</code>.
+              The editor validates source changes, writes only changed durable source files straight to <code>main</code>, and lets the existing GitHub Actions workflows regenerate public outputs afterward.
             </p>
           </div>
         </div>
 
         <label class="admin-field">
-          <span>Maintainer summary for the PR body</span>
+          <span>Maintainer summary for the commit message</span>
           <textarea
-            id="prSummaryInput"
+            id="commitSummaryInput"
             rows="4"
-            placeholder="Describe the correction, context, or follow-up actions for reviewers."
+            placeholder="Describe the correction, context, or follow-up actions for the commit history."
           ></textarea>
         </label>
 
@@ -221,8 +221,8 @@
           <button id="reviewChangesButton" type="button" class="admin-button admin-button--secondary">
             Review pending file changes
           </button>
-          <button id="createPullRequestButton" type="button" class="admin-button">
-            Create branch, commit files, and open PR
+          <button id="commitChangesButton" type="button" class="admin-button">
+            Commit source files to main
           </button>
         </div>
 
