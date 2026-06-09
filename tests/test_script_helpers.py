@@ -275,8 +275,18 @@ class UpdateDataHelpersTest(unittest.TestCase):
             patch.object(update_data, "get_worlds") as get_worlds,
         ):
             self.assertEqual(update_data.main(["--scheduled"]), 0)
+            get_worlds.assert_not_called()
 
-        get_worlds.assert_not_called()
+
+class WorkflowContractsTest(unittest.TestCase):
+    def test_update_market_workflow_stages_repo_relative_artifacts(self) -> None:
+        workflow_text = (
+            Path(__file__).resolve().parent.parent / ".github" / "workflows" / "update-market.yml"
+        ).read_text()
+
+        self.assertIn("mkdir -p artifact/data/market/world", workflow_text)
+        self.assertIn('find data/market/world -type f -name "*_${{ matrix.item_slug }}.json" -print0', workflow_text)
+        self.assertIn("path: artifact/data/market/world", workflow_text)
 
 
 class UpdateOpenHousesHelpersTest(unittest.TestCase):

@@ -93,11 +93,26 @@ jobs:
       - name: Remove transient sync checkpoint
         run: python3 -c "from pathlib import Path; Path('data/market/sync_state.json').unlink(missing_ok=True)"
 
+      - name: Stage refreshed shard files with repo-relative paths
+        run: |
+          mkdir -p artifact/data/market/world
+          found_files=0
+          while IFS= read -r -d '' file; do
+            mkdir -p "artifact/$(dirname "$file")"
+            cp "$file" "artifact/$file"
+            found_files=1
+          done < <(find data/market/world -type f -name "*_${{ matrix.item_slug }}.json" -print0)
+
+          if [ "$found_files" -ne 1 ]; then
+            echo "No refreshed files were staged for ${{ matrix.item_name }}." >&2
+            exit 1
+          fi
+
       - name: Upload refreshed shard artifact
         uses: actions/upload-artifact@v4
         with:
           name: market-${{ matrix.item_slug }}
-          path: data/market/world/*/*_${{ matrix.item_slug }}.json
+          path: artifact/data/market/world
           if-no-files-found: error
 
   update-market:
