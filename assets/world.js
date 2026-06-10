@@ -447,7 +447,7 @@ function renderSummary(world) {
 function getExevoPanWorldUrl(worldName) {
   return `https://www.exevopan.com/?serverSet=${encodeURIComponent(
     worldName
-  )}&minLevel=80&maxLevel=300`;
+  )}&minLevel=80&maxLevel=420`;
 }
 
 function renderBazaarActionCard(world) {
