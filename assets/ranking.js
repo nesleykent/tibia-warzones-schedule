@@ -2,9 +2,9 @@ const {
   SHARED_STORAGE_KEYS,
   escapeHtml,
   formatTransferType,
+  getWorldBattleyeKey,
   getInitialLanguage: getSharedInitialLanguage,
   bindLanguageButtons: bindSharedLanguageButtons,
-  getWorldMarkLabel,
   getWorldPvpKey,
   getWorldRegionKey,
   getWorldTransferKey,
@@ -27,11 +27,15 @@ const FILTER_CONFIGS = [
   { group: "region", getValue: getRegionKey, format: (value) => value },
   { group: "pvp", getValue: getPvpKey, format: (value) => value },
   {
+    group: "battleye",
+    getValue: getBattleyeKey,
+    format: getBattleyeDisplayLabel,
+  },
+  {
     group: "transfer",
     getValue: getTransferKey,
     format: (value) => formatTransferType(value, value),
   },
-  { group: "mark", getValue: getMarkKey, format: getMarkLabel },
 ];
 const FILTER_GROUPS = FILTER_CONFIGS.map(({ group }) => group);
 const FILTER_CONFIGS_BY_GROUP = Object.fromEntries(
@@ -143,6 +147,9 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     healthy: "Healthy",
     inconclusive: "Inconclusive",
     trolls: "Trolls",
+    bgeLabel: "Green BattlEye",
+    ybeLabel: "Yellow BattlEye",
+    noneLabel: "None",
     notAvailable: "N/A",
   },
   "pt-BR": {
@@ -238,6 +245,9 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     healthy: "Healthy",
     inconclusive: "Inconclusivo",
     trolls: "Trolls",
+    bgeLabel: "BattlEye verde",
+    ybeLabel: "BattlEye amarelo",
+    noneLabel: "Nenhum",
     notAvailable: "N/D",
   },
   "es-419": {
@@ -333,6 +343,9 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     healthy: "Healthy",
     inconclusive: "Inconclusivo",
     trolls: "Trolls",
+    bgeLabel: "BattlEye verde",
+    ybeLabel: "BattlEye amarillo",
+    noneLabel: "Ninguno",
     notAvailable: "N/D",
   },
   pl: {
@@ -428,6 +441,9 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     healthy: "Healthy",
     inconclusive: "Niejednoznaczne",
     trolls: "Trolls",
+    bgeLabel: "Zielony BattlEye",
+    ybeLabel: "Żółty BattlEye",
+    noneLabel: "Brak",
     notAvailable: "Brak",
   },
 };
@@ -453,25 +469,23 @@ function t() {
 }
 
 
-function getMarkKey(world) {
-  return String(world?.mark || "").trim().toLowerCase();
-}
-
-function getMarkLabel(mark) {
-  return getWorldMarkLabel(mark, {
-    notAvailable: t().notAvailable,
-    healthy: t().healthy,
-    trolls: t().trolls,
-    inconclusive: t().inconclusive,
-  });
-}
-
 function getRegionKey(world) {
   return getWorldRegionKey(world);
 }
 
 function getPvpKey(world) {
   return getWorldPvpKey(world);
+}
+
+function getBattleyeKey(world) {
+  return getWorldBattleyeKey(world);
+}
+
+function getBattleyeDisplayLabel(key) {
+  const dict = t();
+  if (key === "GBE") return dict.bgeLabel;
+  if (key === "YBE") return dict.ybeLabel;
+  return dict.noneLabel;
 }
 
 function getTransferKey(world) {
