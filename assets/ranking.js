@@ -591,8 +591,10 @@ function renderFilters() {
   const dict = t();
   const filterBar = pageElements.filtersBar;
   if (!filterBar) return;
-
-  const rankedWorlds = worlds.filter((world) => getRanking(world)?.is_ranked);
+  if (worlds.length === 0) {
+    filterBar.replaceChildren();
+    return;
+  }
 
   function pills(group, values, format) {
     return [...values]
@@ -611,9 +613,7 @@ function renderFilters() {
       .map(({ group, format }) =>
         pills(
           group,
-          new Set(
-            rankedWorlds.map((world) => FILTER_CONFIGS_BY_GROUP[group].getValue(world))
-          ),
+          new Set(worlds.map((world) => FILTER_CONFIGS_BY_GROUP[group].getValue(world))),
           format
         )
       )
