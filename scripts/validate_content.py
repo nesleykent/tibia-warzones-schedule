@@ -918,7 +918,11 @@ def validate_market_history_files(market_world_dir: Path) -> ValidationReport:
         report.error("market: data/market/world directory is missing")
         return report
 
-    for path in sorted(market_world_dir.glob("*/*.json")):
+    market_paths = sorted(market_world_dir.glob("*/*.json"))
+    for message in find_case_insensitive_market_path_aliases(market_paths, market_world_dir):
+        report.error(message)
+
+    for path in market_paths:
         try:
             payload = load_json(path)
         except ValueError as exc:
@@ -975,6 +979,25 @@ def validate_market_history_files(market_world_dir: Path) -> ValidationReport:
                     )
 
     return report
+
+
+def find_case_insensitive_market_path_aliases(
+    market_paths: list[Path], market_world_dir: Path
+) -> list[str]:
+    seen_casefold_paths: dict[str, Path] = {}
+    errors: list[str] = []
+    for path in market_paths:
+        casefold_key = str(path.relative_to(market_world_dir)).casefold()
+        existing = seen_casefold_paths.get(casefold_key)
+        if existing is not None:
+            errors.append(
+                "market: duplicate case-insensitive path alias detected for "
+                f"{existing.relative_to(market_world_dir)!s} and {path.relative_to(market_world_dir)!s}"
+            )
+        else:
+            seen_casefold_paths[casefold_key] = path
+
+    return errors
 
 
 def merge_reports(*reports: ValidationReport) -> ValidationReport:

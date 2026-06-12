@@ -234,6 +234,23 @@ class ValidateMarketDefinitionsTest(unittest.TestCase):
         self.assertTrue(any("market coverage: missing market file" in message for message in report.warnings))
 
 
+class ValidateMarketHistoryFilesTest(unittest.TestCase):
+    def test_case_insensitive_duplicate_market_paths_are_errors(self) -> None:
+        market_world_dir = Path("/tmp/market-world")
+        market_paths = [
+            market_world_dir / "Aethera" / "aethera_tibia_coins.json",
+            market_world_dir / "aethera" / "aethera_tibia_coins.json",
+        ]
+
+        errors = validate_content.find_case_insensitive_market_path_aliases(
+            market_paths, market_world_dir
+        )
+
+        self.assertTrue(
+            any("duplicate case-insensitive path alias detected" in message for message in errors)
+        )
+
+
 class ValidateOpenHousesTest(unittest.TestCase):
     def test_duplicate_open_house(self) -> None:
         payload = [
