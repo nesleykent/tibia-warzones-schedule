@@ -20,7 +20,8 @@ const {
 } = window.TibiaTime;
 
 const STORAGE_KEYS = {
-  activeFilters: "rankingActiveFilters",
+  activeFilters: "activeFilters",
+  legacyActiveFilters: "rankingActiveFilters",
   lang: SHARED_STORAGE_KEYS.language,
 };
 const FILTER_CONFIGS = [
@@ -505,7 +506,10 @@ function worldPassesFilters(world) {
 
 function loadSettings() {
   lang = getSharedInitialLanguage(I18N);
-  const savedFilters = readJsonStorage(STORAGE_KEYS.activeFilters, {});
+  const savedFilters = readJsonStorage(
+    STORAGE_KEYS.activeFilters,
+    readJsonStorage(STORAGE_KEYS.legacyActiveFilters, {})
+  );
 
   FILTER_GROUPS.forEach((group) => {
     if (Array.isArray(savedFilters[group])) {
