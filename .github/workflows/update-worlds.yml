@@ -12,11 +12,13 @@ on:
       - scripts/enrich_worlds_with_rankings.py
       - scripts/update_data.py
   schedule:
-    # GitHub scheduled runs drift by hours in practice. Queue an off-peak hourly
-    # retry window and let scripts/update_data.py --scheduled no-op until the
-    # TibiaData refresh window has actually opened in Berlin.
-    - cron: "17 23 * * *"
-    - cron: "17 0-6 * * *"
+    # Primary window: 04:17–08:17 UTC (06:17–10:17 Berlin), all past the TibiaData
+    # refresh gate (04:05 Berlin). First surviving run commits; the rest no-op via
+    # git diff. Fallback window: 14:17–16:17 UTC catches any morning failure
+    # (API outage, validation error). If morning already committed, fallback is a
+    # guaranteed no-op (update_world_history deduplicates by date).
+    - cron: "17 4-8 * * *"
+    - cron: "17 14-16 * * *"
 
 permissions:
   contents: write
