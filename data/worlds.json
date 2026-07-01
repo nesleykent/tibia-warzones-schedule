@@ -39,6 +39,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
@@ -55,11 +60,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -176,7 +176,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 29,
+      "ranking_position": 26,
       "economic_score_raw": 10.038664925264838,
       "market_liquidity_score": 0.877811,
       "warzone_health_score": 0.93,
@@ -191,6 +191,11 @@
       "service_expected_value": 370588.0714285714,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -208,11 +213,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -301,11 +301,11 @@
     "tracks_warzone_service": true,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 4,
-      "Gnomevil": 4,
-      "Abyssador": 4
+      "Deathstrike": 3,
+      "Gnomevil": 3,
+      "Abyssador": 3
     },
-    "last_detected_services": 4,
+    "last_detected_services": 3,
     "mark": "healthy",
     "has_service_history": true,
     "warzone_executions": [
@@ -334,14 +334,14 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 64,
+      "ranking_position": 61,
       "economic_score_raw": 7.615615389098988,
       "market_liquidity_score": 0.488238,
       "warzone_health_score": 0.93,
       "final_score": 7.615615,
       "history_health_score": 0.9,
       "current_operational_score": 1.0,
-      "expected_services": 4,
+      "expected_services": 3,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 60205.07142857143,
       "wz2_expected_value": 83376.64285714286,
@@ -349,6 +349,11 @@
       "service_expected_value": 317311.14285714284,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -366,11 +371,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -459,11 +459,11 @@
     "tracks_warzone_service": true,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 4,
-      "Gnomevil": 2,
-      "Abyssador": 3
+      "Deathstrike": 1,
+      "Gnomevil": 0,
+      "Abyssador": 2
     },
-    "last_detected_services": 2,
+    "last_detected_services": 0,
     "mark": "inconclusive",
     "has_service_history": true,
     "warzone_executions": [
@@ -482,14 +482,14 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 49,
+      "ranking_position": 46,
       "economic_score_raw": 8.851180605516353,
       "market_liquidity_score": 0.500605,
-      "warzone_health_score": 0.41625,
+      "warzone_health_score": 0.3925,
       "final_score": 8.851181,
-      "history_health_score": 0.3,
-      "current_operational_score": 0.6875,
-      "expected_services": 4,
+      "history_health_score": 0.4,
+      "current_operational_score": 0.375,
+      "expected_services": 2,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 66219.14285714286,
       "wz2_expected_value": 117640.85714285714,
@@ -497,6 +497,11 @@
       "service_expected_value": 371724.9285714286,
       "current_mark_value": 0.5,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "inconclusive",
+          "mark_value": 0.5
+        },
         {
           "date": "2026-06-30",
           "mark": "inconclusive",
@@ -514,11 +519,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "trolls",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "trolls",
           "mark_value": 0.0
         }
@@ -607,33 +607,38 @@
     "tracks_warzone_service": true,
     "timezone": "America/Sao_Paulo#Curitiba",
     "last_detected_kills": {
-      "Deathstrike": 0,
-      "Gnomevil": 0,
+      "Deathstrike": 1,
+      "Gnomevil": 1,
       "Abyssador": 1
     },
-    "last_detected_services": 0,
-    "mark": "inconclusive",
+    "last_detected_services": 1,
+    "mark": "healthy",
     "has_service_history": true,
     "warzone_executions": [],
     "warzone_economic_ranking": {
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 17,
+      "ranking_position": 14,
       "economic_score_raw": 11.4217106933492,
       "market_liquidity_score": 0.478229,
-      "warzone_health_score": 0.285,
+      "warzone_health_score": 0.51,
       "final_score": 11.421711,
       "history_health_score": 0.3,
-      "current_operational_score": 0.25,
+      "current_operational_score": 1.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 72591.92857142858,
       "wz2_expected_value": 113506.35714285714,
       "wz3_expected_value": 244488.7857142857,
       "service_expected_value": 430587.0714285715,
-      "current_mark_value": 0.5,
+      "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "inconclusive",
@@ -653,11 +658,6 @@
           "date": "2026-06-27",
           "mark": "na",
           "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
@@ -762,7 +762,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 61,
+      "ranking_position": 58,
       "economic_score_raw": 8.097602494606,
       "market_liquidity_score": 0.866447,
       "warzone_health_score": 1.0,
@@ -777,6 +777,11 @@
       "service_expected_value": 335362.7857142857,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -794,11 +799,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -917,6 +917,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
@@ -933,11 +938,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -1049,12 +1049,12 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 66,
+      "ranking_position": 63,
       "economic_score_raw": 7.480137895917483,
       "market_liquidity_score": 0.807733,
-      "warzone_health_score": 0.86,
+      "warzone_health_score": 1.0,
       "final_score": 7.480138,
-      "history_health_score": 0.8,
+      "history_health_score": 1.0,
       "current_operational_score": 1.0,
       "expected_services": 2,
       "rolling_window_entries_target": 7,
@@ -1064,6 +1064,11 @@
       "service_expected_value": 310590.28571428574,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -1083,11 +1088,6 @@
           "date": "2026-06-27",
           "mark": "healthy",
           "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
-          "mark": "trolls",
-          "mark_value": 0.0
         }
       ],
       "market": {
@@ -1171,38 +1171,41 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "release",
-    "tracks_warzone_service": false,
+    "tracks_warzone_service": true,
     "timezone": null,
     "last_detected_kills": {
-      "Deathstrike": 0,
-      "Gnomevil": 0,
-      "Abyssador": 0
+      "Deathstrike": 1,
+      "Gnomevil": 1,
+      "Abyssador": 1
     },
-    "last_detected_services": 0,
-    "mark": "na",
+    "last_detected_services": 1,
+    "mark": "healthy",
     "has_service_history": true,
     "warzone_executions": [],
     "warzone_economic_ranking": {
-      "is_ranked": false,
-      "insufficient_data": true,
-      "insufficient_data_reasons": [
-        "excluded_na_world"
-      ],
-      "ranking_position": null,
+      "is_ranked": true,
+      "insufficient_data": false,
+      "insufficient_data_reasons": [],
+      "ranking_position": 8,
       "economic_score_raw": 13.837064793718342,
       "market_liquidity_score": 0.613909,
-      "warzone_health_score": 0.0,
+      "warzone_health_score": 0.44,
       "final_score": 13.837065,
-      "history_health_score": 0.0,
-      "current_operational_score": 0.0,
+      "history_health_score": 0.2,
+      "current_operational_score": 1.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 115682.35714285714,
       "wz2_expected_value": 132264.85714285716,
       "wz3_expected_value": 276942.0714285714,
       "service_expected_value": 524889.2857142857,
-      "current_mark_value": 0.0,
+      "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "na",
@@ -1220,11 +1223,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -1314,11 +1312,11 @@
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
       "Deathstrike": 2,
-      "Gnomevil": 2,
+      "Gnomevil": 1,
       "Abyssador": 2
     },
-    "last_detected_services": 2,
-    "mark": "healthy",
+    "last_detected_services": 1,
+    "mark": "trolls",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -1336,21 +1334,26 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 65,
+      "ranking_position": 62,
       "economic_score_raw": 7.541886847295053,
       "market_liquidity_score": 0.824888,
-      "warzone_health_score": 1.0,
+      "warzone_health_score": 0.785,
       "final_score": 7.541887,
-      "history_health_score": 1.0,
-      "current_operational_score": 1.0,
+      "history_health_score": 0.8,
+      "current_operational_score": 0.75,
       "expected_services": 2,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 62514.142857142855,
       "wz2_expected_value": 82589.64285714286,
       "wz3_expected_value": 173675.07142857142,
       "service_expected_value": 318778.85714285716,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "trolls",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -1368,11 +1371,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -1479,7 +1477,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 60,
+      "ranking_position": 57,
       "economic_score_raw": 8.162129665998307,
       "market_liquidity_score": 0.528973,
       "warzone_health_score": 1.0,
@@ -1494,6 +1492,11 @@
       "service_expected_value": 339906.64285714284,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -1511,11 +1514,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -1634,6 +1632,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
@@ -1650,11 +1653,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -1761,7 +1759,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 35,
+      "ranking_position": 32,
       "economic_score_raw": 9.550353423602353,
       "market_liquidity_score": 0.867564,
       "warzone_health_score": 1.0,
@@ -1776,6 +1774,11 @@
       "service_expected_value": 361328.0714285714,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -1793,11 +1796,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -1909,7 +1907,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 57,
+      "ranking_position": 54,
       "economic_score_raw": 8.315132147208615,
       "market_liquidity_score": 0.814226,
       "warzone_health_score": 1.0,
@@ -1924,6 +1922,11 @@
       "service_expected_value": 311492.5714285714,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -1941,11 +1944,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -2052,7 +2050,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 24,
+      "ranking_position": 21,
       "economic_score_raw": 10.345533089109853,
       "market_liquidity_score": 0.655074,
       "warzone_health_score": 0.93,
@@ -2067,6 +2065,11 @@
       "service_expected_value": 388308.5,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -2086,11 +2089,6 @@
           "date": "2026-06-27",
           "mark": "inconclusive",
           "mark_value": 0.5
-        },
-        {
-          "date": "2026-06-26",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
@@ -2195,7 +2193,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 5,
+      "ranking_position": 4,
       "economic_score_raw": 17.983603265721754,
       "market_liquidity_score": 0.738769,
       "warzone_health_score": 1.0,
@@ -2210,6 +2208,11 @@
       "service_expected_value": 358255.2142857143,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -2227,11 +2230,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -2332,12 +2330,12 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 6,
+      "ranking_position": 5,
       "economic_score_raw": 16.848488359966165,
       "market_liquidity_score": 0.716783,
-      "warzone_health_score": 0.44,
+      "warzone_health_score": 0.58,
       "final_score": 16.848488,
-      "history_health_score": 0.2,
+      "history_health_score": 0.4,
       "current_operational_score": 1.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -2347,6 +2345,11 @@
       "service_expected_value": 623131.7142857143,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -2364,11 +2367,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -2454,36 +2452,43 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "2018-04-19",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": null,
     "last_detected_kills": {
-      "Deathstrike": 1,
-      "Gnomevil": 1,
-      "Abyssador": 1
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 1,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 13,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 12.597855925160571,
       "market_liquidity_score": 0.581783,
-      "warzone_health_score": 0.44,
+      "warzone_health_score": 0.14,
       "final_score": 12.597856,
       "history_health_score": 0.2,
-      "current_operational_score": 1.0,
+      "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 92028.71428571429,
       "wz2_expected_value": 121836.0,
       "wz3_expected_value": 228992.2142857143,
       "service_expected_value": 442856.9285714286,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -2501,11 +2506,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -2625,6 +2625,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
@@ -2641,11 +2646,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -2752,7 +2752,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 39,
+      "ranking_position": 36,
       "economic_score_raw": 9.229614804567461,
       "market_liquidity_score": 0.833746,
       "warzone_health_score": 1.0,
@@ -2767,6 +2767,11 @@
       "service_expected_value": 348835.9285714285,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -2784,11 +2789,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -2900,7 +2900,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 38,
+      "ranking_position": 35,
       "economic_score_raw": 9.450060373415797,
       "market_liquidity_score": 0.895464,
       "warzone_health_score": 0.93,
@@ -2915,6 +2915,11 @@
       "service_expected_value": 352744.4285714286,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -2934,11 +2939,6 @@
           "date": "2026-06-27",
           "mark": "inconclusive",
           "mark_value": 0.5
-        },
-        {
-          "date": "2026-06-26",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
@@ -3055,6 +3055,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
@@ -3071,11 +3076,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -3194,6 +3194,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
@@ -3210,11 +3215,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -3303,12 +3303,12 @@
     "tracks_warzone_service": true,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 4,
-      "Gnomevil": 4,
+      "Deathstrike": 3,
+      "Gnomevil": 3,
       "Abyssador": 3
     },
     "last_detected_services": 3,
-    "mark": "trolls",
+    "mark": "healthy",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -3331,21 +3331,26 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 42,
+      "ranking_position": 39,
       "economic_score_raw": 9.0676579024046,
       "market_liquidity_score": 0.872455,
-      "warzone_health_score": 0.4725,
+      "warzone_health_score": 0.58,
       "final_score": 9.067658,
-      "history_health_score": 0.3,
-      "current_operational_score": 0.875,
-      "expected_services": 4,
+      "history_health_score": 0.4,
+      "current_operational_score": 1.0,
+      "expected_services": 3,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 69060.28571428571,
       "wz2_expected_value": 125779.64285714286,
       "wz3_expected_value": 189717.5,
       "service_expected_value": 384557.4285714286,
-      "current_mark_value": 0.0,
+      "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "trolls",
@@ -3365,11 +3370,6 @@
           "date": "2026-06-27",
           "mark": "trolls",
           "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
-          "mark": "inconclusive",
-          "mark_value": 0.5
         }
       ],
       "market": {
@@ -3468,12 +3468,12 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 45,
+      "ranking_position": 42,
       "economic_score_raw": 8.996966674762424,
       "market_liquidity_score": 0.802739,
-      "warzone_health_score": 0.72,
+      "warzone_health_score": 0.86,
       "final_score": 8.996967,
-      "history_health_score": 0.6,
+      "history_health_score": 0.8,
       "current_operational_score": 1.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -3483,6 +3483,11 @@
       "service_expected_value": 373085.5714285714,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -3502,11 +3507,6 @@
           "date": "2026-06-27",
           "mark": "healthy",
           "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
-          "mark": "na",
-          "mark_value": 0.0
         }
       ],
       "market": {
@@ -3623,6 +3623,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
@@ -3639,11 +3644,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -3750,7 +3750,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 44,
+      "ranking_position": 41,
       "economic_score_raw": 9.009744289423882,
       "market_liquidity_score": 0.464561,
       "warzone_health_score": 0.72,
@@ -3765,6 +3765,11 @@
       "service_expected_value": 365554.28571428574,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -3782,11 +3787,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -3877,10 +3877,10 @@
     "last_detected_kills": {
       "Deathstrike": 1,
       "Gnomevil": 1,
-      "Abyssador": 2
+      "Abyssador": 1
     },
     "last_detected_services": 1,
-    "mark": "inconclusive",
+    "mark": "healthy",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -3893,21 +3893,26 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 58,
+      "ranking_position": 55,
       "economic_score_raw": 8.275581980525669,
       "market_liquidity_score": 0.873796,
-      "warzone_health_score": 0.6775,
+      "warzone_health_score": 0.79,
       "final_score": 8.275582,
       "history_health_score": 0.7,
-      "current_operational_score": 0.625,
-      "expected_services": 2,
+      "current_operational_score": 1.0,
+      "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 62496.57142857143,
       "wz2_expected_value": 81896.5,
       "wz3_expected_value": 165697.7142857143,
       "service_expected_value": 310090.7857142857,
-      "current_mark_value": 0.5,
+      "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "inconclusive",
@@ -3927,11 +3932,6 @@
           "date": "2026-06-27",
           "mark": "inconclusive",
           "mark_value": 0.5
-        },
-        {
-          "date": "2026-06-26",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
@@ -4046,7 +4046,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 18,
+      "ranking_position": 15,
       "economic_score_raw": 11.395743930172536,
       "market_liquidity_score": 0.856014,
       "warzone_health_score": 1.0,
@@ -4061,6 +4061,11 @@
       "service_expected_value": 424502.85714285716,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -4078,11 +4083,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -4201,6 +4201,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
@@ -4217,11 +4222,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -4340,6 +4340,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
@@ -4356,11 +4361,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -4479,6 +4479,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
@@ -4495,11 +4500,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -4600,12 +4600,12 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 1,
+      "ranking_position": 2,
       "economic_score_raw": 28.38694013452058,
       "market_liquidity_score": -0.00849,
-      "warzone_health_score": 0.58,
+      "warzone_health_score": 0.72,
       "final_score": 28.38694,
-      "history_health_score": 0.4,
+      "history_health_score": 0.6,
       "current_operational_score": 1.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -4615,6 +4615,11 @@
       "service_expected_value": 848915.5,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -4632,11 +4637,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -4725,12 +4725,12 @@
     "tracks_warzone_service": true,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 4,
+      "Deathstrike": 5,
       "Gnomevil": 4,
       "Abyssador": 4
     },
     "last_detected_services": 4,
-    "mark": "healthy",
+    "mark": "inconclusive",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -4758,21 +4758,26 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 41,
+      "ranking_position": 38,
       "economic_score_raw": 9.075232140552279,
       "market_liquidity_score": 0.901883,
-      "warzone_health_score": 0.93,
+      "warzone_health_score": 0.815,
       "final_score": 9.075232,
-      "history_health_score": 0.9,
-      "current_operational_score": 1.0,
-      "expected_services": 4,
+      "history_health_score": 0.8,
+      "current_operational_score": 0.85,
+      "expected_services": 5,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 77327.35714285714,
       "wz2_expected_value": 82982.07142857142,
       "wz3_expected_value": 181201.92857142858,
       "service_expected_value": 341511.35714285716,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.5,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "inconclusive",
+          "mark_value": 0.5
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -4790,11 +4795,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -4901,7 +4901,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 37,
+      "ranking_position": 34,
       "economic_score_raw": 9.529105972306224,
       "market_liquidity_score": 0.90153,
       "warzone_health_score": 1.0,
@@ -4916,6 +4916,11 @@
       "service_expected_value": 361243.64285714284,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -4933,11 +4938,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -5049,7 +5049,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 22,
+      "ranking_position": 19,
       "economic_score_raw": 10.712249179725337,
       "market_liquidity_score": 0.858794,
       "warzone_health_score": 1.0,
@@ -5064,6 +5064,11 @@
       "service_expected_value": 399709.2142857143,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -5081,11 +5086,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -5205,6 +5205,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
@@ -5221,11 +5226,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -5326,7 +5326,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 16,
+      "ranking_position": 13,
       "economic_score_raw": 11.890690190921207,
       "market_liquidity_score": 0.454462,
       "warzone_health_score": 1.0,
@@ -5341,6 +5341,11 @@
       "service_expected_value": 437877.2142857143,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -5358,11 +5363,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -5451,12 +5451,12 @@
     "tracks_warzone_service": true,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 3,
+      "Deathstrike": 2,
       "Gnomevil": 2,
       "Abyssador": 2
     },
     "last_detected_services": 2,
-    "mark": "inconclusive",
+    "mark": "healthy",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -5474,21 +5474,26 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 43,
+      "ranking_position": 40,
       "economic_score_raw": 9.014759269582715,
       "market_liquidity_score": 0.880421,
-      "warzone_health_score": 0.785,
+      "warzone_health_score": 0.86,
       "final_score": 9.014759,
       "history_health_score": 0.8,
-      "current_operational_score": 0.75,
-      "expected_services": 3,
+      "current_operational_score": 1.0,
+      "expected_services": 2,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 62332.42857142857,
       "wz2_expected_value": 109033.5,
       "wz3_expected_value": 207496.07142857142,
       "service_expected_value": 378862.0,
-      "current_mark_value": 0.5,
+      "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "inconclusive",
@@ -5508,11 +5513,6 @@
           "date": "2026-06-27",
           "mark": "inconclusive",
           "mark_value": 0.5
-        },
-        {
-          "date": "2026-06-26",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
@@ -5629,6 +5629,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
@@ -5645,11 +5650,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -5750,7 +5750,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 2,
+      "ranking_position": 3,
       "economic_score_raw": 22.74111137956028,
       "market_liquidity_score": 0.627205,
       "warzone_health_score": 0.86,
@@ -5765,6 +5765,11 @@
       "service_expected_value": 336162.35714285716,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -5782,11 +5787,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -5893,7 +5893,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 20,
+      "ranking_position": 17,
       "economic_score_raw": 11.345522574875359,
       "market_liquidity_score": 0.189077,
       "warzone_health_score": 0.86,
@@ -5908,6 +5908,11 @@
       "service_expected_value": 424081.85714285716,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -5925,11 +5930,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -6041,7 +6041,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 59,
+      "ranking_position": 56,
       "economic_score_raw": 8.231055602023028,
       "market_liquidity_score": 0.830381,
       "warzone_health_score": 1.0,
@@ -6056,6 +6056,11 @@
       "service_expected_value": 300849.7857142857,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -6073,11 +6078,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -6194,7 +6194,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 54,
+      "ranking_position": 51,
       "economic_score_raw": 8.413505731588623,
       "market_liquidity_score": 0.42162,
       "warzone_health_score": 1.0,
@@ -6209,6 +6209,11 @@
       "service_expected_value": 355655.7142857143,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -6226,11 +6231,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -6349,6 +6349,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
@@ -6365,11 +6370,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -6476,7 +6476,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 12,
+      "ranking_position": 10,
       "economic_score_raw": 13.153673173610033,
       "market_liquidity_score": 0.778718,
       "warzone_health_score": 1.0,
@@ -6491,6 +6491,11 @@
       "service_expected_value": 345529.14285714284,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -6508,11 +6513,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -6598,38 +6598,44 @@
     "transfer_type": "blocked",
     "battleye_protected": true,
     "battleye_date": "release",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": null,
     "last_detected_kills": {
       "Deathstrike": 0,
-      "Gnomevil": 1,
+      "Gnomevil": 0,
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "inconclusive",
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [],
     "warzone_economic_ranking": {
       "is_ranked": false,
       "insufficient_data": true,
       "insufficient_data_reasons": [
+        "excluded_na_world",
         "missing_economic_inputs"
       ],
       "ranking_position": null,
       "economic_score_raw": null,
       "market_liquidity_score": 0.888656,
-      "warzone_health_score": 0.285,
+      "warzone_health_score": 0.21,
       "final_score": null,
       "history_health_score": 0.3,
-      "current_operational_score": 0.25,
+      "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": null,
       "wz2_expected_value": null,
       "wz3_expected_value": null,
       "service_expected_value": null,
-      "current_mark_value": 0.5,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-06-30",
           "mark": "inconclusive",
@@ -6647,11 +6653,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -6758,7 +6759,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 63,
+      "ranking_position": 60,
       "economic_score_raw": 7.712866946084649,
       "market_liquidity_score": 0.484557,
       "warzone_health_score": 1.0,
@@ -6773,6 +6774,11 @@
       "service_expected_value": 327953.85714285716,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -6790,11 +6796,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -6913,6 +6914,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
@@ -6929,11 +6935,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -7040,7 +7041,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 52,
+      "ranking_position": 49,
       "economic_score_raw": 8.499292003766815,
       "market_liquidity_score": 0.85821,
       "warzone_health_score": 1.0,
@@ -7055,6 +7056,11 @@
       "service_expected_value": 353281.5714285714,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -7072,11 +7078,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -7196,6 +7197,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
@@ -7212,11 +7218,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -7328,7 +7329,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 62,
+      "ranking_position": 59,
       "economic_score_raw": 8.000213009828881,
       "market_liquidity_score": 0.845193,
       "warzone_health_score": 1.0,
@@ -7343,6 +7344,11 @@
       "service_expected_value": 338021.5714285714,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -7360,11 +7366,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -7471,7 +7472,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 30,
+      "ranking_position": 27,
       "economic_score_raw": 10.011899477257247,
       "market_liquidity_score": 0.860918,
       "warzone_health_score": 1.0,
@@ -7486,6 +7487,11 @@
       "service_expected_value": 373749.9285714286,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -7503,11 +7509,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -7608,7 +7609,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 7,
+      "ranking_position": 6,
       "economic_score_raw": 16.666806695169242,
       "market_liquidity_score": 0.784007,
       "warzone_health_score": 0.86,
@@ -7623,6 +7624,11 @@
       "service_expected_value": 527108.0,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -7640,11 +7646,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -7734,32 +7735,37 @@
     "timezone": null,
     "last_detected_kills": {
       "Deathstrike": 1,
-      "Gnomevil": 1,
+      "Gnomevil": 0,
       "Abyssador": 1
     },
-    "last_detected_services": 1,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "trolls",
     "has_service_history": true,
     "warzone_executions": [],
     "warzone_economic_ranking": {
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 25,
+      "ranking_position": 22,
       "economic_score_raw": 10.248715075633937,
       "market_liquidity_score": 0.582432,
-      "warzone_health_score": 0.44,
+      "warzone_health_score": 0.29,
       "final_score": 10.248715,
       "history_health_score": 0.2,
-      "current_operational_score": 1.0,
+      "current_operational_score": 0.5,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 82949.28571428571,
       "wz2_expected_value": 104826.92857142858,
       "wz3_expected_value": 232964.2857142857,
       "service_expected_value": 420740.5,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "trolls",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -7777,11 +7783,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -7893,7 +7894,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 15,
+      "ranking_position": 12,
       "economic_score_raw": 11.919940848161044,
       "market_liquidity_score": 0.837558,
       "warzone_health_score": 1.0,
@@ -7908,6 +7909,11 @@
       "service_expected_value": 446210.21428571426,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -7925,11 +7931,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -8015,30 +8016,28 @@
     "transfer_type": "blocked",
     "battleye_protected": true,
     "battleye_date": "release",
-    "tracks_warzone_service": false,
+    "tracks_warzone_service": true,
     "timezone": null,
     "last_detected_kills": {
-      "Deathstrike": 0,
-      "Gnomevil": 0,
+      "Deathstrike": 1,
+      "Gnomevil": 1,
       "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "na",
+    "mark": "trolls",
     "has_service_history": true,
     "warzone_executions": [],
     "warzone_economic_ranking": {
-      "is_ranked": false,
-      "insufficient_data": true,
-      "insufficient_data_reasons": [
-        "excluded_na_world"
-      ],
-      "ranking_position": null,
+      "is_ranked": true,
+      "insufficient_data": false,
+      "insufficient_data_reasons": [],
+      "ranking_position": 1,
       "economic_score_raw": 37.61163820062545,
       "market_liquidity_score": 0.584323,
-      "warzone_health_score": 0.14,
+      "warzone_health_score": 0.29,
       "final_score": 37.611638,
       "history_health_score": 0.2,
-      "current_operational_score": 0.0,
+      "current_operational_score": 0.5,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 71964.85714285714,
@@ -8047,6 +8046,11 @@
       "service_expected_value": 558398.5,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "trolls",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-06-30",
           "mark": "na",
@@ -8064,11 +8068,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -8185,7 +8184,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 19,
+      "ranking_position": 16,
       "economic_score_raw": 11.375916962687095,
       "market_liquidity_score": 0.869852,
       "warzone_health_score": 0.86,
@@ -8200,6 +8199,11 @@
       "service_expected_value": 425240.7142857143,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -8217,11 +8221,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -8333,7 +8332,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 56,
+      "ranking_position": 53,
       "economic_score_raw": 8.345602050420052,
       "market_liquidity_score": 0.878035,
       "warzone_health_score": 1.0,
@@ -8348,6 +8347,11 @@
       "service_expected_value": 343291.5714285714,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -8365,11 +8369,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -8476,7 +8475,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 34,
+      "ranking_position": 31,
       "economic_score_raw": 9.556655759124357,
       "market_liquidity_score": 0.864871,
       "warzone_health_score": 1.0,
@@ -8491,6 +8490,11 @@
       "service_expected_value": 353172.35714285716,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -8508,11 +8512,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -8631,6 +8630,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
@@ -8647,11 +8651,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -8776,6 +8775,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
@@ -8792,11 +8796,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -8913,7 +8912,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 31,
+      "ranking_position": 28,
       "economic_score_raw": 9.975283885826906,
       "market_liquidity_score": 0.812577,
       "warzone_health_score": 1.0,
@@ -8928,6 +8927,11 @@
       "service_expected_value": 373094.14285714284,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -8945,11 +8949,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -9061,7 +9060,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 21,
+      "ranking_position": 18,
       "economic_score_raw": 10.758261681305669,
       "market_liquidity_score": 0.903503,
       "warzone_health_score": 1.0,
@@ -9076,6 +9075,11 @@
       "service_expected_value": 398423.0,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -9093,11 +9097,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -9209,7 +9208,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 55,
+      "ranking_position": 52,
       "economic_score_raw": 8.405656114713391,
       "market_liquidity_score": 0.498654,
       "warzone_health_score": 1.0,
@@ -9224,6 +9223,11 @@
       "service_expected_value": 310938.4285714286,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -9241,11 +9245,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -9357,7 +9356,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 23,
+      "ranking_position": 20,
       "economic_score_raw": 10.566298109061293,
       "market_liquidity_score": 0.848399,
       "warzone_health_score": 1.0,
@@ -9372,6 +9371,11 @@
       "service_expected_value": 392906.28571428574,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -9389,11 +9393,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -9500,7 +9499,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 36,
+      "ranking_position": 33,
       "economic_score_raw": 9.541363958786057,
       "market_liquidity_score": 0.736766,
       "warzone_health_score": 1.0,
@@ -9515,6 +9514,11 @@
       "service_expected_value": 392968.5714285714,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -9532,11 +9536,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -9622,36 +9621,43 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "release",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": null,
     "last_detected_kills": {
-      "Deathstrike": 1,
-      "Gnomevil": 1,
-      "Abyssador": 1
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 1,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 9,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 14.491081975190427,
       "market_liquidity_score": 0.720357,
-      "warzone_health_score": 0.44,
+      "warzone_health_score": 0.14,
       "final_score": 14.491082,
       "history_health_score": 0.2,
-      "current_operational_score": 1.0,
+      "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 106265.71428571429,
       "wz2_expected_value": 184832.85714285716,
       "wz3_expected_value": 236420.2857142857,
       "service_expected_value": 527518.8571428572,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -9669,11 +9675,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -9790,7 +9791,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 48,
+      "ranking_position": 45,
       "economic_score_raw": 8.895395463196897,
       "market_liquidity_score": 0.917975,
       "warzone_health_score": 1.0,
@@ -9805,6 +9806,11 @@
       "service_expected_value": 375225.5714285715,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -9822,11 +9828,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -9938,12 +9939,12 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 26,
+      "ranking_position": 23,
       "economic_score_raw": 10.200435508706343,
       "market_liquidity_score": 0.467362,
-      "warzone_health_score": 0.93,
+      "warzone_health_score": 1.0,
       "final_score": 10.200436,
-      "history_health_score": 0.9,
+      "history_health_score": 1.0,
       "current_operational_score": 1.0,
       "expected_services": 2,
       "rolling_window_entries_target": 7,
@@ -9953,6 +9954,11 @@
       "service_expected_value": 380438.35714285716,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -9972,11 +9978,6 @@
           "date": "2026-06-27",
           "mark": "healthy",
           "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
-          "mark": "inconclusive",
-          "mark_value": 0.5
         }
       ],
       "market": {
@@ -10081,7 +10082,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 32,
+      "ranking_position": 29,
       "economic_score_raw": 9.830044149856349,
       "market_liquidity_score": 0.909015,
       "warzone_health_score": 1.0,
@@ -10096,6 +10097,11 @@
       "service_expected_value": 366103.14285714284,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -10113,11 +10119,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -10236,6 +10237,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
@@ -10252,11 +10258,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -10342,36 +10343,43 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "release",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": null,
     "last_detected_kills": {
-      "Deathstrike": 1,
-      "Gnomevil": 1,
-      "Abyssador": 1
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 1,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 3,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 22.412906737455504,
       "market_liquidity_score": 0.056163,
-      "warzone_health_score": 0.44,
+      "warzone_health_score": 0.14,
       "final_score": 22.412907,
       "history_health_score": 0.2,
-      "current_operational_score": 1.0,
+      "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 71918.57142857142,
       "wz2_expected_value": 126546.35714285714,
       "wz3_expected_value": 351543.0,
       "service_expected_value": 550007.9285714286,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -10389,11 +10397,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -10512,6 +10515,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
@@ -10528,11 +10536,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -10621,11 +10624,11 @@
     "tracks_warzone_service": true,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 4,
-      "Gnomevil": 4,
-      "Abyssador": 4
+      "Deathstrike": 3,
+      "Gnomevil": 3,
+      "Abyssador": 3
     },
-    "last_detected_services": 4,
+    "last_detected_services": 3,
     "mark": "healthy",
     "has_service_history": true,
     "warzone_executions": [
@@ -10649,14 +10652,14 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 53,
+      "ranking_position": 50,
       "economic_score_raw": 8.43803582363748,
       "market_liquidity_score": 0.862534,
       "warzone_health_score": 1.0,
       "final_score": 8.438036,
       "history_health_score": 1.0,
       "current_operational_score": 1.0,
-      "expected_services": 4,
+      "expected_services": 3,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 60097.07142857143,
       "wz2_expected_value": 83000.85714285714,
@@ -10664,6 +10667,11 @@
       "service_expected_value": 314955.7142857143,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -10681,11 +10689,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -10804,6 +10807,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
@@ -10820,11 +10828,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -10910,36 +10913,43 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "release",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": null,
     "last_detected_kills": {
-      "Deathstrike": 1,
-      "Gnomevil": 1,
-      "Abyssador": 1
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 1,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 4,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 20.848817100299836,
       "market_liquidity_score": 0.717329,
-      "warzone_health_score": 0.44,
+      "warzone_health_score": 0.14,
       "final_score": 20.848817,
       "history_health_score": 0.2,
-      "current_operational_score": 1.0,
+      "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 251582.42857142858,
       "wz2_expected_value": 264641.85714285716,
       "wz3_expected_value": 253618.2857142857,
       "service_expected_value": 769842.5714285715,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -10957,11 +10967,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -11068,7 +11073,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 40,
+      "ranking_position": 37,
       "economic_score_raw": 9.199145988188869,
       "market_liquidity_score": 0.889389,
       "warzone_health_score": 1.0,
@@ -11083,6 +11088,11 @@
       "service_expected_value": 340693.0,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -11100,11 +11110,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -11211,7 +11216,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 8,
+      "ranking_position": 7,
       "economic_score_raw": 14.57679234797966,
       "market_liquidity_score": 0.720822,
       "warzone_health_score": 1.0,
@@ -11226,6 +11231,11 @@
       "service_expected_value": 547104.5,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -11243,11 +11253,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -11354,7 +11359,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 11,
+      "ranking_position": 9,
       "economic_score_raw": 13.271739088655275,
       "market_liquidity_score": 0.809408,
       "warzone_health_score": 1.0,
@@ -11369,6 +11374,11 @@
       "service_expected_value": 493263.14285714284,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -11386,11 +11396,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -11481,10 +11486,10 @@
     "last_detected_kills": {
       "Deathstrike": 4,
       "Gnomevil": 4,
-      "Abyssador": 4
+      "Abyssador": 3
     },
-    "last_detected_services": 4,
-    "mark": "healthy",
+    "last_detected_services": 3,
+    "mark": "trolls",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -11512,21 +11517,26 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 50,
+      "ranking_position": 47,
       "economic_score_raw": 8.651712096593986,
       "market_liquidity_score": 0.855334,
-      "warzone_health_score": 0.86,
+      "warzone_health_score": 0.7525,
       "final_score": 8.651712,
-      "history_health_score": 0.8,
-      "current_operational_score": 1.0,
+      "history_health_score": 0.7,
+      "current_operational_score": 0.875,
       "expected_services": 4,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 65293.0,
       "wz2_expected_value": 80618.0,
       "wz3_expected_value": 180422.92857142858,
       "service_expected_value": 326333.9285714286,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "trolls",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -11544,11 +11554,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "inconclusive",
-          "mark_value": 0.5
-        },
-        {
-          "date": "2026-06-26",
           "mark": "inconclusive",
           "mark_value": 0.5
         }
@@ -11655,7 +11660,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 46,
+      "ranking_position": 43,
       "economic_score_raw": 8.980593652574074,
       "market_liquidity_score": 0.922583,
       "warzone_health_score": 1.0,
@@ -11670,6 +11675,11 @@
       "service_expected_value": 339703.14285714284,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -11687,11 +11697,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -11810,6 +11815,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
@@ -11826,11 +11836,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -11937,7 +11942,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 27,
+      "ranking_position": 24,
       "economic_score_raw": 10.190294556387723,
       "market_liquidity_score": 0.84763,
       "warzone_health_score": 1.0,
@@ -11952,6 +11957,11 @@
       "service_expected_value": 376694.4285714286,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -11969,11 +11979,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -12062,11 +12067,11 @@
     "tracks_warzone_service": true,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 2,
-      "Gnomevil": 2,
-      "Abyssador": 2
+      "Deathstrike": 3,
+      "Gnomevil": 3,
+      "Abyssador": 3
     },
-    "last_detected_services": 2,
+    "last_detected_services": 3,
     "mark": "healthy",
     "has_service_history": true,
     "warzone_executions": [
@@ -12085,14 +12090,14 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 51,
+      "ranking_position": 48,
       "economic_score_raw": 8.534741880890438,
       "market_liquidity_score": 0.878352,
       "warzone_health_score": 0.86,
       "final_score": 8.534742,
       "history_health_score": 0.8,
       "current_operational_score": 1.0,
-      "expected_services": 2,
+      "expected_services": 3,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 64991.21428571429,
       "wz2_expected_value": 80154.78571428571,
@@ -12100,6 +12105,11 @@
       "service_expected_value": 319149.35714285716,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -12119,11 +12129,6 @@
           "date": "2026-06-27",
           "mark": "trolls",
           "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
@@ -12246,6 +12251,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
@@ -12262,11 +12272,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -12373,7 +12378,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 14,
+      "ranking_position": 11,
       "economic_score_raw": 12.14737917860554,
       "market_liquidity_score": 0.501498,
       "warzone_health_score": 0.86,
@@ -12388,6 +12393,11 @@
       "service_expected_value": 454225.2142857143,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -12405,11 +12415,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -12495,36 +12500,43 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "release",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": null,
     "last_detected_kills": {
-      "Deathstrike": 1,
-      "Gnomevil": 1,
-      "Abyssador": 1
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 1,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 10,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 14.101770534012486,
       "market_liquidity_score": 0.415148,
-      "warzone_health_score": 0.44,
+      "warzone_health_score": 0.14,
       "final_score": 14.101771,
       "history_health_score": 0.2,
-      "current_operational_score": 1.0,
+      "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 113594.85714285714,
       "wz2_expected_value": 146127.92857142858,
       "wz3_expected_value": 262932.14285714284,
       "service_expected_value": 522654.9285714286,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -12542,11 +12554,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -12653,7 +12660,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 33,
+      "ranking_position": 30,
       "economic_score_raw": 9.721604525394847,
       "market_liquidity_score": 0.723591,
       "warzone_health_score": 1.0,
@@ -12668,6 +12675,11 @@
       "service_expected_value": 413197.35714285716,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -12685,11 +12697,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -12796,7 +12803,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 28,
+      "ranking_position": 25,
       "economic_score_raw": 10.093942804977583,
       "market_liquidity_score": 0.784195,
       "warzone_health_score": 1.0,
@@ -12811,6 +12818,11 @@
       "service_expected_value": 372782.28571428574,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -12828,11 +12840,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -12944,7 +12951,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 47,
+      "ranking_position": 44,
       "economic_score_raw": 8.940918574811723,
       "market_liquidity_score": 0.837371,
       "warzone_health_score": 1.0,
@@ -12959,6 +12966,11 @@
       "service_expected_value": 335470.9285714286,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-01",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-06-30",
           "mark": "healthy",
@@ -12976,11 +12988,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -13099,6 +13106,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
@@ -13115,11 +13127,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -13238,6 +13245,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-01",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
@@ -13254,11 +13266,6 @@
         },
         {
           "date": "2026-06-27",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-26",
           "mark": "na",
           "mark_value": 0.0
         }
