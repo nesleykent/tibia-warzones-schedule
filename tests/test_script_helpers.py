@@ -331,7 +331,9 @@ class WorkflowContractsTest(unittest.TestCase):
         ).read_text()
 
         self.assertIn("uses: actions/deploy-pages@v5", workflow_text)
-        self.assertIn("timeout: 1800000", workflow_text)
+        self.assertIn("continue-on-error: true", workflow_text)
+        self.assertIn("Wait before retrying Pages deployment", workflow_text)
+        self.assertIn("Retry GitHub Pages deployment", workflow_text)
 
     def test_update_market_workflow_downloads_shards_into_market_tree(self) -> None:
         workflow_text = (
