@@ -286,13 +286,66 @@ class UpdateDataHelpersTest(unittest.TestCase):
             ),
             patch.object(update_data, "today_iso_date", return_value="2026-06-04"),
             patch.object(update_data, "update_world_history", return_value={"history": []}),
-            patch.object(update_data, "save_world_history"),
+            patch.object(update_data, "save_world_history") as save_world_history,
             patch.object(update_data, "normalize_worlds_payload", side_effect=lambda payload: payload),
             patch.object(update_data, "attach_ranking_metrics", side_effect=lambda payload, _: payload),
             patch.object(update_data, "save_json") as save_json,
         ):
             self.assertEqual(update_data.main(), 1)
 
+        save_world_history.assert_not_called()
+        save_json.assert_not_called()
+
+    def test_main_can_keep_stale_data_when_fetch_failures_are_allowed(self) -> None:
+        worlds = [
+            {
+                "name": "Antica",
+                "location": "EU",
+                "pvp_type": "Open PvP",
+                "transfer_type": "regular",
+                "battleye_protected": True,
+                "battleye_date": "2024-01-01",
+            },
+            {
+                "name": "Zuna",
+                "location": "EU",
+                "pvp_type": "Optional PvP",
+                "transfer_type": "locked",
+                "battleye_protected": True,
+                "battleye_date": "2024-01-01",
+            },
+        ]
+
+        with (
+            patch.object(update_data, "get_worlds", return_value=worlds),
+            patch.object(update_data, "load_manual_schedules", return_value={}),
+            patch.object(
+                update_data,
+                "get_kill_statistics",
+                side_effect=[
+                    {
+                        "killstatistics": {
+                            "entries": [
+                                {"race": "Deathstrike", "last_day_killed": 1},
+                                {"race": "Gnomevil", "last_day_killed": 1},
+                                {"race": "Abyssador", "last_day_killed": 1},
+                            ]
+                        }
+                    },
+                    RuntimeError("boom"),
+                ],
+            ),
+            patch.object(update_data, "today_iso_date", return_value="2026-06-04"),
+            patch.object(update_data, "update_world_history", return_value={"history": []}),
+            patch.object(update_data, "save_world_history") as save_world_history,
+            patch.object(update_data, "save_json") as save_json,
+        ):
+            self.assertEqual(
+                update_data.main(["--allow-stale-on-fetch-failure"]),
+                0,
+            )
+
+        save_world_history.assert_not_called()
         save_json.assert_not_called()
 
     def test_today_iso_date_normalizes_to_utc_calendar_day(self) -> None:
@@ -325,7 +378,7 @@ class UpdateDataHelpersTest(unittest.TestCase):
 
 
 class WorkflowContractsTest(unittest.TestCase):
-    def test_deploy_pages_workflow_waits_for_slow_pages_queue(self) -> None:
+    def test_deploy_pages_workflow_retries_transient_pages_failure(self) -> None:
         workflow_text = (
             Path(__file__).resolve().parent.parent / ".github" / "workflows" / "deploy-pages.yml"
         ).read_text()
@@ -342,6 +395,13 @@ class WorkflowContractsTest(unittest.TestCase):
 
         self.assertIn('path: data/market/world/*/*_${{ matrix.item_slug }}.json', workflow_text)
         self.assertIn("path: data/market/world", workflow_text)
+
+    def test_update_worlds_workflow_keeps_stale_data_on_fetch_failure(self) -> None:
+        workflow_text = (
+            Path(__file__).resolve().parent.parent / ".github" / "workflows" / "update-worlds.yml"
+        ).read_text()
+
+        self.assertIn("--allow-stale-on-fetch-failure", workflow_text)
 
 
 class UpdateOpenHousesHelpersTest(unittest.TestCase):

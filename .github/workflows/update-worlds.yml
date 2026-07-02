@@ -59,11 +59,11 @@ jobs:
 
       - name: Refresh worlds data for scheduled window
         if: github.event_name == 'schedule'
-        run: python scripts/update_data.py --scheduled
+        run: python scripts/update_data.py --scheduled --allow-stale-on-fetch-failure
 
       - name: Refresh worlds data
         if: github.event_name != 'schedule'
-        run: python scripts/update_data.py
+        run: python scripts/update_data.py --allow-stale-on-fetch-failure
 
       - name: Validate generated data
         run: |

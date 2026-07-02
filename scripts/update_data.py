@@ -181,6 +181,14 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             f"{HISTORY_REFRESH_SOURCE_TIMEZONE}."
         ),
     )
+    parser.add_argument(
+        "--allow-stale-on-fetch-failure",
+        action="store_true",
+        help=(
+            "Exit successfully without writing generated data when a TibiaData "
+            "fetch failure leaves the refresh incomplete."
+        ),
+    )
     return parser.parse_args(argv)
 
 
@@ -490,6 +498,7 @@ def main(argv: list[str] | None = None) -> int:
 
     manual_schedules = load_manual_schedules()
     output: list[dict[str, Any]] = []
+    pending_history_updates: list[tuple[str, dict[str, Any]]] = []
     failed_worlds: list[tuple[str, str]] = []
     current_date = today_iso_date()
 
@@ -511,7 +520,7 @@ def main(argv: list[str] | None = None) -> int:
                 manual_schedule.get("timezone"),
                 daily_record,
             )
-            save_world_history(world_name, history_data)
+            pending_history_updates.append((world_name, history_data))
             record = build_world_summary(
                 world,
                 manual_schedule,
@@ -540,12 +549,22 @@ def main(argv: list[str] | None = None) -> int:
         )
         for world_name, error_message in failed_worlds:
             print(f"- {world_name}: {error_message}", file=sys.stderr)
+        if args.allow_stale_on_fetch_failure:
+            print(
+                "Refresh incomplete; keeping existing worlds.json and history files unchanged.",
+                file=sys.stderr,
+            )
+            return 0
         return 1
 
     output = normalize_worlds_payload(output)
     output = attach_ranking_metrics(output, DATA_DIR)
     output = normalize_worlds_payload(output)
     validate_worlds(output)
+
+    for world_name, history_data in pending_history_updates:
+        save_world_history(world_name, history_data)
+
     save_json(OUTPUT_FILE, output)
 
     tracked_worlds = sum(1 for world in output if world["tracks_warzone_service"])
