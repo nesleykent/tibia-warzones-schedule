@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import io
 import importlib
 import json
 import sys
@@ -7,8 +8,10 @@ import tempfile
 import types
 import unittest
 from datetime import UTC, datetime, timedelta, timezone
+from email.message import Message
 from pathlib import Path
 from unittest.mock import patch
+from urllib.error import HTTPError
 
 SCRIPTS_DIR = Path(__file__).resolve().parent.parent / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
@@ -22,6 +25,49 @@ import update_open_houses
 
 
 class UpdateDataHelpersTest(unittest.TestCase):
+    def test_fetch_json_retries_retryable_http_errors(self) -> None:
+        url = "https://api.tibiadata.com/v4/killstatistics/Antica"
+        response = io.BytesIO(b'{"ok": true}')
+        error = HTTPError(url, 503, "Service Unavailable", {}, None)
+
+        with (
+            patch.object(update_data, "urlopen", side_effect=[error, response]) as urlopen,
+            patch.object(update_data.time, "sleep") as sleep,
+        ):
+            self.assertEqual(update_data.fetch_json(url), {"ok": True})
+
+        self.assertEqual(urlopen.call_count, 2)
+        sleep.assert_called_once_with(1.0)
+
+    def test_fetch_json_honors_retry_after_for_retryable_http_errors(self) -> None:
+        url = "https://api.tibiadata.com/v4/worlds"
+        response = io.BytesIO(b'{"worlds": {"regular_worlds": []}}')
+        headers = Message()
+        headers["Retry-After"] = "3"
+        error = HTTPError(url, 429, "Too Many Requests", headers, None)
+
+        with (
+            patch.object(update_data, "urlopen", side_effect=[error, response]),
+            patch.object(update_data.time, "sleep") as sleep,
+        ):
+            self.assertEqual(update_data.fetch_json(url), {"worlds": {"regular_worlds": []}})
+
+        sleep.assert_called_once_with(3.0)
+
+    def test_fetch_json_does_not_retry_non_retryable_http_errors(self) -> None:
+        url = "https://api.tibiadata.com/v4/killstatistics/Unknown"
+        error = HTTPError(url, 404, "Not Found", {}, None)
+
+        with (
+            patch.object(update_data, "urlopen", side_effect=error) as urlopen,
+            patch.object(update_data.time, "sleep") as sleep,
+        ):
+            with self.assertRaisesRegex(RuntimeError, "HTTP 404"):
+                update_data.fetch_json(url)
+
+        self.assertEqual(urlopen.call_count, 1)
+        sleep.assert_not_called()
+
     def test_extract_boss_kills_ignores_unknown_entries(self) -> None:
         payload = {
             "killstatistics": {
@@ -279,6 +325,14 @@ class UpdateDataHelpersTest(unittest.TestCase):
 
 
 class WorkflowContractsTest(unittest.TestCase):
+    def test_deploy_pages_workflow_waits_for_slow_pages_queue(self) -> None:
+        workflow_text = (
+            Path(__file__).resolve().parent.parent / ".github" / "workflows" / "deploy-pages.yml"
+        ).read_text()
+
+        self.assertIn("uses: actions/deploy-pages@v5", workflow_text)
+        self.assertIn("timeout: 1800000", workflow_text)
+
     def test_update_market_workflow_downloads_shards_into_market_tree(self) -> None:
         workflow_text = (
             Path(__file__).resolve().parent.parent / ".github" / "workflows" / "update-market.yml"

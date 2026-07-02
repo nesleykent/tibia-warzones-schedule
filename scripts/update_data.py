@@ -4,7 +4,9 @@ import argparse
 import json
 import re
 import sys
+import time
 from datetime import UTC, datetime
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
@@ -31,16 +33,90 @@ DEFAULT_MANUAL_SCHEDULE = {"timezone": None, "warzone_executions": []}
 HISTORY_REFRESH_SOURCE_TIMEZONE = "Europe/Berlin"
 HISTORY_REFRESH_READY_HOUR = 4
 HISTORY_REFRESH_READY_MINUTE = 5
+RETRYABLE_HTTP_STATUS_CODES = {429, 500, 502, 503, 504}
+FETCH_RETRY_ATTEMPTS = 4
+FETCH_RETRY_BASE_DELAY_SECONDS = 1.0
+FETCH_RETRY_MAX_DELAY_SECONDS = 4.0
 
 
-def fetch_json(url: str) -> dict[str, Any]:
+def format_fetch_error(url: str, error: HTTPError | URLError) -> str:
+    if isinstance(error, HTTPError):
+        return f"HTTP {error.code} for {url}"
+    return f"Network error for {url}: {error.reason}"
+
+
+def is_retryable_fetch_error(error: HTTPError | URLError) -> bool:
+    if isinstance(error, HTTPError):
+        return error.code in RETRYABLE_HTTP_STATUS_CODES
+    return True
+
+
+def retry_after_seconds(error: HTTPError) -> float | None:
+    retry_after = error.headers.get("retry-after") if error.headers else None
+    if not retry_after:
+        return None
+
     try:
-        with urlopen(url, timeout=30) as response:
-            return json.load(response)
-    except HTTPError as exc:
-        raise RuntimeError(f"HTTP {exc.code} for {url}") from exc
-    except URLError as exc:
-        raise RuntimeError(f"Network error for {url}: {exc.reason}") from exc
+        return max(float(retry_after), 0.0)
+    except ValueError:
+        pass
+
+    try:
+        parsed_retry_at = parsedate_to_datetime(retry_after)
+    except (TypeError, ValueError):
+        return None
+
+    if parsed_retry_at.tzinfo is None:
+        parsed_retry_at = parsed_retry_at.replace(tzinfo=UTC)
+
+    return max(parsed_retry_at.timestamp() - time.time(), 0.0)
+
+
+def fetch_retry_delay(error: HTTPError | URLError, attempt: int) -> float:
+    if isinstance(error, HTTPError):
+        header_delay = retry_after_seconds(error)
+        if header_delay is not None:
+            return min(header_delay, FETCH_RETRY_MAX_DELAY_SECONDS)
+
+    backoff_delay = FETCH_RETRY_BASE_DELAY_SECONDS * (2 ** max(attempt - 1, 0))
+    return min(backoff_delay, FETCH_RETRY_MAX_DELAY_SECONDS)
+
+
+def fetch_json(url: str, attempts: int = FETCH_RETRY_ATTEMPTS) -> dict[str, Any]:
+    total_attempts = max(attempts, 1)
+    last_error: HTTPError | URLError | None = None
+
+    for attempt in range(1, total_attempts + 1):
+        try:
+            with urlopen(url, timeout=30) as response:
+                return json.load(response)
+        except HTTPError as exc:
+            exc.close()
+            last_error = exc
+        except URLError as exc:
+            last_error = exc
+
+        if (
+            attempt >= total_attempts
+            or last_error is None
+            or not is_retryable_fetch_error(last_error)
+        ):
+            break
+
+        delay_seconds = fetch_retry_delay(last_error, attempt)
+        print(
+            "WARN retrying TibiaData request after "
+            f"{format_fetch_error(url, last_error)} "
+            f"(attempt {attempt}/{total_attempts}, sleeping {delay_seconds:.1f}s).",
+            file=sys.stderr,
+        )
+        if delay_seconds > 0:
+            time.sleep(delay_seconds)
+
+    if last_error is not None:
+        raise RuntimeError(format_fetch_error(url, last_error)) from last_error
+
+    raise RuntimeError(f"Request failed without an explicit error for {url}")
 
 
 def save_json(path: Path, payload: Any) -> None:

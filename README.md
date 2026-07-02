@@ -95,6 +95,8 @@ GITHUB_TOKEN=... GITHUB_REPOSITORY=owner/repo python3 scripts/update_open_houses
 - `data/active_warzones.txt` is not consumed by the current codebase.
 - World history dates on `world.html` are intentionally adjusted one day earlier at render time because TibiaData kill statistics are refreshed after the observation day. Do not rewrite the committed data files just to change the displayed calendar date.
 - The scheduled world refresh workflow uses an hourly retry window plus a Berlin-time gate because GitHub cron is not minute-accurate enough to rely on a single daily trigger.
+- `scripts/update_data.py` retries retryable TibiaData HTTP/network failures before failing atomically, so `Update Worlds` should not commit partial generated data during temporary upstream instability.
+- GitHub Pages deployment waits up to 30 minutes for the Pages queue before cancelling; validation and artifact upload still run before deployment.
 - The scheduled market refresh workflow now uses an hourly retry window because GitHub cron can drift by hours there as well.
 
 ## Source Of Truth
