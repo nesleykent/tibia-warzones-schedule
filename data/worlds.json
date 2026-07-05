@@ -39,6 +39,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "na",
           "mark_value": 0.0
@@ -55,11 +60,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -192,6 +192,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "healthy",
           "mark_value": 1.0
@@ -208,11 +213,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -350,6 +350,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "healthy",
           "mark_value": 1.0
@@ -366,11 +371,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -485,9 +485,9 @@
       "ranking_position": 17,
       "economic_score_raw": 8.688053654288398,
       "market_liquidity_score": 0.865914,
-      "warzone_health_score": 0.58,
+      "warzone_health_score": 0.65,
       "final_score": 8.688054,
-      "history_health_score": 0.4,
+      "history_health_score": 0.5,
       "current_operational_score": 1.0,
       "expected_services": 2,
       "rolling_window_entries_target": 7,
@@ -497,6 +497,11 @@
       "service_expected_value": 364843.64285714284,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-07-04",
           "mark": "healthy",
@@ -514,11 +519,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "inconclusive",
-          "mark_value": 0.5
-        },
-        {
-          "date": "2026-06-30",
           "mark": "inconclusive",
           "mark_value": 0.5
         }
@@ -624,9 +624,9 @@
       "ranking_position": null,
       "economic_score_raw": 11.793482508908388,
       "market_liquidity_score": 0.872549,
-      "warzone_health_score": 0.21,
+      "warzone_health_score": 0.14,
       "final_score": 11.793483,
-      "history_health_score": 0.3,
+      "history_health_score": 0.2,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -636,6 +636,11 @@
       "service_expected_value": 439711.5714285715,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "na",
@@ -655,11 +660,6 @@
           "date": "2026-07-01",
           "mark": "healthy",
           "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
-          "mark": "inconclusive",
-          "mark_value": 0.5
         }
       ],
       "market": {
@@ -780,6 +780,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "healthy",
           "mark_value": 1.0
@@ -796,11 +801,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -919,6 +919,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "na",
           "mark_value": 0.0
@@ -935,11 +940,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -1056,9 +1056,9 @@
       "ranking_position": null,
       "economic_score_raw": 7.398122652457237,
       "market_liquidity_score": 0.48911,
-      "warzone_health_score": 0.56,
+      "warzone_health_score": 0.42,
       "final_score": 7.398123,
-      "history_health_score": 0.8,
+      "history_health_score": 0.6,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -1068,6 +1068,11 @@
       "service_expected_value": 307827.4285714286,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "na",
@@ -1085,11 +1090,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -1208,6 +1208,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "na",
           "mark_value": 0.0
@@ -1226,11 +1231,6 @@
           "date": "2026-07-01",
           "mark": "healthy",
           "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
-          "mark": "na",
-          "mark_value": 0.0
         }
       ],
       "market": {
@@ -1356,6 +1356,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "healthy",
           "mark_value": 1.0
@@ -1374,11 +1379,6 @@
           "date": "2026-07-01",
           "mark": "trolls",
           "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
@@ -1499,6 +1499,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "healthy",
           "mark_value": 1.0
@@ -1515,11 +1520,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -1638,6 +1638,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "na",
           "mark_value": 0.0
@@ -1654,11 +1659,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -1781,6 +1781,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "healthy",
           "mark_value": 1.0
@@ -1797,11 +1802,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -1929,6 +1929,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "healthy",
           "mark_value": 1.0
@@ -1945,11 +1950,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -2061,9 +2061,9 @@
       "ranking_position": null,
       "economic_score_raw": 10.421085765285069,
       "market_liquidity_score": 0.905502,
-      "warzone_health_score": 0.7,
+      "warzone_health_score": 0.56,
       "final_score": 10.421086,
-      "history_health_score": 1.0,
+      "history_health_score": 0.8,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -2073,6 +2073,11 @@
       "service_expected_value": 387824.4285714286,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "healthy",
@@ -2090,11 +2095,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -2206,9 +2206,9 @@
       "ranking_position": null,
       "economic_score_raw": 19.034134044428903,
       "market_liquidity_score": 0.797164,
-      "warzone_health_score": 0.56,
+      "warzone_health_score": 0.42,
       "final_score": 19.034134,
-      "history_health_score": 0.8,
+      "history_health_score": 0.6,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -2218,6 +2218,11 @@
       "service_expected_value": 373213.14285714284,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "na",
@@ -2235,11 +2240,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -2345,9 +2345,9 @@
       "ranking_position": null,
       "economic_score_raw": 15.192588419381169,
       "market_liquidity_score": 0.855335,
-      "warzone_health_score": 0.28,
+      "warzone_health_score": 0.14,
       "final_score": 15.192588,
-      "history_health_score": 0.4,
+      "history_health_score": 0.2,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -2357,6 +2357,11 @@
       "service_expected_value": 562448.0714285715,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "na",
@@ -2374,11 +2379,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -2484,9 +2484,9 @@
       "ranking_position": null,
       "economic_score_raw": 11.763279655386382,
       "market_liquidity_score": 0.445579,
-      "warzone_health_score": 0.14,
+      "warzone_health_score": 0.0,
       "final_score": 11.76328,
-      "history_health_score": 0.2,
+      "history_health_score": 0.0,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -2496,6 +2496,11 @@
       "service_expected_value": 421124.5714285714,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "na",
@@ -2515,11 +2520,6 @@
           "date": "2026-07-01",
           "mark": "na",
           "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
@@ -2637,6 +2637,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "na",
           "mark_value": 0.0
@@ -2653,11 +2658,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -2769,9 +2769,9 @@
       "ranking_position": null,
       "economic_score_raw": 9.055046886099486,
       "market_liquidity_score": 0.792266,
-      "warzone_health_score": 0.7,
+      "warzone_health_score": 0.56,
       "final_score": 9.055047,
-      "history_health_score": 1.0,
+      "history_health_score": 0.8,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -2781,6 +2781,11 @@
       "service_expected_value": 345079.4285714286,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "healthy",
@@ -2798,11 +2803,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -2930,6 +2930,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "healthy",
           "mark_value": 1.0
@@ -2946,11 +2951,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -3069,6 +3069,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "na",
           "mark_value": 0.0
@@ -3085,11 +3090,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -3196,9 +3196,9 @@
       "ranking_position": null,
       "economic_score_raw": null,
       "market_liquidity_score": 0.914349,
-      "warzone_health_score": 0.7,
+      "warzone_health_score": 0.56,
       "final_score": null,
-      "history_health_score": 1.0,
+      "history_health_score": 0.8,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -3208,6 +3208,11 @@
       "service_expected_value": null,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "healthy",
@@ -3225,11 +3230,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -3349,9 +3349,9 @@
       "ranking_position": 13,
       "economic_score_raw": 8.86834649567332,
       "market_liquidity_score": 0.895128,
-      "warzone_health_score": 0.65,
+      "warzone_health_score": 0.79,
       "final_score": 8.868346,
-      "history_health_score": 0.5,
+      "history_health_score": 0.7,
       "current_operational_score": 1.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -3361,6 +3361,11 @@
       "service_expected_value": 378753.1428571429,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-07-04",
           "mark": "trolls",
@@ -3380,11 +3385,6 @@
           "date": "2026-07-01",
           "mark": "healthy",
           "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
-          "mark": "trolls",
-          "mark_value": 0.0
         }
       ],
       "market": {
@@ -3488,9 +3488,9 @@
       "ranking_position": null,
       "economic_score_raw": 8.93412788168769,
       "market_liquidity_score": 0.664275,
-      "warzone_health_score": 0.56,
+      "warzone_health_score": 0.42,
       "final_score": 8.934128,
-      "history_health_score": 0.8,
+      "history_health_score": 0.6,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -3500,6 +3500,11 @@
       "service_expected_value": 366777.85714285716,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "healthy",
@@ -3517,11 +3522,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -3640,6 +3640,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "na",
           "mark_value": 0.0
@@ -3656,11 +3661,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -3772,9 +3772,9 @@
       "ranking_position": null,
       "economic_score_raw": 8.91111385478679,
       "market_liquidity_score": 0.824269,
-      "warzone_health_score": 0.56,
+      "warzone_health_score": 0.42,
       "final_score": 8.911114,
-      "history_health_score": 0.8,
+      "history_health_score": 0.6,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -3784,6 +3784,11 @@
       "service_expected_value": 355719.5714285714,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "na",
@@ -3801,11 +3806,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -3928,6 +3928,11 @@
       "current_mark_value": 0.5,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "inconclusive",
+          "mark_value": 0.5
+        },
+        {
           "date": "2026-07-04",
           "mark": "trolls",
           "mark_value": 0.0
@@ -3946,11 +3951,6 @@
           "date": "2026-07-01",
           "mark": "healthy",
           "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
-          "mark": "inconclusive",
-          "mark_value": 0.5
         }
       ],
       "market": {
@@ -4070,9 +4070,9 @@
       "ranking_position": null,
       "economic_score_raw": 11.303826719250678,
       "market_liquidity_score": 0.848392,
-      "warzone_health_score": 0.56,
+      "warzone_health_score": 0.42,
       "final_score": 11.303827,
-      "history_health_score": 0.8,
+      "history_health_score": 0.6,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -4082,6 +4082,11 @@
       "service_expected_value": 419288.0,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "trolls",
@@ -4099,11 +4104,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -4222,6 +4222,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "na",
           "mark_value": 0.0
@@ -4238,11 +4243,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -4361,6 +4361,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "na",
           "mark_value": 0.0
@@ -4377,11 +4382,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -4500,6 +4500,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "na",
           "mark_value": 0.0
@@ -4516,11 +4521,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -4626,9 +4626,9 @@
       "ranking_position": null,
       "economic_score_raw": 28.38694013452058,
       "market_liquidity_score": -0.00849,
-      "warzone_health_score": 0.28,
+      "warzone_health_score": 0.14,
       "final_score": 28.38694,
-      "history_health_score": 0.4,
+      "history_health_score": 0.2,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -4638,6 +4638,11 @@
       "service_expected_value": 848915.5,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "na",
@@ -4655,11 +4660,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -4786,9 +4786,9 @@
       "ranking_position": null,
       "economic_score_raw": 8.876251212238877,
       "market_liquidity_score": 0.882921,
-      "warzone_health_score": 0.49,
+      "warzone_health_score": 0.35,
       "final_score": 8.876251,
-      "history_health_score": 0.7,
+      "history_health_score": 0.5,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -4798,6 +4798,11 @@
       "service_expected_value": 331460.14285714284,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "inconclusive",
@@ -4817,11 +4822,6 @@
           "date": "2026-07-01",
           "mark": "inconclusive",
           "mark_value": 0.5
-        },
-        {
-          "date": "2026-06-30",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
@@ -4931,9 +4931,9 @@
       "ranking_position": null,
       "economic_score_raw": 9.529105972306224,
       "market_liquidity_score": 0.90153,
-      "warzone_health_score": 0.7,
+      "warzone_health_score": 0.56,
       "final_score": 9.529106,
-      "history_health_score": 1.0,
+      "history_health_score": 0.8,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -4943,6 +4943,11 @@
       "service_expected_value": 361243.64285714284,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "healthy",
@@ -4960,11 +4965,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -5081,9 +5081,9 @@
       "ranking_position": null,
       "economic_score_raw": 11.07276884188094,
       "market_liquidity_score": 0.492593,
-      "warzone_health_score": 0.56,
+      "warzone_health_score": 0.42,
       "final_score": 11.072769,
-      "history_health_score": 0.8,
+      "history_health_score": 0.6,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -5093,6 +5093,11 @@
       "service_expected_value": 412700.2857142857,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "trolls",
@@ -5110,11 +5115,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -5234,6 +5234,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "na",
           "mark_value": 0.0
@@ -5250,11 +5255,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -5360,9 +5360,9 @@
       "ranking_position": null,
       "economic_score_raw": 12.429697781401035,
       "market_liquidity_score": 0.62811,
-      "warzone_health_score": 0.42,
+      "warzone_health_score": 0.28,
       "final_score": 12.429698,
-      "history_health_score": 0.6,
+      "history_health_score": 0.4,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -5372,6 +5372,11 @@
       "service_expected_value": 457404.0,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "na",
@@ -5389,11 +5394,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -5508,9 +5508,9 @@
       "ranking_position": 12,
       "economic_score_raw": 9.059318094613486,
       "market_liquidity_score": 0.836154,
-      "warzone_health_score": 0.79,
+      "warzone_health_score": 0.86,
       "final_score": 9.059318,
-      "history_health_score": 0.7,
+      "history_health_score": 0.8,
       "current_operational_score": 1.0,
       "expected_services": 2,
       "rolling_window_entries_target": 7,
@@ -5520,6 +5520,11 @@
       "service_expected_value": 382825.4285714286,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-07-04",
           "mark": "inconclusive",
@@ -5539,11 +5544,6 @@
           "date": "2026-07-01",
           "mark": "healthy",
           "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
-          "mark": "inconclusive",
-          "mark_value": 0.5
         }
       ],
       "market": {
@@ -5660,6 +5660,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "na",
           "mark_value": 0.0
@@ -5676,11 +5681,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -5786,9 +5786,9 @@
       "ranking_position": null,
       "economic_score_raw": 23.532769112734517,
       "market_liquidity_score": 0.619879,
-      "warzone_health_score": 0.56,
+      "warzone_health_score": 0.42,
       "final_score": 23.532769,
-      "history_health_score": 0.8,
+      "history_health_score": 0.6,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -5798,6 +5798,11 @@
       "service_expected_value": 352734.35714285716,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "na",
@@ -5815,11 +5820,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -5931,9 +5931,9 @@
       "ranking_position": null,
       "economic_score_raw": 11.364932593959933,
       "market_liquidity_score": 0.763344,
-      "warzone_health_score": 0.42,
+      "warzone_health_score": 0.28,
       "final_score": 11.364933,
-      "history_health_score": 0.6,
+      "history_health_score": 0.4,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -5943,6 +5943,11 @@
       "service_expected_value": 429217.7857142857,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "na",
@@ -5960,11 +5965,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -6092,6 +6092,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "inconclusive",
           "mark_value": 0.5
@@ -6108,11 +6113,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -6234,9 +6234,9 @@
       "ranking_position": null,
       "economic_score_raw": 8.044280191194419,
       "market_liquidity_score": 0.821626,
-      "warzone_health_score": 0.7,
+      "warzone_health_score": 0.56,
       "final_score": 8.04428,
-      "history_health_score": 1.0,
+      "history_health_score": 0.8,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -6246,6 +6246,11 @@
       "service_expected_value": 337071.4285714286,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "healthy",
@@ -6263,11 +6268,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -6386,6 +6386,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "na",
           "mark_value": 0.0
@@ -6402,11 +6407,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -6518,9 +6518,9 @@
       "ranking_position": null,
       "economic_score_raw": 12.285865423759388,
       "market_liquidity_score": 0.076243,
-      "warzone_health_score": 0.56,
+      "warzone_health_score": 0.42,
       "final_score": 12.285865,
-      "history_health_score": 0.8,
+      "history_health_score": 0.6,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -6530,6 +6530,11 @@
       "service_expected_value": 359994.2857142857,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "na",
@@ -6547,11 +6552,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -6658,9 +6658,9 @@
       "ranking_position": null,
       "economic_score_raw": null,
       "market_liquidity_score": 0.888656,
-      "warzone_health_score": 0.35,
+      "warzone_health_score": 0.28,
       "final_score": null,
-      "history_health_score": 0.5,
+      "history_health_score": 0.4,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -6670,6 +6670,11 @@
       "service_expected_value": null,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "inconclusive",
@@ -6689,11 +6694,6 @@
           "date": "2026-07-01",
           "mark": "na",
           "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
-          "mark": "inconclusive",
-          "mark_value": 0.5
         }
       ],
       "market": {
@@ -6803,9 +6803,9 @@
       "ranking_position": null,
       "economic_score_raw": 7.712866946084649,
       "market_liquidity_score": 0.484557,
-      "warzone_health_score": 0.56,
+      "warzone_health_score": 0.42,
       "final_score": 7.712867,
-      "history_health_score": 0.8,
+      "history_health_score": 0.6,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -6815,6 +6815,11 @@
       "service_expected_value": 327953.85714285716,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "na",
@@ -6832,11 +6837,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -6955,6 +6955,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "na",
           "mark_value": 0.0
@@ -6971,11 +6976,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -7098,6 +7098,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "healthy",
           "mark_value": 1.0
@@ -7114,11 +7119,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -7238,6 +7238,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "na",
           "mark_value": 0.0
@@ -7254,11 +7259,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -7386,6 +7386,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "healthy",
           "mark_value": 1.0
@@ -7402,11 +7407,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -7516,9 +7516,9 @@
       "ranking_position": 5,
       "economic_score_raw": 10.12462905711212,
       "market_liquidity_score": 0.889345,
-      "warzone_health_score": 0.775,
+      "warzone_health_score": 0.705,
       "final_score": 10.124629,
-      "history_health_score": 1.0,
+      "history_health_score": 0.9,
       "current_operational_score": 0.25,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -7528,6 +7528,11 @@
       "service_expected_value": 373103.4285714285,
       "current_mark_value": 0.5,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "inconclusive",
+          "mark_value": 0.5
+        },
         {
           "date": "2026-07-04",
           "mark": "healthy",
@@ -7545,11 +7550,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -7655,9 +7655,9 @@
       "ranking_position": null,
       "economic_score_raw": 16.666806695169242,
       "market_liquidity_score": 0.784007,
-      "warzone_health_score": 0.42,
+      "warzone_health_score": 0.28,
       "final_score": 16.666807,
-      "history_health_score": 0.6,
+      "history_health_score": 0.4,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -7667,6 +7667,11 @@
       "service_expected_value": 527108.0,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "na",
@@ -7684,11 +7689,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -7794,9 +7794,9 @@
       "ranking_position": null,
       "economic_score_raw": 9.423901281697999,
       "market_liquidity_score": 0.987317,
-      "warzone_health_score": 0.14,
+      "warzone_health_score": 0.0,
       "final_score": 9.423901,
-      "history_health_score": 0.2,
+      "history_health_score": 0.0,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -7806,6 +7806,11 @@
       "service_expected_value": 400615.4285714286,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "na",
@@ -7825,11 +7830,6 @@
           "date": "2026-07-01",
           "mark": "trolls",
           "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
@@ -7944,9 +7944,9 @@
       "ranking_position": null,
       "economic_score_raw": 11.36924966906968,
       "market_liquidity_score": 0.816979,
-      "warzone_health_score": 0.7,
+      "warzone_health_score": 0.56,
       "final_score": 11.36925,
-      "history_health_score": 1.0,
+      "history_health_score": 0.8,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -7956,6 +7956,11 @@
       "service_expected_value": 426375.2857142857,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "healthy",
@@ -7973,11 +7978,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -8096,6 +8096,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "healthy",
           "mark_value": 1.0
@@ -8113,11 +8118,6 @@
         {
           "date": "2026-07-01",
           "mark": "trolls",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
-          "mark": "na",
           "mark_value": 0.0
         }
       ],
@@ -8238,9 +8238,9 @@
       "ranking_position": null,
       "economic_score_raw": 11.384032223481483,
       "market_liquidity_score": 0.853413,
-      "warzone_health_score": 0.63,
+      "warzone_health_score": 0.49,
       "final_score": 11.384032,
-      "history_health_score": 0.9,
+      "history_health_score": 0.7,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -8250,6 +8250,11 @@
       "service_expected_value": 424748.0,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "inconclusive",
@@ -8267,11 +8272,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -8399,6 +8399,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "healthy",
           "mark_value": 1.0
@@ -8415,11 +8420,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -8531,9 +8531,9 @@
       "ranking_position": null,
       "economic_score_raw": 10.148763817889366,
       "market_liquidity_score": 0.845651,
-      "warzone_health_score": 0.56,
+      "warzone_health_score": 0.42,
       "final_score": 10.148764,
-      "history_health_score": 0.8,
+      "history_health_score": 0.6,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -8543,6 +8543,11 @@
       "service_expected_value": 374511.85714285716,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "trolls",
@@ -8560,11 +8565,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -8683,6 +8683,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "na",
           "mark_value": 0.0
@@ -8699,11 +8704,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -8828,6 +8828,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "na",
           "mark_value": 0.0
@@ -8844,11 +8849,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -8981,6 +8981,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "healthy",
           "mark_value": 1.0
@@ -8997,11 +9002,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -9129,6 +9129,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "healthy",
           "mark_value": 1.0
@@ -9145,11 +9150,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -9264,9 +9264,9 @@
       "ranking_position": 22,
       "economic_score_raw": 8.405656114713391,
       "market_liquidity_score": 0.498654,
-      "warzone_health_score": 0.71,
+      "warzone_health_score": 0.57,
       "final_score": 8.405656,
-      "history_health_score": 0.8,
+      "history_health_score": 0.6,
       "current_operational_score": 0.5,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -9276,6 +9276,11 @@
       "service_expected_value": 310938.4285714286,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "trolls",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "trolls",
@@ -9293,11 +9298,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -9425,6 +9425,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "healthy",
           "mark_value": 1.0
@@ -9441,11 +9446,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -9557,9 +9557,9 @@
       "ranking_position": null,
       "economic_score_raw": 10.03259537492211,
       "market_liquidity_score": 0.887808,
-      "warzone_health_score": 0.56,
+      "warzone_health_score": 0.42,
       "final_score": 10.032595,
-      "history_health_score": 0.8,
+      "history_health_score": 0.6,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -9569,6 +9569,11 @@
       "service_expected_value": 414002.2142857143,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "na",
@@ -9586,11 +9591,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -9696,9 +9696,9 @@
       "ranking_position": null,
       "economic_score_raw": 14.491081975190427,
       "market_liquidity_score": 0.720357,
-      "warzone_health_score": 0.14,
+      "warzone_health_score": 0.0,
       "final_score": 14.491082,
-      "history_health_score": 0.2,
+      "history_health_score": 0.0,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -9708,6 +9708,11 @@
       "service_expected_value": 527518.8571428572,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "na",
@@ -9727,11 +9732,6 @@
           "date": "2026-07-01",
           "mark": "na",
           "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
@@ -9862,6 +9862,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "healthy",
           "mark_value": 1.0
@@ -9878,11 +9883,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -10010,6 +10010,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "healthy",
           "mark_value": 1.0
@@ -10026,11 +10031,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -10153,6 +10153,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "healthy",
           "mark_value": 1.0
@@ -10169,11 +10174,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -10292,6 +10292,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "na",
           "mark_value": 0.0
@@ -10308,11 +10313,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -10418,9 +10418,9 @@
       "ranking_position": null,
       "economic_score_raw": 22.412906737455504,
       "market_liquidity_score": 0.056163,
-      "warzone_health_score": 0.14,
+      "warzone_health_score": 0.0,
       "final_score": 22.412907,
-      "history_health_score": 0.2,
+      "history_health_score": 0.0,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -10430,6 +10430,11 @@
       "service_expected_value": 550007.9285714286,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "na",
@@ -10449,11 +10454,6 @@
           "date": "2026-07-01",
           "mark": "na",
           "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
@@ -10570,6 +10570,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "na",
           "mark_value": 0.0
@@ -10586,11 +10591,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -10723,6 +10723,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "healthy",
           "mark_value": 1.0
@@ -10739,11 +10744,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -10862,6 +10862,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "na",
           "mark_value": 0.0
@@ -10878,11 +10883,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -10988,9 +10988,9 @@
       "ranking_position": null,
       "economic_score_raw": 20.848817100299836,
       "market_liquidity_score": 0.717329,
-      "warzone_health_score": 0.14,
+      "warzone_health_score": 0.0,
       "final_score": 20.848817,
-      "history_health_score": 0.2,
+      "history_health_score": 0.0,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -11000,6 +11000,11 @@
       "service_expected_value": 769842.5714285715,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "na",
@@ -11019,11 +11024,6 @@
           "date": "2026-07-01",
           "mark": "na",
           "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
@@ -11144,6 +11144,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "healthy",
           "mark_value": 1.0
@@ -11160,11 +11165,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -11276,9 +11276,9 @@
       "ranking_position": null,
       "economic_score_raw": 14.029440849724686,
       "market_liquidity_score": 0.444068,
-      "warzone_health_score": 0.7,
+      "warzone_health_score": 0.56,
       "final_score": 14.029441,
-      "history_health_score": 1.0,
+      "history_health_score": 0.8,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -11288,6 +11288,11 @@
       "service_expected_value": 527960.9285714286,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "healthy",
@@ -11305,11 +11310,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -11421,9 +11421,9 @@
       "ranking_position": null,
       "economic_score_raw": 12.67691975081887,
       "market_liquidity_score": 0.786114,
-      "warzone_health_score": 0.56,
+      "warzone_health_score": 0.42,
       "final_score": 12.67692,
-      "history_health_score": 0.8,
+      "history_health_score": 0.6,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -11433,6 +11433,11 @@
       "service_expected_value": 473276.5,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "na",
@@ -11450,11 +11455,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -11579,9 +11579,9 @@
       "ranking_position": 14,
       "economic_score_raw": 8.739510305882174,
       "market_liquidity_score": 0.879738,
-      "warzone_health_score": 0.6125,
+      "warzone_health_score": 0.4725,
       "final_score": 8.73951,
-      "history_health_score": 0.5,
+      "history_health_score": 0.3,
       "current_operational_score": 0.875,
       "expected_services": 4,
       "rolling_window_entries_target": 7,
@@ -11591,6 +11591,11 @@
       "service_expected_value": 326878.28571428574,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "trolls",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "trolls",
@@ -11610,11 +11615,6 @@
           "date": "2026-07-01",
           "mark": "trolls",
           "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
@@ -11724,9 +11724,9 @@
       "ranking_position": null,
       "economic_score_raw": 8.892765132803893,
       "market_liquidity_score": 0.871781,
-      "warzone_health_score": 0.56,
+      "warzone_health_score": 0.42,
       "final_score": 8.892765,
-      "history_health_score": 0.8,
+      "history_health_score": 0.6,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -11736,6 +11736,11 @@
       "service_expected_value": 334329.85714285716,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "na",
@@ -11753,11 +11758,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -11876,6 +11876,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "na",
           "mark_value": 0.0
@@ -11892,11 +11897,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -12008,9 +12008,9 @@
       "ranking_position": null,
       "economic_score_raw": 10.02074811358703,
       "market_liquidity_score": 0.827291,
-      "warzone_health_score": 0.7,
+      "warzone_health_score": 0.56,
       "final_score": 10.020748,
-      "history_health_score": 1.0,
+      "history_health_score": 0.8,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -12020,6 +12020,11 @@
       "service_expected_value": 368334.7857142857,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "healthy",
@@ -12037,11 +12042,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -12158,9 +12158,9 @@
       "ranking_position": null,
       "economic_score_raw": 8.505252390956935,
       "market_liquidity_score": 0.88229,
-      "warzone_health_score": 0.63,
+      "warzone_health_score": 0.49,
       "final_score": 8.505252,
-      "history_health_score": 0.9,
+      "history_health_score": 0.7,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -12170,6 +12170,11 @@
       "service_expected_value": 318946.35714285716,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "healthy",
@@ -12187,11 +12192,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -12316,6 +12316,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "na",
           "mark_value": 0.0
@@ -12332,11 +12337,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -12448,9 +12448,9 @@
       "ranking_position": null,
       "economic_score_raw": 12.177729351380153,
       "market_liquidity_score": 0.772821,
-      "warzone_health_score": 0.56,
+      "warzone_health_score": 0.42,
       "final_score": 12.177729,
-      "history_health_score": 0.8,
+      "history_health_score": 0.6,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -12460,6 +12460,11 @@
       "service_expected_value": 453841.35714285716,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "na",
@@ -12477,11 +12482,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -12587,9 +12587,9 @@
       "ranking_position": null,
       "economic_score_raw": 13.08890551702305,
       "market_liquidity_score": 0.595316,
-      "warzone_health_score": 0.14,
+      "warzone_health_score": 0.0,
       "final_score": 13.088906,
-      "history_health_score": 0.2,
+      "history_health_score": 0.0,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -12599,6 +12599,11 @@
       "service_expected_value": 487285.9285714285,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "na",
@@ -12618,11 +12623,6 @@
           "date": "2026-07-01",
           "mark": "na",
           "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
@@ -12743,6 +12743,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "healthy",
           "mark_value": 1.0
@@ -12759,11 +12764,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -12875,9 +12875,9 @@
       "ranking_position": null,
       "economic_score_raw": 9.84284757346588,
       "market_liquidity_score": 0.911023,
-      "warzone_health_score": 0.56,
+      "warzone_health_score": 0.42,
       "final_score": 9.842848,
-      "history_health_score": 0.8,
+      "history_health_score": 0.6,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -12887,6 +12887,11 @@
       "service_expected_value": 362100.7857142857,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "na",
@@ -12904,11 +12909,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -13025,9 +13025,9 @@
       "ranking_position": null,
       "economic_score_raw": 8.940918574811723,
       "market_liquidity_score": 0.837371,
-      "warzone_health_score": 0.56,
+      "warzone_health_score": 0.42,
       "final_score": 8.940919,
-      "history_health_score": 0.8,
+      "history_health_score": 0.6,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -13037,6 +13037,11 @@
       "service_expected_value": 335470.9285714286,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-07-04",
           "mark": "na",
@@ -13054,11 +13059,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -13177,6 +13177,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "na",
           "mark_value": 0.0
@@ -13193,11 +13198,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -13316,6 +13316,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-07-05",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-07-04",
           "mark": "na",
           "mark_value": 0.0
@@ -13332,11 +13337,6 @@
         },
         {
           "date": "2026-07-01",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-06-30",
           "mark": "na",
           "mark_value": 0.0
         }
