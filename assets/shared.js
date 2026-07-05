@@ -579,6 +579,164 @@
     return labels.inconclusive || "Inconclusive";
   }
 
+  const DAILY_SUMMARY_CATEGORY_ORDER = [
+    "completedAll",
+    "partialOrInconsistent",
+    "noneCompleted",
+  ];
+  const DAILY_SUMMARY_WARNING_MARKERS = {
+    inconclusive: "uncertain",
+    trolls: "warning",
+  };
+
+  function normalizeDailySummaryCount(value) {
+    const count = Number(value);
+    if (!Number.isFinite(count) || count < 0) return 0;
+    return Math.floor(count);
+  }
+
+  function isIsoDateStamp(value) {
+    return /^\d{4}-\d{2}-\d{2}$/.test(String(value || "").trim());
+  }
+
+  function formatLocalDateStamp(value = new Date()) {
+    if (typeof value === "string" && isIsoDateStamp(value)) return value;
+
+    const date = value instanceof Date ? value : new Date(value);
+    const safeDate = Number.isNaN(date.getTime()) ? new Date() : date;
+    const year = String(safeDate.getFullYear());
+    const month = String(safeDate.getMonth() + 1).padStart(2, "0");
+    const day = String(safeDate.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+
+  function getDailySummaryHistoryDates(world) {
+    const dates = [];
+    const rankingHistory =
+      world?.warzone_economic_ranking?.history_last_five_days;
+    const directHistory = world?.history_last_five_days;
+
+    [rankingHistory, directHistory].forEach((history) => {
+      if (!Array.isArray(history)) return;
+      history.forEach((entry) => {
+        const date = String(entry?.date || "").trim();
+        if (isIsoDateStamp(date)) dates.push(date);
+      });
+    });
+
+    return dates;
+  }
+
+  function resolveDailyWarzoneSummaryDate(worldsPayload, fallbackDate = new Date()) {
+    const worlds = Array.isArray(worldsPayload) ? worldsPayload : [];
+    const dates = worlds.flatMap(getDailySummaryHistoryDates);
+    if (dates.length > 0) return dates.sort().at(-1);
+    return formatLocalDateStamp(fallbackDate);
+  }
+
+  function getDailySummaryWarningMarker(world) {
+    const effectiveMark = getEffectiveWorldMark(
+      world?.mark,
+      world?.last_detected_kills
+    );
+    return DAILY_SUMMARY_WARNING_MARKERS[effectiveMark] || null;
+  }
+
+  function buildDailyWarzoneSummaryModel(worldsPayload, options = {}) {
+    const categories = Object.fromEntries(
+      DAILY_SUMMARY_CATEGORY_ORDER.map((key) => [key, []])
+    );
+    const worlds = Array.isArray(worldsPayload) ? worldsPayload : [];
+    const locale = options.locale || undefined;
+
+    worlds.forEach((world) => {
+      if (!world || typeof world !== "object" || Array.isArray(world)) return;
+
+      const worldName = String(world.name || "").trim();
+      const scheduledTimes = Array.isArray(world.warzone_executions)
+        ? world.warzone_executions.length
+        : 0;
+      if (!worldName || scheduledTimes <= 0) return;
+
+      const completedWarzones = normalizeDailySummaryCount(
+        world.last_detected_services
+      );
+      const warningMarker = getDailySummaryWarningMarker(world);
+      const summaryItem = {
+        name: worldName,
+        completedWarzones,
+        scheduledTimes,
+        warningMarker,
+      };
+
+      if (
+        warningMarker ||
+        (completedWarzones > 0 && completedWarzones !== scheduledTimes)
+      ) {
+        categories.partialOrInconsistent.push(summaryItem);
+      } else if (completedWarzones === scheduledTimes) {
+        categories.completedAll.push(summaryItem);
+      } else {
+        categories.noneCompleted.push(summaryItem);
+      }
+    });
+
+    Object.values(categories).forEach((items) => {
+      items.sort((left, right) => left.name.localeCompare(right.name, locale));
+    });
+
+    return {
+      date:
+        typeof options.date === "string" && isIsoDateStamp(options.date)
+          ? options.date
+          : resolveDailyWarzoneSummaryDate(worlds, options.fallbackDate),
+      categories: DAILY_SUMMARY_CATEGORY_ORDER.map((key) => ({
+        key,
+        items: categories[key],
+      })),
+    };
+  }
+
+  function formatNaturalLanguageList(items, connector) {
+    if (!Array.isArray(items) || items.length === 0) return "";
+    if (items.length === 1) return items[0];
+    if (items.length === 2) return `${items[0]} ${connector} ${items[1]}`;
+
+    const leadingItems = items.slice(0, -1).join(", ");
+    return `${leadingItems} ${connector} ${items.at(-1)}`;
+  }
+
+  function formatDailySummaryItem(item, labels) {
+    const markerLabel = item.warningMarker
+      ? labels.markers?.[item.warningMarker]
+      : "";
+    const markerSuffix = markerLabel ? `, ${markerLabel}` : "";
+    return `${item.name} (${item.completedWarzones}/${item.scheduledTimes}${markerSuffix})`;
+  }
+
+  function formatDailyWarzoneSummaryText(model, labels) {
+    const heading =
+      typeof labels.heading === "function"
+        ? labels.heading(model.date)
+        : String(labels.heading || model.date || "");
+    const lines = [heading, ""];
+    const categoryLabels = labels.categories || {};
+
+    model.categories.forEach((category) => {
+      const formattedItems = category.items.map((item) =>
+        formatDailySummaryItem(item, labels)
+      );
+      const listText =
+        formattedItems.length > 0
+          ? formatNaturalLanguageList(formattedItems, labels.connector)
+          : labels.none;
+
+      lines.push(`${categoryLabels[category.key]}: ${listText}.`);
+    });
+
+    return lines.join("\n");
+  }
+
   function getDateTimeParts(date, timeZone, options = {}) {
     return new Intl.DateTimeFormat("en-CA", {
       timeZone,
@@ -1056,6 +1214,9 @@
     getNormalizedBossKills,
     getEffectiveWorldMark,
     getWorldMarkLabel,
+    buildDailyWarzoneSummaryModel,
+    formatDailyWarzoneSummaryText,
+    formatNaturalLanguageList,
     buildRecurringTimeConversion,
     convertTimeBetweenTimezones,
     formatObservedKillStatisticsDate,

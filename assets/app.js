@@ -16,6 +16,8 @@ const {
   initSharedUi,
   bindLanguageButtons: bindSharedLanguageButtons,
   loadSavedTimezone,
+  buildDailyWarzoneSummaryModel,
+  formatDailyWarzoneSummaryText,
   readJsonStorage,
   readStorage,
   setTextContent,
@@ -71,6 +73,7 @@ const PAGE_ELEMENT_IDS = {
   searchInput: "searchInput",
   filtersLabel: "filtersLabel",
   plannerLabel: "warzonePlannerLabel",
+  dailySummaryTrigger: "dailySummaryTrigger",
   printListTrigger: "printListTrigger",
   printListModalBackdrop: "printListModalBackdrop",
   printListModalTitle: "printListModalTitle",
@@ -151,6 +154,21 @@ const I18N = {
     printListReady: "Plain-text schedule ready.",
     printListEmpty: "No visible schedules available for printing.",
     printListError: "Could not build the print list from the visible planner data.",
+    dailySummary: "Daily Summary",
+    dailySummaryTitle: "Daily Summary",
+    dailySummaryReady: "Daily summary ready.",
+    dailySummaryEmpty: "No scheduled Warzone data available.",
+    dailySummaryError: "Could not build the daily summary from the parsed world data.",
+    dailySummaryHeading: (date) => `Warzones on ${date}`,
+    dailySummaryCompletedAll: "Completed all scheduled Warzones",
+    dailySummaryPartialOrInconsistent:
+      "Completed partially or with inconsistent data",
+    dailySummaryNoneCompleted:
+      "Had scheduled service times but completed no Warzones",
+    dailySummaryConnector: "and",
+    dailySummaryUncertain: "uncertain",
+    dailySummaryWarning: "warning",
+    dailySummaryNone: "none",
     clearFilters: "Clear filters",
     bgeLabel: "Green BattlEye",
     ybeLabel: "Yellow BattlEye",
@@ -241,6 +259,22 @@ const I18N = {
     printListEmpty: "Nenhum horário visível disponível para impressão.",
     printListError:
       "Não foi possível montar a lista de impressão a partir dos horários visíveis.",
+    dailySummary: "Resumo diário",
+    dailySummaryTitle: "Resumo diário",
+    dailySummaryReady: "Resumo diário pronto.",
+    dailySummaryEmpty: "Nenhum dado de Warzone agendado disponível.",
+    dailySummaryError:
+      "Não foi possível montar o resumo diário a partir dos dados de mundos.",
+    dailySummaryHeading: (date) => `Warzones em ${date}`,
+    dailySummaryCompletedAll: "Concluíram todas as Warzones agendadas",
+    dailySummaryPartialOrInconsistent:
+      "Concluíram parcialmente ou com dados inconsistentes",
+    dailySummaryNoneCompleted:
+      "Tinham horários de service agendados, mas não concluíram nenhuma Warzone",
+    dailySummaryConnector: "e",
+    dailySummaryUncertain: "incerto",
+    dailySummaryWarning: "alerta",
+    dailySummaryNone: "nenhum",
     clearFilters: "Limpar filtros",
     bgeLabel: "Green BattlEye",
     ybeLabel: "Yellow BattlEye",
@@ -331,6 +365,22 @@ const I18N = {
     printListEmpty: "No hay horarios visibles para imprimir.",
     printListError:
       "No se pudo generar la lista de impresión a partir de los horarios visibles.",
+    dailySummary: "Resumen diario",
+    dailySummaryTitle: "Resumen diario",
+    dailySummaryReady: "Resumen diario listo.",
+    dailySummaryEmpty: "No hay datos de Warzone programados disponibles.",
+    dailySummaryError:
+      "No se pudo generar el resumen diario a partir de los datos de mundos.",
+    dailySummaryHeading: (date) => `Warzones el ${date}`,
+    dailySummaryCompletedAll: "Completaron todas las Warzones programadas",
+    dailySummaryPartialOrInconsistent:
+      "Completaron parcialmente o con datos inconsistentes",
+    dailySummaryNoneCompleted:
+      "Tuvieron horarios de service programados, pero no completaron ninguna Warzone",
+    dailySummaryConnector: "y",
+    dailySummaryUncertain: "incierto",
+    dailySummaryWarning: "advertencia",
+    dailySummaryNone: "ninguno",
     bgeLabel: "Green BattlEye",
     ybeLabel: "Yellow BattlEye",
     noneLabel: "Ninguno",
@@ -420,6 +470,22 @@ const I18N = {
     printListEmpty: "Brak widocznych harmonogramów do wydruku.",
     printListError:
       "Nie udało się zbudować listy wydruku z aktualnie widocznych danych.",
+    dailySummary: "Podsumowanie dnia",
+    dailySummaryTitle: "Podsumowanie dnia",
+    dailySummaryReady: "Podsumowanie dnia jest gotowe.",
+    dailySummaryEmpty: "Brak dostępnych zaplanowanych danych Warzone.",
+    dailySummaryError:
+      "Nie udało się zbudować podsumowania dnia z danych światów.",
+    dailySummaryHeading: (date) => `Warzones w dniu ${date}`,
+    dailySummaryCompletedAll: "Ukończono wszystkie zaplanowane Warzones",
+    dailySummaryPartialOrInconsistent:
+      "Ukończono częściowo lub z niespójnymi danymi",
+    dailySummaryNoneCompleted:
+      "Miały zaplanowane godziny service, ale nie ukończyły żadnej Warzone",
+    dailySummaryConnector: "i",
+    dailySummaryUncertain: "niepewne",
+    dailySummaryWarning: "ostrzeżenie",
+    dailySummaryNone: "brak",
     clearFilters: "Wyczyść filtry",
     bgeLabel: "Green BattlEye",
     ybeLabel: "Yellow BattlEye",
@@ -462,6 +528,7 @@ let selectedExecutions = new Set();
 // ─── Filter state ─────────────────────────────────
 let activeFilters = createEmptyFilterState();
 const pageElements = {};
+let textModalMode = "printList";
 
 function cachePageElements() {
   Object.entries(PAGE_ELEMENT_IDS).forEach(([key, id]) => {
@@ -1158,11 +1225,39 @@ function setPrintListStatus(message, type = "muted") {
   status.dataset.state = type;
 }
 
-function openPrintListModal() {
+function setTextModalTitle(title) {
+  setTextContent(pageElements.printListModalTitle, title);
+}
+
+function buildDailySummaryLabels() {
   const dict = t();
-  const backdrop = pageElements.printListModalBackdrop;
+  return {
+    heading: dict.dailySummaryHeading,
+    categories: {
+      completedAll: dict.dailySummaryCompletedAll,
+      partialOrInconsistent: dict.dailySummaryPartialOrInconsistent,
+      noneCompleted: dict.dailySummaryNoneCompleted,
+    },
+    markers: {
+      uncertain: dict.dailySummaryUncertain,
+      warning: dict.dailySummaryWarning,
+    },
+    connector: dict.dailySummaryConnector,
+    none: dict.dailySummaryNone,
+  };
+}
+
+function buildDailySummaryText() {
+  const model = buildDailyWarzoneSummaryModel(worlds, { locale: lang });
+  return formatDailyWarzoneSummaryText(model, buildDailySummaryLabels());
+}
+
+function populatePrintListModal() {
+  const dict = t();
   const textarea = pageElements.printListTextarea;
-  if (!backdrop || !textarea) return;
+  if (!textarea) return;
+
+  setTextModalTitle(dict.printListTitle);
 
   try {
     const groups = buildPrintListPayload();
@@ -1180,13 +1275,68 @@ function openPrintListModal() {
       "error"
     );
   }
+}
+
+function populateDailySummaryModal() {
+  const dict = t();
+  const textarea = pageElements.printListTextarea;
+  if (!textarea) return;
+
+  setTextModalTitle(dict.dailySummaryTitle);
+
+  try {
+    const summaryText = buildDailySummaryText();
+    if (!summaryText.trim()) {
+      textarea.value = "";
+      setPrintListStatus(dict.dailySummaryEmpty, "warning");
+    } else {
+      textarea.value = summaryText;
+      setPrintListStatus(dict.dailySummaryReady, "success");
+    }
+  } catch (error) {
+    textarea.value = "";
+    setPrintListStatus(
+      `${dict.dailySummaryError} ${error instanceof Error ? error.message : ""}`.trim(),
+      "error"
+    );
+  }
+}
+
+function refreshOpenTextModal() {
+  const backdrop = pageElements.printListModalBackdrop;
+  if (!backdrop || backdrop.hidden) return;
+
+  if (textModalMode === "dailySummary") {
+    populateDailySummaryModal();
+  } else {
+    populatePrintListModal();
+  }
+}
+
+function openTextModal(mode, populate) {
+  textModalMode = mode;
+  const backdrop = pageElements.printListModalBackdrop;
+  const textarea = pageElements.printListTextarea;
+  if (!backdrop || !textarea) return;
+
+  populate();
 
   backdrop.hidden = false;
   document.body.classList.add("print-list-modal-open");
   requestAnimationFrame(() => {
     textarea.focus();
     textarea.select();
+    textarea.scrollTop = 0;
+    textarea.scrollLeft = 0;
   });
+}
+
+function openPrintListModal() {
+  openTextModal("printList", populatePrintListModal);
+}
+
+function openDailySummaryModal() {
+  openTextModal("dailySummary", populateDailySummaryModal);
 }
 
 function closePrintListModal() {
@@ -1463,6 +1613,7 @@ function saveLang(value) {
   updateLanguageButtons();
   populateTimezoneSelect();
   render();
+  refreshOpenTextModal();
 }
 
 function saveTZ(value) {
@@ -1471,6 +1622,7 @@ function saveTZ(value) {
   populateTimezoneSelect();
   updateClock();
   render();
+  refreshOpenTextModal();
 }
 
 function loadSettings() {
@@ -1573,8 +1725,12 @@ function applyStaticLabels() {
     pageElements.plannerLabel,
     d.warzonePlannerLabel || "Warzone Planner"
   );
+  setTextContent(pageElements.dailySummaryTrigger, d.dailySummary);
   setTextContent(pageElements.printListTrigger, d.printList || "Print List");
-  setTextContent(pageElements.printListModalTitle, d.printListTitle || "Print List");
+  setTextContent(
+    pageElements.printListModalTitle,
+    textModalMode === "dailySummary" ? d.dailySummaryTitle : d.printListTitle
+  );
   setTextContent(pageElements.printListCopyBtn, d.printListCopy || "Copy");
   setTextContent(pageElements.printListPrintBtn, d.printListPrint || "Print");
   setTextContent(pageElements.printListCloseActionBtn, d.printListClose || "Close");
@@ -2034,6 +2190,7 @@ async function init() {
   applyStaticLabels();
   bindLanguageButtons();
   bindFilterBar();
+  pageElements.dailySummaryTrigger?.addEventListener("click", openDailySummaryModal);
   pageElements.printListTrigger?.addEventListener("click", openPrintListModal);
   pageElements.printListCopyBtn?.addEventListener("click", copyPrintListText);
   pageElements.printListPrintBtn?.addEventListener("click", printPrintListText);
@@ -2098,6 +2255,7 @@ async function init() {
     });
     worlds = Array.isArray(worldsData) ? worldsData : [];
     render();
+    refreshOpenTextModal();
     let resizeTimer;
     window.addEventListener("resize", () => {
       clearTimeout(resizeTimer);
