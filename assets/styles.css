@@ -912,7 +912,7 @@ body::after {
 
 .world-card,
 .worlds-list > .empty-state {
-  margin-bottom: 16px;
+  margin-bottom: 0;
 }
 
 @media (max-width: 1019px) {

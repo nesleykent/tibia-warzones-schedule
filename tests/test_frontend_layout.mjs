@@ -19,6 +19,7 @@ const sharedController = readFileSync(
 test("world card flow avoids row stretching with shared column packing", () => {
   assert.match(styles, /\.worlds-list\s*\{[^}]*display:\s*flex;[^}]*gap:\s*16px;/s);
   assert.match(styles, /\.world-card-column\s*\{[^}]*display:\s*flex;/s);
+  assert.match(styles, /\.world-card,\s*\n\.worlds-list > \.empty-state\s*\{[^}]*margin-bottom:\s*0;/s);
   assert.match(styles, /@media \(max-width: 679px\)[\s\S]*display:\s*contents;/);
 });
 
