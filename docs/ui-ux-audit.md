@@ -737,7 +737,7 @@ Update the affected docs from code evidence and add a brief note that open-house
 
 - Introduce a publish/export step that produces a minimal public dataset.
 - Minify and optimize CSS/JS/assets for deployment.
-- Replace JS-driven masonry with a layout that preserves source order.
+- Keep the CSS multicolumn card flow covered by the frontend layout contract; do not reintroduce JavaScript-driven masonry or DOM redistribution.
 - Decide whether `admin.html` is intentionally public and align deployment/navigation with that decision.
 
 ### Long-term

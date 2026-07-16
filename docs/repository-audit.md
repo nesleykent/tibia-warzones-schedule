@@ -313,11 +313,14 @@ Evidence:
 
 ### 14. Frontend logic is duplicated across large page controllers
 
-Examples:
+Examples still requiring follow-up:
 
-- masonry layout exists in both `assets/app.js` and `assets/open-houses.js`
 - filter persistence exists independently in `assets/app.js`, `assets/ranking.js`, and `assets/open-houses.js`
 - `assets/admin.js` defines its own normalization helpers instead of sharing script-side behavior
+
+Resolved since the original audit:
+
+- JavaScript masonry was removed from `assets/app.js` and `assets/open-houses.js`; both lists now use the shared CSS multicolumn flow contract covered by `tests/test_frontend_layout.mjs`.
 
 Evidence:
 

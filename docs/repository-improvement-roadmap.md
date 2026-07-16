@@ -76,6 +76,8 @@ Audit basis: current repository source, workflows, tests, and verified commands 
 - Progress: home and open-house card grids now share one native-link delegation
   helper instead of duplicating synthetic card URLs and activation handlers as
   of 2026-07-16.
+- Progress: home and open-house card lists now use responsive CSS multicolumn
+  flow without runtime masonry or row-stretching gaps as of 2026-07-16.
 - Problem: localization, filter persistence, and route-controller structure are duplicated across page scripts.
 - Impact: behavior drift, harder fixes, and repetitive bugs.
 - Risk: Medium
