@@ -12,17 +12,28 @@ const openHousesController = readFileSync(
   "utf8"
 );
 
-test("world card grids preserve source order without runtime masonry", () => {
+test("world card flow avoids row stretching without runtime masonry", () => {
   assert.match(
     styles,
-    /\.worlds-list\s*\{[^}]*display:\s*grid;[^}]*grid-template-columns:\s*repeat\(3,/s
+    /\.worlds-list\s*\{[^}]*column-count:\s*3;[^}]*column-gap:\s*16px;/s
   );
-  assert.match(styles, /@media \(max-width: 1019px\)[\s\S]*repeat\(2,/);
-  assert.match(styles, /@media \(max-width: 679px\)[\s\S]*minmax\(0, 1fr\)/);
+  assert.match(styles, /@media \(max-width: 1019px\)[\s\S]*column-count:\s*2;/);
+  assert.match(styles, /@media \(max-width: 679px\)[\s\S]*column-count:\s*1;/);
+  assert.match(
+    styles,
+    /\.world-card,[\s\S]*?\.worlds-list > \.empty-state\s*\{[^}]*break-inside:\s*avoid;/
+  );
 
   for (const controller of [homeController, openHousesController]) {
     assert.doesNotMatch(controller, /applyMasonry|masonry-col|getColumnCount/);
   }
+});
+
+test("fixed artwork stays within the viewport on narrow screens", () => {
+  const backgroundRule = styles.match(/#bg-layer\s*\{([\s\S]*?)\n\}/)?.[1] ?? "";
+  assert.doesNotMatch(backgroundRule, /transform\s*:/);
+  assert.match(backgroundRule, /position:\s*fixed/);
+  assert.match(backgroundRule, /inset:\s*0/);
 });
 
 test("responsive layout changes do not trigger full home-page renders", () => {

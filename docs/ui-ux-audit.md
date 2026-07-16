@@ -191,7 +191,8 @@ Title: Height-based masonry layout can create non-linear reading and keyboard or
 Severity: Medium  
 Category: Layout and spacing / accessibility  
 Resolution: Completed on 2026-07-16. The home and open-house world lists now use
-responsive CSS Grid with stable row-major DOM order. Runtime column wrappers,
+responsive CSS multicolumn flow with stable source order and independent card
+heights. Runtime column wrappers,
 card measurement, resize-triggered full renders, and duplicated masonry code
 were removed. `tests/test_frontend_layout.mjs` protects the layout contract.
 Evidence:

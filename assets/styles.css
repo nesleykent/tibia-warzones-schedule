@@ -118,7 +118,6 @@ body {
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
-  transform: scale(1.02);
   opacity: 0;
   transition: opacity 1s var(--ease-out);
 }
@@ -897,24 +896,33 @@ body::after {
    WORLDS LIST
 ══════════════════════════════════════════════ */
 .worlds-list {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-  align-items: flex-start;
+  column-count: 3;
+  column-gap: 16px;
   margin-bottom: 64px;
+}
+
+.world-card,
+.worlds-list > .empty-state {
+  break-inside: avoid;
+  margin-bottom: 16px;
 }
 
 @media (max-width: 1019px) {
   .worlds-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
+    column-count: 2;
+    column-gap: 14px;
   }
 }
 
 @media (max-width: 679px) {
   .worlds-list {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 12px;
+    column-count: 1;
+    column-gap: 12px;
+  }
+
+  .world-card,
+  .worlds-list > .empty-state {
+    margin-bottom: 12px;
   }
 }
 .world-card,
