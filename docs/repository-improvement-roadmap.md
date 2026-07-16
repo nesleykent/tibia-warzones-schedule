@@ -31,14 +31,11 @@ Audit basis: current repository source, workflows, tests, and verified commands 
 - Estimated effort: Low
 - Evidence: `requirements.txt`; `scripts/remove_outliers.py:9`; `python3 scripts/remove_outliers.py` failed; `.venv/bin/python scripts/remove_outliers.py` passed.
 
-### 4. Remove the hardcoded TibiaMarket bearer token
+### 4. Preserve the TibiaMarket API integration
 
-- Problem: `scripts/fetch_item_history.py` embeds a bearer-token fallback in source.
-- Impact: Credential exposure and brittle operational rotation.
-- Risk: High
-- Proposed solution: require `TIBIA_MARKET_TOKEN` or `--token`, fail fast when absent, and rotate the existing token.
-- Estimated effort: Low
-- Evidence: `scripts/fetch_item_history.py:37-41`, `86-89`, `501`.
+- Scope: Out of scope for UI and product-quality iterations.
+- Constraint: Do not modify API requests, authentication, endpoints, or token
+  handling without explicit authorization for an API-security task.
 
 ### 5. Clarify the production status of `admin.html`
 
