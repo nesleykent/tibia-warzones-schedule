@@ -1,5 +1,6 @@
 const {
   GITHUB_ISSUES_URL,
+  activateSurfacePrimaryLink,
   escapeHtml,
   fetchJson,
   getWorldBattleyeKey,
@@ -326,10 +327,6 @@ function renderWorldCard(world, reports) {
     <div
       class="world-card"
       data-world-name="${escapeHtml(world.name)}"
-      data-world-url="${escapeHtml(worldUrl)}"
-      role="button"
-      tabindex="0"
-      aria-label="Open ${escapeHtml(world.name)} open houses"
     >
       <h2>
         <a class="world-name world-name-link" href="${escapeHtml(worldUrl)}">${escapeHtml(world.name)}</a>
@@ -596,19 +593,7 @@ function bindControls() {
   });
 
   elements.worldsList.addEventListener("click", (event) => {
-    const card = event.target.closest(".world-card");
-    const blocked = event.target.closest(".world-name-link, .history-link, button");
-    if (card && !blocked && card.dataset.worldUrl) {
-      window.location.href = card.dataset.worldUrl;
-    }
-  });
-
-  elements.worldsList.addEventListener("keydown", (event) => {
-    const card = event.target.closest(".world-card");
-    if (!card || !card.dataset.worldUrl) return;
-    if (event.key !== "Enter" && event.key !== " ") return;
-    event.preventDefault();
-    window.location.href = card.dataset.worldUrl;
+    activateSurfacePrimaryLink(event, ".world-card", ".world-name-link");
   });
 }
 

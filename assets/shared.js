@@ -1084,6 +1084,23 @@
     return true;
   }
 
+  function activateSurfacePrimaryLink(
+    event,
+    surfaceSelector,
+    linkSelector,
+    blockedSelector = "a, button"
+  ) {
+    const target = event?.target;
+    if (!(target instanceof Element) || target.closest(blockedSelector)) {
+      return false;
+    }
+
+    const link = target.closest(surfaceSelector)?.querySelector(linkSelector);
+    if (!link || typeof link.click !== "function") return false;
+    link.click();
+    return true;
+  }
+
   function setDocumentLanguage(language, fallbackLanguage = "en") {
     const resolvedLanguage = String(language || "").trim() || fallbackLanguage;
     document.documentElement.lang = resolvedLanguage;
@@ -1419,6 +1436,7 @@
     getDialogFocusTargetIndex,
     getMenuNavigationIndex,
     trapDialogFocus,
+    activateSurfacePrimaryLink,
     setDocumentLanguage,
     updateLanguageButtons,
     bindLanguageButtons,

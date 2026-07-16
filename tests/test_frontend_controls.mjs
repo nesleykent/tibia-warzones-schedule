@@ -8,6 +8,7 @@ function loadSharedExports() {
     new URL("../assets/shared.js", import.meta.url),
     "utf8"
   );
+  class TestElement {}
   const sandbox = {
     window: {},
     document: {
@@ -31,6 +32,7 @@ function loadSharedExports() {
       setItem() {},
     },
     Image: class {},
+    Element: TestElement,
     URL,
     fetch: async () => {
       throw new Error("fetch should not run in frontend control tests");
@@ -44,6 +46,7 @@ function loadSharedExports() {
   return {
     ...sandbox.window.TibiaTime,
     documentElement: sandbox.document.documentElement,
+    Element: TestElement,
   };
 }
 
@@ -53,6 +56,14 @@ const worldController = readFileSync(
 );
 const rankingController = readFileSync(
   new URL("../assets/ranking.js", import.meta.url),
+  "utf8"
+);
+const homeController = readFileSync(
+  new URL("../assets/app.js", import.meta.url),
+  "utf8"
+);
+const openHousesController = readFileSync(
+  new URL("../assets/open-houses.js", import.meta.url),
   "utf8"
 );
 
@@ -360,4 +371,60 @@ test("ranking rows expose one native navigation target", () => {
   );
   assert.match(styles, /\.ranking-table \.world-name-link:focus-visible/);
   assert.doesNotMatch(styles, /\.ranking-table-row:focus-visible/);
+});
+
+test("shared surface navigation delegates only background clicks", () => {
+  const { activateSurfacePrimaryLink, Element } = loadSharedExports();
+  let clickCount = 0;
+  const link = { click: () => (clickCount += 1) };
+  const surface = {
+    querySelector(selector) {
+      return selector === ".world-name-link" ? link : null;
+    },
+  };
+  const backgroundTarget = new Element();
+  backgroundTarget.closest = (selector) =>
+    selector === ".world-card" ? surface : null;
+
+  assert.equal(
+    activateSurfacePrimaryLink(
+      { target: backgroundTarget },
+      ".world-card",
+      ".world-name-link"
+    ),
+    true
+  );
+  assert.equal(clickCount, 1);
+
+  const nativeLinkTarget = new Element();
+  nativeLinkTarget.closest = (selector) =>
+    selector === "a, button" ? nativeLinkTarget : surface;
+  assert.equal(
+    activateSurfacePrimaryLink(
+      { target: nativeLinkTarget },
+      ".world-card",
+      ".world-name-link"
+    ),
+    false
+  );
+  assert.equal(clickCount, 1);
+});
+
+test("world card controllers share one native-link delegation contract", () => {
+  for (const controller of [homeController, openHousesController]) {
+    assert.match(
+      controller,
+      /activateSurfacePrimaryLink\([^;]+"\.world-card", "\.world-name-link"\)/
+    );
+    assert.doesNotMatch(controller, /data-world-url/);
+  }
+
+  assert.doesNotMatch(
+    openHousesController,
+    /elements\.worldsList\.addEventListener\("keydown"/
+  );
+  assert.doesNotMatch(
+    openHousesController,
+    /class="world-card"[\s\S]{0,180}(?:role="button"|tabindex="0")/
+  );
 });

@@ -11,6 +11,7 @@ const {
   escapeHtml,
   formatTransferType,
   getEffectiveWorldMark,
+  activateSurfacePrimaryLink,
   trapDialogFocus,
   getInitialLanguage: getSharedInitialLanguage,
   getNormalizedBossKills,
@@ -1926,9 +1927,7 @@ function renderWorld(world) {
   return `
     <div class="world-card${
       hasAny ? " world-card--selected" : ""
-    }" data-world-name="${escapeHtml(world.name)}" data-world-url="${escapeHtml(
-    getWorldHistoryUrl(world.name)
-  )}">
+    }" data-world-name="${escapeHtml(world.name)}">
       <h2>
         <a class="world-name world-name-link" href="${escapeHtml(
           getWorldHistoryUrl(world.name)
@@ -2244,13 +2243,7 @@ async function init() {
         return;
       }
 
-      const card = e.target.closest(".world-card");
-      const blocked = e.target.closest(
-        ".exec-select-btn, .history-link, .world-name-link, button"
-      );
-      if (card && !blocked && card.dataset.worldUrl) {
-        window.location.href = card.dataset.worldUrl;
-      }
+      activateSurfacePrimaryLink(e, ".world-card", ".world-name-link");
     });
   }
 

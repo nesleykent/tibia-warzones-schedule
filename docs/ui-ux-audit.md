@@ -515,6 +515,7 @@ Start with non-invasive event logging for route views, modal open failures, and 
 Title: Localization and interaction patterns are duplicated across page controllers
 Severity: Medium  
 Category: Consistency / code health  
+Progress: Shared primitives now own filter pills, language metadata and menu behavior, dialog focus boundaries, responsive navigation centering, and world-card background navigation. The remaining duplication is concentrated in localization dictionaries, filter persistence, and route-controller state.
 Evidence:
 - File: `assets/app.js`
 - Function/component: page-local I18N and filter state management
@@ -707,7 +708,7 @@ Update the affected docs from code evidence and add a brief note that open-house
 | UX-14 | Medium | Language menu behavior was incomplete for keyboard users | `assets/shared.js`, rendered keyboard QA | Resolved with shared roving focus and radio-menu semantics |
 | UX-15 | Medium | Filter state is not announced semantically | `assets/app.js:1868-1890` | Add `aria-pressed` or equivalent state semantics |
 | UX-16 | Medium | No product feedback instrumentation exists | repo-wide search, `assets/shared.js:599-600` | Add minimal privacy-conscious telemetry or diagnostics |
-| UX-17 | Medium | Reimplemented i18n/control logic increases drift | `assets/app.js`, `assets/ranking.js`, `assets/open-houses.js` | Consolidate shared behavior |
+| UX-17 | Medium | Reimplemented i18n/control logic increases drift | `assets/shared.js`, page controllers, frontend contract tests | Shared interaction primitives consolidated; continue with localization and filter persistence |
 | UX-19 | Medium | Raw assets ship without optimization | repo inventory and `wc -c` results | Add a lightweight build/minification step |
 | UX-20 | Medium | CI/workflows are not dependency-reproducible | `requirements.txt:1`, workflow files | Install Python requirements in every relevant workflow |
 | UX-22 | Medium | Docs describe a maintainer workflow the UI no longer provides | `README.md:89-91`, `docs/architecture.md:130-132`, `docs/operational-runbook.md:192-195`, admin code | Rewrite those docs from current code |
