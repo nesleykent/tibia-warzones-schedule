@@ -70,6 +70,17 @@ test("language menu navigation wraps and supports boundary keys", () => {
   assert.equal(getMenuNavigationIndex(0, "ArrowDown", 0), -1);
 });
 
+test("dialog focus looping wraps only at the boundaries", () => {
+  const { getDialogFocusTargetIndex } = loadSharedExports();
+
+  assert.equal(getDialogFocusTargetIndex(0, true, 5), 4);
+  assert.equal(getDialogFocusTargetIndex(4, false, 5), 0);
+  assert.equal(getDialogFocusTargetIndex(2, false, 5), -1);
+  assert.equal(getDialogFocusTargetIndex(2, true, 5), -1);
+  assert.equal(getDialogFocusTargetIndex(-1, false, 5), 0);
+  assert.equal(getDialogFocusTargetIndex(0, false, 0), -1);
+});
+
 test("active navigation centering stays within the scroll range", () => {
   const { getCenteredNavigationScrollLeft } = loadSharedExports();
 
@@ -245,5 +256,35 @@ test("narrow responsive containers contain intrinsic content width", () => {
   assert.match(
     source,
     /@media \(max-width: 600px\)[\s\S]*?\.footer-copy,[\s\S]*?\.footer-disclaimer\s*\{[^}]*max-width:\s*100%;[^}]*white-space:\s*normal;/
+  );
+});
+
+test("print-list dialog markup and controller expose a complete focus contract", () => {
+  const markup = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+  const controller = readFileSync(
+    new URL("../assets/app.js", import.meta.url),
+    "utf8"
+  );
+  const styles = readFileSync(
+    new URL("../assets/styles.css", import.meta.url),
+    "utf8"
+  );
+
+  assert.match(markup, /role="dialog"[^>]*aria-modal="true"/s);
+  assert.match(markup, /aria-describedby="printListStatus"/);
+  for (const id of [
+    "printListCopyBtn",
+    "printListPrintBtn",
+    "printListCloseBtn",
+    "printListCloseActionBtn",
+  ]) {
+    assert.match(markup, new RegExp(`id="${id}"`));
+    assert.match(controller, new RegExp(`${id}: "${id}"`));
+  }
+  assert.match(controller, /trapDialogFocus\(event,/);
+  assert.match(controller, /returnFocus\?\.isConnected/);
+  assert.match(
+    styles,
+    /\.print-list-modal-btn\s*\{[^}]*min-height:\s*var\(--interactive-target-min\);/s
   );
 });

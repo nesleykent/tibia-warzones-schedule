@@ -11,6 +11,7 @@ const {
   escapeHtml,
   formatTransferType,
   getEffectiveWorldMark,
+  trapDialogFocus,
   getInitialLanguage: getSharedInitialLanguage,
   getNormalizedBossKills,
   initSharedUi,
@@ -530,6 +531,7 @@ let selectedExecutions = new Set();
 let activeFilters = createEmptyFilterState();
 const pageElements = {};
 let textModalMode = "printList";
+let textModalReturnFocus = null;
 
 function cachePageElements() {
   Object.entries(PAGE_ELEMENT_IDS).forEach(([key, id]) => {
@@ -1230,6 +1232,15 @@ function setTextModalTitle(title) {
   setTextContent(pageElements.printListModalTitle, title);
 }
 
+function setTextModalActionsEnabled(enabled) {
+  if (pageElements.printListCopyBtn) {
+    pageElements.printListCopyBtn.disabled = !enabled;
+  }
+  if (pageElements.printListPrintBtn) {
+    pageElements.printListPrintBtn.disabled = !enabled;
+  }
+}
+
 function buildDailySummaryLabels() {
   const dict = t();
   return {
@@ -1264,13 +1275,16 @@ function populatePrintListModal() {
     const groups = buildPrintListPayload();
     if (!groups.length) {
       textarea.value = "";
+      setTextModalActionsEnabled(false);
       setPrintListStatus(dict.printListEmpty, "warning");
     } else {
       textarea.value = formatPrintListText(groups);
+      setTextModalActionsEnabled(true);
       setPrintListStatus(dict.printListReady, "success");
     }
   } catch (error) {
     textarea.value = "";
+    setTextModalActionsEnabled(false);
     setPrintListStatus(
       `${dict.printListError} ${error instanceof Error ? error.message : ""}`.trim(),
       "error"
@@ -1289,13 +1303,16 @@ function populateDailySummaryModal() {
     const summaryText = buildDailySummaryText();
     if (!summaryText.trim()) {
       textarea.value = "";
+      setTextModalActionsEnabled(false);
       setPrintListStatus(dict.dailySummaryEmpty, "warning");
     } else {
       textarea.value = summaryText;
+      setTextModalActionsEnabled(true);
       setPrintListStatus(dict.dailySummaryReady, "success");
     }
   } catch (error) {
     textarea.value = "";
+    setTextModalActionsEnabled(false);
     setPrintListStatus(
       `${dict.dailySummaryError} ${error instanceof Error ? error.message : ""}`.trim(),
       "error"
@@ -1314,11 +1331,21 @@ function refreshOpenTextModal() {
   }
 }
 
-function openTextModal(mode, populate) {
+function openTextModal(mode, populate, returnFocusTarget) {
   textModalMode = mode;
   const backdrop = pageElements.printListModalBackdrop;
   const textarea = pageElements.printListTextarea;
   if (!backdrop || !textarea) return;
+
+  if (backdrop.hidden) {
+    if (returnFocusTarget instanceof HTMLElement) {
+      textModalReturnFocus = returnFocusTarget;
+    } else if (document.activeElement instanceof HTMLElement) {
+      textModalReturnFocus = document.activeElement;
+    } else {
+      textModalReturnFocus = null;
+    }
+  }
 
   populate();
 
@@ -1333,21 +1360,32 @@ function openTextModal(mode, populate) {
 }
 
 function openPrintListModal() {
-  openTextModal("printList", populatePrintListModal);
+  openTextModal(
+    "printList",
+    populatePrintListModal,
+    pageElements.printListTrigger
+  );
 }
 
 function openDailySummaryModal() {
-  openTextModal("dailySummary", populateDailySummaryModal);
+  openTextModal(
+    "dailySummary",
+    populateDailySummaryModal,
+    pageElements.dailySummaryTrigger
+  );
 }
 
-function closePrintListModal() {
+function closeTextModal() {
   const backdrop = pageElements.printListModalBackdrop;
-  if (!backdrop) return;
+  if (!backdrop || backdrop.hidden) return;
+  const returnFocus = textModalReturnFocus;
+  textModalReturnFocus = null;
   backdrop.hidden = true;
   document.body.classList.remove("print-list-modal-open");
+  if (returnFocus?.isConnected) returnFocus.focus();
 }
 
-function copyPrintListText() {
+function copyTextModalContent() {
   const dict = t();
   const textarea = pageElements.printListTextarea;
   if (!textarea || !textarea.value.trim()) return;
@@ -1365,7 +1403,7 @@ function copyPrintListText() {
     });
 }
 
-function printPrintListText() {
+function printTextModalContent() {
   const textarea = pageElements.printListTextarea;
   if (!textarea || !textarea.value.trim()) return;
 
@@ -2159,26 +2197,29 @@ async function init() {
   bindFilterBar();
   pageElements.dailySummaryTrigger?.addEventListener("click", openDailySummaryModal);
   pageElements.printListTrigger?.addEventListener("click", openPrintListModal);
-  pageElements.printListCopyBtn?.addEventListener("click", copyPrintListText);
-  pageElements.printListPrintBtn?.addEventListener("click", printPrintListText);
-  pageElements.printListCloseBtn?.addEventListener("click", closePrintListModal);
+  pageElements.printListCopyBtn?.addEventListener("click", copyTextModalContent);
+  pageElements.printListPrintBtn?.addEventListener("click", printTextModalContent);
+  pageElements.printListCloseBtn?.addEventListener("click", closeTextModal);
   pageElements.printListCloseActionBtn?.addEventListener(
     "click",
-    closePrintListModal
+    closeTextModal
   );
   pageElements.printListModalBackdrop?.addEventListener("click", (event) => {
     if (event.target === pageElements.printListModalBackdrop) {
-      closePrintListModal();
+      closeTextModal();
     }
   });
   document.addEventListener("keydown", (event) => {
-    if (
-      event.key === "Escape" &&
-      pageElements.printListModalBackdrop &&
-      !pageElements.printListModalBackdrop.hidden
-    ) {
-      closePrintListModal();
+    const backdrop = pageElements.printListModalBackdrop;
+    if (!backdrop || backdrop.hidden) return;
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeTextModal();
+      return;
     }
+
+    trapDialogFocus(event, backdrop.querySelector('[role="dialog"]'));
   });
   updateLanguageButtons();
   populateTimezoneSelect();

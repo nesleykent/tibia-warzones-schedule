@@ -11,7 +11,7 @@ The strongest product risks are not visual polish issues. They are interaction a
 
 - Primary navigation compresses below Apple HIG touch-target and legibility expectations on small screens.
 - Localization is only partially implemented. Several pages expose language controls that do not fully work, translations are incomplete, and the document language metadata does not track the displayed language.
-- The two modal experiences inspected during runtime testing do not meet basic keyboard and focus-management expectations.
+- The remaining world-page market modal does not yet meet basic keyboard and focus-management expectations; the home text dialog has since been repaired.
 - The deployment artifact includes the full raw `data/` tree and large market datasets without a build step, minification pass, or payload boundary.
 - Current repository documentation still describes admin open-house editing behavior that the code no longer exposes.
 
@@ -28,7 +28,7 @@ The strongest product risks are not visual polish issues. They are interaction a
 | Routing architecture | File-based static routes plus query-string state (`index.html`, `ranking.html`, `world.html`, `open-houses.html`, `bigfoot.html`, `admin.html`) |
 | Localization approach | Per-page JavaScript dictionaries with a shared saved language key in `localStorage`; no central i18n build step |
 | Python/runtime dependencies | `requirements.txt` contains `numpy`; scripts are executed directly with `python3` |
-| Test framework | Python `unittest` |
+| Test framework | Python `unittest` plus Node's built-in test runner for frontend contracts |
 | Build system | No bundler, no transpiler, no package-based frontend build step |
 | Deployment | GitHub Pages workflow copies source files and `data/` directly into `_site` |
 | Documentation structure | `README.md`, `Expected_Return_Explanation.md`, and `docs/*.md` |
@@ -300,6 +300,7 @@ Either make the row non-interactive and keep the link, or render a full-row anch
 Title: The print-list modal is partially implemented and does not preserve user context
 Severity: High  
 Category: Interactivity / accessibility  
+Resolution: Completed on 2026-07-16. The shared Print List / Daily Summary dialog now provides visible Copy, Print, header-close, and footer-close controls; disables unavailable actions; traps keyboard focus; and restores focus to the trigger after every close path. All dialog actions meet the shared 44-point minimum target size, and source-contract tests cover its markup, controller, and focus-loop behavior.
 Evidence:
 - File: `index.html`
 - Function/component: print-list modal markup
@@ -691,7 +692,7 @@ Update the affected docs from code evidence and add a brief note that open-house
 | --- | --- | --- | --- | --- |
 | UX-03 | High | Primary navigation and filters were hard to tap on mobile | `assets/styles.css`, 390px rendered metrics | Core target sizing resolved; mobile navigation adaptation remains UX-04 |
 | UX-06 | High | Language selector behaves like a dead affordance on Bigfoot | `assets/shared.js:640-703`, `assets/bigfoot.js:1`, runtime inspection | Implement real localization or remove the selector from that page |
-| UX-09 | High | Print-list modal looks incomplete and breaks focus continuity | `index.html:150-176`, `assets/app.js:67-88`, `1162-1198` | Align markup/controller and restore focus on dismiss |
+| UX-09 | High | Print-list modal looked incomplete and broke focus continuity | `index.html`, `assets/app.js`, `assets/shared.js`, rendered keyboard QA | Resolved with a complete shared text-dialog contract and focus restoration |
 | UX-10 | High | Market modal is not keyboard-safe and has fragile failure handling | `assets/world.js:1640-1762`, runtime inspection | Add dialog focus management and repair error-path references |
 | UX-11 | High | Mixed-language UI reduces comprehension and trust | `assets/world.js:50-140`, `assets/ranking.js:149-180` | Complete translations or trim the supported locale list |
 | UX-12 | High | Incorrect document language harms assistive technology output | public HTML roots + `assets/shared.js:385-410`, `684-703` | Synchronize `document.documentElement.lang` with actual UI language |
@@ -715,7 +716,7 @@ Update the affected docs from code evidence and add a brief note that open-house
 
 ### Immediate
 
-- Fix modal accessibility on `index.html` and `world.html`.
+- Fix the remaining market-modal accessibility defects on `world.html`.
 - Raise all primary touch targets to `44x44`.
 - Remove or fix the broken language selector on `bigfoot.html`.
 - Synchronize `document.documentElement.lang` with the active locale.
@@ -758,11 +759,12 @@ Update the affected docs from code evidence and add a brief note that open-house
 - `assets/shared.js:385-410` (`getInitialLanguage`)
 - `assets/shared.js:569-632` (`renderSiteFooter`)
 - `assets/shared.js:640-703` (`initLanguageDropdown`, `updateLanguageButtons`, `bindLanguageButtons`)
+- `assets/shared.js` (`getDialogFocusTargetIndex`, `trapDialogFocus`)
 
 ### Home page controller
 
 - `assets/app.js:67-88` (`PAGE_ELEMENT_IDS`)
-- `assets/app.js:1101-1215` (print-list payload and modal behavior)
+- `assets/app.js` (Print List / Daily Summary payload and shared text-dialog behavior)
 - `assets/app.js:1868-1890` (`renderFilters`)
 - `assets/app.js:1980-2008` (`applyMasonry`)
 

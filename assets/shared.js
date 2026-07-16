@@ -1054,6 +1054,36 @@
     return -1;
   }
 
+  function getDialogFocusTargetIndex(currentIndex, shiftKey, itemCount) {
+    if (!Number.isInteger(itemCount) || itemCount <= 0) return -1;
+    if (shiftKey && currentIndex <= 0) return itemCount - 1;
+    if (!shiftKey && (currentIndex < 0 || currentIndex >= itemCount - 1)) {
+      return 0;
+    }
+    return -1;
+  }
+
+  function trapDialogFocus(event, dialog) {
+    if (event.key !== "Tab" || !dialog) return false;
+
+    const focusableElements = Array.from(
+      dialog.querySelectorAll(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )
+    ).filter((element) => element.getClientRects().length > 0);
+    const currentIndex = focusableElements.indexOf(document.activeElement);
+    const targetIndex = getDialogFocusTargetIndex(
+      currentIndex,
+      event.shiftKey,
+      focusableElements.length
+    );
+    if (targetIndex < 0) return false;
+
+    event.preventDefault();
+    focusableElements[targetIndex].focus();
+    return true;
+  }
+
   function setDocumentLanguage(language, fallbackLanguage = "en") {
     const resolvedLanguage = String(language || "").trim() || fallbackLanguage;
     document.documentElement.lang = resolvedLanguage;
@@ -1386,7 +1416,9 @@
     initSiteFooter,
     initLanguageDropdown,
     getCenteredNavigationScrollLeft,
+    getDialogFocusTargetIndex,
     getMenuNavigationIndex,
+    trapDialogFocus,
     setDocumentLanguage,
     updateLanguageButtons,
     bindLanguageButtons,

@@ -2087,7 +2087,7 @@ body.print-list-modal-open {
 .print-list-modal-header {
   display: flex;
   align-items: flex-start;
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: 16px;
   position: relative;
   z-index: 1;
@@ -2097,8 +2097,35 @@ body.print-list-modal-open {
 
 .print-list-modal-heading {
   display: grid;
+  flex: 1;
   gap: 6px;
   min-width: 0;
+}
+
+.print-list-modal-close {
+  width: var(--interactive-target-min);
+  height: var(--interactive-target-min);
+  flex: 0 0 var(--interactive-target-min);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--sep-md);
+  border-radius: var(--r-sm);
+  background: var(--fill-3);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out),
+    transform var(--t-fast) var(--ease-spr);
+}
+
+.print-list-modal-close:hover {
+  background: var(--fill-2);
+  color: var(--text-primary);
+}
+
+.print-list-modal-close:active {
+  transform: scale(0.92);
 }
 
 .print-list-modal-header h2 {
@@ -2169,9 +2196,14 @@ body.print-list-modal-open {
 }
 
 .print-list-modal-btn {
-  min-height: 32px;
+  min-height: var(--interactive-target-min);
   min-width: 96px;
   padding-inline: 14px;
+}
+
+.print-list-modal-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
 }
 
 .market-item-modal-backdrop {

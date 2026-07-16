@@ -183,20 +183,34 @@
         role="dialog"
         aria-modal="true"
         aria-labelledby="printListModalTitle"
+        aria-describedby="printListStatus"
       >
         <div class="print-list-modal-header">
           <div class="print-list-modal-heading">
             <h2 id="printListModalTitle">Print List</h2>
             <p class="print-list-modal-status" id="printListStatus" aria-live="polite"></p>
           </div>
+          <button
+            type="button"
+            class="print-list-modal-close"
+            id="printListCloseBtn"
+            aria-label="Close"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
         </div>
         <textarea
           class="print-list-textarea"
           id="printListTextarea"
+          aria-labelledby="printListModalTitle"
           spellcheck="false"
         ></textarea>
         <div class="print-list-modal-actions">
           <button type="button" class="schedule-btn print-list-modal-btn" id="printListCopyBtn">Copy</button>
+          <button type="button" class="schedule-btn print-list-modal-btn" id="printListPrintBtn">Print</button>
+          <button type="button" class="schedule-btn print-list-modal-btn" id="printListCloseActionBtn">Close</button>
         </div>
       </div>
     </div>
