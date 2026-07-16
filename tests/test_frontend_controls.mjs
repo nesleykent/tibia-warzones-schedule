@@ -51,6 +51,10 @@ const worldController = readFileSync(
   new URL("../assets/world.js", import.meta.url),
   "utf8"
 );
+const rankingController = readFileSync(
+  new URL("../assets/ranking.js", import.meta.url),
+  "utf8"
+);
 
 test("language state synchronizes document metadata", () => {
   const { documentElement, setDocumentLanguage, updateLanguageButtons } =
@@ -332,4 +336,28 @@ test("world market dialog owns focus and centralizes lifecycle cleanup", () => {
     styles,
     /\.market-item-modal-ranges \[data-range\]\s*\{[^}]*min-height:\s*var\(--interactive-target-min\);/s
   );
+});
+
+test("ranking rows expose one native navigation target", () => {
+  const styles = readFileSync(
+    new URL("../assets/styles.css", import.meta.url),
+    "utf8"
+  );
+
+  assert.match(rankingController, /<tr class="ranking-table-row">/);
+  assert.doesNotMatch(rankingController, /data-world-url|role="link"/);
+  assert.doesNotMatch(
+    rankingController,
+    /wrap\.addEventListener\("keydown"/
+  );
+  assert.match(
+    rankingController,
+    /closest\("\.ranking-table-row"\)[\s\S]*?querySelector\("\.world-name-link"\)[\s\S]*?\.click\(\)/
+  );
+  assert.match(
+    styles,
+    /\.ranking-table \.world-name-link\s*\{[^}]*min-height:\s*var\(--interactive-target-min\);/s
+  );
+  assert.match(styles, /\.ranking-table \.world-name-link:focus-visible/);
+  assert.doesNotMatch(styles, /\.ranking-table-row:focus-visible/);
 });

@@ -84,6 +84,9 @@ Audit basis: current repository source, workflows, tests, and verified commands 
 
 - Progress: source-level frontend regression tests now enforce shared language,
   filter, and minimum-target contracts through `node --test tests/*.mjs`.
+- Progress: ranking-table regression coverage now enforces a single native
+  navigation target per row, with rendered pointer-navigation verification as
+  of 2026-07-16.
 - Problem: frontend behavior is validated manually; there is no repo-owned browser test suite.
 - Impact: UI regressions and accessibility issues are easy to miss.
 - Risk: Medium

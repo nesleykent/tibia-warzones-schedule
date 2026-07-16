@@ -654,19 +654,16 @@ function bindRankingTable() {
   if (!wrap) return;
 
   wrap.addEventListener("click", (event) => {
-    if (event.target.closest("a, button")) return;
-    const row = event.target.closest(".ranking-table-row");
-    if (row?.dataset.worldUrl) {
-      window.location.href = row.dataset.worldUrl;
+    if (
+      !(event.target instanceof Element) ||
+      event.target.closest("a, button")
+    ) {
+      return;
     }
-  });
-
-  wrap.addEventListener("keydown", (event) => {
-    if (event.key !== "Enter" && event.key !== " ") return;
-    const row = event.target.closest(".ranking-table-row");
-    if (!row?.dataset.worldUrl) return;
-    event.preventDefault();
-    window.location.href = row.dataset.worldUrl;
+    event.target
+      .closest(".ranking-table-row")
+      ?.querySelector(".world-name-link")
+      ?.click();
   });
 }
 
@@ -705,7 +702,7 @@ function renderTable(rows) {
             const ranking = getRanking(world);
             const market = ranking.market || {};
             return `
-              <tr class="ranking-table-row" data-world-url="./world.html?name=${encodeURIComponent(world.name)}" tabindex="0" role="link" aria-label="Open ${escapeHtml(world.name)} world page">
+              <tr class="ranking-table-row">
                 <td>${escapeHtml(
                   ranking.ranking_position
                     ? `#${String(ranking.ranking_position)}`

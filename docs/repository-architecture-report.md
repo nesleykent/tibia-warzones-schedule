@@ -241,7 +241,7 @@ Observed behavior:
 - `unittest` passed with 48 tests.
 - `validate_content.py` passed with warnings for three known missing market worlds.
 - `node --check` passed.
-- Node's test runner passed with 31 tests.
+- Node's test runner passed with 32 tests.
 
 ### Local development workflow
 

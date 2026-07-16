@@ -872,10 +872,20 @@ body::after {
   background: rgba(255, 255, 255, 0.04);
 }
 
-.ranking-table-row:focus-visible {
+.ranking-table td:nth-child(2) {
+  padding-block: 0;
+}
+
+.ranking-table .world-name-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--interactive-target-min);
+}
+
+.ranking-table .world-name-link:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.55);
-  outline-offset: -2px;
-  background: rgba(255, 255, 255, 0.06);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
 }
 
 .ranking-table th:first-child,

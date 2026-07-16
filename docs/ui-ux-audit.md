@@ -277,6 +277,7 @@ Either add an explicit maintainer entry point and copy explaining intended use, 
 Title: Ranking rows expose nested navigation targets
 Severity: Medium  
 Category: Navigation / accessibility  
+Resolution: Completed on 2026-07-16. Ranking rows are now semantic table rows with one native world-name link as their only focus target. Whole-row pointer activation delegates to that same link, removing the duplicated URL and synthetic keyboard-navigation paths while preserving the convenient click area.
 Evidence:
 - File: `assets/ranking.js`
 - Function/component: `renderTable`
@@ -702,7 +703,7 @@ Update the affected docs from code evidence and add a brief note that open-house
 | UX-04 | Medium | Small-screen nav lost information scent | `assets/styles.css`, `assets/shared.js`, 320px rendered QA | Resolved with full-label scrolling navigation and active-route centering |
 | UX-05 | Medium | Card grids may produce non-linear reading order | `assets/app.js:1980-2008`, `assets/open-houses.js:241-255` | Preserve linear DOM order with CSS layout |
 | UX-07 | Medium | Deployed admin route lacks explicit IA treatment | `index.html:17-35`, `.github/workflows/deploy-pages.yml:63-67` | Decide whether it is public or internal and reflect that explicitly |
-| UX-08 | Medium | Ranking rows create duplicate navigation affordances | `assets/ranking.js:679-689` | Use one semantic interactive target per row |
+| UX-08 | Medium | Ranking rows created duplicate navigation affordances | `assets/ranking.js`, `assets/styles.css`, rendered semantic QA | Resolved with one native link and delegated whole-row pointer activation |
 | UX-14 | Medium | Language menu behavior was incomplete for keyboard users | `assets/shared.js`, rendered keyboard QA | Resolved with shared roving focus and radio-menu semantics |
 | UX-15 | Medium | Filter state is not announced semantically | `assets/app.js:1868-1890` | Add `aria-pressed` or equivalent state semantics |
 | UX-16 | Medium | No product feedback instrumentation exists | repo-wide search, `assets/shared.js:599-600` | Add minimal privacy-conscious telemetry or diagnostics |
