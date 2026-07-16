@@ -64,6 +64,8 @@ Audit basis: current repository source, workflows, tests, and verified commands 
 
 - Progress: filter-pill markup, escaping, visual-state classes, and semantic
   pressed state were consolidated in `assets/shared.js` on 2026-07-16.
+- Progress: document-language synchronization is shared, and English-only
+  pages no longer expose nonfunctional locale controls as of 2026-07-16.
 - Problem: localization, filter persistence, and route-controller structure are duplicated across page scripts.
 - Impact: behavior drift, harder fixes, and repetitive bugs.
 - Risk: Medium

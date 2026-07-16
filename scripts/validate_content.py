@@ -214,6 +214,11 @@ def validate_frontend_assets(repo_root: Path) -> ValidationReport:
             report.error(f"frontend: cannot read {path}: {exc}")
             continue
 
+        if not re.search(r'<html\s+lang="[A-Za-z][A-Za-z0-9-]*"', html):
+            report.error(
+                f"frontend: {entrypoint} must declare a valid document language"
+            )
+
         for fragment in required_head_fragments:
             if fragment not in html:
                 report.error(

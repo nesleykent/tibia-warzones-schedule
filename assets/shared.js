@@ -984,7 +984,14 @@
     });
   }
 
+  function setDocumentLanguage(language, fallbackLanguage = "en") {
+    const resolvedLanguage = String(language || "").trim() || fallbackLanguage;
+    document.documentElement.lang = resolvedLanguage;
+    return resolvedLanguage;
+  }
+
   function updateLanguageButtons(activeLanguage) {
+    setDocumentLanguage(activeLanguage);
     document.querySelectorAll(".lang-flag").forEach((button) => {
       const isActive = button.dataset.lang === activeLanguage;
       button.classList.toggle("is-active", isActive);
@@ -1236,6 +1243,7 @@
     initBackgroundArtwork,
     initSiteFooter,
     initLanguageDropdown,
+    setDocumentLanguage,
     updateLanguageButtons,
     bindLanguageButtons,
     initBackLinks,

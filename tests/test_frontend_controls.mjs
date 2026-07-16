@@ -11,6 +11,7 @@ function loadSharedExports() {
   const sandbox = {
     window: {},
     document: {
+      documentElement: { lang: "en" },
       addEventListener() {},
       getElementById() {
         return null;
@@ -40,8 +41,22 @@ function loadSharedExports() {
   };
 
   vm.runInNewContext(source, sandbox, { filename: "assets/shared.js" });
-  return sandbox.window.TibiaTime;
+  return {
+    ...sandbox.window.TibiaTime,
+    documentElement: sandbox.document.documentElement,
+  };
 }
+
+test("language state synchronizes document metadata", () => {
+  const { documentElement, setDocumentLanguage, updateLanguageButtons } =
+    loadSharedExports();
+
+  assert.equal(setDocumentLanguage("pt-BR"), "pt-BR");
+  assert.equal(documentElement.lang, "pt-BR");
+
+  updateLanguageButtons("pl");
+  assert.equal(documentElement.lang, "pl");
+});
 
 test("renderFilterPill exposes and escapes active filter state", () => {
   const { renderFilterPill } = loadSharedExports();
@@ -82,5 +97,13 @@ test("all filter controllers use the shared filter renderer", () => {
     );
     assert.match(source, /renderFilterPill/);
     assert.doesNotMatch(source, /<button[^>]*class="filter-pill/s);
+  }
+});
+
+test("English-only pages do not advertise unavailable translations", () => {
+  for (const file of ["bigfoot.html", "open-houses.html"]) {
+    const source = readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
+    assert.match(source, /<html lang="en">/);
+    assert.doesNotMatch(source, /id="langDropdown"|class="lang-flag"/);
   }
 });

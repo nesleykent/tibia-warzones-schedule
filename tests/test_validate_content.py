@@ -42,6 +42,7 @@ class ValidateFrontendAssetsTest(unittest.TestCase):
             assets_dir.mkdir()
             (assets_dir / "styles.css").write_text(":root {}", encoding="utf-8")
             complete_html = """
+                <html lang="en">
                 <link rel="preconnect" href="https://fonts.googleapis.com">
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
                 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans">
@@ -53,6 +54,29 @@ class ValidateFrontendAssetsTest(unittest.TestCase):
             report = validate_content.validate_frontend_assets(repo_root)
 
         self.assertEqual(report.errors, [])
+
+    def test_rejects_entrypoints_without_document_language(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = Path(tmpdir)
+            assets_dir = repo_root / "assets"
+            assets_dir.mkdir()
+            (assets_dir / "styles.css").write_text(":root {}", encoding="utf-8")
+            html_without_language = """
+                <link rel="preconnect" href="https://fonts.googleapis.com">
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans">
+                <link rel="stylesheet" href="./assets/styles.css">
+            """
+            for entrypoint in validate_content.FRONTEND_ENTRYPOINTS:
+                (repo_root / entrypoint).write_text(
+                    html_without_language, encoding="utf-8"
+                )
+
+            report = validate_content.validate_frontend_assets(repo_root)
+
+        self.assertTrue(
+            any("document language" in message for message in report.errors)
+        )
 
 
 class ValidateManualSchedulesTest(unittest.TestCase):

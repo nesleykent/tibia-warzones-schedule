@@ -213,6 +213,9 @@ Use CSS grid or multicolumn layout for presentation while preserving a stable so
 Title: Language navigation is only partially wired and fails on `bigfoot.html`
 Severity: High  
 Category: Navigation / localization  
+Resolution: Completed on 2026-07-16. Bigfoot and Open Houses are explicitly
+English-only and no longer advertise unavailable translations. The genuinely
+localized home, ranking, and world pages retain the shared language selector.
 Evidence:
 - File: `assets/shared.js`
 - Function/component: `initLanguageDropdown`, `bindLanguageButtons`, `updateLanguageButtons`
@@ -363,6 +366,10 @@ Centralize translation ownership, add locale-completeness validation, and remove
 Title: Document language metadata does not reflect the active interface language
 Severity: High  
 Category: Content strategy / accessibility  
+Resolution: Completed on 2026-07-16. Every shipped entry point declares its
+English source language, and the shared language-state updater synchronizes the
+root `lang` attribute whenever a translated controller initializes or changes
+locale. Repository validation rejects entry points without language metadata.
 Evidence:
 - File: `index.html`
 - Function/component: root document
