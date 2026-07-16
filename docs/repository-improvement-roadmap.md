@@ -89,12 +89,14 @@ Audit basis: current repository source, workflows, tests, and verified commands 
 
 ### 10. Remove dead or partially integrated maintenance surfaces
 
-- Problem: the repo still contains dead or partially integrated pieces such as `data/active_warzones.txt`, `assets/open-houses.js:getFilteredReports()`, and `window.OpenHouse`.
+- Progress: the no-op `assets/open-houses.js:getFilteredReports()` helper was removed
+  on 2026-07-16. The remaining surfaces require separate ownership decisions.
+- Problem: the repo still contains dead or partially integrated pieces such as `data/active_warzones.txt` and `window.OpenHouse`.
 - Impact: extra cognitive load and false signals about supported behavior.
 - Risk: Low to medium
 - Proposed solution: delete or fully wire those surfaces and update docs/workflows accordingly.
 - Estimated effort: Medium
-- Evidence: `data/active_warzones.txt`; `.github/workflows/update-worlds.yml:9-14`; `assets/open-houses.js:237-239`, `704-709`.
+- Evidence: `data/active_warzones.txt`; `.github/workflows/update-worlds.yml:9-14`; `assets/open-houses.js`.
 
 ## Strategic
 

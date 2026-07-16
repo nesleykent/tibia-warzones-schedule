@@ -139,7 +139,7 @@ Evidence:
 | Module | Responsibility | Evidence |
 | --- | --- | --- |
 | `assets/shared.js` | storage helpers, timezone helpers, language menu wiring, footer rendering, shared labels | `getInitialLanguage()`, `readStorage()`, `renderSiteFooter()`, `initLanguageDropdown()` |
-| `assets/app.js` | world overview, filters, planner, print-list modal, notifications | `renderWorld()`, `renderSchedulePanel()`, `openPrintListModal()`, `applyMasonry()` |
+| `assets/app.js` | world overview, filters, planner, print-list modal, notifications | `renderWorld()`, `renderSchedulePanel()`, `openPrintListModal()` |
 | `assets/world.js` | per-world summary, market cards, history, market modal | `loadWorldPage()`, `renderMarketPrices()`, `openMarketItemModal()` |
 | `assets/ranking.js` | ranking filters, summary, ranking table | `render()`, `renderTable()` |
 | `assets/open-houses.js` | world list/detail routing and filters for open houses | `render()`, `getVisibleWorlds()`, `renderRouteState()` |

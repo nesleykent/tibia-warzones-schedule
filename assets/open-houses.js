@@ -234,52 +234,6 @@ function clearWorldFilters() {
   render();
 }
 
-function getFilteredReports() {
-  return allReports;
-}
-
-function getColumnCount(container) {
-  const width = container.offsetWidth;
-  if (width >= 1020) return 3;
-  if (width >= 680) return 2;
-  return 1;
-}
-
-function applyMasonry(container) {
-  const cols = getColumnCount(container);
-  const cards = [...container.querySelectorAll(".world-card, .empty-state")];
-  container.replaceChildren();
-
-  if (cols === 1) {
-    container.style.cssText = "display:flex;flex-direction:column;";
-    cards.forEach((card) => container.appendChild(card));
-    return;
-  }
-
-  const gap = cols === 3 ? 16 : 14;
-  const columns = Array.from({ length: cols }, () => {
-    const col = document.createElement("div");
-    col.className = "masonry-col";
-    col.style.cssText = `display:flex;flex-direction:column;gap:${gap}px;flex:1;min-width:0;`;
-    container.appendChild(col);
-    return col;
-  });
-
-  container.style.cssText = `display:flex;align-items:flex-start;gap:${gap}px;`;
-  cards.forEach((card, i) => columns[i % cols].appendChild(card));
-
-  requestAnimationFrame(() => {
-    cards.forEach((card) => card.remove());
-    columns.forEach((column) => column.replaceChildren());
-    const heights = new Array(cols).fill(0);
-    cards.forEach((card) => {
-      const shortest = heights.indexOf(Math.min(...heights));
-      columns[shortest].appendChild(card);
-      heights[shortest] += card.getBoundingClientRect().height + gap;
-    });
-  });
-}
-
 function renderFilters() {
   const isAllActive = !hasActiveWorldFilters();
   const filterOptions = Object.fromEntries(
@@ -439,7 +393,6 @@ function renderWorlds(reports, worlds) {
       })
       .join("")
   );
-  requestAnimationFrame(() => applyMasonry(elements.worldsList));
 }
 
 function getUtilityRows(report) {
@@ -597,7 +550,7 @@ function syncControls() {
 
 function render() {
   ensureSelectedWorld();
-  const reports = getFilteredReports();
+  const reports = allReports;
   const visibleWorlds = getVisibleWorlds(reports);
   renderFilters();
   renderSummary(reports, isWorldDetailRoute() ? null : visibleWorlds);

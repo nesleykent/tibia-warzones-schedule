@@ -2119,48 +2119,9 @@ function render() {
   }
 
   worldsList.innerHTML = filtered.map(renderWorld).join("");
-  requestAnimationFrame(() => applyMasonry(worldsList));
 
   renderSchedulePanel();
   updateCountdownPanel();
-}
-
-function getColumnCount(container) {
-  const w = container.offsetWidth;
-  if (w >= 1020) return 3;
-  if (w >= 680) return 2;
-  return 1;
-}
-
-function applyMasonry(container) {
-  const cols = getColumnCount(container);
-  const cards = [...container.querySelectorAll(".world-card, .empty-state")];
-  container.replaceChildren();
-  if (cols === 1) {
-    container.style.cssText = "display:flex;flex-direction:column;";
-    cards.forEach((c) => container.appendChild(c));
-    return;
-  }
-  const gap = cols === 3 ? 16 : 14;
-  const columns = Array.from({ length: cols }, () => {
-    const col = document.createElement("div");
-    col.className = "masonry-col";
-    col.style.cssText = `display:flex;flex-direction:column;gap:${gap}px;flex:1;min-width:0;`;
-    container.appendChild(col);
-    return col;
-  });
-  container.style.cssText = `display:flex;align-items:flex-start;gap:${gap}px;`;
-  cards.forEach((card, i) => columns[i % cols].appendChild(card));
-  requestAnimationFrame(() => {
-    cards.forEach((c) => c.remove());
-    columns.forEach((column) => column.replaceChildren());
-    const heights = new Array(cols).fill(0);
-    cards.forEach((card) => {
-      const s = heights.indexOf(Math.min(...heights));
-      columns[s].appendChild(card);
-      heights[s] += card.getBoundingClientRect().height + gap;
-    });
-  });
 }
 
 // ─── Master tick ─────────────────────────────────────
@@ -2222,7 +2183,7 @@ async function init() {
   renderSchedulePanel();
   updateCountdownPanel();
 
-  // Single delegated listener for all .world-select-btn clicks (survives masonry re-renders)
+  // Single delegated listener for all current and future world-card controls.
   const worldsList = pageElements.worldsList;
   if (worldsList) {
     worldsList.addEventListener("click", (e) => {
@@ -2256,11 +2217,6 @@ async function init() {
     worlds = Array.isArray(worldsData) ? worldsData : [];
     render();
     refreshOpenTextModal();
-    let resizeTimer;
-    window.addEventListener("resize", () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(render, 120);
-    });
   } catch (error) {
     const { summary, worldsList } = pageElements;
     if (summary) summary.textContent = "";

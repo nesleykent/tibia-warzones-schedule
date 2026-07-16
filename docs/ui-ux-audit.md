@@ -180,6 +180,10 @@ Promote the most-used routes into the top level, move secondary destinations int
 Title: Height-based masonry layout can create non-linear reading and keyboard order
 Severity: Medium  
 Category: Layout and spacing / accessibility  
+Resolution: Completed on 2026-07-16. The home and open-house world lists now use
+responsive CSS Grid with stable row-major DOM order. Runtime column wrappers,
+card measurement, resize-triggered full renders, and duplicated masonry code
+were removed. `tests/test_frontend_layout.mjs` protects the layout contract.
 Evidence:
 - File: `assets/app.js`
 - Function/component: `applyMasonry`
@@ -597,6 +601,10 @@ Add `python -m pip install -r requirements.txt` after `actions/setup-python` in 
 Title: The open-houses controller still contains partially integrated code paths
 Severity: Low  
 Category: Codebase health  
+Resolution: Partially completed on 2026-07-16. The no-op
+`getFilteredReports()` layer was removed and rendering now reads `allReports`
+directly. The existing `window.OpenHouse` surface remains unchanged pending an
+explicit compatibility decision.
 Evidence:
 - File: `assets/open-houses.js`
 - Function/component: `getFilteredReports`
