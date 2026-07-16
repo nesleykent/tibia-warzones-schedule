@@ -297,7 +297,7 @@ body::after {
 
   .topbar-links {
     gap: 6px;
-    font-size: 13px;
+    font-size: 12px;
     flex: 1 1 auto;
     overflow-x: auto;
     overflow-y: hidden;
@@ -325,6 +325,10 @@ body::after {
 
   .topbar-actions {
     gap: 4px;
+  }
+
+  .topbar-links {
+    font-size: 11px;
   }
 }
 

@@ -235,8 +235,9 @@ test("mobile navigation keeps full route labels in a scrollable strip", () => {
 
   assert.match(
     styles,
-    /@media \(max-width: 720px\)[\s\S]*?\.topbar-links\s*\{[^}]*font-size:\s*13px;[^}]*overflow-x:\s*auto;[^}]*scroll-snap-type:\s*inline proximity;/
+    /@media \(max-width: 720px\)[\s\S]*?\.topbar-links\s*\{[^}]*font-size:\s*12px;[^}]*overflow-x:\s*auto;[^}]*scroll-snap-type:\s*inline proximity;/
   );
+  assert.match(styles, /@media \(max-width: 560px\)[\s\S]*?\.topbar-links\s*\{[^}]*font-size:\s*11px;/);
   assert.doesNotMatch(styles, /\.link-(?:short|full)/);
 
   for (const file of [
