@@ -13,6 +13,7 @@ const {
   renderFilterPill,
   setHtml,
   formatTransferType,
+  layoutMulticolumnCards,
 } = window.TibiaTime;
 
 const OPEN_HOUSES_DATA_PATH = "./data/open-houses.json";
@@ -372,6 +373,7 @@ function renderWorlds(reports, worlds) {
 
   if (visibleWorlds.length === 0) {
     setHtml(elements.worldsList, '<div class="empty-state">No worlds match the current search.</div>');
+    layoutMulticolumnCards(elements.worldsList);
     return;
   }
 
@@ -386,6 +388,7 @@ function renderWorlds(reports, worlds) {
       })
       .join("")
   );
+  layoutMulticolumnCards(elements.worldsList);
 }
 
 function getUtilityRows(report) {

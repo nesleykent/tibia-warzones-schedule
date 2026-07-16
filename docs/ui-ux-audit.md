@@ -187,14 +187,13 @@ Suggested implementation approach:
 Promote the most-used routes into the top level, move secondary destinations into a menu, and stop using `white-space: nowrap` plus padding reduction as the main responsive strategy.
 
 ### UX-05
-Title: Height-based masonry layout can create non-linear reading and keyboard order
+Title: Column packing must preserve visual rhythm without hiding reading order
 Severity: Medium  
 Category: Layout and spacing / accessibility  
 Resolution: Completed on 2026-07-16. The home and open-house world lists now use
-responsive CSS multicolumn flow with stable source order and independent card
-heights. Runtime column wrappers,
-card measurement, resize-triggered full renders, and duplicated masonry code
-were removed. `tests/test_frontend_layout.mjs` protects the layout contract.
+shared round-robin column packing with independent card heights. Height
+measurement and resize-triggered full renders are avoided, and the shared
+helper is covered by `tests/test_frontend_layout.mjs`.
 Evidence:
 - File: `assets/app.js`
 - Function/component: `applyMasonry`
@@ -213,7 +212,9 @@ Acceptance criteria:
 - Reading order matches visual order in keyboard traversal and screen-reader output.
 - Card layout does not require DOM redistribution after render.
 Suggested implementation approach:
-Use CSS grid or multicolumn layout for presentation while preserving a stable source order, or accept a simpler single-column list when accessibility is prioritized.
+Keep the packer’s layout-order marker in sync with the rendered source
+sequence. Re-evaluate a single-column presentation if assistive-technology
+testing shows that column-major DOM order is confusing.
 
 ## Navigation findings
 

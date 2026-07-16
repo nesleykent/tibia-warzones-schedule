@@ -896,28 +896,38 @@ body::after {
    WORLDS LIST
 ══════════════════════════════════════════════ */
 .worlds-list {
-  column-count: 3;
-  column-gap: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
   margin-bottom: 64px;
+}
+
+.world-card-column {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .world-card,
 .worlds-list > .empty-state {
-  break-inside: avoid;
   margin-bottom: 16px;
 }
 
 @media (max-width: 1019px) {
   .worlds-list {
-    column-count: 2;
-    column-gap: 14px;
+    gap: 14px;
   }
 }
 
 @media (max-width: 679px) {
   .worlds-list {
-    column-count: 1;
-    column-gap: 12px;
+    display: block;
+  }
+
+  .world-card-column {
+    display: contents;
   }
 
   .world-card,

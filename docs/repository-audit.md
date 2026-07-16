@@ -320,7 +320,10 @@ Examples still requiring follow-up:
 
 Resolved since the original audit:
 
-- JavaScript masonry was removed from `assets/app.js` and `assets/open-houses.js`; both lists now use the shared CSS multicolumn flow contract covered by `tests/test_frontend_layout.mjs`.
+- The shared `layoutMulticolumnCards` helper now packs home and open-house cards
+  into equal-width flex columns, avoiding blank row gaps while retaining
+  responsive one- and two-column breakpoints. Card layout order is retained
+  across resize repacks.
 
 Evidence:
 

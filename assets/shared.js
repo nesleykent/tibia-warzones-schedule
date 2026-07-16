@@ -1386,6 +1386,56 @@
     return date.toISOString().slice(0, 10);
   }
 
+  const multicolumnContainers = new WeakSet();
+
+  function layoutMulticolumnCards(container) {
+    if (!container) return;
+
+    if (!multicolumnContainers.has(container)) {
+      multicolumnContainers.add(container);
+      let resizeFrame = null;
+      window.addEventListener(
+        "resize",
+        () => {
+          if (resizeFrame !== null) cancelAnimationFrame(resizeFrame);
+          resizeFrame = requestAnimationFrame(() => {
+            resizeFrame = null;
+            layoutMulticolumnCards(container);
+          });
+        },
+        { passive: true }
+      );
+    }
+
+    const cards = [...container.querySelectorAll(":scope > .world-card, :scope > .empty-state, :scope > .world-card-column > *")]
+      .map((card, index) => {
+        if (!card.dataset.layoutOrder) card.dataset.layoutOrder = String(index);
+        return card;
+      })
+      .sort((a, b) => Number(a.dataset.layoutOrder) - Number(b.dataset.layoutOrder));
+    const columns = window.matchMedia("(max-width: 679px)").matches
+      ? 1
+      : window.matchMedia("(max-width: 1019px)").matches
+        ? 2
+        : 3;
+
+    if (!cards.length) {
+      container.replaceChildren();
+      return;
+    }
+
+    const columnsMarkup = Array.from({ length: columns }, () => {
+      const column = document.createElement("div");
+      column.className = "world-card-column";
+      return column;
+    });
+    cards.forEach((card, index) => {
+      const targetIndex = index % columns;
+      columnsMarkup[targetIndex].append(card);
+    });
+    container.replaceChildren(...columnsMarkup);
+  }
+
   window.TibiaTime = {
     GITHUB_ISSUES_URL,
     WORLDS_DATA_PATH,
@@ -1429,6 +1479,7 @@
     buildRecurringTimeConversion,
     convertTimeBetweenTimezones,
     formatObservedKillStatisticsDate,
+    layoutMulticolumnCards,
     initBackgroundArtwork,
     initSiteFooter,
     initLanguageDropdown,

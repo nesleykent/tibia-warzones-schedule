@@ -37,6 +37,7 @@ const {
   writeJsonStorage,
   writeStorage,
   convertTimeBetweenTimezones: convertSharedTimeBetweenTimezones,
+  layoutMulticolumnCards,
 } = window.TibiaTime;
 
 const STORAGE_KEYS = {
@@ -2158,10 +2159,12 @@ function render() {
 
   if (filtered.length === 0) {
     renderEmptyState(worldsList, dict.noServersFound);
+    layoutMulticolumnCards(worldsList);
     return;
   }
 
   worldsList.innerHTML = filtered.map(renderWorld).join("");
+  layoutMulticolumnCards(worldsList);
 
   renderSchedulePanel();
   updateCountdownPanel();
