@@ -324,6 +324,18 @@
     }
   }
 
+  function renderFilterPill({ active, group, label, value, isAll = false }) {
+    const classes = ["filter-pill"];
+    if (isAll) classes.push("filter-pill--all");
+    if (active) classes.push("is-active");
+
+    return `<button type="button" class="${classes.join(" ")}" aria-pressed="${
+      active ? "true" : "false"
+    }" data-filter-group="${escapeHtml(group)}" data-filter-value="${escapeHtml(
+      value
+    )}">${escapeHtml(label)}</button>`;
+  }
+
   async function fetchJson(path) {
     const response = await fetch(path);
     if (!response.ok) {
@@ -1188,6 +1200,7 @@
     escapeHtml,
     setTextContent,
     setHtml,
+    renderFilterPill,
     fetchJson,
     loadWorldsData,
     overlayWorldSchedules,

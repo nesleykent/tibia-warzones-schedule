@@ -9,6 +9,7 @@ const {
   getWorldTransferLabel,
   getWorldTransferKey,
   initSharedUi,
+  renderFilterPill,
   setHtml,
   formatTransferType,
 } = window.TibiaTime;
@@ -246,29 +247,24 @@ function renderFilters() {
     elements.filtersBar,
     `
       <div class="filter-pills-row">
-        <button
-          type="button"
-          class="filter-pill filter-pill--all${isAllActive ? " is-active" : ""}"
-          data-filter-group="__all__"
-          data-filter-value="__all__"
-        >
-          All
-        </button>
+        ${renderFilterPill({
+          active: isAllActive,
+          group: "__all__",
+          isAll: true,
+          label: "All",
+          value: "__all__",
+        })}
         ${FILTER_GROUPS.map((group) =>
           [...filterOptions[group]]
             .sort()
             .map((value) => {
               const isActive = (filterState.activeFilters[group] || []).includes(value);
-              return `
-                <button
-                  type="button"
-                  class="filter-pill${isActive ? " is-active" : ""}"
-                  data-filter-group="${escapeHtml(group)}"
-                  data-filter-value="${escapeHtml(value)}"
-                >
-                  ${escapeHtml(FILTER_CONFIGS_BY_GROUP[group].getLabel(value))}
-                </button>
-              `;
+              return renderFilterPill({
+                active: isActive,
+                group,
+                label: FILTER_CONFIGS_BY_GROUP[group].getLabel(value),
+                value,
+              });
             })
             .join("")
         ).join("")}

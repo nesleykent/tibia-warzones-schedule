@@ -20,6 +20,7 @@ const {
   formatDailyWarzoneSummaryText,
   readJsonStorage,
   readStorage,
+  renderFilterPill,
   setTextContent,
   updateLanguageButtons: updateSharedLanguageButtons,
   getWorldBattleyeKey,
@@ -2025,18 +2026,23 @@ function renderFilters(warzone_worlds) {
       .sort()
       .map((value) => {
         const active = activeFilters[group].has(value);
-        return `<button type="button" class="filter-pill${
-          active ? " is-active" : ""
-        }" data-filter-group="${escapeHtml(
-          group
-        )}" data-filter-value="${escapeHtml(value)}">${escapeHtml(
-          FILTER_CONFIGS_BY_GROUP[group].getLabel(value)
-        )}</button>`;
+        return renderFilterPill({
+          active,
+          group,
+          label: FILTER_CONFIGS_BY_GROUP[group].getLabel(value),
+          value,
+        });
       })
       .join("");
   }
 
-  const allPill = `<button type="button" class="filter-pill filter-pill--all${isAllActive ? " is-active" : ""}" data-filter-group="__all__" data-filter-value="__all__">${escapeHtml(dict.filterAll)}</button>`;
+  const allPill = renderFilterPill({
+    active: isAllActive,
+    group: "__all__",
+    isAll: true,
+    label: dict.filterAll,
+    value: "__all__",
+  });
 
   const rest = FILTER_GROUPS.map((group) => pills(group, filterOptions[group])).join(
     ""

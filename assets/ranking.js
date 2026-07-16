@@ -12,6 +12,7 @@ const {
   loadWorldsData,
   readJsonStorage,
   readStorage,
+  renderFilterPill,
   setHtml,
   setTextContent,
   updateLanguageButtons: updateSharedLanguageButtons,
@@ -601,12 +602,23 @@ function renderFilters() {
       .sort()
       .map((value) => {
         const active = activeFilters[group].has(value);
-        return `<button type="button" class="filter-pill${active ? " is-active" : ""}" data-filter-group="${escapeHtml(group)}" data-filter-value="${escapeHtml(value)}">${escapeHtml(format(value))}</button>`;
+        return renderFilterPill({
+          active,
+          group,
+          label: format(value),
+          value,
+        });
       })
       .join("");
   }
 
-  const allPill = `<button type="button" class="filter-pill filter-pill--all${!hasActiveFilters() ? " is-active" : ""}" data-filter-group="__all__" data-filter-value="__all__">${escapeHtml(dict.all)}</button>`;
+  const allPill = renderFilterPill({
+    active: !hasActiveFilters(),
+    group: "__all__",
+    isAll: true,
+    label: dict.all,
+    value: "__all__",
+  });
   filterBar.innerHTML = `<div class="filter-pills-row">${
     allPill +
     FILTER_CONFIGS

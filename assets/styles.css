@@ -649,7 +649,7 @@ body::after {
 .filter-pill {
   display: inline-flex;
   align-items: center;
-  min-height: 40px;
+  min-height: 44px;
   padding: 0 14px;
   border-radius: var(--r-md);
   border: 1px solid var(--sep-md);
@@ -709,7 +709,6 @@ body::after {
 @media (max-width: 600px) {
   .filter-pill {
     font-size: 12px;
-    min-height: 36px;
     padding: 0 10px;
   }
 }

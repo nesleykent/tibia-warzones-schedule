@@ -137,6 +137,9 @@ Replace the import with explicit head links on each public page, or package the 
 Title: Core interactive controls fall below Apple HIG touch-target guidance
 Severity: High  
 Category: Layout and spacing / accessibility  
+Progress: Filter pills now maintain a 44px minimum target at every viewport as
+of 2026-07-16. The remaining topbar, language, search, and timezone controls
+still require verification and remediation before this finding is resolved.
 Evidence:
 - File: `assets/styles.css`
 - Function/component: topbar links, language button, search input, timezone select, filter pills
@@ -441,6 +444,10 @@ Adopt a simple roving-tabindex menu pattern or replace the popup menu with inlin
 Title: Filter controls do not expose their on/off state semantically
 Severity: Medium  
 Category: Accessibility / interactivity  
+Resolution: Completed on 2026-07-16. Home, ranking, and open-house filters use a
+single escaped `renderFilterPill()` contract that emits synchronized
+`aria-pressed` state. Regression tests cover active, inactive, all-filter, and
+controller-adoption behavior.
 Evidence:
 - File: `assets/app.js`
 - Function/component: `renderFilters`

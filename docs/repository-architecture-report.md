@@ -138,7 +138,7 @@ Evidence:
 
 | Module | Responsibility | Evidence |
 | --- | --- | --- |
-| `assets/shared.js` | storage helpers, timezone helpers, language menu wiring, footer rendering, shared labels | `getInitialLanguage()`, `readStorage()`, `renderSiteFooter()`, `initLanguageDropdown()` |
+| `assets/shared.js` | storage helpers, timezone helpers, language menu wiring, footer rendering, shared labels and filter-control markup | `getInitialLanguage()`, `readStorage()`, `renderSiteFooter()`, `renderFilterPill()`, `initLanguageDropdown()` |
 | `assets/app.js` | world overview, filters, planner, print-list modal, notifications | `renderWorld()`, `renderSchedulePanel()`, `openPrintListModal()` |
 | `assets/world.js` | per-world summary, market cards, history, market modal | `loadWorldPage()`, `renderMarketPrices()`, `openMarketItemModal()` |
 | `assets/ranking.js` | ranking filters, summary, ranking table | `render()`, `renderTable()` |
