@@ -137,10 +137,11 @@ Replace the import with explicit head links on each public page, or package the 
 Title: Core interactive controls fall below Apple HIG touch-target guidance
 Severity: High  
 Category: Layout and spacing / accessibility  
-Progress: Filter pills, the language trigger and options, and the GitHub icon
-now maintain a 44px minimum target at every viewport as of 2026-07-16. The
-remaining topbar route links, search, and timezone controls still require
-verification and remediation before this finding is resolved.
+Progress: All controls named by this finding now share a `44px` minimum-target
+token as of 2026-07-16. Rendered mobile verification measured topbar routes,
+language and GitHub controls, search, timezone, filter pills, and planner
+actions at no less than `44x44`, with no page-level horizontal overflow. The
+separate small-screen navigation-pattern concern remains tracked by UX-04.
 Evidence:
 - File: `assets/styles.css`
 - Function/component: topbar links, language button, search input, timezone select, filter pills
@@ -683,7 +684,7 @@ Update the affected docs from code evidence and add a brief note that open-house
 
 | ID | Severity | Impact | Evidence | Recommended action |
 | --- | --- | --- | --- | --- |
-| UX-03 | High | Primary navigation and filters are hard to tap on mobile | `assets/styles.css:196-232`, `268-296`, `317-330`, browser metrics | Raise all core targets to `44x44` and redesign the mobile nav |
+| UX-03 | High | Primary navigation and filters were hard to tap on mobile | `assets/styles.css`, 390px rendered metrics | Core target sizing resolved; mobile navigation adaptation remains UX-04 |
 | UX-06 | High | Language selector behaves like a dead affordance on Bigfoot | `assets/shared.js:640-703`, `assets/bigfoot.js:1`, runtime inspection | Implement real localization or remove the selector from that page |
 | UX-09 | High | Print-list modal looks incomplete and breaks focus continuity | `index.html:150-176`, `assets/app.js:67-88`, `1162-1198` | Align markup/controller and restore focus on dismiss |
 | UX-10 | High | Market modal is not keyboard-safe and has fragile failure handling | `assets/world.js:1640-1762`, runtime inspection | Add dialog focus management and repair error-path references |

@@ -32,6 +32,7 @@
   --r-xl: 18px;
   --card-pad-h: 16px;
   --card-pad-v: 14px;
+  --interactive-target-min: 44px;
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-spr: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -219,6 +220,11 @@ body::after {
 }
 
 .topbar-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--interactive-target-min);
+  min-height: var(--interactive-target-min);
   color: var(--text-secondary);
   text-decoration: none;
   font-weight: 500;
@@ -265,8 +271,8 @@ body::after {
 
 .topbar-icon-link,
 .lang-menu-btn {
-  width: 44px;
-  height: 44px;
+  width: var(--interactive-target-min);
+  height: var(--interactive-target-min);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -381,7 +387,7 @@ body::after {
 
 .lang-flag {
   width: 100%;
-  min-height: 44px;
+  min-height: var(--interactive-target-min);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -529,6 +535,11 @@ body::after {
 }
 
 .planner-print-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--interactive-target-min);
+  padding-block: 0;
   appearance: none;
   -webkit-appearance: none;
   background: transparent;
@@ -558,7 +569,7 @@ body::after {
 
 #searchInput {
   width: 100%;
-  min-height: 40px;
+  min-height: var(--interactive-target-min);
   padding: 9px 12px 9px 34px;
   border: 1px solid var(--sep-md);
   border-radius: var(--r-md);
@@ -592,7 +603,7 @@ body::after {
 
 #timezoneSelect {
   width: 100%;
-  min-height: 40px;
+  min-height: var(--interactive-target-min);
   padding: 9px 34px 9px 12px;
   border: 1px solid var(--sep-md);
   border-radius: var(--r-md);
@@ -650,7 +661,8 @@ body::after {
 .filter-pill {
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
+  min-width: var(--interactive-target-min);
+  min-height: var(--interactive-target-min);
   padding: 0 14px;
   border-radius: var(--r-md);
   border: 1px solid var(--sep-md);
@@ -1859,7 +1871,7 @@ html.open-house-world-route #worldsSection {
   display: flex;
   align-items: center;
   width: 100%;
-  min-height: 44px;
+  min-height: var(--interactive-target-min);
   padding: 14px 18px;
   border-radius: inherit;
   color: var(--text-primary);

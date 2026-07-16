@@ -77,12 +77,15 @@ Audit basis: current repository source, workflows, tests, and verified commands 
 
 ### 8. Add automated browser smoke and accessibility checks
 
+- Progress: source-level frontend regression tests now enforce shared language,
+  filter, and minimum-target contracts through `node --test tests/*.mjs`.
 - Problem: frontend behavior is validated manually; there is no repo-owned browser test suite.
 - Impact: UI regressions and accessibility issues are easy to miss.
 - Risk: Medium
 - Proposed solution: add lightweight smoke tests for the main routes and a small accessibility check pass.
 - Estimated effort: Medium
-- Evidence: `tests/` covers Python helpers and validators only.
+- Evidence: `tests/test_frontend_controls.mjs` covers source contracts; rendered
+  browser behavior still depends on the documented manual validation loop.
 
 ### 9. Split safe commands from environment-bound commands in developer docs
 

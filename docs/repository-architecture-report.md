@@ -138,6 +138,7 @@ Evidence:
 
 | Module | Responsibility | Evidence |
 | --- | --- | --- |
+| `assets/styles.css` | shared theme, layout, component styles, responsive rules, and interaction-size tokens | `:root`, `--interactive-target-min`, `.topbar-links`, `.filter-pill` |
 | `assets/shared.js` | storage helpers, timezone helpers, accessible language-menu and document-metadata wiring, footer rendering, shared labels and filter-control markup | `getInitialLanguage()`, `setDocumentLanguage()`, `getMenuNavigationIndex()`, `readStorage()`, `renderSiteFooter()`, `renderFilterPill()`, `initLanguageDropdown()` |
 | `assets/app.js` | world overview, filters, planner, print-list modal, notifications | `renderWorld()`, `renderSchedulePanel()`, `openPrintListModal()` |
 | `assets/world.js` | per-world summary, market cards, history, market modal | `loadWorldPage()`, `renderMarketPrices()`, `openMarketItemModal()` |
@@ -231,14 +232,16 @@ python3 -m py_compile scripts/*.py tests/*.py
 python3 -m unittest discover -s tests -v
 python3 scripts/validate_content.py
 node --check assets/*.js
+node --test tests/*.mjs
 ```
 
 Observed behavior:
 
 - `py_compile` passed.
-- `unittest` passed with 33 tests.
+- `unittest` passed with 48 tests.
 - `validate_content.py` passed with warnings for three known missing market worlds.
 - `node --check` passed.
+- Node's test runner passed with 25 tests.
 
 ### Local development workflow
 

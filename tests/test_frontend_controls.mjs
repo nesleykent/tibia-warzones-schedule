@@ -128,3 +128,35 @@ test("translated pages use radio-menu language semantics", () => {
     assert.doesNotMatch(source, /role="menuitem"/);
   }
 });
+
+test("core interaction styles share the minimum target-size token", () => {
+  const source = readFileSync(
+    new URL("../assets/styles.css", import.meta.url),
+    "utf8"
+  );
+
+  assert.match(source, /--interactive-target-min:\s*44px;/);
+  for (const selector of [
+    "\\.topbar-links a",
+    "\\.planner-print-trigger",
+    "#searchInput",
+    "#timezoneSelect",
+    "\\.filter-pill",
+  ]) {
+    assert.match(
+      source,
+      new RegExp(
+        `${selector}\\s*\\{[^}]*var\\(--interactive-target-min\\)`,
+        "s"
+      )
+    );
+  }
+  assert.match(
+    source,
+    /\.topbar-links a\s*\{[^}]*min-width:\s*var\(--interactive-target-min\);[^}]*min-height:\s*var\(--interactive-target-min\);/s
+  );
+  assert.match(
+    source,
+    /\.filter-pill\s*\{[^}]*min-width:\s*var\(--interactive-target-min\);[^}]*min-height:\s*var\(--interactive-target-min\);/s
+  );
+});
