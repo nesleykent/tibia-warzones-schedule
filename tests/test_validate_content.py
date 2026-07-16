@@ -12,6 +12,49 @@ if str(SCRIPTS_DIR) not in sys.path:
 import validate_content
 
 
+class ValidateFrontendAssetsTest(unittest.TestCase):
+    def test_rejects_css_imports_and_missing_font_connection_hints(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = Path(tmpdir)
+            assets_dir = repo_root / "assets"
+            assets_dir.mkdir()
+            (assets_dir / "styles.css").write_text(
+                '@import url("https://fonts.googleapis.com/css2?family=DM+Sans");',
+                encoding="utf-8",
+            )
+            incomplete_html = (
+                '<link rel="stylesheet" '
+                'href="https://fonts.googleapis.com/css2?family=DM+Sans">'
+                '<link rel="stylesheet" href="./assets/styles.css">'
+            )
+            for entrypoint in validate_content.FRONTEND_ENTRYPOINTS:
+                (repo_root / entrypoint).write_text(incomplete_html, encoding="utf-8")
+
+            report = validate_content.validate_frontend_assets(repo_root)
+
+        self.assertTrue(any("must not use" in message for message in report.errors))
+        self.assertTrue(any("preconnect" in message for message in report.errors))
+
+    def test_accepts_consistent_non_blocking_font_markup(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_root = Path(tmpdir)
+            assets_dir = repo_root / "assets"
+            assets_dir.mkdir()
+            (assets_dir / "styles.css").write_text(":root {}", encoding="utf-8")
+            complete_html = """
+                <link rel="preconnect" href="https://fonts.googleapis.com">
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans">
+                <link rel="stylesheet" href="./assets/styles.css">
+            """
+            for entrypoint in validate_content.FRONTEND_ENTRYPOINTS:
+                (repo_root / entrypoint).write_text(complete_html, encoding="utf-8")
+
+            report = validate_content.validate_frontend_assets(repo_root)
+
+        self.assertEqual(report.errors, [])
+
+
 class ValidateManualSchedulesTest(unittest.TestCase):
     def setUp(self) -> None:
         self.valid_worlds = {"Antica", "Gentebra"}

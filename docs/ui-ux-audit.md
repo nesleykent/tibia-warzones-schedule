@@ -110,6 +110,10 @@ Introduce a neutral surface token set, move the saturated gradient treatment to 
 Title: Web fonts are loaded with render-blocking CSS `@import`
 Severity: Medium  
 Category: Visual design / performance  
+Resolution: Completed on 2026-07-16. All shipped HTML entry points now establish
+early Google Fonts connections and load the font stylesheet directly before the
+local stylesheet. Repository validation rejects CSS `@import` regressions and
+missing entry-point font markup.
 Evidence:
 - File: `assets/styles.css`
 - Function/component: global font import

@@ -26,6 +26,14 @@ ITEMS_CSV_PATH = DATA_DIR / "market" / "items" / "items.csv"
 TRACKED_ITEMS_PATH = DATA_DIR / "market" / "items" / "tracked_items.json"
 HISTORY_DIR = DATA_DIR / "history"
 MARKET_WORLD_DIR = DATA_DIR / "market" / "world"
+FRONTEND_ENTRYPOINTS = (
+    "admin.html",
+    "bigfoot.html",
+    "index.html",
+    "open-houses.html",
+    "ranking.html",
+    "world.html",
+)
 
 ALLOWED_MARKS = {"healthy", "inconclusive", "trolls", "na"}
 VALID_WARZONE_ORDERS = {"", "1-2-3", "1-3-2", "2-1-3"}
@@ -176,6 +184,43 @@ def load_json(path: Path) -> Any:
         return json.loads(path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as exc:
         raise ValueError(f"{path}: invalid JSON: {exc}") from exc
+
+
+def validate_frontend_assets(repo_root: Path) -> ValidationReport:
+    report = ValidationReport()
+    stylesheet_path = repo_root / "assets" / "styles.css"
+    try:
+        stylesheet = stylesheet_path.read_text(encoding="utf-8")
+    except OSError as exc:
+        report.error(f"frontend: cannot read {stylesheet_path}: {exc}")
+        return report
+
+    if re.search(r"@import\s", stylesheet, flags=re.IGNORECASE):
+        report.error(
+            "frontend: assets/styles.css must not use render-blocking @import rules"
+        )
+
+    required_head_fragments = (
+        'rel="preconnect" href="https://fonts.googleapis.com"',
+        'rel="preconnect" href="https://fonts.gstatic.com" crossorigin',
+        'href="https://fonts.googleapis.com/css2?',
+        'href="./assets/styles.css"',
+    )
+    for entrypoint in FRONTEND_ENTRYPOINTS:
+        path = repo_root / entrypoint
+        try:
+            html = path.read_text(encoding="utf-8")
+        except OSError as exc:
+            report.error(f"frontend: cannot read {path}: {exc}")
+            continue
+
+        for fragment in required_head_fragments:
+            if fragment not in html:
+                report.error(
+                    f"frontend: {entrypoint} is missing required head markup {fragment!r}"
+                )
+
+    return report
 
 
 def slugify_world_name(name: str) -> str:
@@ -1027,6 +1072,7 @@ def print_report(report: ValidationReport) -> None:
 
 def validate_repository(repo_root: Path = REPO_ROOT) -> ValidationReport:
     initial_report = ValidationReport()
+    frontend_report = validate_frontend_assets(repo_root)
 
     try:
         worlds_payload = load_json(repo_root / "data" / "worlds.json")
@@ -1107,6 +1153,7 @@ def validate_repository(repo_root: Path = REPO_ROOT) -> ValidationReport:
         tracked_items_report,
         history_report,
         market_history_report,
+        frontend_report,
     )
 
 
