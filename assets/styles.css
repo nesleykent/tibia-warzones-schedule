@@ -265,8 +265,8 @@ body::after {
 
 .topbar-icon-link,
 .lang-menu-btn {
-  min-width: 34px;
-  min-height: 34px;
+  width: 44px;
+  height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -381,6 +381,7 @@ body::after {
 
 .lang-flag {
   width: 100%;
+  min-height: 44px;
   display: flex;
   align-items: center;
   gap: 10px;

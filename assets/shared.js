@@ -947,19 +947,37 @@
 
     if (!button || !menu || !wrapper) return;
 
-    const openMenu = () => {
-      menu.classList.add("is-open");
-      button.setAttribute("aria-expanded", "true");
+    const getMenuItems = () => Array.from(menu.querySelectorAll(".lang-flag"));
+
+    const focusMenuItem = (items, index) => {
+      if (!items[index]) return;
+      items.forEach((item, itemIndex) => {
+        item.tabIndex = itemIndex === index ? 0 : -1;
+      });
+      items[index].focus();
     };
 
-    const closeMenu = () => {
+    const openMenu = (preferredIndex = null) => {
+      const items = getMenuItems();
+      menu.classList.add("is-open");
+      button.setAttribute("aria-expanded", "true");
+      const activeIndex = items.findIndex(
+        (item) => item.getAttribute("aria-checked") === "true"
+      );
+      const focusIndex =
+        preferredIndex ?? (activeIndex >= 0 ? activeIndex : 0);
+      focusMenuItem(items, focusIndex);
+    };
+
+    const closeMenu = ({ restoreFocus = false } = {}) => {
       menu.classList.remove("is-open");
       button.setAttribute("aria-expanded", "false");
+      if (restoreFocus) button.focus();
     };
 
     const toggleMenu = () => {
       if (menu.classList.contains("is-open")) {
-        closeMenu();
+        closeMenu({ restoreFocus: true });
         return;
       }
 
@@ -971,6 +989,47 @@
       toggleMenu();
     });
 
+    button.addEventListener("keydown", (event) => {
+      const items = getMenuItems();
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        openMenu(0);
+      } else if (event.key === "ArrowUp") {
+        event.preventDefault();
+        openMenu(items.length - 1);
+      }
+    });
+
+    menu.addEventListener("click", (event) => {
+      if (event.target.closest(".lang-flag")) {
+        closeMenu({ restoreFocus: true });
+      }
+    });
+
+    menu.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeMenu({ restoreFocus: true });
+        return;
+      }
+      if (event.key === "Tab") {
+        closeMenu();
+        return;
+      }
+
+      const items = getMenuItems();
+      const currentIndex = items.indexOf(document.activeElement);
+      const nextIndex = getMenuNavigationIndex(
+        currentIndex,
+        event.key,
+        items.length
+      );
+      if (nextIndex >= 0) {
+        event.preventDefault();
+        focusMenuItem(items, nextIndex);
+      }
+    });
+
     document.addEventListener("click", (event) => {
       if (!wrapper.contains(event.target)) {
         closeMenu();
@@ -978,10 +1037,21 @@
     });
 
     document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") {
-        closeMenu();
+      if (event.key === "Escape" && menu.classList.contains("is-open")) {
+        closeMenu({ restoreFocus: true });
       }
     });
+  }
+
+  function getMenuNavigationIndex(currentIndex, key, itemCount) {
+    if (!Number.isInteger(itemCount) || itemCount <= 0) return -1;
+    if (key === "Home") return 0;
+    if (key === "End") return itemCount - 1;
+    if (key === "ArrowDown") return (Math.max(currentIndex, -1) + 1) % itemCount;
+    if (key === "ArrowUp") {
+      return (currentIndex <= 0 ? itemCount : currentIndex) - 1;
+    }
+    return -1;
   }
 
   function setDocumentLanguage(language, fallbackLanguage = "en") {
@@ -995,7 +1065,8 @@
     document.querySelectorAll(".lang-flag").forEach((button) => {
       const isActive = button.dataset.lang === activeLanguage;
       button.classList.toggle("is-active", isActive);
-      button.setAttribute("aria-pressed", isActive ? "true" : "false");
+      button.setAttribute("aria-checked", isActive ? "true" : "false");
+      button.removeAttribute("aria-pressed");
     });
   }
 
@@ -1243,6 +1314,7 @@
     initBackgroundArtwork,
     initSiteFooter,
     initLanguageDropdown,
+    getMenuNavigationIndex,
     setDocumentLanguage,
     updateLanguageButtons,
     bindLanguageButtons,

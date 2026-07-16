@@ -137,9 +137,10 @@ Replace the import with explicit head links on each public page, or package the 
 Title: Core interactive controls fall below Apple HIG touch-target guidance
 Severity: High  
 Category: Layout and spacing / accessibility  
-Progress: Filter pills now maintain a 44px minimum target at every viewport as
-of 2026-07-16. The remaining topbar, language, search, and timezone controls
-still require verification and remediation before this finding is resolved.
+Progress: Filter pills, the language trigger and options, and the GitHub icon
+now maintain a 44px minimum target at every viewport as of 2026-07-16. The
+remaining topbar route links, search, and timezone controls still require
+verification and remediation before this finding is resolved.
 Evidence:
 - File: `assets/styles.css`
 - Function/component: topbar links, language button, search input, timezone select, filter pills
@@ -429,6 +430,10 @@ Replace the current phrase with language that reflects issue-based submissions, 
 Title: The language menu has incomplete keyboard semantics and no roving focus model
 Severity: Medium  
 Category: Accessibility  
+Resolution: Completed on 2026-07-16. The shared language menu now moves focus
+on keyboard open, supports wrapping arrow navigation plus Home and End, closes
+without trapping Tab, restores trigger focus after Escape or selection, and
+exposes the selected locale with radio-menu semantics.
 Evidence:
 - File: `assets/shared.js`
 - Function/component: `initLanguageDropdown`
@@ -690,7 +695,7 @@ Update the affected docs from code evidence and add a brief note that open-house
 | UX-05 | Medium | Card grids may produce non-linear reading order | `assets/app.js:1980-2008`, `assets/open-houses.js:241-255` | Preserve linear DOM order with CSS layout |
 | UX-07 | Medium | Deployed admin route lacks explicit IA treatment | `index.html:17-35`, `.github/workflows/deploy-pages.yml:63-67` | Decide whether it is public or internal and reflect that explicitly |
 | UX-08 | Medium | Ranking rows create duplicate navigation affordances | `assets/ranking.js:679-689` | Use one semantic interactive target per row |
-| UX-14 | Medium | Language menu behavior is incomplete for keyboard users | `assets/shared.js:640-682` | Implement a proper keyboard model or simplify the control |
+| UX-14 | Medium | Language menu behavior was incomplete for keyboard users | `assets/shared.js`, rendered keyboard QA | Resolved with shared roving focus and radio-menu semantics |
 | UX-15 | Medium | Filter state is not announced semantically | `assets/app.js:1868-1890` | Add `aria-pressed` or equivalent state semantics |
 | UX-16 | Medium | No product feedback instrumentation exists | repo-wide search, `assets/shared.js:599-600` | Add minimal privacy-conscious telemetry or diagnostics |
 | UX-17 | Medium | Reimplemented i18n/control logic increases drift | `assets/app.js`, `assets/ranking.js`, `assets/open-houses.js` | Consolidate shared behavior |

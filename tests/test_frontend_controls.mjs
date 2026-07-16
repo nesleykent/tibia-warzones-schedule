@@ -58,6 +58,18 @@ test("language state synchronizes document metadata", () => {
   assert.equal(documentElement.lang, "pl");
 });
 
+test("language menu navigation wraps and supports boundary keys", () => {
+  const { getMenuNavigationIndex } = loadSharedExports();
+
+  assert.equal(getMenuNavigationIndex(0, "ArrowDown", 4), 1);
+  assert.equal(getMenuNavigationIndex(3, "ArrowDown", 4), 0);
+  assert.equal(getMenuNavigationIndex(0, "ArrowUp", 4), 3);
+  assert.equal(getMenuNavigationIndex(2, "Home", 4), 0);
+  assert.equal(getMenuNavigationIndex(1, "End", 4), 3);
+  assert.equal(getMenuNavigationIndex(1, "Tab", 4), -1);
+  assert.equal(getMenuNavigationIndex(0, "ArrowDown", 0), -1);
+});
+
 test("renderFilterPill exposes and escapes active filter state", () => {
   const { renderFilterPill } = loadSharedExports();
   const markup = renderFilterPill({
@@ -105,5 +117,14 @@ test("English-only pages do not advertise unavailable translations", () => {
     const source = readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
     assert.match(source, /<html lang="en">/);
     assert.doesNotMatch(source, /id="langDropdown"|class="lang-flag"/);
+  }
+});
+
+test("translated pages use radio-menu language semantics", () => {
+  for (const file of ["index.html", "ranking.html", "world.html"]) {
+    const source = readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
+    assert.match(source, /aria-controls="langMenu"/);
+    assert.equal((source.match(/role="menuitemradio"/g) || []).length, 4);
+    assert.doesNotMatch(source, /role="menuitem"/);
   }
 });
