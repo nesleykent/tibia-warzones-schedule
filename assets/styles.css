@@ -245,14 +245,6 @@ body::after {
   background: var(--fill-2);
 }
 
-.link-short {
-  display: none;
-}
-
-.link-full {
-  display: inline;
-}
-
 .topbar-divider {
   display: inline-block;
   width: 1px;
@@ -305,40 +297,35 @@ body::after {
   }
 
   .topbar-links {
-    gap: 4px;
-    font-size: 12px;
+    gap: 6px;
+    font-size: 13px;
     flex: 1 1 auto;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: inline proximity;
+    scrollbar-width: none;
+  }
+
+  .topbar-links::-webkit-scrollbar {
+    display: none;
   }
 
   .topbar-links a {
-    padding: 2px 4px;
+    flex: 0 0 auto;
+    padding: 2px 6px;
+    scroll-snap-align: center;
   }
 }
 
 @media (max-width: 560px) {
   .topbar-inner {
     flex-wrap: nowrap;
+    gap: 6px;
   }
 
-  .topbar-links {
-    font-size: 11px;
-    gap: 2px;
-  }
-
-  .topbar-links a {
-    padding: 2px 3px;
-  }
-
-  .topbar-divider {
-    height: 9px;
-  }
-
-  .link-short {
-    display: inline;
-  }
-
-  .link-full {
-    display: none;
+  .topbar-actions {
+    gap: 4px;
   }
 }
 
@@ -418,13 +405,6 @@ body::after {
 }
 .lang-flag span {
   flex: 1;
-}
-
-@media (max-width: 640px) {
-  .topbar-links {
-    font-size: 11px;
-    gap: 4px;
-  }
 }
 
 /* ══════════════════════════════════════════════
@@ -2964,6 +2944,13 @@ body.print-list-modal-open {
     align-items: flex-start;
     gap: 4px;
   }
+
+  .footer-copy,
+  .footer-disclaimer {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
 }
 
 /* ══════════════════════════════════════════════
@@ -3510,6 +3497,7 @@ body.print-list-modal-open {
 .admin-card,
 .admin-subcard,
 .admin-preview {
+  min-width: 0;
   background: var(--bg-card);
   border: 1px solid var(--sep-md);
   border-radius: var(--r-xl);
@@ -3543,6 +3531,7 @@ body.print-list-modal-open {
 
 .admin-card {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 18px;
 }
 
@@ -3562,6 +3551,11 @@ body.print-list-modal-open {
 .admin-helper {
   color: var(--text-tertiary);
   font-size: 14px;
+}
+
+.admin-card-copy code,
+.admin-helper code {
+  overflow-wrap: anywhere;
 }
 
 .admin-badge-group,
@@ -3749,6 +3743,7 @@ body.print-list-modal-open {
 
 .admin-panel {
   display: grid;
+  min-width: 0;
   gap: 12px;
   border: 1px solid var(--sep-md);
   border-radius: var(--r-md);
@@ -3757,6 +3752,7 @@ body.print-list-modal-open {
 }
 
 .admin-table-wrap {
+  min-width: 0;
   overflow-x: auto;
 }
 

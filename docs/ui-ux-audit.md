@@ -141,7 +141,8 @@ Progress: All controls named by this finding now share a `44px` minimum-target
 token as of 2026-07-16. Rendered mobile verification measured topbar routes,
 language and GitHub controls, search, timezone, filter pills, and planner
 actions at no less than `44x44`, with no page-level horizontal overflow. The
-separate small-screen navigation-pattern concern remains tracked by UX-04.
+small-screen navigation no longer reduces typography or padding to preserve
+fit; UX-04 documents the adaptive scrolling pattern.
 Evidence:
 - File: `assets/styles.css`
 - Function/component: topbar links, language button, search input, timezone select, filter pills
@@ -163,6 +164,10 @@ Increase min-heights and horizontal padding, convert the topbar to a more resili
 Title: Small-screen navigation is solved by compression rather than adaptation
 Severity: Medium  
 Category: Layout and spacing / navigation  
+Resolution: Completed on 2026-07-16. Narrow layouts retain the full route
+labels and 13px typography in a touch-scrollable, snap-aligned strip. Shared
+initialization centers the active route without moving the page, and intrinsic
+footer and Admin content can no longer force page-level horizontal overflow.
 Evidence:
 - File: `assets/styles.css`
 - Function/component: responsive topbar rules
@@ -692,7 +697,7 @@ Update the affected docs from code evidence and add a brief note that open-house
 | UX-12 | High | Incorrect document language harms assistive technology output | public HTML roots + `assets/shared.js:385-410`, `684-703` | Synchronize `document.documentElement.lang` with actual UI language |
 | UX-18 | High | Public artifact size and raw data exposure are uncontrolled | `.github/workflows/deploy-pages.yml:63-67`, `du -sh` results | Add a publish-time export boundary and artifact size controls |
 | UX-01 | Medium | Visual hierarchy favors brand texture over platform deference | `assets/styles.css:12-30`, `52-79` | Rebalance surface tokens and add adaptive theming |
-| UX-04 | Medium | Small-screen nav loses information scent | `assets/styles.css:205-214`, `268-309`, runtime inspection | Replace compression with a mobile-specific nav pattern |
+| UX-04 | Medium | Small-screen nav lost information scent | `assets/styles.css`, `assets/shared.js`, 320px rendered QA | Resolved with full-label scrolling navigation and active-route centering |
 | UX-05 | Medium | Card grids may produce non-linear reading order | `assets/app.js:1980-2008`, `assets/open-houses.js:241-255` | Preserve linear DOM order with CSS layout |
 | UX-07 | Medium | Deployed admin route lacks explicit IA treatment | `index.html:17-35`, `.github/workflows/deploy-pages.yml:63-67` | Decide whether it is public or internal and reflect that explicitly |
 | UX-08 | Medium | Ranking rows create duplicate navigation affordances | `assets/ranking.js:679-689` | Use one semantic interactive target per row |

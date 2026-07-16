@@ -138,8 +138,8 @@ Evidence:
 
 | Module | Responsibility | Evidence |
 | --- | --- | --- |
-| `assets/styles.css` | shared theme, layout, component styles, responsive rules, and interaction-size tokens | `:root`, `--interactive-target-min`, `.topbar-links`, `.filter-pill` |
-| `assets/shared.js` | storage helpers, timezone helpers, accessible language-menu and document-metadata wiring, footer rendering, shared labels and filter-control markup | `getInitialLanguage()`, `setDocumentLanguage()`, `getMenuNavigationIndex()`, `readStorage()`, `renderSiteFooter()`, `renderFilterPill()`, `initLanguageDropdown()` |
+| `assets/styles.css` | shared theme, layout, component styles, responsive navigation, and interaction-size tokens | `:root`, `--interactive-target-min`, `.topbar-links`, `.filter-pill` |
+| `assets/shared.js` | storage helpers, timezone helpers, accessible navigation and language-menu wiring, document metadata, footer rendering, shared labels and filter-control markup | `getInitialLanguage()`, `setDocumentLanguage()`, `getCenteredNavigationScrollLeft()`, `getMenuNavigationIndex()`, `readStorage()`, `renderSiteFooter()`, `renderFilterPill()`, `initLanguageDropdown()` |
 | `assets/app.js` | world overview, filters, planner, print-list modal, notifications | `renderWorld()`, `renderSchedulePanel()`, `openPrintListModal()` |
 | `assets/world.js` | per-world summary, market cards, history, market modal | `loadWorldPage()`, `renderMarketPrices()`, `openMarketItemModal()` |
 | `assets/ranking.js` | ranking filters, summary, ranking table | `render()`, `renderTable()` |
@@ -241,7 +241,7 @@ Observed behavior:
 - `unittest` passed with 48 tests.
 - `validate_content.py` passed with warnings for three known missing market worlds.
 - `node --check` passed.
-- Node's test runner passed with 25 tests.
+- Node's test runner passed with 28 tests.
 
 ### Local development workflow
 

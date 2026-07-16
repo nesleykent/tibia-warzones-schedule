@@ -1127,11 +1127,82 @@
     });
   }
 
+  function getCenteredNavigationScrollLeft({
+    containerWidth = 0,
+    currentScroll = 0,
+    itemLeft = 0,
+    itemWidth = 0,
+    scrollWidth = 0,
+  } = {}) {
+    const resolvedContainerWidth = Math.max(0, Number(containerWidth) || 0);
+    const resolvedCurrentScroll = Math.max(0, Number(currentScroll) || 0);
+    const resolvedItemLeft = Number(itemLeft) || 0;
+    const resolvedItemWidth = Math.max(0, Number(itemWidth) || 0);
+    const resolvedScrollWidth = Math.max(0, Number(scrollWidth) || 0);
+    const maxScroll = Math.max(
+      0,
+      resolvedScrollWidth - resolvedContainerWidth
+    );
+    const centeredScroll =
+      resolvedCurrentScroll +
+      resolvedItemLeft -
+      (resolvedContainerWidth - resolvedItemWidth) / 2;
+
+    return Math.min(maxScroll, Math.max(0, centeredScroll));
+  }
+
+  function revealActiveTopbarRoute() {
+    const navigation = document.querySelector(".topbar-links");
+    const activeLink = navigation?.querySelector('[aria-current="page"]');
+    if (
+      !navigation ||
+      !activeLink ||
+      navigation.scrollWidth <= navigation.clientWidth
+    ) {
+      return;
+    }
+
+    const navigationRect = navigation.getBoundingClientRect();
+    const activeLinkRect = activeLink.getBoundingClientRect();
+    navigation.scrollLeft = getCenteredNavigationScrollLeft({
+      containerWidth: navigation.clientWidth,
+      currentScroll: navigation.scrollLeft,
+      itemLeft: activeLinkRect.left - navigationRect.left,
+      itemWidth: activeLinkRect.width,
+      scrollWidth: navigation.scrollWidth,
+    });
+  }
+
+  function initTopbarNavigation() {
+    const navigation = document.querySelector(".topbar-links");
+    if (!navigation) return;
+
+    revealActiveTopbarRoute();
+
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(revealActiveTopbarRoute);
+    }
+
+    let resizeFrame = null;
+    window.addEventListener(
+      "resize",
+      () => {
+        if (resizeFrame !== null) cancelAnimationFrame(resizeFrame);
+        resizeFrame = requestAnimationFrame(() => {
+          resizeFrame = null;
+          revealActiveTopbarRoute();
+        });
+      },
+      { passive: true }
+    );
+  }
+
   function initSharedUi() {
     initSiteFooter();
     initBackgroundArtwork();
     initLanguageDropdown();
     initBackLinks();
+    initTopbarNavigation();
   }
 
   function buildRecurringTimeConversion(
@@ -1314,6 +1385,7 @@
     initBackgroundArtwork,
     initSiteFooter,
     initLanguageDropdown,
+    getCenteredNavigationScrollLeft,
     getMenuNavigationIndex,
     setDocumentLanguage,
     updateLanguageButtons,

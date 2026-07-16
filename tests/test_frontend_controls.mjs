@@ -70,6 +70,41 @@ test("language menu navigation wraps and supports boundary keys", () => {
   assert.equal(getMenuNavigationIndex(0, "ArrowDown", 0), -1);
 });
 
+test("active navigation centering stays within the scroll range", () => {
+  const { getCenteredNavigationScrollLeft } = loadSharedExports();
+
+  assert.equal(
+    getCenteredNavigationScrollLeft({
+      containerWidth: 200,
+      currentScroll: 0,
+      itemLeft: 300,
+      itemWidth: 100,
+      scrollWidth: 500,
+    }),
+    250
+  );
+  assert.equal(
+    getCenteredNavigationScrollLeft({
+      containerWidth: 200,
+      currentScroll: 0,
+      itemLeft: 480,
+      itemWidth: 80,
+      scrollWidth: 500,
+    }),
+    300
+  );
+  assert.equal(
+    getCenteredNavigationScrollLeft({
+      containerWidth: 300,
+      currentScroll: 25,
+      itemLeft: 50,
+      itemWidth: 100,
+      scrollWidth: 250,
+    }),
+    0
+  );
+});
+
 test("renderFilterPill exposes and escapes active filter state", () => {
   const { renderFilterPill } = loadSharedExports();
   const markup = renderFilterPill({
@@ -158,5 +193,57 @@ test("core interaction styles share the minimum target-size token", () => {
   assert.match(
     source,
     /\.filter-pill\s*\{[^}]*min-width:\s*var\(--interactive-target-min\);[^}]*min-height:\s*var\(--interactive-target-min\);/s
+  );
+});
+
+test("mobile navigation keeps full route labels in a scrollable strip", () => {
+  const styles = readFileSync(
+    new URL("../assets/styles.css", import.meta.url),
+    "utf8"
+  );
+
+  assert.match(
+    styles,
+    /@media \(max-width: 720px\)[\s\S]*?\.topbar-links\s*\{[^}]*font-size:\s*13px;[^}]*overflow-x:\s*auto;[^}]*scroll-snap-type:\s*inline proximity;/
+  );
+  assert.doesNotMatch(styles, /\.link-(?:short|full)/);
+
+  for (const file of [
+    "index.html",
+    "ranking.html",
+    "world.html",
+    "open-houses.html",
+    "bigfoot.html",
+    "admin.html",
+  ]) {
+    const source = readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
+    assert.match(source, />\s*Bigfoot's Burden Quest\s*<\/a>/);
+    assert.doesNotMatch(source, /link-(?:short|full)/);
+  }
+});
+
+test("narrow responsive containers contain intrinsic content width", () => {
+  const source = readFileSync(
+    new URL("../assets/styles.css", import.meta.url),
+    "utf8"
+  );
+
+  assert.match(
+    source,
+    /\.admin-warning,[\s\S]*?\.admin-preview\s*\{\s*min-width:\s*0;/
+  );
+  assert.match(
+    source,
+    /\.admin-card\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\);/s
+  );
+  assert.match(
+    source,
+    /\.admin-card-copy code,[\s\S]*?\.admin-helper code\s*\{[^}]*overflow-wrap:\s*anywhere;/
+  );
+  assert.match(source, /\.admin-panel\s*\{[^}]*min-width:\s*0;/s);
+  assert.match(source, /\.admin-table-wrap\s*\{[^}]*min-width:\s*0;/s);
+  assert.match(
+    source,
+    /@media \(max-width: 600px\)[\s\S]*?\.footer-copy,[\s\S]*?\.footer-disclaimer\s*\{[^}]*max-width:\s*100%;[^}]*white-space:\s*normal;/
   );
 });
