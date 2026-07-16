@@ -236,6 +236,7 @@ const {
   loadSavedTimezone,
   setHtml,
   setTextContent,
+  trapDialogFocus,
   updateLanguageButtons: updateSharedLanguageButtons,
   getTimezoneContextLabel,
   getWorldBattleyeLabel,
@@ -263,6 +264,8 @@ const HISTORY_REFRESH_SOURCE_TIME = "04:00";
 const HISTORY_REFRESH_SOURCE_TIMEZONE = "Europe/Berlin";
 
 let worldLang = "pt-BR";
+let marketModalKeydownHandler = null;
+let marketModalReturnFocus = null;
 let pageTimezone = "UTC";
 
 function t() {
@@ -1503,16 +1506,16 @@ function getMarketModalSections(modalRoot) {
   };
 }
 
-function renderMarketModalLoadingState(modalRoot, loadingText) {
+function renderMarketModalMessageState(modalRoot, message) {
   const { chartsSection, equilibriumSection, metricsSection } =
     getMarketModalSections(modalRoot);
-  const loadingMarkup = `<p class="market-item-chart-empty">${escapeHtml(
-    loadingText
+  const messageMarkup = `<p class="market-item-chart-empty">${escapeHtml(
+    message
   )}</p>`;
 
-  if (chartsSection) chartsSection.innerHTML = loadingMarkup;
-  if (equilibriumSection) equilibriumSection.innerHTML = loadingMarkup;
-  if (metricsSection) metricsSection.innerHTML = loadingMarkup;
+  if (chartsSection) chartsSection.innerHTML = messageMarkup;
+  if (equilibriumSection) equilibriumSection.innerHTML = messageMarkup;
+  if (metricsSection) metricsSection.innerHTML = messageMarkup;
 }
 
 function updateMarketItemModalContent(modalRoot, entries, rangeKey) {
@@ -1620,13 +1623,14 @@ function renderMarketItemModalShell(itemName) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="marketItemModalTitle"
+        aria-describedby="marketItemModalUpdated"
       >
         <div class="market-item-modal-header">
           <div>
             <h2 id="marketItemModalTitle" class="market-item-modal-title">${escapeHtml(
               itemName
             )}</h2>
-            <p class="market-item-modal-updated">${escapeHtml(
+            <p id="marketItemModalUpdated" class="market-item-modal-updated">${escapeHtml(
               dict.updated
             )}: ${escapeHtml(dict.loading)}</p>
           </div>
@@ -1671,19 +1675,41 @@ function renderMarketItemModalShell(itemName) {
   `;
 }
 
-function closeMarketItemModal() {
+function closeMarketItemModal({ restoreFocus = true } = {}) {
+  if (marketModalKeydownHandler) {
+    document.removeEventListener("keydown", marketModalKeydownHandler);
+    marketModalKeydownHandler = null;
+  }
+
   document.getElementById("marketItemModalRoot")?.remove();
-  document.body.style.removeProperty("overflow");
+  document.body.classList.remove("market-item-modal-open");
+
+  const returnFocus = marketModalReturnFocus;
+  marketModalReturnFocus = null;
+  if (restoreFocus && returnFocus?.isConnected) returnFocus.focus();
 }
 
-async function openMarketItemModal(worldName, itemName) {
-  closeMarketItemModal();
+async function openMarketItemModal(worldName, itemName, returnFocusTarget) {
+  closeMarketItemModal({ restoreFocus: false });
+  if (returnFocusTarget instanceof HTMLElement) {
+    marketModalReturnFocus = returnFocusTarget;
+  } else if (document.activeElement instanceof HTMLElement) {
+    marketModalReturnFocus = document.activeElement;
+  } else {
+    marketModalReturnFocus = null;
+  }
 
   const modalRoot = document.createElement("div");
   modalRoot.id = "marketItemModalRoot";
   modalRoot.innerHTML = renderMarketItemModalShell(itemName);
   document.body.appendChild(modalRoot);
-  document.body.style.overflow = "hidden";
+  document.body.classList.add("market-item-modal-open");
+
+  const dialog = modalRoot.querySelector('[role="dialog"]');
+  const closeButton = modalRoot.querySelector(
+    "[data-market-modal-close='true']"
+  );
+  requestAnimationFrame(() => closeButton?.focus());
 
   let loadedEntries = [];
   let activeRangeKey = "7D";
@@ -1709,19 +1735,23 @@ async function openMarketItemModal(worldName, itemName) {
     }
   });
 
-  const onKeyDown = (event) => {
+  marketModalKeydownHandler = (event) => {
     if (event.key === "Escape") {
+      event.preventDefault();
       closeMarketItemModal();
-      document.removeEventListener("keydown", onKeyDown);
+      return;
     }
+
+    trapDialogFocus(event, dialog);
   };
-  document.addEventListener("keydown", onKeyDown);
+  document.addEventListener("keydown", marketModalKeydownHandler);
 
   const dict = t();
-  renderMarketModalLoadingState(modalRoot, dict.loading);
+  renderMarketModalMessageState(modalRoot, dict.loading);
 
   try {
     const entries = await loadMarketEntries(worldName, itemName);
+    if (!modalRoot.isConnected) return;
     loadedEntries = entries;
     const latest = getLatestMarketEntry(entries);
     const updatedLabel = modalRoot.querySelector(".market-item-modal-updated");
@@ -1734,6 +1764,7 @@ async function openMarketItemModal(worldName, itemName) {
     }
 
     requestAnimationFrame(() => {
+      if (!modalRoot.isConnected) return;
       updateMarketItemModalContent(modalRoot, entries, "7D");
       activeRangeKey = "7D";
 
@@ -1776,21 +1807,8 @@ async function openMarketItemModal(worldName, itemName) {
     });
   } catch (error) {
     console.error("Failed to open market item modal", error);
-
-    if (chartsSection) {
-      chartsSection.innerHTML = `<p class="market-item-chart-empty">${escapeHtml(
-        dict.noMarketData
-      )}</p>`;
-    }
-    if (equilibriumSection) {
-      equilibriumSection.innerHTML = `<p class="market-item-chart-empty">${escapeHtml(
-        dict.noMarketData
-      )}</p>`;
-    }
-    if (metricsSection) {
-      metricsSection.innerHTML = `<p class="market-item-chart-empty">${escapeHtml(
-        dict.noMarketData
-      )}</p>`;
+    if (modalRoot.isConnected) {
+      renderMarketModalMessageState(modalRoot, dict.noMarketData);
     }
   }
 }
@@ -1807,7 +1825,7 @@ function bindMarketPricesTableInteractions(cardElement, worldName) {
     if (!row) return;
     const itemName = row.getAttribute("data-market-item-name");
     if (!itemName) return;
-    openMarketItemModal(worldName, itemName);
+    openMarketItemModal(worldName, itemName, row);
   });
 
   table.addEventListener("keydown", (event) => {
@@ -1820,7 +1838,7 @@ function bindMarketPricesTableInteractions(cardElement, worldName) {
     event.preventDefault();
     const itemName = row.getAttribute("data-market-item-name");
     if (!itemName) return;
-    openMarketItemModal(worldName, itemName);
+    openMarketItemModal(worldName, itemName, row);
   });
 }
 

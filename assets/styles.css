@@ -2219,6 +2219,10 @@ body.print-list-modal-open {
   -webkit-backdrop-filter: blur(6px) saturate(120%);
 }
 
+body.market-item-modal-open {
+  overflow: hidden;
+}
+
 .market-item-modal {
   width: min(880px, 100%);
   max-height: min(900px, calc(100vh - 48px));
@@ -2300,8 +2304,8 @@ body.print-list-modal-open {
 }
 
 .market-item-modal [data-market-modal-close="true"] {
-  min-width: 36px;
-  min-height: 36px;
+  min-width: var(--interactive-target-min);
+  min-height: var(--interactive-target-min);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -2378,7 +2382,7 @@ body.print-list-modal-open {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 34px;
+  min-height: var(--interactive-target-min);
   min-width: 54px;
   padding: 0 14px;
   border-radius: 999px;
@@ -2659,7 +2663,7 @@ body.print-list-modal-open {
   }
 
   .market-item-modal-ranges [data-range] {
-    min-height: 32px;
+    min-height: var(--interactive-target-min);
     font-size: 12px;
     min-width: 50px;
     padding: 0 12px;

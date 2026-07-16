@@ -47,6 +47,11 @@ function loadSharedExports() {
   };
 }
 
+const worldController = readFileSync(
+  new URL("../assets/world.js", import.meta.url),
+  "utf8"
+);
+
 test("language state synchronizes document metadata", () => {
   const { documentElement, setDocumentLanguage, updateLanguageButtons } =
     loadSharedExports();
@@ -286,5 +291,45 @@ test("print-list dialog markup and controller expose a complete focus contract",
   assert.match(
     styles,
     /\.print-list-modal-btn\s*\{[^}]*min-height:\s*var\(--interactive-target-min\);/s
+  );
+});
+
+test("world market dialog owns focus and centralizes lifecycle cleanup", () => {
+  const styles = readFileSync(
+    new URL("../assets/styles.css", import.meta.url),
+    "utf8"
+  );
+
+  assert.match(worldController, /aria-describedby="marketItemModalUpdated"/);
+  assert.match(worldController, /trapDialogFocus\(event, dialog\)/);
+  assert.match(
+    worldController,
+    /document\.removeEventListener\("keydown", marketModalKeydownHandler\)/
+  );
+  assert.match(worldController, /returnFocus\?\.isConnected/);
+  assert.equal(
+    worldController.match(/openMarketItemModal\(worldName, itemName, row\)/g)
+      ?.length,
+    2
+  );
+  assert.match(
+    worldController,
+    /renderMarketModalMessageState\(modalRoot, dict\.noMarketData\)/
+  );
+  const marketErrorHandler = worldController.slice(
+    worldController.indexOf('console.error("Failed to open market item modal"'),
+    worldController.indexOf("function bindMarketPricesTableInteractions")
+  );
+  assert.doesNotMatch(
+    marketErrorHandler,
+    /chartsSection|equilibriumSection|metricsSection/
+  );
+  assert.match(
+    styles,
+    /\.market-item-modal \[data-market-modal-close="true"\]\s*\{[^}]*min-height:\s*var\(--interactive-target-min\);/s
+  );
+  assert.match(
+    styles,
+    /\.market-item-modal-ranges \[data-range\]\s*\{[^}]*min-height:\s*var\(--interactive-target-min\);/s
   );
 });

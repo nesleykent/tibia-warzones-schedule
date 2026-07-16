@@ -70,6 +70,9 @@ Audit basis: current repository source, workflows, tests, and verified commands 
   restoration, and radio-selection semantics as of 2026-07-16.
 - Progress: responsive topbar navigation now preserves full route labels and
   centers the active route through shared initialization as of 2026-07-16.
+- Progress: home and world dialogs now share one tested focus-boundary helper,
+  while each controller owns consistent trigger restoration and cleanup as of
+  2026-07-16.
 - Problem: localization, filter persistence, and route-controller structure are duplicated across page scripts.
 - Impact: behavior drift, harder fixes, and repetitive bugs.
 - Risk: Medium

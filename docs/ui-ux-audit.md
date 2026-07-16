@@ -11,7 +11,7 @@ The strongest product risks are not visual polish issues. They are interaction a
 
 - Primary navigation compresses below Apple HIG touch-target and legibility expectations on small screens.
 - Localization is only partially implemented. Several pages expose language controls that do not fully work, translations are incomplete, and the document language metadata does not track the displayed language.
-- The remaining world-page market modal does not yet meet basic keyboard and focus-management expectations; the home text dialog has since been repaired.
+- Both modal experiences identified during the audit now own keyboard focus, restore the invoking control, and clean up consistently after dismissal.
 - The deployment artifact includes the full raw `data/` tree and large market datasets without a build step, minification pass, or payload boundary.
 - Current repository documentation still describes admin open-house editing behavior that the code no longer exposes.
 
@@ -326,6 +326,7 @@ Align markup and controller IDs, add a close button, remember the invoking eleme
 Title: The world market modal lacks focus management and contains fragile error-path behavior
 Severity: High  
 Category: Interactivity / accessibility  
+Resolution: Completed on 2026-07-16. The market modal now focuses its close control, traps focus through the shared dialog helper, restores the invoking market row on every dismissal path, centralizes document-listener cleanup, and uses one section-message renderer for loading and failure states. Its close and range controls also meet the shared 44-point minimum target size.
 Evidence:
 - File: `assets/world.js`
 - Function/component: `closeMarketItemModal`, `openMarketItemModal`
@@ -693,7 +694,7 @@ Update the affected docs from code evidence and add a brief note that open-house
 | UX-03 | High | Primary navigation and filters were hard to tap on mobile | `assets/styles.css`, 390px rendered metrics | Core target sizing resolved; mobile navigation adaptation remains UX-04 |
 | UX-06 | High | Language selector behaves like a dead affordance on Bigfoot | `assets/shared.js:640-703`, `assets/bigfoot.js:1`, runtime inspection | Implement real localization or remove the selector from that page |
 | UX-09 | High | Print-list modal looked incomplete and broke focus continuity | `index.html`, `assets/app.js`, `assets/shared.js`, rendered keyboard QA | Resolved with a complete shared text-dialog contract and focus restoration |
-| UX-10 | High | Market modal is not keyboard-safe and has fragile failure handling | `assets/world.js:1640-1762`, runtime inspection | Add dialog focus management and repair error-path references |
+| UX-10 | High | Market modal was not keyboard-safe and had fragile failure handling | `assets/world.js`, `assets/shared.js`, rendered keyboard QA | Resolved with centralized lifecycle, shared focus trapping, and safe failure rendering |
 | UX-11 | High | Mixed-language UI reduces comprehension and trust | `assets/world.js:50-140`, `assets/ranking.js:149-180` | Complete translations or trim the supported locale list |
 | UX-12 | High | Incorrect document language harms assistive technology output | public HTML roots + `assets/shared.js:385-410`, `684-703` | Synchronize `document.documentElement.lang` with actual UI language |
 | UX-18 | High | Public artifact size and raw data exposure are uncontrolled | `.github/workflows/deploy-pages.yml:63-67`, `du -sh` results | Add a publish-time export boundary and artifact size controls |
@@ -716,7 +717,6 @@ Update the affected docs from code evidence and add a brief note that open-house
 
 ### Immediate
 
-- Fix the remaining market-modal accessibility defects on `world.html`.
 - Raise all primary touch targets to `44x44`.
 - Remove or fix the broken language selector on `bigfoot.html`.
 - Synchronize `document.documentElement.lang` with the active locale.
