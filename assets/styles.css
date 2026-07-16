@@ -907,12 +907,13 @@ body::after {
   flex: 1 1 0;
   min-width: 0;
   flex-direction: column;
-  gap: 16px;
+  column-gap: 16px;
+  row-gap: 16px;
 }
 
 .world-card,
 .worlds-list > .empty-state {
-  margin-bottom: 0;
+  margin-block: 0 !important;
 }
 
 @media (max-width: 1019px) {
@@ -932,7 +933,7 @@ body::after {
 
   .world-card,
   .worlds-list > .empty-state {
-    margin-bottom: 12px;
+    margin-block: 0 12px !important;
   }
 }
 .world-card,
