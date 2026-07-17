@@ -93,7 +93,7 @@ GITHUB_TOKEN=... GITHUB_REPOSITORY=owner/repo python3 scripts/update_open_houses
 - Public pages overlay `data/manual-schedules.json` onto `data/worlds.json` at runtime, so schedule-only edits go live through `Deploy Pages` without waiting for `Update Worlds`.
 - The admin page does not write durable open-house changes; `scripts/update_open_houses.py` regenerates `data/open-houses.json` from GitHub issues.
 - `data/active_warzones.txt` is not consumed by the current codebase.
-- World history dates on `world.html` are intentionally adjusted one day earlier at render time because TibiaData kill statistics are refreshed after the observation day. Do not rewrite the committed data files just to change the displayed calendar date.
+- World history and Daily Summary dates are intentionally adjusted one day earlier at render time because TibiaData kill statistics are refreshed after the observation day. Do not rewrite the committed data files just to change the displayed calendar date.
 - The scheduled world refresh workflow uses an hourly retry window plus a Berlin-time gate because GitHub cron is not minute-accurate enough to rely on a single daily trigger.
 - `scripts/update_data.py` retries retryable TibiaData HTTP/network failures. The workflow keeps the last committed generated data unchanged when an upstream outage leaves a refresh incomplete.
 - GitHub Pages deployment retries once after a transient Pages service failure; validation and artifact upload still run before deployment.

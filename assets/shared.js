@@ -642,7 +642,10 @@
   function resolveDailyWarzoneSummaryDate(worldsPayload, fallbackDate = new Date()) {
     const worlds = Array.isArray(worldsPayload) ? worldsPayload : [];
     const dates = worlds.flatMap(getDailySummaryHistoryDates);
-    if (dates.length > 0) return dates.sort().at(-1);
+    if (dates.length > 0) {
+      const latestCollectionDate = dates.sort().at(-1);
+      return formatObservedKillStatisticsDate(latestCollectionDate);
+    }
     return formatLocalDateStamp(fallbackDate);
   }
 

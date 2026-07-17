@@ -366,3 +366,20 @@ test("daily Warzone summary uses locale-specific connector and marker labels", a
   assert.match(summaryText, /Completaram tudo: Antica \(1\/1\) e Bona \(1\/1\)\./);
   assert.match(summaryText, /Parcial ou inconsistente: Havera \(1\/1, incerto\)\./);
 });
+
+test("daily Warzone summary labels the observed day, not the UTC collection day", async () => {
+  const shared = await loadSharedExports();
+  const worlds = [
+    {
+      ...summaryWorld("Antica", 2, 1, "healthy"),
+      history_last_five_days: [
+        { date: "2026-07-17", services_completed: 1 },
+        { date: "2026-07-16", services_completed: 2 },
+      ],
+    },
+  ];
+
+  const model = shared.buildDailyWarzoneSummaryModel(worlds, { locale: "en" });
+
+  assert.equal(model.date, "2026-07-16");
+});
