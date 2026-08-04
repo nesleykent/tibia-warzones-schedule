@@ -552,6 +552,49 @@
     return String(world?.pvp_type || "").trim() || "unknown";
   }
 
+  const WORLD_ECONOMY_CLASSES = {
+    developed: [
+      "Aethera", "Antica", "Astera", "Belobra", "Blumera", "Bona", "Bravoria",
+      "Calmera", "Cantabra", "Celebra", "Celesta", "Citra", "Collabra",
+      "Descubra", "Dia", "Dracobra", "Eclipta", "Epoca", "Etebra", "Ferobra",
+      "Firmera", "Gentebra", "Gladera", "Harmonia", "Havera", "Honbra",
+      "Inabra", "Issobra", "Jadebra", "Kalanta", "Kalibra", "Karmeya",
+      "Lobera", "Luminera", "Lutabra", "Luzibra", "Menera", "Monstera",
+      "Monza", "Nefera", "Nevia", "Oceanis", "Ombra", "Ourobra", "Pacera",
+      "Peloria", "Premia", "Quelibra", "Quidera", "Quintera", "Rasteibra",
+      "Refugia", "Retalia", "Secura", "Serdebra", "Solidera", "Talera",
+      "Terribra", "Thyria", "Tornabra", "Unebra", "Ustebra", "Venebra",
+      "Vunira", "Wintera", "Xybra", "Xyla", "Xymera", "Yonabra", "Yovera",
+      "Yubra", "Zuna", "Zunera",
+    ],
+    emerging: [
+      "Escura", "Floribra", "Gladibra", "Hostera", "Idyllia", "Ignibra",
+      "Ignitera", "Junera", "Kalimera", "Kanda", "Maligna", "Mystera",
+      "Noctalia", "Opulera", "Penumbra", "Sombra", "Sonira", "Stralis",
+      "Tempestera", "Victoris",
+    ],
+  };
+
+  const WORLD_ECONOMY_CLASS_BY_NAME = new Map(
+    Object.entries(WORLD_ECONOMY_CLASSES).flatMap(([key, names]) =>
+      names.map((name) => [name.toLowerCase(), key])
+    )
+  );
+
+  function getWorldEconomyKey(world) {
+    const name = String(world?.name || "")
+      .trim()
+      .toLowerCase();
+
+    return WORLD_ECONOMY_CLASS_BY_NAME.get(name) || "unclassified";
+  }
+
+  function getWorldEconomyLabel(key, labels = {}) {
+    if (key === "developed") return labels.developed || "Developed Economy";
+    if (key === "emerging") return labels.emerging || "Emerging Economy";
+    return labels.unclassified || "Unclassified Economy";
+  }
+
   function getWorldTransferKey(world) {
     const value = String(world?.transfer_type || "")
       .trim()
@@ -1473,6 +1516,9 @@
     getWorldRegionKey,
     getWorldPvpKey,
     getWorldTransferKey,
+    WORLD_ECONOMY_CLASSES,
+    getWorldEconomyKey,
+    getWorldEconomyLabel,
     getNormalizedBossKills,
     getEffectiveWorldMark,
     getWorldMarkLabel,

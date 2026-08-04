@@ -8,6 +8,8 @@ const {
   getWorldPvpKey,
   getWorldRegionKey,
   getWorldTransferKey,
+  getWorldEconomyKey,
+  getWorldEconomyLabel,
   initSharedUi,
   loadWorldsData,
   readJsonStorage,
@@ -37,6 +39,11 @@ const FILTER_CONFIGS = [
     group: "transfer",
     getValue: getTransferKey,
     format: (value) => formatTransferType(value, value),
+  },
+  {
+    group: "economy",
+    getValue: getEconomyKey,
+    format: getEconomyDisplayLabel,
   },
 ];
 const FILTER_GROUPS = FILTER_CONFIGS.map(({ group }) => group);
@@ -152,6 +159,9 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     bgeLabel: "Green BattlEye",
     ybeLabel: "Yellow BattlEye",
     noneLabel: "None",
+    economyDeveloped: "Developed Economy",
+    economyEmerging: "Emerging Economy",
+    economyUnclassified: "Unclassified Economy",
     notAvailable: "N/A",
   },
   "pt-BR": {
@@ -250,6 +260,9 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     bgeLabel: "BattlEye verde",
     ybeLabel: "BattlEye amarelo",
     noneLabel: "Nenhum",
+    economyDeveloped: "Economia desenvolvida",
+    economyEmerging: "Economia emergente",
+    economyUnclassified: "Economia não classificada",
     notAvailable: "N/D",
   },
   "es-419": {
@@ -348,6 +361,9 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     bgeLabel: "BattlEye verde",
     ybeLabel: "BattlEye amarillo",
     noneLabel: "Ninguno",
+    economyDeveloped: "Economía desarrollada",
+    economyEmerging: "Economía emergente",
+    economyUnclassified: "Economía sin clasificar",
     notAvailable: "N/D",
   },
   pl: {
@@ -446,6 +462,9 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     bgeLabel: "Zielony BattlEye",
     ybeLabel: "Żółty BattlEye",
     noneLabel: "Brak",
+    economyDeveloped: "Gospodarka rozwinięta",
+    economyEmerging: "Gospodarka wschodząca",
+    economyUnclassified: "Gospodarka niesklasyfikowana",
     notAvailable: "Brak",
   },
 };
@@ -492,6 +511,19 @@ function getBattleyeDisplayLabel(key) {
 
 function getTransferKey(world) {
   return getWorldTransferKey(world);
+}
+
+function getEconomyKey(world) {
+  return getWorldEconomyKey(world);
+}
+
+function getEconomyDisplayLabel(key) {
+  const dict = t();
+  return getWorldEconomyLabel(key, {
+    developed: dict.economyDeveloped,
+    emerging: dict.economyEmerging,
+    unclassified: dict.economyUnclassified,
+  });
 }
 
 function hasActiveFilters() {
