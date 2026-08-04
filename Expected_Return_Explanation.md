@@ -18,10 +18,9 @@ It also loads the last five history rows for the world from `data/history/<world
 
 For each market snapshot row:
 
-1. Take the positive values from `day_average_sell` and `day_average_buy`.
-2. Average those values for the row.
-3. Sort rows by `time` descending.
-4. Average the most recent 7 valid rows.
+1. For Tibia Coins, take the positive value from `day_average_sell` only (`day_average_buy` is ignored). For every other tracked item (Minor Crystalline Token, Gill Necklace, Prismatic Necklace, Prismatic Ring), take the positive values from `day_average_sell` and `day_average_buy` and average them for the row.
+2. Sort rows by `time` descending.
+3. Average the most recent 7 valid rows.
 
 That 7-row mean is the preferred price input for the ranking formulas.
 

@@ -133,8 +133,11 @@ def timestamp_value(row: dict[str, Any]) -> float | None:
     return value
 
 
-def daily_market_price_from_row(row: dict[str, Any]) -> float | None:
+def daily_market_price_from_row(row: dict[str, Any], sell_only: bool = False) -> float | None:
     day_average_sell = positive_number(row.get("day_average_sell"))
+    if sell_only:
+        return day_average_sell
+
     day_average_buy = positive_number(row.get("day_average_buy"))
     values = [value for value in (day_average_sell, day_average_buy) if value is not None]
     if not values:
@@ -142,7 +145,9 @@ def daily_market_price_from_row(row: dict[str, Any]) -> float | None:
     return sum(values) / len(values)
 
 
-def rolling_window_market_price(rows: list[dict[str, Any]]) -> tuple[float | None, int]:
+def rolling_window_market_price(
+    rows: list[dict[str, Any]], sell_only: bool = False
+) -> tuple[float | None, int]:
     normalized_rows: list[tuple[float, float]] = []
 
     for row in rows:
@@ -153,7 +158,7 @@ def rolling_window_market_price(rows: list[dict[str, Any]]) -> tuple[float | Non
         if row_timestamp is None:
             continue
 
-        daily_price = daily_market_price_from_row(row)
+        daily_price = daily_market_price_from_row(row, sell_only=sell_only)
         if daily_price is None:
             continue
 
@@ -241,7 +246,9 @@ def load_market_models(data_dir: Path, world_name: str) -> tuple[dict[str, Any],
             latest_entry.get("day_average_sell"),
             latest_entry.get("day_average_buy"),
         )
-        rolling_window_price, rolling_window_entries_used = rolling_window_market_price(entries)
+        rolling_window_price, rolling_window_entries_used = rolling_window_market_price(
+            entries, sell_only=item_key == "tibia_coin"
+        )
         models[item_key]["rolling_window_price"] = rolling_window_price
         models[item_key]["rolling_window_entries_used"] = rolling_window_entries_used
 
