@@ -9,6 +9,8 @@ const {
   getWorldRegionKey,
   getWorldTransferLabel,
   getWorldTransferKey,
+  getWorldEconomyKey,
+  getWorldEconomyLabel,
   initSharedUi,
   renderFilterPill,
   setHtml,
@@ -44,6 +46,11 @@ const FILTER_CONFIGS = [
     group: "transfer",
     getValue: (world) => getWorldTransferKey(world),
     getLabel: (value) => formatTransferType(value, value),
+  },
+  {
+    group: "economy",
+    getValue: (world) => getWorldEconomyKey(world),
+    getLabel: (value) => getWorldEconomyLabel(value),
   },
 ];
 const FILTER_GROUPS = FILTER_CONFIGS.map(({ group }) => group);

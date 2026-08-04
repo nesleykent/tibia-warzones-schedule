@@ -64,9 +64,24 @@ There is no backend server, database, bundler, or JavaScript package build step.
 - timezone conversion
 - language controls
 - world metadata labels
+- world economy classification
 - footer rendering
 
 The page scripts are independent files that read helpers from that shared global.
+
+### World Economy Classification
+
+`assets/shared.js` owns `WORLD_ECONOMY_CLASSES`, a curated map of world names to
+`developed` or `emerging`. It is durable source input, not generated output: the
+data refresh scripts never write it, so it must be updated by hand when CipSoft
+launches, merges, or closes a world.
+
+- `getWorldEconomyKey(world)` returns `developed`, `emerging`, or `unclassified`
+- `getWorldEconomyLabel(key, labels)` renders a translated label
+- `assets/app.js`, `assets/ranking.js`, and `assets/open-houses.js` register it as
+  the `economy` filter group next to `region`, `pvp`, `battleye`, and `transfer`
+- `tests/test_frontend_controls.mjs` fails if any world in `data/worlds.json`
+  is missing from the map, or if the map names a world that no longer exists
 
 ## Data Model
 

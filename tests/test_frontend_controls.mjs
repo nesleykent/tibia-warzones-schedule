@@ -178,6 +178,60 @@ test("all filter controllers use the shared filter renderer", () => {
   }
 });
 
+test("world economy classification covers every world exactly once", () => {
+  const { WORLD_ECONOMY_CLASSES, getWorldEconomyKey } = loadSharedExports();
+  const worlds = JSON.parse(
+    readFileSync(new URL("../data/worlds.json", import.meta.url), "utf8")
+  );
+
+  const classified = [
+    ...WORLD_ECONOMY_CLASSES.developed,
+    ...WORLD_ECONOMY_CLASSES.emerging,
+  ];
+  assert.equal(new Set(classified).size, classified.length);
+
+  const worldNames = new Set(worlds.map((world) => world.name));
+  assert.deepEqual(
+    classified.filter((name) => !worldNames.has(name)),
+    []
+  );
+  for (const world of worlds) {
+    assert.notEqual(
+      getWorldEconomyKey(world),
+      "unclassified",
+      `${world.name} has no economy classification`
+    );
+  }
+});
+
+test("economy classification keys and labels resolve", () => {
+  const { getWorldEconomyKey, getWorldEconomyLabel } = loadSharedExports();
+
+  assert.equal(getWorldEconomyKey({ name: "Antica" }), "developed");
+  assert.equal(getWorldEconomyKey({ name: "  victoris " }), "emerging");
+  assert.equal(getWorldEconomyKey({ name: "Nowhere" }), "unclassified");
+  assert.equal(getWorldEconomyKey({}), "unclassified");
+
+  assert.equal(getWorldEconomyLabel("developed"), "Developed Economy");
+  assert.equal(getWorldEconomyLabel("emerging"), "Emerging Economy");
+  assert.equal(getWorldEconomyLabel("unclassified"), "Unclassified Economy");
+  assert.equal(
+    getWorldEconomyLabel("developed", { developed: "Desenvolvida" }),
+    "Desenvolvida"
+  );
+});
+
+test("all filter controllers expose the economy filter group", () => {
+  for (const source of [
+    homeController,
+    rankingController,
+    openHousesController,
+  ]) {
+    assert.match(source, /group: "economy"/);
+    assert.match(source, /getWorldEconomyKey/);
+  }
+});
+
 test("English-only pages do not advertise unavailable translations", () => {
   for (const file of ["bigfoot.html", "open-houses.html"]) {
     const source = readFileSync(new URL(`../${file}`, import.meta.url), "utf8");

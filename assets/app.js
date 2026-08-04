@@ -31,6 +31,8 @@ const {
   getWorldPvpKey,
   getWorldRegionKey,
   getWorldTransferKey,
+  getWorldEconomyKey,
+  getWorldEconomyLabel,
   getTimezoneDisplayLabel,
   getWorldTransferLabel,
   resolveTimezoneValue,
@@ -63,6 +65,11 @@ const FILTER_CONFIGS = [
     group: "transfer",
     getValue: getTransferKey,
     getLabel: getTransferDisplayLabel,
+  },
+  {
+    group: "economy",
+    getValue: getEconomyKey,
+    getLabel: getEconomyDisplayLabel,
   },
 ];
 const FILTER_GROUPS = FILTER_CONFIGS.map(({ group }) => group);
@@ -177,6 +184,9 @@ const I18N = {
     bgeLabel: "Green BattlEye",
     ybeLabel: "Yellow BattlEye",
     noneLabel: "None",
+    economyDeveloped: "Developed Economy",
+    economyEmerging: "Emerging Economy",
+    economyUnclassified: "Unclassified Economy",
     tooltipClose: "Close",
     tooltipRemove: "Remove",
     tooltipAddExec: "Add to schedule",
@@ -283,6 +293,9 @@ const I18N = {
     bgeLabel: "Green BattlEye",
     ybeLabel: "Yellow BattlEye",
     noneLabel: "Nenhum",
+    economyDeveloped: "Economia desenvolvida",
+    economyEmerging: "Economia emergente",
+    economyUnclassified: "Economia não classificada",
     tooltipClose: "Close",
     tooltipRemove: "Remove",
     tooltipAddExec: "Add to schedule",
@@ -388,6 +401,9 @@ const I18N = {
     bgeLabel: "Green BattlEye",
     ybeLabel: "Yellow BattlEye",
     noneLabel: "Ninguno",
+    economyDeveloped: "Economía desarrollada",
+    economyEmerging: "Economía emergente",
+    economyUnclassified: "Economía sin clasificar",
     tooltipClose: "Close",
     tooltipRemove: "Remove",
     tooltipAddExec: "Add to schedule",
@@ -494,6 +510,9 @@ const I18N = {
     bgeLabel: "Green BattlEye",
     ybeLabel: "Yellow BattlEye",
     noneLabel: "Brak",
+    economyDeveloped: "Gospodarka rozwinięta",
+    economyEmerging: "Gospodarka wschodząca",
+    economyUnclassified: "Gospodarka niesklasyfikowana",
     tooltipClose: "Close",
     tooltipRemove: "Remove",
     tooltipAddExec: "Add to schedule",
@@ -1981,6 +2000,10 @@ function getPvpKey(world) {
   return getWorldPvpKey(world);
 }
 
+function getEconomyKey(world) {
+  return getWorldEconomyKey(world);
+}
+
 function hasActiveFilters() {
   return FILTER_GROUPS.some((group) => activeFilters[group].size > 0);
 }
@@ -2045,6 +2068,15 @@ function getBattleyeDisplayLabel(key) {
 
 function getTransferDisplayLabel(key) {
   return formatTransferType(key, key);
+}
+
+function getEconomyDisplayLabel(key) {
+  const dict = t();
+  return getWorldEconomyLabel(key, {
+    developed: dict.economyDeveloped,
+    emerging: dict.economyEmerging,
+    unclassified: dict.economyUnclassified,
+  });
 }
 
 function renderFilters(warzone_worlds) {
