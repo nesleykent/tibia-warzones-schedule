@@ -26,7 +26,57 @@ const STORAGE_KEYS = {
   activeFilters: "activeFilters",
   legacyActiveFilters: "rankingActiveFilters",
   lang: SHARED_STORAGE_KEYS.language,
+  sort: "rankingSort",
 };
+const RANKING_COLUMNS = [
+  {
+    key: "rank",
+    labelKey: "rank",
+    type: "number",
+    defaultDirection: "asc",
+    getValue: (world) => getRanking(world)?.ranking_position,
+  },
+  {
+    key: "world",
+    labelKey: "world",
+    type: "text",
+    defaultDirection: "asc",
+    getValue: (world) => world?.name,
+  },
+  {
+    key: "expectedReturn",
+    labelKey: "expectedReturnXtc",
+    type: "number",
+    defaultDirection: "desc",
+    getValue: (world) => getRanking(world)?.economic_score_raw,
+  },
+  {
+    key: "pvp",
+    labelKey: "pvpType",
+    type: "text",
+    defaultDirection: "asc",
+    getValue: (world) => world?.pvp_type,
+  },
+  {
+    key: "tibiaCoin",
+    labelKey: "tibiaCoin",
+    type: "number",
+    defaultDirection: "desc",
+    getValue: (world) =>
+      getRanking(world)?.market?.tibia_coin?.rolling_window_price,
+  },
+  {
+    key: "serviceExpectedValue",
+    labelKey: "serviceExpectedValue",
+    type: "number",
+    defaultDirection: "desc",
+    getValue: (world) => getRanking(world)?.service_expected_value,
+  },
+];
+const RANKING_COLUMNS_BY_KEY = Object.fromEntries(
+  RANKING_COLUMNS.map((column) => [column.key, column])
+);
+const DEFAULT_SORT = { key: "rank", direction: "asc" };
 const FILTER_CONFIGS = [
   { group: "region", getValue: getRegionKey, format: (value) => value },
   { group: "pvp", getValue: getPvpKey, format: (value) => value },
@@ -159,6 +209,8 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     bgeLabel: "Green BattlEye",
     ybeLabel: "Yellow BattlEye",
     noneLabel: "None",
+    sortAscending: "Sort ascending",
+    sortDescending: "Sort descending",
     economyDeveloped: "Developed Economy",
     economyEmerging: "Emerging Economy",
     economyUnclassified: "Unclassified Economy",
@@ -260,6 +312,8 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     bgeLabel: "BattlEye verde",
     ybeLabel: "BattlEye amarelo",
     noneLabel: "Nenhum",
+    sortAscending: "Ordenar crescente",
+    sortDescending: "Ordenar decrescente",
     economyDeveloped: "Economia desenvolvida",
     economyEmerging: "Economia emergente",
     economyUnclassified: "Economia não classificada",
@@ -361,6 +415,8 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     bgeLabel: "BattlEye verde",
     ybeLabel: "BattlEye amarillo",
     noneLabel: "Ninguno",
+    sortAscending: "Ordenar ascendente",
+    sortDescending: "Ordenar descendente",
     economyDeveloped: "Economía desarrollada",
     economyEmerging: "Economía emergente",
     economyUnclassified: "Economía sin clasificar",
@@ -462,6 +518,8 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     bgeLabel: "Zielony BattlEye",
     ybeLabel: "Żółty BattlEye",
     noneLabel: "Brak",
+    sortAscending: "Sortuj rosnąco",
+    sortDescending: "Sortuj malejąco",
     economyDeveloped: "Gospodarka rozwinięta",
     economyEmerging: "Gospodarka wschodząca",
     economyUnclassified: "Gospodarka niesklasyfikowana",
@@ -473,6 +531,7 @@ let worlds = [];
 let lang = "pt-BR";
 let explanationModalKeydownHandler = null;
 let activeFilters = createEmptyFilterState();
+let activeSort = { ...DEFAULT_SORT };
 const pageElements = {};
 
 function createEmptyFilterState() {
@@ -549,6 +608,8 @@ function loadSettings() {
       activeFilters[group] = new Set(savedFilters[group]);
     }
   });
+
+  loadSort();
 }
 
 function saveFilters() {
@@ -613,11 +674,83 @@ function getRanking(world) {
   return world?.warzone_economic_ranking || null;
 }
 
-function compareWorlds(a, b) {
+function compareByRankingPosition(a, b) {
   return (
     (getRanking(a)?.ranking_position || Number.MAX_SAFE_INTEGER) -
     (getRanking(b)?.ranking_position || Number.MAX_SAFE_INTEGER)
   );
+}
+
+function normalizeSort(sort) {
+  const key = RANKING_COLUMNS_BY_KEY[sort?.key] ? sort.key : DEFAULT_SORT.key;
+  const direction = sort?.direction === "desc" ? "desc" : "asc";
+  return { key, direction };
+}
+
+function toSortableNumber(value) {
+  // null, undefined, and "" all coerce to 0 through Number(), which would sort
+  // missing data as a real zero instead of pushing it to the bottom.
+  if (value === null || value === undefined || value === "") return Number.NaN;
+  return Number(value);
+}
+
+function compareColumnValues(column, a, b) {
+  const left = column.getValue(a);
+  const right = column.getValue(b);
+
+  if (column.type === "number") {
+    const leftNumber = toSortableNumber(left);
+    const rightNumber = toSortableNumber(right);
+    const leftValid = Number.isFinite(leftNumber);
+    const rightValid = Number.isFinite(rightNumber);
+    // Missing values always sink to the bottom, in both directions.
+    if (!leftValid && !rightValid) return 0;
+    if (!leftValid) return Number.POSITIVE_INFINITY;
+    if (!rightValid) return Number.NEGATIVE_INFINITY;
+    return leftNumber - rightNumber;
+  }
+
+  const leftText = String(left ?? "").trim();
+  const rightText = String(right ?? "").trim();
+  if (!leftText && !rightText) return 0;
+  if (!leftText) return Number.POSITIVE_INFINITY;
+  if (!rightText) return Number.NEGATIVE_INFINITY;
+  return leftText.localeCompare(rightText, lang);
+}
+
+function buildComparator(sort) {
+  const { key, direction } = normalizeSort(sort);
+  const column = RANKING_COLUMNS_BY_KEY[key];
+  const sign = direction === "desc" ? -1 : 1;
+
+  return (a, b) => {
+    const result = compareColumnValues(column, a, b);
+    // Absent values were flagged with infinities so they ignore the direction.
+    if (!Number.isFinite(result)) return result > 0 ? 1 : -1;
+    if (result !== 0) return sign * (result > 0 ? 1 : -1);
+    // Ranking position is the stable tie-breaker for every column.
+    return compareByRankingPosition(a, b);
+  };
+}
+
+function loadSort() {
+  activeSort = normalizeSort(readJsonStorage(STORAGE_KEYS.sort, DEFAULT_SORT));
+}
+
+function saveSort() {
+  writeJsonStorage(STORAGE_KEYS.sort, activeSort);
+}
+
+function toggleSort(key) {
+  const column = RANKING_COLUMNS_BY_KEY[key];
+  if (!column) return;
+
+  activeSort =
+    activeSort.key === key
+      ? { key, direction: activeSort.direction === "asc" ? "desc" : "asc" }
+      : { key, direction: column.defaultDirection };
+  saveSort();
+  render();
 }
 
 function renderFilters() {
@@ -686,12 +819,15 @@ function bindRankingTable() {
   if (!wrap) return;
 
   wrap.addEventListener("click", (event) => {
-    if (
-      !(event.target instanceof Element) ||
-      event.target.closest("a, button")
-    ) {
+    if (!(event.target instanceof Element)) return;
+
+    const sortButton = event.target.closest(".ranking-sort");
+    if (sortButton) {
+      toggleSort(sortButton.dataset.sortKey);
       return;
     }
+
+    if (event.target.closest("a, button")) return;
     event.target
       .closest(".ranking-table-row")
       ?.querySelector(".world-name-link")
@@ -704,6 +840,43 @@ function renderEmptyState(container, message) {
   container.innerHTML = `<div class="empty-state">${escapeHtml(
     message
   )}</div>`;
+}
+
+function renderSortableHeader(column) {
+  const dict = t();
+  const label = dict[column.labelKey];
+  const isActive = activeSort.key === column.key;
+  const ariaSort = isActive
+    ? activeSort.direction === "asc"
+      ? "ascending"
+      : "descending"
+    : "none";
+  const nextDirection = isActive
+    ? activeSort.direction === "asc"
+      ? "desc"
+      : "asc"
+    : column.defaultDirection;
+  const indicator = isActive
+    ? activeSort.direction === "asc"
+      ? "▲"
+      : "▼"
+    : "";
+
+  return `
+    <th scope="col" aria-sort="${ariaSort}">
+      <button
+        type="button"
+        class="ranking-sort${isActive ? " is-active" : ""}"
+        data-sort-key="${escapeHtml(column.key)}"
+        title="${escapeHtml(
+          nextDirection === "asc" ? dict.sortAscending : dict.sortDescending
+        )}"
+      >
+        <span class="ranking-sort-label">${escapeHtml(label)}</span>
+        <span class="ranking-sort-indicator" aria-hidden="true">${indicator}</span>
+      </button>
+    </th>
+  `;
 }
 
 function renderTable(rows) {
@@ -719,14 +892,7 @@ function renderTable(rows) {
   wrap.innerHTML = `
     <table class="ranking-table">
       <thead>
-        <tr>
-          <th scope="col">${escapeHtml(dict.rank)}</th>
-          <th scope="col">${escapeHtml(dict.world)}</th>
-          <th scope="col">${escapeHtml(dict.expectedReturnXtc)}</th>
-          <th scope="col">${escapeHtml(dict.pvpType)}</th>
-          <th scope="col">${escapeHtml(dict.tibiaCoin)}</th>
-          <th scope="col">${escapeHtml(dict.serviceExpectedValue)}</th>
-        </tr>
+        <tr>${RANKING_COLUMNS.map(renderSortableHeader).join("")}</tr>
       </thead>
       <tbody>
         ${rows
@@ -762,7 +928,7 @@ function render() {
     .filter((world) => getRanking(world)?.is_ranked)
     .filter((world) => worldPassesFilters(world))
     .filter((world) => String(world.name || "").toLowerCase().includes(query))
-    .sort(compareWorlds);
+    .sort(buildComparator(activeSort));
   if (pageElements.summary) {
     setHtml(
       pageElements.summary,

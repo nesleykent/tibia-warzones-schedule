@@ -32,7 +32,13 @@ There is no backend server, database, bundler, or JavaScript package build step.
 - Controller: `assets/ranking.js`
 - Shared runtime: `assets/shared.js`
 - Purpose: sortable ranking table built from `worlds.json`
-- Evidence: `assets/ranking.js:init()`, `render()`, `renderTable()`
+- Sorting: every column in `RANKING_COLUMNS` (rank, world, expected return, PvP
+  type, Tibia Coins price, service EV) is sortable from its header button.
+  Numeric columns open descending, text columns ascending, rows with missing
+  values always sink to the bottom, ranking position is the tie-breaker, and the
+  choice persists under the `rankingSort` storage key.
+- Evidence: `assets/ranking.js:init()`, `render()`, `renderTable()`,
+  `buildComparator()`, `renderSortableHeader()`
 
 ### `open-houses.html`
 
