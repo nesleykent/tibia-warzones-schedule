@@ -50,6 +50,70 @@ function loadSharedExports() {
   };
 }
 
+function loadRankingSandbox() {
+  const sandbox = {
+    window: {},
+    document: {
+      documentElement: { lang: "en" },
+      addEventListener() {},
+      getElementById() {
+        return null;
+      },
+      querySelector() {
+        return null;
+      },
+      querySelectorAll() {
+        return [];
+      },
+    },
+    localStorage: {
+      getItem() {
+        return null;
+      },
+      removeItem() {},
+      setItem() {},
+    },
+    Image: class {},
+    Element: class {},
+    URL,
+    fetch: async () => {
+      throw new Error("fetch should not run in frontend control tests");
+    },
+    console,
+    setTimeout,
+    clearTimeout,
+  };
+  sandbox.globalThis = sandbox;
+
+  const context = vm.createContext(sandbox);
+  vm.runInContext(
+    readFileSync(new URL("../assets/shared.js", import.meta.url), "utf8"),
+    context,
+    { filename: "assets/shared.js" }
+  );
+  vm.runInContext(
+    readFileSync(new URL("../assets/ranking.js", import.meta.url), "utf8"),
+    context,
+    { filename: "assets/ranking.js" }
+  );
+
+  return sandbox;
+}
+
+function rankingWorld({ name, position, score, pvp, coin, serviceEv }) {
+  return {
+    name,
+    pvp_type: pvp,
+    warzone_economic_ranking: {
+      is_ranked: true,
+      ranking_position: position,
+      economic_score_raw: score,
+      service_expected_value: serviceEv,
+      market: { tibia_coin: { rolling_window_price: coin } },
+    },
+  };
+}
+
 const worldController = readFileSync(
   new URL("../assets/world.js", import.meta.url),
   "utf8"
@@ -426,6 +490,154 @@ test("ranking rows expose one native navigation target", () => {
   );
   assert.match(styles, /\.ranking-table \.world-name-link:focus-visible/);
   assert.doesNotMatch(styles, /\.ranking-table-row:focus-visible/);
+});
+
+test("ranking sort comparator orders every sortable column", () => {
+  const { buildComparator } = loadRankingSandbox();
+  const rows = [
+    rankingWorld({
+      name: "Belobra",
+      position: 2,
+      score: 9.36,
+      pvp: "Optional PvP",
+      coin: 43233,
+      serviceEv: 404713,
+    }),
+    rankingWorld({
+      name: "Antica",
+      position: 3,
+      score: 9.02,
+      pvp: "Open PvP",
+      coin: 39676,
+      serviceEv: 357743,
+    }),
+    rankingWorld({
+      name: "Zunera",
+      position: 1,
+      score: 27.39,
+      pvp: "Hardcore PvP",
+      coin: 12091,
+      serviceEv: 331210,
+    }),
+  ];
+
+  const names = (sort) =>
+    [...rows].sort(buildComparator(sort)).map((world) => world.name);
+
+  assert.deepEqual(names({ key: "rank", direction: "asc" }), [
+    "Zunera",
+    "Belobra",
+    "Antica",
+  ]);
+  assert.deepEqual(names({ key: "rank", direction: "desc" }), [
+    "Antica",
+    "Belobra",
+    "Zunera",
+  ]);
+  assert.deepEqual(names({ key: "world", direction: "asc" }), [
+    "Antica",
+    "Belobra",
+    "Zunera",
+  ]);
+  assert.deepEqual(names({ key: "world", direction: "desc" }), [
+    "Zunera",
+    "Belobra",
+    "Antica",
+  ]);
+  assert.deepEqual(names({ key: "expectedReturn", direction: "desc" }), [
+    "Zunera",
+    "Belobra",
+    "Antica",
+  ]);
+  assert.deepEqual(names({ key: "pvp", direction: "asc" }), [
+    "Zunera",
+    "Antica",
+    "Belobra",
+  ]);
+  assert.deepEqual(names({ key: "tibiaCoin", direction: "asc" }), [
+    "Zunera",
+    "Antica",
+    "Belobra",
+  ]);
+  assert.deepEqual(names({ key: "serviceExpectedValue", direction: "desc" }), [
+    "Belobra",
+    "Antica",
+    "Zunera",
+  ]);
+});
+
+test("ranking sort keeps missing values last and falls back to rank", () => {
+  const { buildComparator, normalizeSort } = loadRankingSandbox();
+
+  // Spread copies cross the vm realm boundary so prototypes match.
+  assert.deepEqual({ ...normalizeSort(undefined) }, {
+    key: "rank",
+    direction: "asc",
+  });
+  assert.deepEqual({ ...normalizeSort({ key: "bogus", direction: "sideways" }) }, {
+    key: "rank",
+    direction: "asc",
+  });
+  assert.deepEqual({ ...normalizeSort({ key: "tibiaCoin", direction: "desc" }) }, {
+    key: "tibiaCoin",
+    direction: "desc",
+  });
+
+  const withCoin = rankingWorld({
+    name: "Antica",
+    position: 2,
+    score: 9,
+    pvp: "Open PvP",
+    coin: 39676,
+    serviceEv: 357743,
+  });
+  const withoutCoin = rankingWorld({
+    name: "Belobra",
+    position: 1,
+    score: 9,
+    pvp: "Open PvP",
+    coin: null,
+    serviceEv: 404713,
+  });
+  const rows = [withoutCoin, withCoin];
+
+  for (const direction of ["asc", "desc"]) {
+    assert.deepEqual(
+      [...rows]
+        .sort(buildComparator({ key: "tibiaCoin", direction }))
+        .map((world) => world.name),
+      ["Antica", "Belobra"],
+      `worlds without a coin price stay last when sorting ${direction}`
+    );
+  }
+
+  // Equal scores fall back to ranking position, not input order.
+  assert.deepEqual(
+    [...rows]
+      .sort(buildComparator({ key: "expectedReturn", direction: "desc" }))
+      .map((world) => world.name),
+    ["Belobra", "Antica"]
+  );
+});
+
+test("ranking table headers expose accessible sort controls", () => {
+  const styles = readFileSync(
+    new URL("../assets/styles.css", import.meta.url),
+    "utf8"
+  );
+
+  assert.match(rankingController, /aria-sort="\$\{ariaSort\}"/);
+  assert.match(rankingController, /class="ranking-sort\$\{/);
+  assert.match(rankingController, /data-sort-key="\$\{escapeHtml\(column\.key\)\}"/);
+  assert.match(
+    rankingController,
+    /closest\("\.ranking-sort"\)[\s\S]*?toggleSort\(/
+  );
+  assert.match(
+    styles,
+    /\.ranking-sort\s*\{[^}]*min-height:\s*var\(--interactive-target-min\);/s
+  );
+  assert.match(styles, /\.ranking-sort:focus-visible/);
 });
 
 test("shared surface navigation delegates only background clicks", () => {

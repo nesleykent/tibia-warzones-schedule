@@ -861,6 +861,46 @@ body::after {
   color: var(--text-quaternary);
 }
 
+/* Header padding moves onto the sort button so the whole cell is clickable. */
+.ranking-table thead th {
+  padding: 0;
+}
+
+.ranking-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-height: var(--interactive-target-min);
+  padding: 12px 14px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--t-fast) var(--ease-out);
+}
+
+.ranking-sort:hover,
+.ranking-sort.is-active {
+  color: var(--text-primary);
+}
+
+.ranking-sort:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.55);
+  outline-offset: -2px;
+  border-radius: var(--r-sm);
+}
+
+.ranking-sort-indicator {
+  font-size: 9px;
+  line-height: 1;
+}
+
 .ranking-table tbody tr:hover {
   background: rgba(255, 255, 255, 0.04);
 }
