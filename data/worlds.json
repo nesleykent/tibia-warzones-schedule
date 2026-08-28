@@ -21,7 +21,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 7,
+      "ranking_position": 8,
       "economic_score_raw": 11.573891022112429,
       "market_liquidity_score": 0.408974,
       "warzone_health_score": 1.0,
@@ -36,6 +36,11 @@
       "service_expected_value": 492604.64285714284,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -53,11 +58,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -174,21 +174,26 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 29,
-      "economic_score_raw": 8.332518585189561,
-      "market_liquidity_score": 0.495181,
-      "warzone_health_score": 0.93,
-      "final_score": 8.332519,
-      "history_health_score": 0.9,
+      "ranking_position": 28,
+      "economic_score_raw": 8.365330059074049,
+      "market_liquidity_score": 0.835462,
+      "warzone_health_score": 1.0,
+      "final_score": 8.36533,
+      "history_health_score": 1.0,
       "current_operational_score": 1.0,
       "expected_services": 2,
       "rolling_window_entries_target": 7,
-      "wz1_expected_value": 77829.21428571429,
-      "wz2_expected_value": 101204.85714285714,
-      "wz3_expected_value": 167470.14285714284,
-      "service_expected_value": 346504.21428571426,
+      "wz1_expected_value": 78039.85714285714,
+      "wz2_expected_value": 100349.35714285714,
+      "wz3_expected_value": 169560.7142857143,
+      "service_expected_value": 347949.9285714286,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -208,82 +213,77 @@
           "date": "2026-08-24",
           "mark": "healthy",
           "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "inconclusive",
-          "mark_value": 0.5
         }
       ],
       "market": {
         "tibia_coin": {
           "item_name": "Tibia Coins",
           "item_key": "tibia_coin",
-          "supply_price": 41694.0,
-          "demand_price": 41082.0,
-          "mid_price": 41388.0,
-          "spread": 612.0,
-          "spread_ratio": 0.014786894752102058,
-          "liquidity_factor": 0.9854285714285713,
-          "adjusted_effective_price": 40784.91771428571,
+          "supply_price": 41653.0,
+          "demand_price": 40892.0,
+          "mid_price": 41272.5,
+          "spread": 761.0,
+          "spread_ratio": 0.01843842752438064,
+          "liquidity_factor": 0.9818953929603768,
+          "adjusted_effective_price": 40525.27760595715,
           "has_required_data": true,
-          "rolling_window_price": 41584.57142857143,
+          "rolling_window_price": 41594.28571428572,
           "rolling_window_entries_used": 7
         },
         "minor_crystalline_token": {
           "item_name": "Minor Crystalline Token",
           "item_key": "minor_crystalline_token",
-          "supply_price": 0.0,
-          "demand_price": 14505.0,
-          "mid_price": 7252.5,
-          "spread": -14505.0,
-          "spread_ratio": -2.0,
-          "liquidity_factor": -1.0,
-          "adjusted_effective_price": -7252.5,
+          "supply_price": 17639.0,
+          "demand_price": 15105.0,
+          "mid_price": 16372.0,
+          "spread": 2534.0,
+          "spread_ratio": 0.15477644759345224,
+          "liquidity_factor": 0.8659684756162064,
+          "adjusted_effective_price": 14177.63588278853,
           "has_required_data": true,
-          "rolling_window_price": 15664.142857142857,
+          "rolling_window_price": 15730.5,
           "rolling_window_entries_used": 7
         },
         "gill_necklace": {
           "item_name": "Gill Necklace",
           "item_key": "gill_necklace",
-          "supply_price": 44745.0,
-          "demand_price": 32110.0,
-          "mid_price": 38427.5,
-          "spread": 12635.0,
-          "spread_ratio": 0.3288009888751545,
-          "liquidity_factor": 0.7525581395348838,
-          "adjusted_effective_price": 28918.927906976747,
+          "supply_price": 44608.0,
+          "demand_price": 28449.0,
+          "mid_price": 36528.5,
+          "spread": 16159.0,
+          "spread_ratio": 0.44236691898106956,
+          "liquidity_factor": 0.6933048635824437,
+          "adjusted_effective_price": 25325.386709371294,
           "has_required_data": true,
-          "rolling_window_price": 42579.21428571428,
+          "rolling_window_price": 42789.857142857145,
           "rolling_window_entries_used": 7
         },
         "prismatic_necklace": {
           "item_name": "Prismatic Necklace",
           "item_key": "prismatic_necklace",
-          "supply_price": 44893.0,
-          "demand_price": 38240.0,
-          "mid_price": 41566.5,
-          "spread": 6653.0,
-          "spread_ratio": 0.16005677649068362,
-          "liquidity_factor": 0.8620267734008025,
-          "adjusted_effective_price": 35831.43587656446,
+          "supply_price": 44581.0,
+          "demand_price": 31898.0,
+          "mid_price": 38239.5,
+          "spread": 12683.0,
+          "spread_ratio": 0.3316727467670864,
+          "liquidity_factor": 0.7509352447346458,
+          "adjusted_effective_price": 28715.38829103049,
           "has_required_data": true,
-          "rolling_window_price": 46204.857142857145,
+          "rolling_window_price": 45349.357142857145,
           "rolling_window_entries_used": 7
         },
         "prismatic_ring": {
           "item_name": "Prismatic Ring",
           "item_key": "prismatic_ring",
-          "supply_price": 114547.0,
-          "demand_price": 99390.0,
-          "mid_price": 106968.5,
-          "spread": 15157.0,
-          "spread_ratio": 0.1416959198268649,
-          "liquidity_factor": 0.8758899656500896,
-          "adjusted_effective_price": 93692.63579064161,
+          "supply_price": 115616.0,
+          "demand_price": 101536.0,
+          "mid_price": 108576.0,
+          "spread": 14080.0,
+          "spread_ratio": 0.12967875036840554,
+          "liquidity_factor": 0.8852074093399426,
+          "adjusted_effective_price": 96112.2796764936,
           "has_required_data": true,
-          "rolling_window_price": 99470.14285714286,
+          "rolling_window_price": 101560.71428571429,
           "rolling_window_entries_used": 7
         }
       }
@@ -348,6 +348,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "healthy",
           "mark_value": 1.0
@@ -364,11 +369,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -480,7 +480,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 21,
+      "ranking_position": 20,
       "economic_score_raw": 8.783358280168382,
       "market_liquidity_score": 0.854131,
       "warzone_health_score": 0.2525,
@@ -495,6 +495,11 @@
       "service_expected_value": 393159.4285714286,
       "current_mark_value": 0.5,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "inconclusive",
+          "mark_value": 0.5
+        },
         {
           "date": "2026-08-27",
           "mark": "trolls",
@@ -512,11 +517,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "inconclusive",
-          "mark_value": 0.5
-        },
-        {
-          "date": "2026-08-23",
           "mark": "inconclusive",
           "mark_value": 0.5
         }
@@ -635,6 +635,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "na",
           "mark_value": 0.0
@@ -651,11 +656,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -762,7 +762,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 39,
+      "ranking_position": 38,
       "economic_score_raw": 7.825463185658435,
       "market_liquidity_score": 0.445144,
       "warzone_health_score": 1.0,
@@ -777,6 +777,11 @@
       "service_expected_value": 346284.5714285714,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -794,11 +799,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -917,6 +917,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "na",
           "mark_value": 0.0
@@ -933,11 +938,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -1049,7 +1049,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 56,
+      "ranking_position": 55,
       "economic_score_raw": 7.241058315055287,
       "market_liquidity_score": 0.484122,
       "warzone_health_score": 1.0,
@@ -1064,6 +1064,11 @@
       "service_expected_value": 319758.9285714286,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -1081,11 +1086,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -1189,9 +1189,9 @@
       "ranking_position": 6,
       "economic_score_raw": 12.711122613296526,
       "market_liquidity_score": 0.586348,
-      "warzone_health_score": 0.44,
+      "warzone_health_score": 0.58,
       "final_score": 12.711123,
-      "history_health_score": 0.2,
+      "history_health_score": 0.4,
       "current_operational_score": 1.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -1201,6 +1201,11 @@
       "service_expected_value": 536765.2857142857,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -1218,11 +1223,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -1334,21 +1334,26 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 51,
-      "economic_score_raw": 7.342422680738318,
-      "market_liquidity_score": 0.786143,
+      "ranking_position": 57,
+      "economic_score_raw": 7.206265642802812,
+      "market_liquidity_score": 0.891077,
       "warzone_health_score": 1.0,
-      "final_score": 7.342423,
+      "final_score": 7.206266,
       "history_health_score": 1.0,
       "current_operational_score": 1.0,
       "expected_services": 2,
       "rolling_window_entries_target": 7,
-      "wz1_expected_value": 69312.28571428571,
-      "wz2_expected_value": 92161.35714285714,
-      "wz3_expected_value": 170284.2857142857,
-      "service_expected_value": 331757.9285714285,
+      "wz1_expected_value": 66844.92857142858,
+      "wz2_expected_value": 88558.21428571429,
+      "wz3_expected_value": 170772.0,
+      "service_expected_value": 326175.14285714284,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -1368,82 +1373,77 @@
           "date": "2026-08-24",
           "mark": "healthy",
           "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
         "tibia_coin": {
           "item_name": "Tibia Coins",
           "item_key": "tibia_coin",
-          "supply_price": 45267.0,
-          "demand_price": 43113.0,
-          "mid_price": 44190.0,
-          "spread": 2154.0,
-          "spread_ratio": 0.04874405974202308,
-          "liquidity_factor": 0.9535214914552046,
-          "adjusted_effective_price": 42136.11470740549,
+          "supply_price": 45087.0,
+          "demand_price": 44254.0,
+          "mid_price": 44670.5,
+          "spread": 833.0,
+          "spread_ratio": 0.01864765337303142,
+          "liquidity_factor": 0.9816937158680102,
+          "adjusted_effective_price": 43852.74913468195,
           "has_required_data": true,
-          "rolling_window_price": 45183.71428571428,
+          "rolling_window_price": 45262.71428571428,
           "rolling_window_entries_used": 7
         },
         "minor_crystalline_token": {
           "item_name": "Minor Crystalline Token",
           "item_key": "minor_crystalline_token",
-          "supply_price": 9744.0,
-          "demand_price": 0.0,
-          "mid_price": 4872.0,
-          "spread": 9744.0,
-          "spread_ratio": 2.0,
-          "liquidity_factor": 0.3333333333333333,
-          "adjusted_effective_price": 1624.0,
+          "supply_price": 9635.0,
+          "demand_price": 7305.0,
+          "mid_price": 8470.0,
+          "spread": 2330.0,
+          "spread_ratio": 0.27508854781582054,
+          "liquidity_factor": 0.7842592592592593,
+          "adjusted_effective_price": 6642.675925925926,
           "has_required_data": true,
-          "rolling_window_price": 9326.5,
+          "rolling_window_price": 9107.57142857143,
           "rolling_window_entries_used": 7
         },
         "gill_necklace": {
           "item_name": "Gill Necklace",
           "item_key": "gill_necklace",
-          "supply_price": 33573.0,
-          "demand_price": 26215.0,
-          "mid_price": 29894.0,
-          "spread": 7358.0,
-          "spread_ratio": 0.2461363484311233,
-          "liquidity_factor": 0.802480403736712,
-          "adjusted_effective_price": 23989.34918930527,
+          "supply_price": 37155.0,
+          "demand_price": 29111.0,
+          "mid_price": 33133.0,
+          "spread": 8044.0,
+          "spread_ratio": 0.2427791024054568,
+          "liquidity_factor": 0.8046482259513806,
+          "adjusted_effective_price": 26660.409670447094,
           "has_required_data": true,
-          "rolling_window_price": 34062.28571428572,
+          "rolling_window_price": 31594.928571428572,
           "rolling_window_entries_used": 7
         },
         "prismatic_necklace": {
           "item_name": "Prismatic Necklace",
           "item_key": "prismatic_necklace",
-          "supply_price": 35273.0,
-          "demand_price": 31227.0,
-          "mid_price": 33250.0,
-          "spread": 4046.0,
-          "spread_ratio": 0.12168421052631578,
-          "liquidity_factor": 0.8915165165165164,
-          "adjusted_effective_price": 29642.92417417417,
+          "supply_price": 34183.0,
+          "demand_price": 31348.0,
+          "mid_price": 32765.5,
+          "spread": 2835.0,
+          "spread_ratio": 0.08652393523675818,
+          "liquidity_factor": 0.9203662869903513,
+          "adjusted_effective_price": 30156.261576382356,
           "has_required_data": true,
-          "rolling_window_price": 37161.357142857145,
+          "rolling_window_price": 33558.21428571428,
           "rolling_window_entries_used": 7
         },
         "prismatic_ring": {
           "item_name": "Prismatic Ring",
           "item_key": "prismatic_ring",
-          "supply_price": 105022.0,
-          "demand_price": 99621.0,
-          "mid_price": 102321.5,
-          "spread": 5401.0,
-          "spread_ratio": 0.05278460538596483,
-          "liquidity_factor": 0.9498619137134767,
-          "adjusted_effective_price": 97191.2958040335,
+          "supply_price": 103648.0,
+          "demand_price": 99893.0,
+          "mid_price": 101770.5,
+          "spread": 3755.0,
+          "spread_ratio": 0.03689674316231128,
+          "liquidity_factor": 0.9644161837660091,
+          "adjusted_effective_price": 98149.11722995863,
           "has_required_data": true,
-          "rolling_window_price": 102284.28571428571,
+          "rolling_window_price": 102772.0,
           "rolling_window_entries_used": 7
         }
       }
@@ -1493,6 +1493,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "healthy",
           "mark_value": 1.0
@@ -1509,11 +1514,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -1632,6 +1632,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "na",
           "mark_value": 0.0
@@ -1648,11 +1653,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -1775,6 +1775,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "healthy",
           "mark_value": 1.0
@@ -1791,11 +1796,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -1907,12 +1907,12 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 46,
+      "ranking_position": 45,
       "economic_score_raw": 7.560408802742452,
       "market_liquidity_score": 0.866695,
-      "warzone_health_score": 0.9625,
+      "warzone_health_score": 0.8225,
       "final_score": 7.560409,
-      "history_health_score": 1.0,
+      "history_health_score": 0.8,
       "current_operational_score": 0.875,
       "expected_services": 4,
       "rolling_window_entries_target": 7,
@@ -1922,6 +1922,11 @@
       "service_expected_value": 311597.9285714286,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "trolls",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -1939,11 +1944,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -2066,6 +2066,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "healthy",
           "mark_value": 1.0
@@ -2082,11 +2087,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -2193,7 +2193,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 11,
+      "ranking_position": 12,
       "economic_score_raw": 10.014771622934889,
       "market_liquidity_score": 0.761658,
       "warzone_health_score": 1.0,
@@ -2208,6 +2208,11 @@
       "service_expected_value": 426929.7142857143,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -2225,11 +2230,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -2348,6 +2348,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "na",
           "mark_value": 0.0
@@ -2364,11 +2369,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -2487,6 +2487,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "na",
           "mark_value": 0.0
@@ -2503,11 +2508,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -2613,7 +2613,7 @@
       ],
       "ranking_position": null,
       "economic_score_raw": null,
-      "market_liquidity_score": 0.958152,
+      "market_liquidity_score": 0.961642,
       "warzone_health_score": 0.0,
       "final_score": null,
       "history_health_score": 0.0,
@@ -2626,6 +2626,11 @@
       "service_expected_value": null,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-08-27",
           "mark": "na",
@@ -2645,26 +2650,21 @@
           "date": "2026-08-24",
           "mark": "na",
           "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "na",
-          "mark_value": 0.0
         }
       ],
       "market": {
         "tibia_coin": {
           "item_name": "Tibia Coins",
           "item_key": "tibia_coin",
-          "supply_price": 26963.0,
-          "demand_price": 20662.0,
-          "mid_price": 23812.5,
-          "spread": 6301.0,
-          "spread_ratio": 0.26460892388451446,
-          "liquidity_factor": 0.7907582977734239,
-          "adjusted_effective_price": 18829.931965729655,
+          "supply_price": 26983.0,
+          "demand_price": 21259.0,
+          "mid_price": 24121.0,
+          "spread": 5724.0,
+          "spread_ratio": 0.23730359437834253,
+          "liquidity_factor": 0.8082090802479477,
+          "adjusted_effective_price": 19494.811224660745,
           "has_required_data": true,
-          "rolling_window_price": 26961.714285714286,
+          "rolling_window_price": 26975.285714285714,
           "rolling_window_entries_used": 7
         },
         "minor_crystalline_token": {
@@ -2770,6 +2770,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "healthy",
           "mark_value": 1.0
@@ -2786,11 +2791,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -2902,12 +2902,12 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 38,
+      "ranking_position": 37,
       "economic_score_raw": 7.847553597309197,
       "market_liquidity_score": 0.860486,
-      "warzone_health_score": 0.93,
+      "warzone_health_score": 1.0,
       "final_score": 7.847554,
-      "history_health_score": 0.9,
+      "history_health_score": 1.0,
       "current_operational_score": 1.0,
       "expected_services": 2,
       "rolling_window_entries_target": 7,
@@ -2917,6 +2917,11 @@
       "service_expected_value": 327973.9285714286,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -2936,11 +2941,6 @@
           "date": "2026-08-24",
           "mark": "healthy",
           "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "inconclusive",
-          "mark_value": 0.5
         }
       ],
       "market": {
@@ -3057,6 +3057,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "na",
           "mark_value": 0.0
@@ -3073,11 +3078,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -3185,20 +3185,25 @@
       "insufficient_data": false,
       "insufficient_data_reasons": [],
       "ranking_position": 4,
-      "economic_score_raw": 22.055910505654,
-      "market_liquidity_score": 0.831435,
+      "economic_score_raw": 22.65628973315314,
+      "market_liquidity_score": 0.741509,
       "warzone_health_score": 0.86,
-      "final_score": 22.055911,
+      "final_score": 22.65629,
       "history_health_score": 0.8,
       "current_operational_score": 1.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
-      "wz1_expected_value": 60597.78571428571,
-      "wz2_expected_value": 90910.07142857142,
-      "wz3_expected_value": 251403.2142857143,
-      "service_expected_value": 402911.0714285714,
+      "wz1_expected_value": 60157.857142857145,
+      "wz2_expected_value": 93029.85714285714,
+      "wz3_expected_value": 251560.42857142858,
+      "service_expected_value": 404748.14285714284,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "inconclusive",
@@ -3218,82 +3223,77 @@
           "date": "2026-08-24",
           "mark": "inconclusive",
           "mark_value": 0.5
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
         "tibia_coin": {
           "item_name": "Tibia Coins",
           "item_key": "tibia_coin",
-          "supply_price": 17998.0,
-          "demand_price": 16696.0,
-          "mid_price": 17347.0,
-          "spread": 1302.0,
-          "spread_ratio": 0.07505620568397994,
-          "liquidity_factor": 0.9301839240709958,
-          "adjusted_effective_price": 16135.900530859564,
+          "supply_price": 17049.0,
+          "demand_price": 15516.0,
+          "mid_price": 16282.5,
+          "spread": 1533.0,
+          "spread_ratio": 0.09415016121602948,
+          "liquidity_factor": 0.9139513345120822,
+          "adjusted_effective_price": 14881.41260419298,
           "has_required_data": true,
-          "rolling_window_price": 18267.714285714286,
+          "rolling_window_price": 17864.714285714286,
           "rolling_window_entries_used": 7
         },
         "minor_crystalline_token": {
           "item_name": "Minor Crystalline Token",
           "item_key": "minor_crystalline_token",
-          "supply_price": 9603.0,
-          "demand_price": 7923.0,
-          "mid_price": 8763.0,
-          "spread": 1680.0,
-          "spread_ratio": 0.19171516603902772,
-          "liquidity_factor": 0.8391266877334099,
-          "adjusted_effective_price": 7353.267164607872,
+          "supply_price": 12850.0,
+          "demand_price": 0.0,
+          "mid_price": 6425.0,
+          "spread": 12850.0,
+          "spread_ratio": 2.0,
+          "liquidity_factor": 0.3333333333333333,
+          "adjusted_effective_price": 2141.6666666666665,
           "has_required_data": true,
-          "rolling_window_price": 8996.214285714286,
+          "rolling_window_price": 10121.92857142857,
           "rolling_window_entries_used": 7
         },
         "gill_necklace": {
           "item_name": "Gill Necklace",
           "item_key": "gill_necklace",
-          "supply_price": 29290.0,
-          "demand_price": 20001.0,
-          "mid_price": 24645.5,
-          "spread": 9289.0,
-          "spread_ratio": 0.37690450589357083,
-          "liquidity_factor": 0.7262667786470997,
-          "adjusted_effective_price": 17899.207893147093,
+          "supply_price": 30046.0,
+          "demand_price": 20443.0,
+          "mid_price": 25244.5,
+          "spread": 9603.0,
+          "spread_ratio": 0.3803996910218067,
+          "liquidity_factor": 0.7244278642657294,
+          "adjusted_effective_price": 18287.819219456203,
           "has_required_data": true,
-          "rolling_window_price": 25347.785714285714,
+          "rolling_window_price": 24907.85714285714,
           "rolling_window_entries_used": 7
         },
         "prismatic_necklace": {
           "item_name": "Prismatic Necklace",
           "item_key": "prismatic_necklace",
-          "supply_price": 41469.0,
-          "demand_price": 34530.0,
-          "mid_price": 37999.5,
-          "spread": 6939.0,
-          "spread_ratio": 0.18260766589034066,
-          "liquidity_factor": 0.8455889715945125,
-          "adjusted_effective_price": 32131.958126105677,
+          "supply_price": 40706.0,
+          "demand_price": 36377.0,
+          "mid_price": 38541.5,
+          "spread": 4329.0,
+          "spread_ratio": 0.11232048571020847,
+          "liquidity_factor": 0.8990214716413385,
+          "adjusted_effective_price": 34649.63604926465,
           "has_required_data": true,
-          "rolling_window_price": 35910.07142857143,
+          "rolling_window_price": 38029.857142857145,
           "rolling_window_entries_used": 7
         },
         "prismatic_ring": {
           "item_name": "Prismatic Ring",
           "item_key": "prismatic_ring",
-          "supply_price": 202274.0,
-          "demand_price": 161287.0,
-          "mid_price": 181780.5,
-          "spread": 40987.0,
-          "spread_ratio": 0.2254752297413639,
-          "liquidity_factor": 0.816009965547039,
-          "adjusted_effective_price": 148334.6995421235,
+          "supply_price": 217680.0,
+          "demand_price": 179001.0,
+          "mid_price": 198340.5,
+          "spread": 38679.0,
+          "spread_ratio": 0.1950131213746058,
+          "liquidity_factor": 0.8368108953060824,
+          "adjusted_effective_price": 165973.49138045605,
           "has_required_data": true,
-          "rolling_window_price": 183403.2142857143,
+          "rolling_window_price": 183560.42857142858,
           "rolling_window_entries_used": 7
         }
       }
@@ -3337,21 +3337,26 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 43,
-      "economic_score_raw": 7.583023815074685,
-      "market_liquidity_score": 0.889771,
+      "ranking_position": 50,
+      "economic_score_raw": 7.358600099518991,
+      "market_liquidity_score": 0.791745,
       "warzone_health_score": 1.0,
-      "final_score": 7.583024,
+      "final_score": 7.3586,
       "history_health_score": 1.0,
       "current_operational_score": 1.0,
       "expected_services": 4,
       "rolling_window_entries_target": 7,
-      "wz1_expected_value": 76540.5,
-      "wz2_expected_value": 103756.21428571429,
-      "wz3_expected_value": 158903.85714285716,
-      "service_expected_value": 339200.5714285715,
+      "wz1_expected_value": 74176.14285714286,
+      "wz2_expected_value": 99128.85714285714,
+      "wz3_expected_value": 156263.57142857142,
+      "service_expected_value": 329568.5714285714,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -3371,82 +3376,77 @@
           "date": "2026-08-24",
           "mark": "healthy",
           "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
         "tibia_coin": {
           "item_name": "Tibia Coins",
           "item_key": "tibia_coin",
-          "supply_price": 44917.0,
-          "demand_price": 43798.0,
-          "mid_price": 44357.5,
-          "spread": 1119.0,
-          "spread_ratio": 0.025226850025362114,
-          "liquidity_factor": 0.9753938847536641,
-          "adjusted_effective_price": 43266.03424296065,
+          "supply_price": 44939.0,
+          "demand_price": 44100.0,
+          "mid_price": 44519.5,
+          "spread": 839.0,
+          "spread_ratio": 0.018845674367412035,
+          "liquidity_factor": 0.9815029156607912,
+          "adjusted_effective_price": 43696.019053760596,
           "has_required_data": true,
-          "rolling_window_price": 44731.57142857143,
+          "rolling_window_price": 44786.857142857145,
           "rolling_window_entries_used": 7
         },
         "minor_crystalline_token": {
           "item_name": "Minor Crystalline Token",
           "item_key": "minor_crystalline_token",
-          "supply_price": 10074.0,
-          "demand_price": 8026.0,
-          "mid_price": 9050.0,
-          "spread": 2048.0,
-          "spread_ratio": 0.22629834254143646,
-          "liquidity_factor": 0.8154622454496305,
-          "adjusted_effective_price": 7379.933321319157,
+          "supply_price": 9970.0,
+          "demand_price": 8964.0,
+          "mid_price": 9467.0,
+          "spread": 1006.0,
+          "spread_ratio": 0.10626386394845252,
+          "liquidity_factor": 0.9039434736942614,
+          "adjusted_effective_price": 8557.632865463573,
           "has_required_data": true,
-          "rolling_window_price": 9613.642857142857,
+          "rolling_window_price": 9244.857142857143,
           "rolling_window_entries_used": 7
         },
         "gill_necklace": {
           "item_name": "Gill Necklace",
           "item_key": "gill_necklace",
-          "supply_price": 44534.0,
-          "demand_price": 39023.0,
-          "mid_price": 41778.5,
-          "spread": 5511.0,
-          "spread_ratio": 0.1319099536843113,
-          "liquidity_factor": 0.8834625022467989,
-          "adjusted_effective_price": 36909.73815011789,
+          "supply_price": 31132.0,
+          "demand_price": 18428.0,
+          "mid_price": 24780.0,
+          "spread": 12704.0,
+          "spread_ratio": 0.5126715092816788,
+          "liquidity_factor": 0.66108206167965,
+          "adjusted_effective_price": 16381.613488421726,
           "has_required_data": true,
-          "rolling_window_price": 41290.5,
+          "rolling_window_price": 38926.142857142855,
           "rolling_window_entries_used": 7
         },
         "prismatic_necklace": {
           "item_name": "Prismatic Necklace",
           "item_key": "prismatic_necklace",
-          "supply_price": 50471.0,
-          "demand_price": 45033.0,
-          "mid_price": 47752.0,
-          "spread": 5438.0,
-          "spread_ratio": 0.11388004690902999,
-          "liquidity_factor": 0.897762737356646,
-          "adjusted_effective_price": 42869.96623425456,
+          "supply_price": 47106.0,
+          "demand_price": 22110.0,
+          "mid_price": 34608.0,
+          "spread": 24996.0,
+          "spread_ratio": 0.7222607489597781,
+          "liquidity_factor": 0.580632172337427,
+          "adjusted_effective_price": 20094.518220253674,
           "has_required_data": true,
-          "rolling_window_price": 48756.21428571428,
+          "rolling_window_price": 44128.857142857145,
           "rolling_window_entries_used": 7
         },
         "prismatic_ring": {
           "item_name": "Prismatic Ring",
           "item_key": "prismatic_ring",
-          "supply_price": 98912.0,
-          "demand_price": 85923.0,
-          "mid_price": 92417.5,
-          "spread": 12989.0,
-          "spread_ratio": 0.14054697432845512,
-          "liquidity_factor": 0.8767723053132397,
-          "adjusted_effective_price": 81029.10452628633,
+          "supply_price": 95746.0,
+          "demand_price": 78136.0,
+          "mid_price": 86941.0,
+          "spread": 17610.0,
+          "spread_ratio": 0.20255115538123555,
+          "liquidity_factor": 0.8315654560931985,
+          "adjusted_effective_price": 72297.13231819877,
           "has_required_data": true,
-          "rolling_window_price": 90903.85714285714,
+          "rolling_window_price": 88263.57142857143,
           "rolling_window_entries_used": 7
         }
       }
@@ -3474,21 +3474,26 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 62,
-      "economic_score_raw": 6.854561355207539,
-      "market_liquidity_score": 0.099916,
-      "warzone_health_score": 0.72,
-      "final_score": 6.854561,
-      "history_health_score": 0.6,
+      "ranking_position": 61,
+      "economic_score_raw": 7.031139761869574,
+      "market_liquidity_score": 0.843719,
+      "warzone_health_score": 0.86,
+      "final_score": 7.03114,
+      "history_health_score": 0.8,
       "current_operational_score": 1.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
-      "wz1_expected_value": 54089.07142857143,
-      "wz2_expected_value": 82537.78571428571,
-      "wz3_expected_value": 165693.57142857142,
-      "service_expected_value": 302320.4285714285,
+      "wz1_expected_value": 59333.07142857143,
+      "wz2_expected_value": 84029.28571428571,
+      "wz3_expected_value": 169280.2857142857,
+      "service_expected_value": 312642.64285714284,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -3508,82 +3513,77 @@
           "date": "2026-08-24",
           "mark": "na",
           "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "na",
-          "mark_value": 0.0
         }
       ],
       "market": {
         "tibia_coin": {
           "item_name": "Tibia Coins",
           "item_key": "tibia_coin",
-          "supply_price": 44212.0,
-          "demand_price": 43557.0,
-          "mid_price": 43884.5,
-          "spread": 655.0,
-          "spread_ratio": 0.014925543187230116,
-          "liquidity_factor": 0.9852939525589645,
-          "adjusted_effective_price": 43239.132461073874,
+          "supply_price": 44629.0,
+          "demand_price": 43248.0,
+          "mid_price": 43938.5,
+          "spread": 1381.0,
+          "spread_ratio": 0.03143029461633875,
+          "liquidity_factor": 0.9695274661017884,
+          "adjusted_effective_price": 42599.58256931343,
           "has_required_data": true,
-          "rolling_window_price": 44105.0,
+          "rolling_window_price": 44465.42857142857,
           "rolling_window_entries_used": 7
         },
         "minor_crystalline_token": {
           "item_name": "Minor Crystalline Token",
           "item_key": "minor_crystalline_token",
-          "supply_price": 0.0,
-          "demand_price": 6128.0,
-          "mid_price": 3064.0,
-          "spread": -6128.0,
-          "spread_ratio": -2.0,
-          "liquidity_factor": -1.0,
-          "adjusted_effective_price": -3064.0,
+          "supply_price": 7584.0,
+          "demand_price": 6108.0,
+          "mid_price": 6846.0,
+          "spread": 1476.0,
+          "spread_ratio": 0.21560035056967572,
+          "liquidity_factor": 0.8226387887527037,
+          "adjusted_effective_price": 5631.78514780101,
           "has_required_data": true,
-          "rolling_window_price": 6653.5,
+          "rolling_window_price": 6607.214285714285,
           "rolling_window_entries_used": 7
         },
         "gill_necklace": {
           "item_name": "Gill Necklace",
           "item_key": "gill_necklace",
-          "supply_price": 24999.0,
-          "demand_price": 18015.0,
-          "mid_price": 21507.0,
-          "spread": 6984.0,
-          "spread_ratio": 0.32473148277305064,
-          "liquidity_factor": 0.7548699589344002,
-          "adjusted_effective_price": 16234.988206802145,
+          "supply_price": 44999.0,
+          "demand_price": 23031.0,
+          "mid_price": 34015.0,
+          "spread": 21968.0,
+          "spread_ratio": 0.6458327208584448,
+          "liquidity_factor": 0.6075951628172838,
+          "adjusted_effective_price": 20667.349463229908,
           "has_required_data": true,
-          "rolling_window_price": 18839.071428571428,
+          "rolling_window_price": 24083.071428571428,
           "rolling_window_entries_used": 7
         },
         "prismatic_necklace": {
           "item_name": "Prismatic Necklace",
           "item_key": "prismatic_necklace",
-          "supply_price": 0.0,
-          "demand_price": 26104.0,
-          "mid_price": 13052.0,
-          "spread": -26104.0,
-          "spread_ratio": -2.0,
-          "liquidity_factor": -1.0,
-          "adjusted_effective_price": -13052.0,
+          "supply_price": 31795.0,
+          "demand_price": 28130.0,
+          "mid_price": 29962.5,
+          "spread": 3665.0,
+          "spread_ratio": 0.12231956612432207,
+          "liquidity_factor": 0.8910118206824771,
+          "adjusted_effective_price": 26696.94167719872,
           "has_required_data": true,
-          "rolling_window_price": 27537.785714285714,
+          "rolling_window_price": 29029.285714285714,
           "rolling_window_entries_used": 7
         },
         "prismatic_ring": {
           "item_name": "Prismatic Ring",
           "item_key": "prismatic_ring",
-          "supply_price": 118597.0,
-          "demand_price": 86163.0,
-          "mid_price": 102380.0,
-          "spread": 32434.0,
-          "spread_ratio": 0.31680015628052355,
-          "liquidity_factor": 0.7594166777931075,
-          "adjusted_effective_price": 77749.07947245835,
+          "supply_price": 100736.0,
+          "demand_price": 93193.0,
+          "mid_price": 96964.5,
+          "spread": 7543.0,
+          "spread_ratio": 0.07779135663051942,
+          "liquidity_factor": 0.9278233619596679,
+          "adjusted_effective_price": 89965.92838073822,
           "has_required_data": true,
-          "rolling_window_price": 97693.57142857143,
+          "rolling_window_price": 101280.28571428571,
           "rolling_window_entries_used": 7
         }
       }
@@ -3629,6 +3629,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "na",
           "mark_value": 0.0
@@ -3645,11 +3650,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -3757,20 +3757,25 @@
       "insufficient_data": false,
       "insufficient_data_reasons": [],
       "ranking_position": 41,
-      "economic_score_raw": 7.61047703528484,
-      "market_liquidity_score": 0.481815,
-      "warzone_health_score": 0.72,
-      "final_score": 7.610477,
-      "history_health_score": 0.6,
+      "economic_score_raw": 7.638418060796476,
+      "market_liquidity_score": 0.84303,
+      "warzone_health_score": 0.86,
+      "final_score": 7.638418,
+      "history_health_score": 0.8,
       "current_operational_score": 1.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
-      "wz1_expected_value": 73843.85714285714,
-      "wz2_expected_value": 85262.78571428571,
-      "wz3_expected_value": 171818.64285714284,
-      "service_expected_value": 330925.2857142857,
+      "wz1_expected_value": 75842.78571428571,
+      "wz2_expected_value": 87498.28571428571,
+      "wz3_expected_value": 173551.35714285716,
+      "service_expected_value": 336892.4285714286,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -3790,82 +3795,77 @@
           "date": "2026-08-24",
           "mark": "na",
           "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "na",
-          "mark_value": 0.0
         }
       ],
       "market": {
         "tibia_coin": {
           "item_name": "Tibia Coins",
           "item_key": "tibia_coin",
-          "supply_price": 43873.0,
-          "demand_price": 42464.0,
-          "mid_price": 43168.5,
-          "spread": 1409.0,
-          "spread_ratio": 0.03263954040561984,
-          "liquidity_factor": 0.9683921260725702,
-          "adjusted_effective_price": 41804.03549436374,
+          "supply_price": 44635.0,
+          "demand_price": 43879.0,
+          "mid_price": 44257.0,
+          "spread": 756.0,
+          "spread_ratio": 0.01708204351853944,
+          "liquidity_factor": 0.9832048519316642,
+          "adjusted_effective_price": 43513.69713193966,
           "has_required_data": true,
-          "rolling_window_price": 43482.857142857145,
+          "rolling_window_price": 44105.0,
           "rolling_window_entries_used": 7
         },
         "minor_crystalline_token": {
           "item_name": "Minor Crystalline Token",
           "item_key": "minor_crystalline_token",
-          "supply_price": 0.0,
-          "demand_price": 11970.0,
-          "mid_price": 5985.0,
-          "spread": -11970.0,
-          "spread_ratio": -2.0,
-          "liquidity_factor": -1.0,
-          "adjusted_effective_price": -5985.0,
+          "supply_price": 13895.0,
+          "demand_price": 13302.0,
+          "mid_price": 13598.5,
+          "spread": 593.0,
+          "spread_ratio": 0.0436077508548737,
+          "liquidity_factor": 0.9582144241271182,
+          "adjusted_effective_price": 13030.278846492616,
           "has_required_data": true,
-          "rolling_window_price": 13753.42857142857,
+          "rolling_window_price": 13611.642857142857,
           "rolling_window_entries_used": 7
         },
         "gill_necklace": {
           "item_name": "Gill Necklace",
           "item_key": "gill_necklace",
-          "supply_price": 36996.0,
-          "demand_price": 33017.0,
-          "mid_price": 35006.5,
-          "spread": 3979.0,
-          "spread_ratio": 0.11366460514475883,
-          "liquidity_factor": 0.8979364122558388,
-          "adjusted_effective_price": 31433.61101563402,
+          "supply_price": 61648.0,
+          "demand_price": 37012.0,
+          "mid_price": 49330.0,
+          "spread": 24636.0,
+          "spread_ratio": 0.49941212244070543,
+          "liquidity_factor": 0.6669280480220642,
+          "adjusted_effective_price": 32899.56060892843,
           "has_required_data": true,
-          "rolling_window_price": 38593.857142857145,
+          "rolling_window_price": 40592.78571428572,
           "rolling_window_entries_used": 7
         },
         "prismatic_necklace": {
           "item_name": "Prismatic Necklace",
           "item_key": "prismatic_necklace",
-          "supply_price": 39470.0,
-          "demand_price": 25223.0,
-          "mid_price": 32346.5,
-          "spread": 14247.0,
-          "spread_ratio": 0.4404495076747098,
-          "liquidity_factor": 0.6942277356283602,
-          "adjusted_effective_price": 22455.837450502753,
+          "supply_price": 38459.0,
+          "demand_price": 26012.0,
+          "mid_price": 32235.5,
+          "spread": 12447.0,
+          "spread_ratio": 0.38612709590358457,
+          "liquidity_factor": 0.7214345661052985,
+          "adjusted_effective_price": 23255.803955687352,
           "has_required_data": true,
-          "rolling_window_price": 30262.785714285714,
+          "rolling_window_price": 32498.285714285714,
           "rolling_window_entries_used": 7
         },
         "prismatic_ring": {
           "item_name": "Prismatic Ring",
           "item_key": "prismatic_ring",
-          "supply_price": 115561.0,
-          "demand_price": 96621.0,
-          "mid_price": 106091.0,
-          "spread": 18940.0,
-          "spread_ratio": 0.17852598241132614,
-          "liquidity_factor": 0.8485175676432245,
-          "adjusted_effective_price": 90020.07726883733,
+          "supply_price": 110641.0,
+          "demand_price": 97187.0,
+          "mid_price": 103914.0,
+          "spread": 13454.0,
+          "spread_ratio": 0.12947244837076813,
+          "liquidity_factor": 0.885369095494513,
+          "adjusted_effective_price": 92002.24418921683,
           "has_required_data": true,
-          "rolling_window_price": 103818.64285714286,
+          "rolling_window_price": 105551.35714285714,
           "rolling_window_entries_used": 7
         }
       }
@@ -3899,7 +3899,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 48,
+      "ranking_position": 47,
       "economic_score_raw": 7.539413636928514,
       "market_liquidity_score": 0.481317,
       "warzone_health_score": 1.0,
@@ -3914,6 +3914,11 @@
       "service_expected_value": 312006.7857142857,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -3931,11 +3936,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -4053,20 +4053,25 @@
       "insufficient_data": false,
       "insufficient_data_reasons": [],
       "ranking_position": 15,
-      "economic_score_raw": 9.33231716779491,
-      "market_liquidity_score": 0.833032,
+      "economic_score_raw": 9.35676866416549,
+      "market_liquidity_score": 0.856746,
       "warzone_health_score": 0.86,
-      "final_score": 9.332317,
+      "final_score": 9.356769,
       "history_health_score": 0.8,
       "current_operational_score": 1.0,
       "expected_services": 3,
       "rolling_window_entries_target": 7,
-      "wz1_expected_value": 78601.78571428571,
-      "wz2_expected_value": 108878.07142857142,
-      "wz3_expected_value": 199116.7142857143,
-      "service_expected_value": 386596.5714285714,
+      "wz1_expected_value": 80693.71428571429,
+      "wz2_expected_value": 110946.71428571429,
+      "wz3_expected_value": 196705.57142857142,
+      "service_expected_value": 388346.0,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -4086,82 +4091,77 @@
           "date": "2026-08-24",
           "mark": "trolls",
           "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
         "tibia_coin": {
           "item_name": "Tibia Coins",
           "item_key": "tibia_coin",
-          "supply_price": 41294.0,
-          "demand_price": 38858.0,
-          "mid_price": 40076.0,
-          "spread": 2436.0,
-          "spread_ratio": 0.06078450943207905,
-          "liquidity_factor": 0.9426985321791493,
-          "adjusted_effective_price": 37779.58637561159,
+          "supply_price": 41785.0,
+          "demand_price": 40809.0,
+          "mid_price": 41297.0,
+          "spread": 976.0,
+          "spread_ratio": 0.023633677991137372,
+          "liquidity_factor": 0.9769119769119768,
+          "adjusted_effective_price": 40343.53391053391,
           "has_required_data": true,
-          "rolling_window_price": 41425.57142857143,
+          "rolling_window_price": 41504.28571428572,
           "rolling_window_entries_used": 7
         },
         "minor_crystalline_token": {
           "item_name": "Minor Crystalline Token",
           "item_key": "minor_crystalline_token",
-          "supply_price": 21100.0,
-          "demand_price": 14002.0,
-          "mid_price": 17551.0,
-          "spread": 7098.0,
-          "spread_ratio": 0.4044214004900006,
-          "liquidity_factor": 0.7120369994725952,
-          "adjusted_effective_price": 12496.961377743519,
+          "supply_price": 16649.0,
+          "demand_price": 13001.0,
+          "mid_price": 14825.0,
+          "spread": 3648.0,
+          "spread_ratio": 0.246070826306914,
+          "liquidity_factor": 0.8025226005521572,
+          "adjusted_effective_price": 11897.39755318573,
           "has_required_data": true,
-          "rolling_window_price": 15456.785714285714,
+          "rolling_window_price": 15576.57142857143,
           "rolling_window_entries_used": 7
         },
         "gill_necklace": {
           "item_name": "Gill Necklace",
           "item_key": "gill_necklace",
-          "supply_price": 54221.0,
-          "demand_price": 39306.0,
-          "mid_price": 46763.5,
-          "spread": 14915.0,
-          "spread_ratio": 0.31894533129470637,
-          "liquidity_factor": 0.7581815381372763,
-          "adjusted_effective_price": 35455.22235868252,
+          "supply_price": 51405.0,
+          "demand_price": 40341.0,
+          "mid_price": 45873.0,
+          "spread": 11064.0,
+          "spread_ratio": 0.24118762670852134,
+          "liquidity_factor": 0.8056799620633331,
+          "adjusted_effective_price": 36958.95689973128,
           "has_required_data": true,
-          "rolling_window_price": 43351.78571428572,
+          "rolling_window_price": 45443.71428571428,
           "rolling_window_entries_used": 7
         },
         "prismatic_necklace": {
           "item_name": "Prismatic Necklace",
           "item_key": "prismatic_necklace",
-          "supply_price": 60772.0,
-          "demand_price": 52069.0,
-          "mid_price": 56420.5,
-          "spread": 8703.0,
-          "spread_ratio": 0.15425244370397284,
-          "liquidity_factor": 0.8663616052577028,
-          "adjusted_effective_price": 48880.55494944222,
+          "supply_price": 64906.0,
+          "demand_price": 52517.0,
+          "mid_price": 58711.5,
+          "spread": 12389.0,
+          "spread_ratio": 0.21101487783483644,
+          "liquidity_factor": 0.8257536866829347,
+          "adjusted_effective_price": 48481.23757568512,
           "has_required_data": true,
-          "rolling_window_price": 53878.07142857143,
+          "rolling_window_price": 55946.71428571428,
           "rolling_window_entries_used": 7
         },
         "prismatic_ring": {
           "item_name": "Prismatic Ring",
           "item_key": "prismatic_ring",
-          "supply_price": 133905.0,
-          "demand_price": 117699.0,
-          "mid_price": 125802.0,
-          "spread": 16206.0,
-          "spread_ratio": 0.12882148137549482,
-          "liquidity_factor": 0.8858796687510563,
-          "adjusted_effective_price": 111445.43408822038,
+          "supply_price": 136612.0,
+          "demand_price": 118064.0,
+          "mid_price": 127338.0,
+          "spread": 18548.0,
+          "spread_ratio": 0.14565958315663824,
+          "liquidity_factor": 0.8728596301221502,
+          "adjusted_effective_price": 111148.19958049436,
           "has_required_data": true,
-          "rolling_window_price": 131116.7142857143,
+          "rolling_window_price": 128705.57142857143,
           "rolling_window_entries_used": 7
         }
       }
@@ -4192,20 +4192,25 @@
         "excluded_na_world"
       ],
       "ranking_position": null,
-      "economic_score_raw": 13.246913984748081,
-      "market_liquidity_score": 0.575643,
+      "economic_score_raw": 11.7652267859156,
+      "market_liquidity_score": -0.004849,
       "warzone_health_score": 0.0,
-      "final_score": 13.246914,
+      "final_score": 11.765227,
       "history_health_score": 0.0,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
-      "wz1_expected_value": 102392.85714285714,
-      "wz2_expected_value": 136177.85714285716,
-      "wz3_expected_value": 223493.0,
-      "service_expected_value": 462063.7142857143,
+      "wz1_expected_value": 90987.42857142858,
+      "wz2_expected_value": 107526.21428571429,
+      "wz3_expected_value": 248749.85714285713,
+      "service_expected_value": 447263.5,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-08-27",
           "mark": "na",
@@ -4225,82 +4230,77 @@
           "date": "2026-08-24",
           "mark": "na",
           "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "na",
-          "mark_value": 0.0
         }
       ],
       "market": {
         "tibia_coin": {
           "item_name": "Tibia Coins",
           "item_key": "tibia_coin",
-          "supply_price": 34608.0,
-          "demand_price": 30120.0,
-          "mid_price": 32364.0,
-          "spread": 4488.0,
-          "spread_ratio": 0.13867259918427882,
-          "liquidity_factor": 0.8782155649625529,
-          "adjusted_effective_price": 28422.568544448062,
+          "supply_price": 37759.0,
+          "demand_price": 34025.0,
+          "mid_price": 35892.0,
+          "spread": 3734.0,
+          "spread_ratio": 0.10403432519781566,
+          "liquidity_factor": 0.9057689395851208,
+          "adjusted_effective_price": 32509.858779589158,
           "has_required_data": true,
-          "rolling_window_price": 34880.857142857145,
+          "rolling_window_price": 38015.71428571428,
           "rolling_window_entries_used": 7
         },
         "minor_crystalline_token": {
           "item_name": "Minor Crystalline Token",
           "item_key": "minor_crystalline_token",
-          "supply_price": 14998.0,
-          "demand_price": 0.0,
-          "mid_price": 7499.0,
-          "spread": 14998.0,
-          "spread_ratio": 2.0,
-          "liquidity_factor": 0.3333333333333333,
-          "adjusted_effective_price": 2499.6666666666665,
+          "supply_price": 0.0,
+          "demand_price": 7001.0,
+          "mid_price": 3500.5,
+          "spread": -7001.0,
+          "spread_ratio": -2.0,
+          "liquidity_factor": -1.0,
+          "adjusted_effective_price": -3500.5,
           "has_required_data": true,
-          "rolling_window_price": 15424.5,
+          "rolling_window_price": 9680.857142857143,
           "rolling_window_entries_used": 7
         },
         "gill_necklace": {
           "item_name": "Gill Necklace",
           "item_key": "gill_necklace",
           "supply_price": 0.0,
-          "demand_price": 0.0,
-          "mid_price": 0.0,
-          "spread": 0.0,
-          "spread_ratio": 0.0,
-          "liquidity_factor": 1.0,
-          "adjusted_effective_price": 0.0,
+          "demand_price": 20081.0,
+          "mid_price": 10040.5,
+          "spread": -20081.0,
+          "spread_ratio": -2.0,
+          "liquidity_factor": -1.0,
+          "adjusted_effective_price": -10040.5,
           "has_required_data": true,
-          "rolling_window_price": 67142.85714285714,
+          "rolling_window_price": 55737.42857142857,
           "rolling_window_entries_used": 7
         },
         "prismatic_necklace": {
           "item_name": "Prismatic Necklace",
           "item_key": "prismatic_necklace",
-          "supply_price": 79999.0,
-          "demand_price": 0.0,
-          "mid_price": 39999.5,
-          "spread": 79999.0,
-          "spread_ratio": 2.0,
-          "liquidity_factor": 0.3333333333333333,
-          "adjusted_effective_price": 13333.166666666666,
+          "supply_price": 79997.0,
+          "demand_price": 25124.0,
+          "mid_price": 52560.5,
+          "spread": 54873.0,
+          "spread_ratio": 1.0439969178375397,
+          "liquidity_factor": 0.48923752833147943,
+          "adjusted_effective_price": 25714.569107866726,
           "has_required_data": true,
-          "rolling_window_price": 81177.85714285714,
+          "rolling_window_price": 52526.21428571428,
           "rolling_window_entries_used": 7
         },
         "prismatic_ring": {
           "item_name": "Prismatic Ring",
           "item_key": "prismatic_ring",
-          "supply_price": 149999.0,
-          "demand_price": 0.0,
-          "mid_price": 74999.5,
-          "spread": 149999.0,
-          "spread_ratio": 2.0,
-          "liquidity_factor": 0.3333333333333333,
-          "adjusted_effective_price": 24999.833333333332,
+          "supply_price": 196999.0,
+          "demand_price": 92501.0,
+          "mid_price": 144750.0,
+          "spread": 104498.0,
+          "spread_ratio": 0.7219205526770294,
+          "liquidity_factor": 0.5807468866349981,
+          "adjusted_effective_price": 84063.11184041596,
           "has_required_data": true,
-          "rolling_window_price": 155493.0,
+          "rolling_window_price": 180749.85714285713,
           "rolling_window_entries_used": 7
         }
       }
@@ -4331,20 +4331,25 @@
         "excluded_na_world"
       ],
       "ranking_position": null,
-      "economic_score_raw": 15.207872086749166,
-      "market_liquidity_score": 0.907157,
+      "economic_score_raw": 11.73203798164987,
+      "market_liquidity_score": 0.510104,
       "warzone_health_score": 0.0,
-      "final_score": 15.207872,
+      "final_score": 11.732038,
       "history_health_score": 0.0,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
-      "wz1_expected_value": 74153.0,
-      "wz2_expected_value": 84981.28571428571,
-      "wz3_expected_value": 340144.5,
-      "service_expected_value": 499278.7857142857,
+      "wz1_expected_value": 71914.85714285714,
+      "wz2_expected_value": 77047.42857142858,
+      "wz3_expected_value": 259121.57142857142,
+      "service_expected_value": 408083.85714285716,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-08-27",
           "mark": "na",
@@ -4364,26 +4369,21 @@
           "date": "2026-08-24",
           "mark": "na",
           "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "na",
-          "mark_value": 0.0
         }
       ],
       "market": {
         "tibia_coin": {
           "item_name": "Tibia Coins",
           "item_key": "tibia_coin",
-          "supply_price": 33526.0,
-          "demand_price": 28151.0,
-          "mid_price": 30838.5,
-          "spread": 5375.0,
-          "spread_ratio": 0.17429511811534285,
-          "liquidity_factor": 0.8515746889971971,
-          "adjusted_effective_price": 26261.286046640063,
+          "supply_price": 35786.0,
+          "demand_price": 28924.0,
+          "mid_price": 32355.0,
+          "spread": 6862.0,
+          "spread_ratio": 0.21208468552001236,
+          "liquidity_factor": 0.8250248616671342,
+          "adjusted_effective_price": 26693.679399240125,
           "has_required_data": true,
-          "rolling_window_price": 32830.28571428572,
+          "rolling_window_price": 34783.71428571428,
           "rolling_window_entries_used": 7
         },
         "minor_crystalline_token": {
@@ -4411,35 +4411,35 @@
           "liquidity_factor": 1.0,
           "adjusted_effective_price": 0.0,
           "has_required_data": true,
-          "rolling_window_price": 38903.0,
+          "rolling_window_price": 36664.857142857145,
           "rolling_window_entries_used": 7
         },
         "prismatic_necklace": {
           "item_name": "Prismatic Necklace",
           "item_key": "prismatic_necklace",
           "supply_price": 0.0,
-          "demand_price": 0.0,
-          "mid_price": 0.0,
-          "spread": 0.0,
-          "spread_ratio": 0.0,
-          "liquidity_factor": 1.0,
-          "adjusted_effective_price": 0.0,
+          "demand_price": 10001.0,
+          "mid_price": 5000.5,
+          "spread": -10001.0,
+          "spread_ratio": -2.0,
+          "liquidity_factor": -1.0,
+          "adjusted_effective_price": -5000.5,
           "has_required_data": true,
-          "rolling_window_price": 29981.285714285714,
+          "rolling_window_price": 22047.428571428572,
           "rolling_window_entries_used": 7
         },
         "prismatic_ring": {
           "item_name": "Prismatic Ring",
           "item_key": "prismatic_ring",
-          "supply_price": 239999.0,
-          "demand_price": 150000.0,
-          "mid_price": 194999.5,
-          "spread": 89999.0,
-          "spread_ratio": 0.46153451675517115,
-          "liquidity_factor": 0.6842123730475774,
-          "adjusted_effective_price": 133421.07063809107,
+          "supply_price": 219999.0,
+          "demand_price": 150001.0,
+          "mid_price": 185000.0,
+          "spread": 69998.0,
+          "spread_ratio": 0.37836756756756756,
+          "liquidity_factor": 0.725495886242245,
+          "adjusted_effective_price": 134216.73895481534,
           "has_required_data": true,
-          "rolling_window_price": 272144.5,
+          "rolling_window_price": 191121.57142857142,
           "rolling_window_entries_used": 7
         }
       }
@@ -4485,6 +4485,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "na",
           "mark_value": 0.0
@@ -4501,11 +4506,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -4624,6 +4624,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "healthy",
           "mark_value": 1.0
@@ -4640,11 +4645,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -4782,6 +4782,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "inconclusive",
           "mark_value": 0.5
@@ -4798,11 +4803,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -4925,6 +4925,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "healthy",
           "mark_value": 1.0
@@ -4941,11 +4946,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -5073,6 +5073,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "healthy",
           "mark_value": 1.0
@@ -5089,11 +5094,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -5220,6 +5220,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "na",
           "mark_value": 0.0
@@ -5324,9 +5329,9 @@
       "ranking_position": 2,
       "economic_score_raw": 29.310873836841633,
       "market_liquidity_score": 0.436503,
-      "warzone_health_score": 0.72,
+      "warzone_health_score": 0.86,
       "final_score": 29.310874,
-      "history_health_score": 0.6,
+      "history_health_score": 0.8,
       "current_operational_score": 1.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -5336,6 +5341,11 @@
       "service_expected_value": 370790.9285714286,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -5354,11 +5364,6 @@
         {
           "date": "2026-08-24",
           "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "trolls",
           "mark_value": 0.0
         }
       ],
@@ -5469,9 +5474,9 @@
       "ranking_position": null,
       "economic_score_raw": 10.024024486462542,
       "market_liquidity_score": 0.750939,
-      "warzone_health_score": 0.28,
+      "warzone_health_score": 0.14,
       "final_score": 10.024024,
-      "history_health_score": 0.4,
+      "history_health_score": 0.2,
       "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -5481,6 +5486,11 @@
       "service_expected_value": 413814.64285714284,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-08-27",
           "mark": "na",
@@ -5500,11 +5510,6 @@
           "date": "2026-08-24",
           "mark": "na",
           "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
@@ -5619,7 +5624,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 50,
+      "ranking_position": 49,
       "economic_score_raw": 7.420011981314249,
       "market_liquidity_score": 0.850579,
       "warzone_health_score": 1.0,
@@ -5634,6 +5639,11 @@
       "service_expected_value": 332651.85714285716,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -5651,11 +5661,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -5774,6 +5779,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "na",
           "mark_value": 0.0
@@ -5790,11 +5800,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -5911,6 +5916,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "healthy",
           "mark_value": 1.0
@@ -5927,11 +5937,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -6054,6 +6059,11 @@
       "current_mark_value": 0.5,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "inconclusive",
+          "mark_value": 0.5
+        },
+        {
           "date": "2026-08-27",
           "mark": "inconclusive",
           "mark_value": 0.5
@@ -6070,11 +6080,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "inconclusive",
-          "mark_value": 0.5
-        },
-        {
-          "date": "2026-08-23",
           "mark": "inconclusive",
           "mark_value": 0.5
         }
@@ -6191,7 +6196,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 54,
+      "ranking_position": 53,
       "economic_score_raw": 7.300380971322563,
       "market_liquidity_score": 0.520115,
       "warzone_health_score": 1.0,
@@ -6206,6 +6211,11 @@
       "service_expected_value": 304137.0,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -6223,11 +6233,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -6344,7 +6349,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 45,
+      "ranking_position": 44,
       "economic_score_raw": 7.56684467124179,
       "market_liquidity_score": 0.79863,
       "warzone_health_score": 1.0,
@@ -6359,6 +6364,11 @@
       "service_expected_value": 337240.21428571426,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -6376,11 +6386,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -6499,6 +6504,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "na",
           "mark_value": 0.0
@@ -6515,11 +6525,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -6626,7 +6631,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 36,
+      "ranking_position": 34,
       "economic_score_raw": 7.928846416382253,
       "market_liquidity_score": 0.629275,
       "warzone_health_score": 1.0,
@@ -6641,6 +6646,11 @@
       "service_expected_value": 331878.85714285716,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -6658,11 +6668,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -6779,6 +6784,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "na",
           "mark_value": 0.0
@@ -6797,11 +6807,6 @@
           "date": "2026-08-24",
           "mark": "na",
           "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
@@ -6922,6 +6927,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "healthy",
           "mark_value": 1.0
@@ -6938,11 +6948,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -7061,6 +7066,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "na",
           "mark_value": 0.0
@@ -7077,11 +7087,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -7204,6 +7209,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "healthy",
           "mark_value": 1.0
@@ -7220,11 +7230,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -7344,6 +7349,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "na",
           "mark_value": 0.0
@@ -7360,11 +7370,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -7476,7 +7481,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 61,
+      "ranking_position": 62,
       "economic_score_raw": 7.005496868100837,
       "market_liquidity_score": 0.877996,
       "warzone_health_score": 1.0,
@@ -7491,6 +7496,11 @@
       "service_expected_value": 311876.7142857143,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -7508,11 +7518,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -7620,20 +7625,25 @@
       "insufficient_data": false,
       "insufficient_data_reasons": [],
       "ranking_position": 18,
-      "economic_score_raw": 9.020821169405288,
-      "market_liquidity_score": 0.835727,
+      "economic_score_raw": 8.887217111029823,
+      "market_liquidity_score": 0.859255,
       "warzone_health_score": 1.0,
-      "final_score": 9.020821,
+      "final_score": 8.887217,
       "history_health_score": 1.0,
       "current_operational_score": 1.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
-      "wz1_expected_value": 84227.57142857142,
-      "wz2_expected_value": 96045.28571428571,
-      "wz3_expected_value": 190529.2857142857,
-      "service_expected_value": 370802.14285714284,
+      "wz1_expected_value": 80309.92857142858,
+      "wz2_expected_value": 97416.42857142858,
+      "wz3_expected_value": 190176.5,
+      "service_expected_value": 367902.85714285716,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -7653,82 +7663,77 @@
           "date": "2026-08-24",
           "mark": "healthy",
           "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
         "tibia_coin": {
           "item_name": "Tibia Coins",
           "item_key": "tibia_coin",
-          "supply_price": 41541.0,
-          "demand_price": 40670.0,
-          "mid_price": 41105.5,
-          "spread": 871.0,
-          "spread_ratio": 0.021189378550315652,
-          "liquidity_factor": 0.9792502948078091,
-          "adjusted_effective_price": 40252.5729932224,
+          "supply_price": 41809.0,
+          "demand_price": 40575.0,
+          "mid_price": 41192.0,
+          "spread": 1234.0,
+          "spread_ratio": 0.029957273256943095,
+          "liquidity_factor": 0.9709140621317117,
+          "adjusted_effective_price": 39993.89204732947,
           "has_required_data": true,
-          "rolling_window_price": 41105.142857142855,
+          "rolling_window_price": 41396.857142857145,
           "rolling_window_entries_used": 7
         },
         "minor_crystalline_token": {
           "item_name": "Minor Crystalline Token",
           "item_key": "minor_crystalline_token",
-          "supply_price": 15318.0,
-          "demand_price": 11502.0,
-          "mid_price": 13410.0,
-          "spread": 3816.0,
-          "spread_ratio": 0.28456375838926173,
-          "liquidity_factor": 0.7784743991640544,
-          "adjusted_effective_price": 10439.341692789969,
+          "supply_price": 15354.0,
+          "demand_price": 13587.0,
+          "mid_price": 14470.5,
+          "spread": 1767.0,
+          "spread_ratio": 0.1221105006737846,
+          "liquidity_factor": 0.8911778290993072,
+          "adjusted_effective_price": 12895.788775981526,
           "has_required_data": true,
-          "rolling_window_price": 12943.642857142857,
+          "rolling_window_price": 13605.57142857143,
           "rolling_window_entries_used": 7
         },
         "gill_necklace": {
           "item_name": "Gill Necklace",
           "item_key": "gill_necklace",
-          "supply_price": 51413.0,
-          "demand_price": 38527.0,
-          "mid_price": 44970.0,
-          "spread": 12886.0,
-          "spread_ratio": 0.28654658661329774,
-          "liquidity_factor": 0.7772746128318585,
-          "adjusted_effective_price": 34954.03933904868,
+          "supply_price": 49765.0,
+          "demand_price": 38595.0,
+          "mid_price": 44180.0,
+          "spread": 11170.0,
+          "spread_ratio": 0.2528293345405161,
+          "liquidity_factor": 0.798193315266486,
+          "adjusted_effective_price": 35264.18066847335,
           "has_required_data": true,
-          "rolling_window_price": 48977.57142857143,
+          "rolling_window_price": 45059.92857142857,
           "rolling_window_entries_used": 7
         },
         "prismatic_necklace": {
           "item_name": "Prismatic Necklace",
           "item_key": "prismatic_necklace",
-          "supply_price": 49689.0,
-          "demand_price": 35052.0,
-          "mid_price": 42370.5,
-          "spread": 14637.0,
-          "spread_ratio": 0.34545261443693137,
-          "liquidity_factor": 0.7432443099592159,
-          "adjusted_effective_price": 31491.633035126957,
+          "supply_price": 56296.0,
+          "demand_price": 37413.0,
+          "mid_price": 46854.5,
+          "spread": 18883.0,
+          "spread_ratio": 0.4030135846076684,
+          "liquidity_factor": 0.7127514736641948,
+          "adjusted_effective_price": 33395.61392279901,
           "has_required_data": true,
-          "rolling_window_price": 41045.28571428572,
+          "rolling_window_price": 42416.42857142857,
           "rolling_window_entries_used": 7
         },
         "prismatic_ring": {
           "item_name": "Prismatic Ring",
           "item_key": "prismatic_ring",
-          "supply_price": 129566.0,
-          "demand_price": 115984.0,
-          "mid_price": 122775.0,
-          "spread": 13582.0,
-          "spread_ratio": 0.11062512726532274,
-          "liquidity_factor": 0.9003938191658661,
-          "adjusted_effective_price": 110545.85114808922,
+          "supply_price": 127667.0,
+          "demand_price": 117476.0,
+          "mid_price": 122571.5,
+          "spread": 10191.0,
+          "spread_ratio": 0.08314330819154535,
+          "liquidity_factor": 0.9232388663967611,
+          "adjusted_effective_price": 113162.7727125506,
           "has_required_data": true,
-          "rolling_window_price": 122529.28571428571,
+          "rolling_window_price": 122176.5,
           "rolling_window_entries_used": 7
         }
       }
@@ -7774,6 +7779,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "na",
           "mark_value": 0.0
@@ -7790,11 +7800,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -7895,21 +7900,26 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 22,
-      "economic_score_raw": 8.687423662375453,
-      "market_liquidity_score": 0.456106,
-      "warzone_health_score": 0.3,
-      "final_score": 8.687424,
-      "history_health_score": 0.0,
+      "ranking_position": 19,
+      "economic_score_raw": 8.811031437687983,
+      "market_liquidity_score": 0.589439,
+      "warzone_health_score": 0.44,
+      "final_score": 8.811031,
+      "history_health_score": 0.2,
       "current_operational_score": 1.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
-      "wz1_expected_value": 82317.64285714286,
-      "wz2_expected_value": 98809.28571428571,
-      "wz3_expected_value": 212101.85714285713,
-      "service_expected_value": 393228.7857142857,
+      "wz1_expected_value": 85174.5,
+      "wz2_expected_value": 100366.28571428571,
+      "wz3_expected_value": 213283.0,
+      "service_expected_value": 398823.7857142857,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "na",
@@ -7927,11 +7937,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -7962,7 +7967,7 @@
           "liquidity_factor": -1.0,
           "adjusted_effective_price": -5000.0,
           "has_required_data": true,
-          "rolling_window_price": 13641.857142857143,
+          "rolling_window_price": 10985.142857142857,
           "rolling_window_entries_used": 7
         },
         "gill_necklace": {
@@ -7976,7 +7981,7 @@
           "liquidity_factor": 1.0,
           "adjusted_effective_price": 0.0,
           "has_required_data": true,
-          "rolling_window_price": 47067.642857142855,
+          "rolling_window_price": 49924.5,
           "rolling_window_entries_used": 7
         },
         "prismatic_necklace": {
@@ -7990,21 +7995,21 @@
           "liquidity_factor": 1.0,
           "adjusted_effective_price": 0.0,
           "has_required_data": true,
-          "rolling_window_price": 43809.28571428572,
+          "rolling_window_price": 45366.28571428572,
           "rolling_window_entries_used": 7
         },
         "prismatic_ring": {
           "item_name": "Prismatic Ring",
           "item_key": "prismatic_ring",
-          "supply_price": 143300.0,
+          "supply_price": 0.0,
           "demand_price": 0.0,
-          "mid_price": 71650.0,
-          "spread": 143300.0,
-          "spread_ratio": 2.0,
-          "liquidity_factor": 0.3333333333333333,
-          "adjusted_effective_price": 23883.333333333332,
+          "mid_price": 0.0,
+          "spread": 0.0,
+          "spread_ratio": 0.0,
+          "liquidity_factor": 1.0,
+          "adjusted_effective_price": 0.0,
           "has_required_data": true,
-          "rolling_window_price": 144101.85714285713,
+          "rolling_window_price": 145283.0,
           "rolling_window_entries_used": 7
         }
       }
@@ -8043,21 +8048,26 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 20,
-      "economic_score_raw": 8.82654917996203,
-      "market_liquidity_score": 0.831931,
+      "ranking_position": 21,
+      "economic_score_raw": 8.743618484228982,
+      "market_liquidity_score": 0.845663,
       "warzone_health_score": 1.0,
-      "final_score": 8.826549,
+      "final_score": 8.743618,
       "history_health_score": 1.0,
       "current_operational_score": 1.0,
       "expected_services": 2,
       "rolling_window_entries_target": 7,
-      "wz1_expected_value": 84378.21428571429,
-      "wz2_expected_value": 99439.28571428571,
-      "wz3_expected_value": 183451.42857142858,
-      "service_expected_value": 367268.9285714286,
+      "wz1_expected_value": 92658.14285714286,
+      "wz2_expected_value": 94731.21428571429,
+      "wz3_expected_value": 185926.92857142858,
+      "service_expected_value": 373316.28571428574,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -8077,82 +8087,77 @@
           "date": "2026-08-24",
           "mark": "healthy",
           "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
         "tibia_coin": {
           "item_name": "Tibia Coins",
           "item_key": "tibia_coin",
-          "supply_price": 42593.0,
-          "demand_price": 40653.0,
-          "mid_price": 41623.0,
-          "spread": 1940.0,
-          "spread_ratio": 0.046608846070682074,
-          "liquidity_factor": 0.9554667952161237,
-          "adjusted_effective_price": 39769.39441728072,
+          "supply_price": 42937.0,
+          "demand_price": 40985.0,
+          "mid_price": 41961.0,
+          "spread": 1952.0,
+          "spread_ratio": 0.04651938704987965,
+          "liquidity_factor": 0.9555484708400701,
+          "adjusted_effective_price": 40095.76938492018,
           "has_required_data": true,
-          "rolling_window_price": 41609.57142857143,
+          "rolling_window_price": 42695.857142857145,
           "rolling_window_entries_used": 7
         },
         "minor_crystalline_token": {
           "item_name": "Minor Crystalline Token",
           "item_key": "minor_crystalline_token",
-          "supply_price": 13526.0,
-          "demand_price": 12514.0,
-          "mid_price": 13020.0,
-          "spread": 1012.0,
-          "spread_ratio": 0.07772657450076804,
-          "liquidity_factor": 0.92787913340935,
-          "adjusted_effective_price": 12080.986316989738,
+          "supply_price": 13426.0,
+          "demand_price": 9104.0,
+          "mid_price": 11265.0,
+          "spread": 4322.0,
+          "spread_ratio": 0.38366622281402574,
+          "liquidity_factor": 0.722717649323154,
+          "adjusted_effective_price": 8141.414319625329,
           "has_required_data": true,
-          "rolling_window_price": 12849.357142857143,
+          "rolling_window_price": 12594.0,
           "rolling_window_entries_used": 7
         },
         "gill_necklace": {
           "item_name": "Gill Necklace",
           "item_key": "gill_necklace",
-          "supply_price": 57747.0,
-          "demand_price": 43959.0,
-          "mid_price": 50853.0,
-          "spread": 13788.0,
-          "spread_ratio": 0.27113444634534833,
-          "liquidity_factor": 0.7866988443866897,
-          "adjusted_effective_price": 40005.99633359633,
+          "supply_price": 67766.0,
+          "demand_price": 43487.0,
+          "mid_price": 55626.5,
+          "spread": 24279.0,
+          "spread_ratio": 0.43646463466153723,
+          "liquidity_factor": 0.6961535814180501,
+          "adjusted_effective_price": 38724.58719675116,
           "has_required_data": true,
-          "rolling_window_price": 49128.21428571428,
+          "rolling_window_price": 57408.142857142855,
           "rolling_window_entries_used": 7
         },
         "prismatic_necklace": {
           "item_name": "Prismatic Necklace",
           "item_key": "prismatic_necklace",
-          "supply_price": 55128.0,
-          "demand_price": 33475.0,
-          "mid_price": 44301.5,
-          "spread": 21653.0,
-          "spread_ratio": 0.4887644887870614,
-          "liquidity_factor": 0.6716979129551433,
-          "adjusted_effective_price": 29757.225090782278,
+          "supply_price": 35393.0,
+          "demand_price": 33509.0,
+          "mid_price": 34451.0,
+          "spread": 1884.0,
+          "spread_ratio": 0.0546863661432179,
+          "liquidity_factor": 0.948149167469382,
+          "adjusted_effective_price": 32664.68696848768,
           "has_required_data": true,
-          "rolling_window_price": 44439.28571428572,
+          "rolling_window_price": 39731.21428571428,
           "rolling_window_entries_used": 7
         },
         "prismatic_ring": {
           "item_name": "Prismatic Ring",
           "item_key": "prismatic_ring",
-          "supply_price": 132562.0,
-          "demand_price": 106006.0,
-          "mid_price": 119284.0,
-          "spread": 26556.0,
-          "spread_ratio": 0.2226283491499279,
-          "liquidity_factor": 0.8179100383982446,
-          "adjusted_effective_price": 97563.58102029622,
+          "supply_price": 117765.0,
+          "demand_price": 106116.0,
+          "mid_price": 111940.5,
+          "spread": 11649.0,
+          "spread_ratio": 0.10406421268441716,
+          "liquidity_factor": 0.9057444200356827,
+          "adjusted_effective_price": 101389.48325100433,
           "has_required_data": true,
-          "rolling_window_price": 115451.42857142857,
+          "rolling_window_price": 117926.92857142857,
           "rolling_window_entries_used": 7
         }
       }
@@ -8198,6 +8203,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "na",
           "mark_value": 0.0
@@ -8214,11 +8224,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -8335,21 +8340,26 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 12,
-      "economic_score_raw": 10.010005374295899,
-      "market_liquidity_score": 0.885506,
+      "ranking_position": 11,
+      "economic_score_raw": 10.102219919831509,
+      "market_liquidity_score": 0.806363,
       "warzone_health_score": 1.0,
-      "final_score": 10.010005,
+      "final_score": 10.10222,
       "history_health_score": 1.0,
       "current_operational_score": 1.0,
       "expected_services": 3,
       "rolling_window_entries_target": 7,
-      "wz1_expected_value": 74944.64285714286,
-      "wz2_expected_value": 146568.07142857142,
-      "wz3_expected_value": 198896.07142857142,
-      "service_expected_value": 420408.7857142857,
+      "wz1_expected_value": 76519.92857142858,
+      "wz2_expected_value": 146252.42857142858,
+      "wz3_expected_value": 202069.2857142857,
+      "service_expected_value": 424841.64285714284,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -8369,82 +8379,77 @@
           "date": "2026-08-24",
           "mark": "healthy",
           "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
         "tibia_coin": {
           "item_name": "Tibia Coins",
           "item_key": "tibia_coin",
-          "supply_price": 41402.0,
-          "demand_price": 40732.0,
-          "mid_price": 41067.0,
-          "spread": 670.0,
-          "spread_ratio": 0.016314802639588965,
-          "liquidity_factor": 0.983947097299758,
-          "adjusted_effective_price": 40407.75544480916,
+          "supply_price": 42834.0,
+          "demand_price": 41476.0,
+          "mid_price": 42155.0,
+          "spread": 1358.0,
+          "spread_ratio": 0.032214446684853515,
+          "liquidity_factor": 0.9687909360421023,
+          "adjusted_effective_price": 40839.381908854826,
           "has_required_data": true,
-          "rolling_window_price": 41998.857142857145,
+          "rolling_window_price": 42054.28571428572,
           "rolling_window_entries_used": 7
         },
         "minor_crystalline_token": {
           "item_name": "Minor Crystalline Token",
           "item_key": "minor_crystalline_token",
-          "supply_price": 15837.0,
-          "demand_price": 11688.0,
-          "mid_price": 13762.5,
-          "spread": 4149.0,
-          "spread_ratio": 0.3014713896457766,
-          "liquidity_factor": 0.7683611087848589,
-          "adjusted_effective_price": 10574.56975965162,
+          "supply_price": 17106.0,
+          "demand_price": 12252.0,
+          "mid_price": 14679.0,
+          "spread": 4854.0,
+          "spread_ratio": 0.3306764765992234,
+          "liquidity_factor": 0.7514974658270619,
+          "adjusted_effective_price": 11031.23130087544,
           "has_required_data": true,
-          "rolling_window_price": 13232.357142857143,
+          "rolling_window_price": 13672.142857142857,
           "rolling_window_entries_used": 7
         },
         "gill_necklace": {
           "item_name": "Gill Necklace",
           "item_key": "gill_necklace",
-          "supply_price": 38099.0,
-          "demand_price": 33587.0,
-          "mid_price": 35843.0,
-          "spread": 4512.0,
-          "spread_ratio": 0.12588232011829367,
-          "liquidity_factor": 0.8881922933961095,
-          "adjusted_effective_price": 31835.476372196754,
+          "supply_price": 63093.0,
+          "demand_price": 35971.0,
+          "mid_price": 49532.0,
+          "spread": 27122.0,
+          "spread_ratio": 0.5475652103690544,
+          "liquidity_factor": 0.6461763247840948,
+          "adjusted_effective_price": 32006.405719205784,
           "has_required_data": true,
-          "rolling_window_price": 39694.642857142855,
+          "rolling_window_price": 41269.92857142857,
           "rolling_window_entries_used": 7
         },
         "prismatic_necklace": {
           "item_name": "Prismatic Necklace",
           "item_key": "prismatic_necklace",
-          "supply_price": 96181.0,
-          "demand_price": 84310.0,
-          "mid_price": 90245.5,
-          "spread": 11871.0,
-          "spread_ratio": 0.13154118487902444,
-          "liquidity_factor": 0.8837504223117714,
-          "adjusted_effective_price": 79754.49873673696,
+          "supply_price": 105134.0,
+          "demand_price": 83248.0,
+          "mid_price": 94191.0,
+          "spread": 21886.0,
+          "spread_ratio": 0.23235765625165886,
+          "liquidity_factor": 0.8114527425760486,
+          "adjusted_effective_price": 76431.54527598059,
           "has_required_data": true,
-          "rolling_window_price": 91568.07142857143,
+          "rolling_window_price": 91252.42857142857,
           "rolling_window_entries_used": 7
         },
         "prismatic_ring": {
           "item_name": "Prismatic Ring",
           "item_key": "prismatic_ring",
-          "supply_price": 140519.0,
-          "demand_price": 126237.0,
-          "mid_price": 133378.0,
-          "spread": 14282.0,
-          "spread_ratio": 0.1070791284919552,
-          "liquidity_factor": 0.9032778003521603,
-          "adjusted_effective_price": 120477.38645537043,
+          "supply_price": 151530.0,
+          "demand_price": 127646.0,
+          "mid_price": 139588.0,
+          "spread": 23884.0,
+          "spread_ratio": 0.1711035332550076,
+          "liquidity_factor": 0.8538954683370852,
+          "adjusted_effective_price": 119193.56063423704,
           "has_required_data": true,
-          "rolling_window_price": 130896.07142857143,
+          "rolling_window_price": 134069.2857142857,
           "rolling_window_entries_used": 7
         }
       }
@@ -8486,9 +8491,9 @@
       "ranking_position": 63,
       "economic_score_raw": 6.641136459572508,
       "market_liquidity_score": 0.882276,
-      "warzone_health_score": 0.86,
+      "warzone_health_score": 1.0,
       "final_score": 6.641136,
-      "history_health_score": 0.8,
+      "history_health_score": 1.0,
       "current_operational_score": 1.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -8498,6 +8503,11 @@
       "service_expected_value": 296676.64285714284,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -8517,11 +8527,6 @@
           "date": "2026-08-24",
           "mark": "healthy",
           "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "trolls",
-          "mark_value": 0.0
         }
       ],
       "market": {
@@ -8626,7 +8631,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 30,
+      "ranking_position": 29,
       "economic_score_raw": 8.284043183101307,
       "market_liquidity_score": 0.827364,
       "warzone_health_score": 1.0,
@@ -8641,6 +8646,11 @@
       "service_expected_value": 343768.85714285716,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -8658,11 +8668,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -8766,10 +8771,10 @@
         "excluded_na_world"
       ],
       "ranking_position": null,
-      "economic_score_raw": 23.28142275551746,
-      "market_liquidity_score": 0.975129,
+      "economic_score_raw": 24.218886176958996,
+      "market_liquidity_score": 0.967616,
       "warzone_health_score": 0.0,
-      "final_score": 23.281423,
+      "final_score": 24.218886,
       "history_health_score": 0.0,
       "current_operational_score": 0.0,
       "expected_services": 1,
@@ -8780,6 +8785,11 @@
       "service_expected_value": 620882.2857142857,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-08-27",
           "mark": "na",
@@ -8799,26 +8809,21 @@
           "date": "2026-08-24",
           "mark": "na",
           "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "na",
-          "mark_value": 0.0
         }
       ],
       "market": {
         "tibia_coin": {
           "item_name": "Tibia Coins",
           "item_key": "tibia_coin",
-          "supply_price": 25000.0,
-          "demand_price": 21685.0,
-          "mid_price": 23342.5,
-          "spread": 3315.0,
-          "spread_ratio": 0.14201563671414802,
-          "liquidity_factor": 0.8756447528838037,
-          "adjusted_effective_price": 20439.737644190187,
+          "supply_price": 26166.0,
+          "demand_price": 21556.0,
+          "mid_price": 23861.0,
+          "spread": 4610.0,
+          "spread_ratio": 0.19320229663467584,
+          "liquidity_factor": 0.8380808542025219,
+          "adjusted_effective_price": 19997.447262126374,
           "has_required_data": true,
-          "rolling_window_price": 26668.571428571428,
+          "rolling_window_price": 25636.285714285714,
           "rolling_window_entries_used": 7
         },
         "minor_crystalline_token": {
@@ -8926,6 +8931,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "na",
           "mark_value": 0.0
@@ -8942,11 +8952,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -9063,21 +9068,26 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 44,
-      "economic_score_raw": 7.574031790934196,
-      "market_liquidity_score": 0.834881,
+      "ranking_position": 43,
+      "economic_score_raw": 7.592955105702079,
+      "market_liquidity_score": 0.850929,
       "warzone_health_score": 1.0,
-      "final_score": 7.574032,
+      "final_score": 7.592955,
       "history_health_score": 1.0,
       "current_operational_score": 1.0,
       "expected_services": 3,
       "rolling_window_entries_target": 7,
-      "wz1_expected_value": 64694.71428571429,
-      "wz2_expected_value": 87218.71428571429,
-      "wz3_expected_value": 169377.0,
-      "service_expected_value": 321290.4285714286,
+      "wz1_expected_value": 65040.42857142857,
+      "wz2_expected_value": 87022.35714285714,
+      "wz3_expected_value": 169597.57142857142,
+      "service_expected_value": 321660.35714285716,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -9097,82 +9107,77 @@
           "date": "2026-08-24",
           "mark": "healthy",
           "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
         "tibia_coin": {
           "item_name": "Tibia Coins",
           "item_key": "tibia_coin",
-          "supply_price": 42344.0,
-          "demand_price": 40468.0,
-          "mid_price": 41406.0,
-          "spread": 1876.0,
-          "spread_ratio": 0.045307443365695796,
-          "liquidity_factor": 0.9566563467492261,
-          "adjusted_effective_price": 39611.312693498454,
+          "supply_price": 42537.0,
+          "demand_price": 41152.0,
+          "mid_price": 41844.5,
+          "spread": 1385.0,
+          "spread_ratio": 0.03309873460072411,
+          "liquidity_factor": 0.9679616928255012,
+          "adjusted_effective_price": 40503.873055436685,
           "has_required_data": true,
-          "rolling_window_price": 42420.0,
+          "rolling_window_price": 42363.0,
           "rolling_window_entries_used": 7
         },
         "minor_crystalline_token": {
           "item_name": "Minor Crystalline Token",
           "item_key": "minor_crystalline_token",
-          "supply_price": 14537.0,
-          "demand_price": 11007.0,
-          "mid_price": 12772.0,
-          "spread": 3530.0,
-          "spread_ratio": 0.276385844033824,
-          "liquidity_factor": 0.7834621518832044,
-          "adjusted_effective_price": 10006.378603852287,
+          "supply_price": 13830.0,
+          "demand_price": 11255.0,
+          "mid_price": 12542.5,
+          "spread": 2575.0,
+          "spread_ratio": 0.20530197329081123,
+          "liquidity_factor": 0.8296676037704647,
+          "adjusted_effective_price": 10406.105920291053,
           "has_required_data": true,
-          "rolling_window_price": 12447.0,
+          "rolling_window_price": 12431.357142857143,
           "rolling_window_entries_used": 7
         },
         "gill_necklace": {
           "item_name": "Gill Necklace",
           "item_key": "gill_necklace",
-          "supply_price": 36281.0,
-          "demand_price": 27251.0,
-          "mid_price": 31766.0,
-          "spread": 9030.0,
-          "spread_ratio": 0.2842661965623623,
-          "liquidity_factor": 0.7786547700754975,
-          "adjusted_effective_price": 24734.747426218255,
+          "supply_price": 35647.0,
+          "demand_price": 27373.0,
+          "mid_price": 31510.0,
+          "spread": 8274.0,
+          "spread_ratio": 0.2625833068867026,
+          "liquidity_factor": 0.792026945505731,
+          "adjusted_effective_price": 24956.769052885586,
           "has_required_data": true,
-          "rolling_window_price": 29444.714285714286,
+          "rolling_window_price": 29790.428571428572,
           "rolling_window_entries_used": 7
         },
         "prismatic_necklace": {
           "item_name": "Prismatic Necklace",
           "item_key": "prismatic_necklace",
-          "supply_price": 35673.0,
-          "demand_price": 28053.0,
-          "mid_price": 31863.0,
-          "spread": 7620.0,
-          "spread_ratio": 0.23914885603992092,
-          "liquidity_factor": 0.807005546690981,
-          "adjusted_effective_price": 25713.617734214728,
+          "supply_price": 34927.0,
+          "demand_price": 28072.0,
+          "mid_price": 31499.5,
+          "spread": 6855.0,
+          "spread_ratio": 0.2176225019444753,
+          "liquidity_factor": 0.8212726016503931,
+          "adjusted_effective_price": 25869.676315686556,
           "has_required_data": true,
-          "rolling_window_price": 32218.714285714286,
+          "rolling_window_price": 32022.35714285714,
           "rolling_window_entries_used": 7
         },
         "prismatic_ring": {
           "item_name": "Prismatic Ring",
           "item_key": "prismatic_ring",
-          "supply_price": 111631.0,
-          "demand_price": 93349.0,
-          "mid_price": 102490.0,
-          "spread": 18282.0,
-          "spread_ratio": 0.1783783783783784,
-          "liquidity_factor": 0.8486238532110092,
-          "adjusted_effective_price": 86975.45871559634,
+          "supply_price": 113123.0,
+          "demand_price": 93945.0,
+          "mid_price": 103534.0,
+          "spread": 19178.0,
+          "spread_ratio": 0.18523383622771264,
+          "liquidity_factor": 0.843715366060369,
+          "adjusted_effective_price": 87353.22670969424,
           "has_required_data": true,
-          "rolling_window_price": 101377.0,
+          "rolling_window_price": 101597.57142857143,
           "rolling_window_entries_used": 7
         }
       }
@@ -9227,6 +9232,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "healthy",
           "mark_value": 1.0
@@ -9243,11 +9253,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -9375,6 +9380,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "healthy",
           "mark_value": 1.0
@@ -9391,11 +9401,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -9507,21 +9512,26 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 19,
-      "economic_score_raw": 8.881227530408564,
-      "market_liquidity_score": 0.868047,
+      "ranking_position": 22,
+      "economic_score_raw": 8.668697377630693,
+      "market_liquidity_score": 0.875122,
       "warzone_health_score": 0.93,
-      "final_score": 8.881228,
+      "final_score": 8.668697,
       "history_health_score": 0.9,
       "current_operational_score": 1.0,
       "expected_services": 2,
       "rolling_window_entries_target": 7,
-      "wz1_expected_value": 77091.85714285714,
-      "wz2_expected_value": 102830.85714285714,
-      "wz3_expected_value": 192040.85714285716,
-      "service_expected_value": 371963.5714285715,
+      "wz1_expected_value": 75812.85714285714,
+      "wz2_expected_value": 103444.57142857142,
+      "wz3_expected_value": 185216.7142857143,
+      "service_expected_value": 364474.14285714284,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -9541,82 +9551,77 @@
           "date": "2026-08-24",
           "mark": "healthy",
           "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
         "tibia_coin": {
           "item_name": "Tibia Coins",
           "item_key": "tibia_coin",
-          "supply_price": 41937.0,
-          "demand_price": 41093.0,
-          "mid_price": 41515.0,
-          "spread": 844.0,
-          "spread_ratio": 0.020330001204383958,
-          "liquidity_factor": 0.9800750725937818,
-          "adjusted_effective_price": 40687.81663873085,
+          "supply_price": 42326.0,
+          "demand_price": 41218.0,
+          "mid_price": 41772.0,
+          "spread": 1108.0,
+          "spread_ratio": 0.026524944939193718,
+          "liquidity_factor": 0.9741604477611939,
+          "adjusted_effective_price": 40692.630223880595,
           "has_required_data": true,
-          "rolling_window_price": 41882.0,
+          "rolling_window_price": 42044.857142857145,
           "rolling_window_entries_used": 7
         },
         "minor_crystalline_token": {
           "item_name": "Minor Crystalline Token",
           "item_key": "minor_crystalline_token",
-          "supply_price": 18520.0,
-          "demand_price": 12835.0,
-          "mid_price": 15677.5,
-          "spread": 5685.0,
-          "spread_ratio": 0.3626215914527189,
-          "liquidity_factor": 0.7338794616734933,
-          "adjusted_effective_price": 11505.39526038619,
+          "supply_price": 16475.0,
+          "demand_price": 12879.0,
+          "mid_price": 14677.0,
+          "spread": 3596.0,
+          "spread_ratio": 0.24500919806499966,
+          "liquidity_factor": 0.803206917309692,
+          "adjusted_effective_price": 11788.66792535435,
           "has_required_data": true,
-          "rolling_window_price": 15782.142857142857,
+          "rolling_window_price": 15484.285714285714,
           "rolling_window_entries_used": 7
         },
         "gill_necklace": {
           "item_name": "Gill Necklace",
           "item_key": "gill_necklace",
-          "supply_price": 41723.0,
-          "demand_price": 37208.0,
-          "mid_price": 39465.5,
-          "spread": 4515.0,
-          "spread_ratio": 0.11440371970455207,
-          "liquidity_factor": 0.8973408669751368,
-          "adjusted_effective_price": 35414.00598560726,
+          "supply_price": 40774.0,
+          "demand_price": 37225.0,
+          "mid_price": 38999.5,
+          "spread": 3549.0,
+          "spread_ratio": 0.09100116668162413,
+          "liquidity_factor": 0.9165893039707628,
+          "adjusted_effective_price": 35746.52456020776,
           "has_required_data": true,
-          "rolling_window_price": 41841.857142857145,
+          "rolling_window_price": 40562.857142857145,
           "rolling_window_entries_used": 7
         },
         "prismatic_necklace": {
           "item_name": "Prismatic Necklace",
           "item_key": "prismatic_necklace",
-          "supply_price": 51066.0,
-          "demand_price": 40105.0,
-          "mid_price": 45585.5,
-          "spread": 10961.0,
-          "spread_ratio": 0.24044926566561736,
-          "liquidity_factor": 0.8061595324202205,
-          "adjusted_effective_price": 36749.185365141966,
+          "supply_price": 50949.0,
+          "demand_price": 40185.0,
+          "mid_price": 45567.0,
+          "spread": 10764.0,
+          "spread_ratio": 0.23622358285601422,
+          "liquidity_factor": 0.8089151621664803,
+          "adjusted_effective_price": 36859.837194440006,
           "has_required_data": true,
-          "rolling_window_price": 47830.857142857145,
+          "rolling_window_price": 48444.57142857143,
           "rolling_window_entries_used": 7
         },
         "prismatic_ring": {
           "item_name": "Prismatic Ring",
           "item_key": "prismatic_ring",
-          "supply_price": 116630.0,
-          "demand_price": 107262.0,
-          "mid_price": 111946.0,
-          "spread": 9368.0,
-          "spread_ratio": 0.08368320440212246,
-          "liquidity_factor": 0.9227789043309098,
-          "adjusted_effective_price": 103301.40722422802,
+          "supply_price": 118301.0,
+          "demand_price": 102223.0,
+          "mid_price": 110262.0,
+          "spread": 16078.0,
+          "spread_ratio": 0.14581632838149136,
+          "liquidity_factor": 0.8727402247902486,
+          "adjusted_effective_price": 96230.0826658224,
           "has_required_data": true,
-          "rolling_window_price": 124040.85714285714,
+          "rolling_window_price": 117216.71428571429,
           "rolling_window_entries_used": 7
         }
       }
@@ -9650,12 +9655,12 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 53,
+      "ranking_position": 52,
       "economic_score_raw": 7.306292120373796,
       "market_liquidity_score": 0.797274,
-      "warzone_health_score": 0.93,
+      "warzone_health_score": 1.0,
       "final_score": 7.306292,
-      "history_health_score": 0.9,
+      "history_health_score": 1.0,
       "current_operational_score": 1.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
@@ -9665,6 +9670,11 @@
       "service_expected_value": 324467.2142857143,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -9684,11 +9694,6 @@
           "date": "2026-08-24",
           "mark": "healthy",
           "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "inconclusive",
-          "mark_value": 0.5
         }
       ],
       "market": {
@@ -9805,6 +9810,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "na",
           "mark_value": 0.0
@@ -9821,11 +9831,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -9942,21 +9947,26 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 52,
-      "economic_score_raw": 7.319733006524444,
-      "market_liquidity_score": 0.876674,
+      "ranking_position": 51,
+      "economic_score_raw": 7.3408295445481375,
+      "market_liquidity_score": 0.918988,
       "warzone_health_score": 0.86,
-      "final_score": 7.319733,
+      "final_score": 7.34083,
       "history_health_score": 0.8,
       "current_operational_score": 1.0,
       "expected_services": 3,
       "rolling_window_entries_target": 7,
-      "wz1_expected_value": 69622.35714285714,
-      "wz2_expected_value": 88374.57142857142,
-      "wz3_expected_value": 168794.64285714284,
-      "service_expected_value": 326791.5714285714,
+      "wz1_expected_value": 68623.92857142858,
+      "wz2_expected_value": 91245.14285714286,
+      "wz3_expected_value": 168816.57142857142,
+      "service_expected_value": 328685.64285714284,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -9976,82 +9986,77 @@
           "date": "2026-08-24",
           "mark": "healthy",
           "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
         "tibia_coin": {
           "item_name": "Tibia Coins",
           "item_key": "tibia_coin",
-          "supply_price": 44939.0,
-          "demand_price": 44363.0,
-          "mid_price": 44651.0,
-          "spread": 576.0,
-          "spread_ratio": 0.01290004703142147,
-          "liquidity_factor": 0.9872642448095164,
-          "adjusted_effective_price": 44082.33579498972,
+          "supply_price": 44905.0,
+          "demand_price": 44403.0,
+          "mid_price": 44654.0,
+          "spread": 502.0,
+          "spread_ratio": 0.011241993998298025,
+          "liquidity_factor": 0.9888829834352025,
+          "adjusted_effective_price": 44157.580742315535,
           "has_required_data": true,
-          "rolling_window_price": 44645.28571428572,
+          "rolling_window_price": 44775.0,
           "rolling_window_entries_used": 7
         },
         "minor_crystalline_token": {
           "item_name": "Minor Crystalline Token",
           "item_key": "minor_crystalline_token",
-          "supply_price": 14440.0,
-          "demand_price": 11010.0,
-          "mid_price": 12725.0,
-          "spread": 3430.0,
-          "spread_ratio": 0.2695481335952849,
-          "liquidity_factor": 0.7876818322500774,
-          "adjusted_effective_price": 10023.251315382235,
+          "supply_price": 13343.0,
+          "demand_price": 11090.0,
+          "mid_price": 12216.5,
+          "spread": 2253.0,
+          "spread_ratio": 0.1844227069946384,
+          "liquidity_factor": 0.8442931683886796,
+          "adjusted_effective_price": 10314.307491620304,
           "has_required_data": true,
-          "rolling_window_price": 12271.142857142857,
+          "rolling_window_price": 12305.07142857143,
           "rolling_window_entries_used": 7
         },
         "gill_necklace": {
           "item_name": "Gill Necklace",
           "item_key": "gill_necklace",
-          "supply_price": 36180.0,
-          "demand_price": 30624.0,
-          "mid_price": 33402.0,
-          "spread": 5556.0,
-          "spread_ratio": 0.16633734506915754,
-          "liquidity_factor": 0.8573848760203295,
-          "adjusted_effective_price": 28638.369628831046,
+          "supply_price": 33095.0,
+          "demand_price": 29963.0,
+          "mid_price": 31529.0,
+          "spread": 3132.0,
+          "spread_ratio": 0.09933711820863332,
+          "liquidity_factor": 0.9096390756181298,
+          "adjusted_effective_price": 28680.010415164015,
           "has_required_data": true,
-          "rolling_window_price": 34372.357142857145,
+          "rolling_window_price": 33373.92857142857,
           "rolling_window_entries_used": 7
         },
         "prismatic_necklace": {
           "item_name": "Prismatic Necklace",
           "item_key": "prismatic_necklace",
-          "supply_price": 43090.0,
-          "demand_price": 34454.0,
-          "mid_price": 38772.0,
-          "spread": 8636.0,
-          "spread_ratio": 0.22273805839265448,
-          "liquidity_factor": 0.8178366520418495,
-          "adjusted_effective_price": 31709.16267296659,
+          "supply_price": 38430.0,
+          "demand_price": 35192.0,
+          "mid_price": 36811.0,
+          "spread": 3238.0,
+          "spread_ratio": 0.08796283719540354,
+          "liquidity_factor": 0.9191490424230317,
+          "adjusted_effective_price": 33834.79540063422,
           "has_required_data": true,
-          "rolling_window_price": 33374.57142857143,
+          "rolling_window_price": 36245.142857142855,
           "rolling_window_entries_used": 7
         },
         "prismatic_ring": {
           "item_name": "Prismatic Ring",
           "item_key": "prismatic_ring",
-          "supply_price": 103173.0,
-          "demand_price": 96043.0,
-          "mid_price": 99608.0,
-          "spread": 7130.0,
-          "spread_ratio": 0.07158059593606939,
-          "liquidity_factor": 0.9332009218834905,
-          "adjusted_effective_price": 92954.27742697072,
+          "supply_price": 102482.0,
+          "demand_price": 95375.0,
+          "mid_price": 98928.5,
+          "spread": 7107.0,
+          "spread_ratio": 0.07183976306120077,
+          "liquidity_factor": 0.9329752771477478,
+          "adjusted_effective_price": 92297.84470531097,
           "has_required_data": true,
-          "rolling_window_price": 100794.64285714286,
+          "rolling_window_price": 100816.57142857143,
           "rolling_window_entries_used": 7
         }
       }
@@ -10090,21 +10095,26 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 34,
-      "economic_score_raw": 7.949772319116449,
-      "market_liquidity_score": 0.841476,
+      "ranking_position": 39,
+      "economic_score_raw": 7.801862013193158,
+      "market_liquidity_score": 0.867275,
       "warzone_health_score": 1.0,
-      "final_score": 7.949772,
+      "final_score": 7.801862,
       "history_health_score": 1.0,
       "current_operational_score": 1.0,
       "expected_services": 3,
       "rolling_window_entries_target": 7,
-      "wz1_expected_value": 65940.14285714286,
-      "wz2_expected_value": 91153.07142857142,
-      "wz3_expected_value": 180597.2142857143,
-      "service_expected_value": 337690.4285714285,
+      "wz1_expected_value": 65482.07142857143,
+      "wz2_expected_value": 90936.42857142858,
+      "wz3_expected_value": 177106.64285714284,
+      "service_expected_value": 333525.14285714284,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -10124,82 +10134,77 @@
           "date": "2026-08-24",
           "mark": "healthy",
           "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
         "tibia_coin": {
           "item_name": "Tibia Coins",
           "item_key": "tibia_coin",
-          "supply_price": 42824.0,
-          "demand_price": 40568.0,
-          "mid_price": 41696.0,
-          "spread": 2256.0,
-          "spread_ratio": 0.054105909439754414,
-          "liquidity_factor": 0.9486712777575537,
-          "adjusted_effective_price": 39555.79759737896,
+          "supply_price": 42441.0,
+          "demand_price": 40603.0,
+          "mid_price": 41522.0,
+          "spread": 1838.0,
+          "spread_ratio": 0.04426569047733731,
+          "liquidity_factor": 0.9576107011070111,
+          "adjusted_effective_price": 39761.91153136532,
           "has_required_data": true,
-          "rolling_window_price": 42478.0,
+          "rolling_window_price": 42749.42857142857,
           "rolling_window_entries_used": 7
         },
         "minor_crystalline_token": {
           "item_name": "Minor Crystalline Token",
           "item_key": "minor_crystalline_token",
-          "supply_price": 22790.0,
-          "demand_price": 13130.0,
-          "mid_price": 17960.0,
-          "spread": 9660.0,
-          "spread_ratio": 0.5378619153674833,
-          "liquidity_factor": 0.6502534395365677,
-          "adjusted_effective_price": 11678.551774076755,
+          "supply_price": 24832.0,
+          "demand_price": 14000.0,
+          "mid_price": 19416.0,
+          "spread": 10832.0,
+          "spread_ratio": 0.5578903996703749,
+          "liquidity_factor": 0.6418936789209204,
+          "adjusted_effective_price": 12463.007669928591,
           "has_required_data": true,
-          "rolling_window_price": 15236.857142857143,
+          "rolling_window_price": 16661.071428571428,
           "rolling_window_entries_used": 7
         },
         "gill_necklace": {
           "item_name": "Gill Necklace",
           "item_key": "gill_necklace",
-          "supply_price": 31780.0,
-          "demand_price": 27875.0,
-          "mid_price": 29827.5,
-          "spread": 3905.0,
-          "spread_ratio": 0.13091945352443216,
-          "liquidity_factor": 0.8842362706588601,
-          "adjusted_effective_price": 26374.55736307715,
+          "supply_price": 29833.0,
+          "demand_price": 27980.0,
+          "mid_price": 28906.5,
+          "spread": 1853.0,
+          "spread_ratio": 0.06410322937747566,
+          "liquidity_factor": 0.9397584486093726,
+          "adjusted_effective_price": 27165.12759472683,
           "has_required_data": true,
-          "rolling_window_price": 30690.14285714286,
+          "rolling_window_price": 30232.071428571428,
           "rolling_window_entries_used": 7
         },
         "prismatic_necklace": {
           "item_name": "Prismatic Necklace",
           "item_key": "prismatic_necklace",
-          "supply_price": 39189.0,
-          "demand_price": 33028.0,
-          "mid_price": 36108.5,
-          "spread": 6161.0,
-          "spread_ratio": 0.17062464516665052,
-          "liquidity_factor": 0.8542447864299318,
-          "adjusted_effective_price": 30845.497870805193,
+          "supply_price": 36812.0,
+          "demand_price": 33252.0,
+          "mid_price": 35032.0,
+          "spread": 3560.0,
+          "spread_ratio": 0.10162137474309203,
+          "liquidity_factor": 0.9077529021558872,
+          "adjusted_effective_price": 31800.39966832504,
           "has_required_data": true,
-          "rolling_window_price": 36153.07142857143,
+          "rolling_window_price": 35936.42857142857,
           "rolling_window_entries_used": 7
         },
         "prismatic_ring": {
           "item_name": "Prismatic Ring",
           "item_key": "prismatic_ring",
-          "supply_price": 117053.0,
-          "demand_price": 100775.0,
-          "mid_price": 108914.0,
-          "spread": 16278.0,
-          "spread_ratio": 0.14945737003507353,
-          "liquidity_factor": 0.8699757172982299,
-          "adjusted_effective_price": 94752.5352738194,
+          "supply_price": 110868.0,
+          "demand_price": 97883.0,
+          "mid_price": 104375.5,
+          "spread": 12985.0,
+          "spread_ratio": 0.12440658966903152,
+          "liquidity_factor": 0.8893580037576526,
+          "adjusted_effective_price": 92827.18632120687,
           "has_required_data": true,
-          "rolling_window_price": 112597.21428571429,
+          "rolling_window_price": 109106.64285714286,
           "rolling_window_entries_used": 7
         }
       }
@@ -10252,6 +10257,11 @@
       "service_expected_value": null,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-08-27",
           "mark": "na",
@@ -10360,7 +10370,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 37,
+      "ranking_position": 36,
       "economic_score_raw": 7.9181182023960694,
       "market_liquidity_score": 0.898246,
       "warzone_health_score": 0.93,
@@ -10375,6 +10385,11 @@
       "service_expected_value": 327819.14285714284,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -10392,11 +10407,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -10515,6 +10525,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "na",
           "mark_value": 0.0
@@ -10531,11 +10546,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -10654,6 +10664,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "na",
           "mark_value": 0.0
@@ -10670,11 +10685,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -10793,6 +10803,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "na",
           "mark_value": 0.0
@@ -10809,11 +10824,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -10930,7 +10940,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 57,
+      "ranking_position": 56,
       "economic_score_raw": 7.238532204896095,
       "market_liquidity_score": 0.815789,
       "warzone_health_score": 1.0,
@@ -10945,6 +10955,11 @@
       "service_expected_value": 300205.7142857143,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -10962,11 +10977,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -11085,6 +11095,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "na",
           "mark_value": 0.0
@@ -11101,11 +11116,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -11224,6 +11234,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "healthy",
           "mark_value": 1.0
@@ -11240,11 +11255,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -11352,20 +11362,25 @@
       "insufficient_data": false,
       "insufficient_data_reasons": [],
       "ranking_position": 35,
-      "economic_score_raw": 7.949559101046492,
-      "market_liquidity_score": 0.817895,
+      "economic_score_raw": 7.922809849110427,
+      "market_liquidity_score": 0.879532,
       "warzone_health_score": 1.0,
-      "final_score": 7.949559,
+      "final_score": 7.92281,
       "history_health_score": 1.0,
       "current_operational_score": 1.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
-      "wz1_expected_value": 65585.57142857142,
-      "wz2_expected_value": 90517.28571428571,
-      "wz3_expected_value": 174882.7142857143,
-      "service_expected_value": 330985.5714285714,
+      "wz1_expected_value": 70125.64285714286,
+      "wz2_expected_value": 83859.0,
+      "wz3_expected_value": 177711.7142857143,
+      "service_expected_value": 331696.35714285716,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -11385,82 +11400,77 @@
           "date": "2026-08-24",
           "mark": "healthy",
           "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
         "tibia_coin": {
           "item_name": "Tibia Coins",
           "item_key": "tibia_coin",
-          "supply_price": 42139.0,
-          "demand_price": 40218.0,
-          "mid_price": 41178.5,
-          "spread": 1921.0,
-          "spread_ratio": 0.0466505579367874,
-          "liquidity_factor": 0.955428717270502,
-          "adjusted_effective_price": 39343.12143412337,
+          "supply_price": 41988.0,
+          "demand_price": 40555.0,
+          "mid_price": 41271.5,
+          "spread": 1433.0,
+          "spread_ratio": 0.03472129677864871,
+          "liquidity_factor": 0.966443817396293,
+          "adjusted_effective_price": 39886.58600967111,
           "has_required_data": true,
-          "rolling_window_price": 41635.71428571428,
+          "rolling_window_price": 41866.0,
           "rolling_window_entries_used": 7
         },
         "minor_crystalline_token": {
           "item_name": "Minor Crystalline Token",
           "item_key": "minor_crystalline_token",
-          "supply_price": 15895.0,
-          "demand_price": 13753.0,
-          "mid_price": 14824.0,
-          "spread": 2142.0,
-          "spread_ratio": 0.1444954128440367,
-          "liquidity_factor": 0.87374749498998,
-          "adjusted_effective_price": 12952.432865731464,
+          "supply_price": 15761.0,
+          "demand_price": 14194.0,
+          "mid_price": 14977.5,
+          "spread": 1567.0,
+          "spread_ratio": 0.10462360206977132,
+          "liquidity_factor": 0.9052857445072381,
+          "adjusted_effective_price": 13558.917238357159,
           "has_required_data": true,
-          "rolling_window_price": 14866.5,
+          "rolling_window_price": 15079.857142857143,
           "rolling_window_entries_used": 7
         },
         "gill_necklace": {
           "item_name": "Gill Necklace",
           "item_key": "gill_necklace",
-          "supply_price": 44765.0,
-          "demand_price": 21577.0,
-          "mid_price": 33171.0,
-          "spread": 23188.0,
-          "spread_ratio": 0.6990443459648488,
-          "liquidity_factor": 0.5885661562483365,
-          "adjusted_effective_price": 19523.32796891357,
+          "supply_price": 47767.0,
+          "demand_price": 37024.0,
+          "mid_price": 42395.5,
+          "spread": 10743.0,
+          "spread_ratio": 0.2533995353280419,
+          "liquidity_factor": 0.7978301984436896,
+          "adjusted_effective_price": 33824.41017811944,
           "has_required_data": true,
-          "rolling_window_price": 30335.571428571428,
+          "rolling_window_price": 34875.642857142855,
           "rolling_window_entries_used": 7
         },
         "prismatic_necklace": {
           "item_name": "Prismatic Necklace",
           "item_key": "prismatic_necklace",
-          "supply_price": 32902.0,
-          "demand_price": 26696.0,
-          "mid_price": 29799.0,
-          "spread": 6206.0,
-          "spread_ratio": 0.2082620222155106,
-          "liquidity_factor": 0.8276350506874044,
-          "adjusted_effective_price": 24662.696875433965,
+          "supply_price": 26185.0,
+          "demand_price": 22837.0,
+          "mid_price": 24511.0,
+          "spread": 3348.0,
+          "spread_ratio": 0.13659173432336502,
+          "liquidity_factor": 0.8798233963889588,
+          "adjusted_effective_price": 21565.351268889768,
           "has_required_data": true,
-          "rolling_window_price": 35517.28571428572,
+          "rolling_window_price": 28859.0,
           "rolling_window_entries_used": 7
         },
         "prismatic_ring": {
           "item_name": "Prismatic Ring",
           "item_key": "prismatic_ring",
-          "supply_price": 123364.0,
-          "demand_price": 102505.0,
-          "mid_price": 112934.5,
-          "spread": 20859.0,
-          "spread_ratio": 0.18469998096241627,
-          "liquidity_factor": 0.8440955651806702,
-          "adjusted_effective_price": 95327.5106058964,
+          "supply_price": 119013.0,
+          "demand_price": 99474.0,
+          "mid_price": 109243.5,
+          "spread": 19539.0,
+          "spread_ratio": 0.17885732331900753,
+          "liquidity_factor": 0.8482790751849048,
+          "adjusted_effective_price": 92668.97514996215,
           "has_required_data": true,
-          "rolling_window_price": 106882.71428571429,
+          "rolling_window_price": 109711.71428571429,
           "rolling_window_entries_used": 7
         }
       }
@@ -11495,20 +11505,25 @@
       "insufficient_data": false,
       "insufficient_data_reasons": [],
       "ranking_position": 5,
-      "economic_score_raw": 14.523574204157383,
-      "market_liquidity_score": 0.745587,
+      "economic_score_raw": 13.263562168323428,
+      "market_liquidity_score": 0.758807,
       "warzone_health_score": 0.86,
-      "final_score": 14.523574,
+      "final_score": 13.263562,
       "history_health_score": 0.8,
       "current_operational_score": 1.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
-      "wz1_expected_value": 140612.5,
-      "wz2_expected_value": 250509.0,
-      "wz3_expected_value": 217036.57142857142,
-      "service_expected_value": 608158.0714285714,
+      "wz1_expected_value": 144621.0,
+      "wz2_expected_value": 205565.5,
+      "wz3_expected_value": 210022.7857142857,
+      "service_expected_value": 560209.2857142857,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -11528,82 +11543,77 @@
           "date": "2026-08-24",
           "mark": "na",
           "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
         "tibia_coin": {
           "item_name": "Tibia Coins",
           "item_key": "tibia_coin",
-          "supply_price": 42361.0,
-          "demand_price": 39667.0,
-          "mid_price": 41014.0,
-          "spread": 2694.0,
-          "spread_ratio": 0.06568488808699469,
-          "liquidity_factor": 0.9383636862816875,
-          "adjusted_effective_price": 38486.04822915713,
+          "supply_price": 41640.0,
+          "demand_price": 40340.0,
+          "mid_price": 40990.0,
+          "spread": 1300.0,
+          "spread_ratio": 0.031715052451817514,
+          "liquidity_factor": 0.9692598723102388,
+          "adjusted_effective_price": 39729.96216599669,
           "has_required_data": true,
-          "rolling_window_price": 41873.857142857145,
+          "rolling_window_price": 42236.71428571428,
           "rolling_window_entries_used": 7
         },
         "minor_crystalline_token": {
           "item_name": "Minor Crystalline Token",
           "item_key": "minor_crystalline_token",
-          "supply_price": 22285.0,
-          "demand_price": 18213.0,
-          "mid_price": 20249.0,
-          "spread": 4072.0,
-          "spread_ratio": 0.20109635043705862,
-          "liquidity_factor": 0.8325726738209778,
-          "adjusted_effective_price": 16858.76407220098,
+          "supply_price": 21348.0,
+          "demand_price": 19100.0,
+          "mid_price": 20224.0,
+          "spread": 2248.0,
+          "spread_ratio": 0.11115506329113924,
+          "liquidity_factor": 0.8999644001423993,
+          "adjusted_effective_price": 18200.880028479885,
           "has_required_data": true,
-          "rolling_window_price": 19529.714285714286,
+          "rolling_window_price": 19887.785714285714,
           "rolling_window_entries_used": 7
         },
         "gill_necklace": {
           "item_name": "Gill Necklace",
           "item_key": "gill_necklace",
-          "supply_price": 155726.0,
-          "demand_price": 0.0,
-          "mid_price": 77863.0,
-          "spread": 155726.0,
-          "spread_ratio": 2.0,
-          "liquidity_factor": 0.3333333333333333,
-          "adjusted_effective_price": 25954.333333333332,
+          "supply_price": 143152.0,
+          "demand_price": 51415.0,
+          "mid_price": 97283.5,
+          "spread": 91737.0,
+          "spread_ratio": 0.9429862206849055,
+          "liquidity_factor": 0.5146716890496005,
+          "adjusted_effective_price": 50069.06326165681,
           "has_required_data": true,
-          "rolling_window_price": 105362.5,
+          "rolling_window_price": 109371.0,
           "rolling_window_entries_used": 7
         },
         "prismatic_necklace": {
           "item_name": "Prismatic Necklace",
           "item_key": "prismatic_necklace",
-          "supply_price": 188409.0,
-          "demand_price": 143322.0,
-          "mid_price": 165865.5,
-          "spread": 45087.0,
-          "spread_ratio": 0.27182868046700487,
-          "liquidity_factor": 0.7862694208411846,
-          "adjusted_effective_price": 130414.9706225335,
+          "supply_price": 148041.0,
+          "demand_price": 56013.0,
+          "mid_price": 102027.0,
+          "spread": 92028.0,
+          "spread_ratio": 0.9019965303302067,
+          "liquidity_factor": 0.5257633145242329,
+          "adjusted_effective_price": 53642.053690963905,
           "has_required_data": true,
-          "rolling_window_price": 195509.0,
+          "rolling_window_price": 150565.5,
           "rolling_window_entries_used": 7
         },
         "prismatic_ring": {
           "item_name": "Prismatic Ring",
           "item_key": "prismatic_ring",
-          "supply_price": 158852.0,
-          "demand_price": 130736.0,
-          "mid_price": 144794.0,
-          "spread": 28116.0,
-          "spread_ratio": 0.19417931682252026,
-          "liquidity_factor": 0.8373951766815105,
-          "adjusted_effective_price": 121249.79721242264,
+          "supply_price": 147607.0,
+          "demand_price": 129493.0,
+          "mid_price": 138550.0,
+          "spread": 18114.0,
+          "spread_ratio": 0.13073980512450378,
+          "liquidity_factor": 0.8843767553490273,
+          "adjusted_effective_price": 122530.39945360772,
           "has_required_data": true,
-          "rolling_window_price": 149036.57142857142,
+          "rolling_window_price": 142022.7857142857,
           "rolling_window_entries_used": 7
         }
       }
@@ -11653,6 +11663,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "healthy",
           "mark_value": 1.0
@@ -11669,11 +11684,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -11796,20 +11806,25 @@
       "insufficient_data": false,
       "insufficient_data_reasons": [],
       "ranking_position": 26,
-      "economic_score_raw": 8.424068353462616,
-      "market_liquidity_score": 0.823405,
+      "economic_score_raw": 8.564308234898569,
+      "market_liquidity_score": 0.866465,
       "warzone_health_score": 1.0,
-      "final_score": 8.424068,
+      "final_score": 8.564308,
       "history_health_score": 1.0,
       "current_operational_score": 1.0,
       "expected_services": 4,
       "rolling_window_entries_target": 7,
-      "wz1_expected_value": 80786.5,
-      "wz2_expected_value": 89424.57142857142,
-      "wz3_expected_value": 179234.92857142858,
-      "service_expected_value": 349446.0,
+      "wz1_expected_value": 85815.92857142858,
+      "wz2_expected_value": 92091.07142857142,
+      "wz3_expected_value": 178709.57142857142,
+      "service_expected_value": 356616.5714285714,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -11829,82 +11844,77 @@
           "date": "2026-08-24",
           "mark": "healthy",
           "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
         "tibia_coin": {
           "item_name": "Tibia Coins",
           "item_key": "tibia_coin",
-          "supply_price": 41715.0,
-          "demand_price": 40362.0,
-          "mid_price": 41038.5,
-          "spread": 1353.0,
-          "spread_ratio": 0.032969041266128145,
-          "liquidity_factor": 0.9680832242312728,
-          "adjusted_effective_price": 39728.68339761509,
+          "supply_price": 42138.0,
+          "demand_price": 39499.0,
+          "mid_price": 40818.5,
+          "spread": 2639.0,
+          "spread_ratio": 0.06465205727794995,
+          "liquidity_factor": 0.9392740033365933,
+          "adjusted_effective_price": 38339.75590519473,
           "has_required_data": true,
-          "rolling_window_price": 41481.857142857145,
+          "rolling_window_price": 41639.857142857145,
           "rolling_window_entries_used": 7
         },
         "minor_crystalline_token": {
           "item_name": "Minor Crystalline Token",
           "item_key": "minor_crystalline_token",
-          "supply_price": 8916.0,
-          "demand_price": 7142.0,
-          "mid_price": 8029.0,
-          "spread": 1774.0,
-          "spread_ratio": 0.22094905965873707,
-          "liquidity_factor": 0.8190349892889931,
-          "adjusted_effective_price": 6576.031929001326,
+          "supply_price": 9750.0,
+          "demand_price": 8237.0,
+          "mid_price": 8993.5,
+          "spread": 1513.0,
+          "spread_ratio": 0.16823261244231946,
+          "liquidity_factor": 0.855993908532813,
+          "adjusted_effective_price": 7698.381216389854,
           "has_required_data": true,
-          "rolling_window_price": 8863.357142857143,
+          "rolling_window_price": 8926.357142857143,
           "rolling_window_entries_used": 7
         },
         "gill_necklace": {
           "item_name": "Gill Necklace",
           "item_key": "gill_necklace",
-          "supply_price": 61562.0,
-          "demand_price": 41509.0,
-          "mid_price": 51535.5,
-          "spread": 20053.0,
-          "spread_ratio": 0.38911041903154137,
-          "liquidity_factor": 0.7198851770884989,
-          "adjusted_effective_price": 37099.64254384433,
+          "supply_price": 58408.0,
+          "demand_price": 46027.0,
+          "mid_price": 52217.5,
+          "spread": 12381.0,
+          "spread_ratio": 0.2371044190166132,
+          "liquidity_factor": 0.8083392029226685,
+          "adjusted_effective_price": 42209.45232861444,
           "has_required_data": true,
-          "rolling_window_price": 45536.5,
+          "rolling_window_price": 50565.92857142857,
           "rolling_window_entries_used": 7
         },
         "prismatic_necklace": {
           "item_name": "Prismatic Necklace",
           "item_key": "prismatic_necklace",
-          "supply_price": 46892.0,
-          "demand_price": 31486.0,
-          "mid_price": 39189.0,
-          "spread": 15406.0,
-          "spread_ratio": 0.393120518512848,
-          "liquidity_factor": 0.7178129865372287,
-          "adjusted_effective_price": 28130.373129407457,
+          "supply_price": 40634.0,
+          "demand_price": 32076.0,
+          "mid_price": 36355.0,
+          "spread": 8558.0,
+          "spread_ratio": 0.23540090771558245,
+          "liquidity_factor": 0.8094538329659563,
+          "adjusted_effective_price": 29427.694097477342,
           "has_required_data": true,
-          "rolling_window_price": 34424.57142857143,
+          "rolling_window_price": 37091.07142857143,
           "rolling_window_entries_used": 7
         },
         "prismatic_ring": {
           "item_name": "Prismatic Ring",
           "item_key": "prismatic_ring",
-          "supply_price": 122082.0,
-          "demand_price": 108173.0,
-          "mid_price": 115127.5,
-          "spread": 13909.0,
-          "spread_ratio": 0.12081388026318647,
-          "liquidity_factor": 0.8922087936359093,
-          "adjusted_effective_price": 102717.76788931814,
+          "supply_price": 114454.0,
+          "demand_price": 104825.0,
+          "mid_price": 109639.5,
+          "spread": 9629.0,
+          "spread_ratio": 0.08782418745069068,
+          "liquidity_factor": 0.9192661935045716,
+          "adjusted_effective_price": 100787.88582274447,
           "has_required_data": true,
-          "rolling_window_price": 111234.92857142857,
+          "rolling_window_price": 110709.57142857143,
           "rolling_window_entries_used": 7
         }
       }
@@ -11938,7 +11948,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 47,
+      "ranking_position": 46,
       "economic_score_raw": 7.546069922794721,
       "market_liquidity_score": 0.831911,
       "warzone_health_score": 1.0,
@@ -11953,6 +11963,11 @@
       "service_expected_value": 315003.14285714284,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -11970,11 +11985,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -12091,6 +12101,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "healthy",
           "mark_value": 1.0
@@ -12109,11 +12124,6 @@
           "date": "2026-08-24",
           "mark": "na",
           "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
@@ -12218,21 +12228,26 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 28,
-      "economic_score_raw": 8.401867944983426,
-      "market_liquidity_score": 0.448832,
+      "ranking_position": 30,
+      "economic_score_raw": 8.278104388219969,
+      "market_liquidity_score": 0.857385,
       "warzone_health_score": 1.0,
-      "final_score": 8.401868,
+      "final_score": 8.278104,
       "history_health_score": 1.0,
       "current_operational_score": 1.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
-      "wz1_expected_value": 76216.42857142858,
-      "wz2_expected_value": 89377.64285714286,
-      "wz3_expected_value": 180938.57142857142,
-      "service_expected_value": 346532.64285714284,
+      "wz1_expected_value": 74715.85714285714,
+      "wz2_expected_value": 91104.85714285714,
+      "wz3_expected_value": 177349.2857142857,
+      "service_expected_value": 343170.0,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -12252,82 +12267,77 @@
           "date": "2026-08-24",
           "mark": "healthy",
           "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "healthy",
-          "mark_value": 1.0
         }
       ],
       "market": {
         "tibia_coin": {
           "item_name": "Tibia Coins",
           "item_key": "tibia_coin",
-          "supply_price": 41300.0,
-          "demand_price": 40117.0,
-          "mid_price": 40708.5,
-          "spread": 1183.0,
-          "spread_ratio": 0.029060269968188463,
-          "liquidity_factor": 0.9717603809842091,
-          "adjusted_effective_price": 39558.90746929568,
+          "supply_price": 41625.0,
+          "demand_price": 39661.0,
+          "mid_price": 40643.0,
+          "spread": 1964.0,
+          "spread_ratio": 0.048323204487857686,
+          "liquidity_factor": 0.9539042880277889,
+          "adjusted_effective_price": 38769.531978313425,
           "has_required_data": true,
-          "rolling_window_price": 41244.71428571428,
+          "rolling_window_price": 41455.142857142855,
           "rolling_window_entries_used": 7
         },
         "minor_crystalline_token": {
           "item_name": "Minor Crystalline Token",
           "item_key": "minor_crystalline_token",
-          "supply_price": 0.0,
-          "demand_price": 12678.0,
-          "mid_price": 6339.0,
-          "spread": -12678.0,
-          "spread_ratio": -2.0,
-          "liquidity_factor": -1.0,
-          "adjusted_effective_price": -6339.0,
+          "supply_price": 14784.0,
+          "demand_price": 13256.0,
+          "mid_price": 14020.0,
+          "spread": 1528.0,
+          "spread_ratio": 0.10898716119828816,
+          "liquidity_factor": 0.9017236943658348,
+          "adjusted_effective_price": 12642.166195009004,
           "has_required_data": true,
-          "rolling_window_price": 13295.5,
+          "rolling_window_price": 13687.57142857143,
           "rolling_window_entries_used": 7
         },
         "gill_necklace": {
           "item_name": "Gill Necklace",
           "item_key": "gill_necklace",
-          "supply_price": 44989.0,
-          "demand_price": 33640.0,
-          "mid_price": 39314.5,
-          "spread": 11349.0,
-          "spread_ratio": 0.28867211842958707,
-          "liquidity_factor": 0.7759925784835237,
-          "adjusted_effective_price": 30507.76022679049,
+          "supply_price": 44981.0,
+          "demand_price": 35030.0,
+          "mid_price": 40005.5,
+          "spread": 9951.0,
+          "spread_ratio": 0.2487407981402557,
+          "liquidity_factor": 0.8008067018305927,
+          "adjusted_effective_price": 32036.672510083776,
           "has_required_data": true,
-          "rolling_window_price": 40966.42857142857,
+          "rolling_window_price": 39465.857142857145,
           "rolling_window_entries_used": 7
         },
         "prismatic_necklace": {
           "item_name": "Prismatic Necklace",
           "item_key": "prismatic_necklace",
-          "supply_price": 48235.0,
-          "demand_price": 25181.0,
-          "mid_price": 36708.0,
-          "spread": 23054.0,
-          "spread_ratio": 0.62803748501689,
-          "liquidity_factor": 0.6142364713363007,
-          "adjusted_effective_price": 22547.392389812925,
+          "supply_price": 46914.0,
+          "demand_price": 31474.0,
+          "mid_price": 39194.0,
+          "spread": 15440.0,
+          "spread_ratio": 0.39393784762973927,
+          "liquidity_factor": 0.7173921001574112,
+          "adjusted_effective_price": 28117.465973569575,
           "has_required_data": true,
-          "rolling_window_price": 34377.642857142855,
+          "rolling_window_price": 36104.857142857145,
           "rolling_window_entries_used": 7
         },
         "prismatic_ring": {
           "item_name": "Prismatic Ring",
           "item_key": "prismatic_ring",
-          "supply_price": 116938.0,
-          "demand_price": 102297.0,
-          "mid_price": 109617.5,
-          "spread": 14641.0,
-          "spread_ratio": 0.13356443998449152,
-          "liquidity_factor": 0.8821730505357782,
-          "adjusted_effective_price": 96701.60436710567,
+          "supply_price": 112316.0,
+          "demand_price": 102112.0,
+          "mid_price": 107214.0,
+          "spread": 10204.0,
+          "spread_ratio": 0.09517413770589662,
+          "liquidity_factor": 0.9130967994685654,
+          "adjusted_effective_price": 97896.76025822277,
           "has_required_data": true,
-          "rolling_window_price": 112938.57142857143,
+          "rolling_window_price": 109349.28571428571,
           "rolling_window_entries_used": 7
         }
       }
@@ -12380,6 +12390,11 @@
       "service_expected_value": null,
       "current_mark_value": 0.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
         {
           "date": "2026-08-27",
           "mark": "na",
@@ -12493,12 +12508,12 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 55,
+      "ranking_position": 54,
       "economic_score_raw": 7.251039899010801,
       "market_liquidity_score": 0.895453,
-      "warzone_health_score": 0.72,
+      "warzone_health_score": 0.86,
       "final_score": 7.25104,
-      "history_health_score": 0.6,
+      "history_health_score": 0.8,
       "current_operational_score": 1.0,
       "expected_services": 2,
       "rolling_window_entries_target": 7,
@@ -12508,6 +12523,11 @@
       "service_expected_value": 300329.7857142857,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -12525,11 +12545,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "trolls",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "trolls",
           "mark_value": 0.0
         }
@@ -12654,6 +12669,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "na",
           "mark_value": 0.0
@@ -12670,11 +12690,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -12781,21 +12796,26 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 8,
-      "economic_score_raw": 11.529439809710055,
-      "market_liquidity_score": 0.26218,
-      "warzone_health_score": 0.72,
-      "final_score": 11.52944,
-      "history_health_score": 0.6,
+      "ranking_position": 7,
+      "economic_score_raw": 11.672805236844452,
+      "market_liquidity_score": 0.462597,
+      "warzone_health_score": 0.86,
+      "final_score": 11.672805,
+      "history_health_score": 0.8,
       "current_operational_score": 1.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
-      "wz1_expected_value": 99711.07142857142,
-      "wz2_expected_value": 139095.2857142857,
-      "wz3_expected_value": 236209.85714285713,
-      "service_expected_value": 475016.21428571426,
+      "wz1_expected_value": 94673.14285714286,
+      "wz2_expected_value": 140933.7142857143,
+      "wz3_expected_value": 250692.2142857143,
+      "service_expected_value": 486299.0714285715,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -12815,82 +12835,77 @@
           "date": "2026-08-24",
           "mark": "na",
           "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
-          "mark": "na",
-          "mark_value": 0.0
         }
       ],
       "market": {
         "tibia_coin": {
           "item_name": "Tibia Coins",
           "item_key": "tibia_coin",
-          "supply_price": 41160.0,
-          "demand_price": 40107.0,
-          "mid_price": 40633.5,
-          "spread": 1053.0,
-          "spread_ratio": 0.025914577872937355,
-          "liquidity_factor": 0.9747400237486957,
-          "adjusted_effective_price": 39607.09875499263,
+          "supply_price": 42223.0,
+          "demand_price": 41355.0,
+          "mid_price": 41789.0,
+          "spread": 868.0,
+          "spread_ratio": 0.02077101629615449,
+          "liquidity_factor": 0.9796516398246478,
+          "adjusted_effective_price": 40938.66237663221,
           "has_required_data": true,
-          "rolling_window_price": 41200.28571428572,
+          "rolling_window_price": 41660.857142857145,
           "rolling_window_entries_used": 7
         },
         "minor_crystalline_token": {
           "item_name": "Minor Crystalline Token",
           "item_key": "minor_crystalline_token",
           "supply_price": 0.0,
-          "demand_price": 16002.0,
-          "mid_price": 8001.0,
-          "spread": -16002.0,
+          "demand_price": 17201.0,
+          "mid_price": 8600.5,
+          "spread": -17201.0,
           "spread_ratio": -2.0,
           "liquidity_factor": -1.0,
-          "adjusted_effective_price": -8001.0,
+          "adjusted_effective_price": -8600.5,
           "has_required_data": true,
-          "rolling_window_price": 21826.35714285714,
+          "rolling_window_price": 17787.714285714286,
           "rolling_window_entries_used": 7
         },
         "gill_necklace": {
           "item_name": "Gill Necklace",
           "item_key": "gill_necklace",
-          "supply_price": 77995.0,
-          "demand_price": 47114.0,
-          "mid_price": 62554.5,
-          "spread": 30881.0,
-          "spread_ratio": 0.4936655236633655,
-          "liquidity_factor": 0.6694939289670414,
-          "adjusted_effective_price": 41879.85797956879,
+          "supply_price": 0.0,
+          "demand_price": 0.0,
+          "mid_price": 0.0,
+          "spread": 0.0,
+          "spread_ratio": 0.0,
+          "liquidity_factor": 1.0,
+          "adjusted_effective_price": 0.0,
           "has_required_data": true,
-          "rolling_window_price": 64461.07142857143,
+          "rolling_window_price": 59423.142857142855,
           "rolling_window_entries_used": 7
         },
         "prismatic_necklace": {
           "item_name": "Prismatic Necklace",
           "item_key": "prismatic_necklace",
-          "supply_price": 97829.0,
+          "supply_price": 0.0,
           "demand_price": 0.0,
-          "mid_price": 48914.5,
-          "spread": 97829.0,
-          "spread_ratio": 2.0,
-          "liquidity_factor": 0.3333333333333333,
-          "adjusted_effective_price": 16304.833333333332,
+          "mid_price": 0.0,
+          "spread": 0.0,
+          "spread_ratio": 0.0,
+          "liquidity_factor": 1.0,
+          "adjusted_effective_price": 0.0,
           "has_required_data": true,
-          "rolling_window_price": 84095.28571428571,
+          "rolling_window_price": 85933.71428571429,
           "rolling_window_entries_used": 7
         },
         "prismatic_ring": {
           "item_name": "Prismatic Ring",
           "item_key": "prismatic_ring",
-          "supply_price": 187386.0,
+          "supply_price": 187997.0,
           "demand_price": 0.0,
-          "mid_price": 93693.0,
-          "spread": 187386.0,
+          "mid_price": 93998.5,
+          "spread": 187997.0,
           "spread_ratio": 2.0,
           "liquidity_factor": 0.3333333333333333,
-          "adjusted_effective_price": 31231.0,
+          "adjusted_effective_price": 31332.833333333332,
           "has_required_data": true,
-          "rolling_window_price": 168209.85714285713,
+          "rolling_window_price": 182692.2142857143,
           "rolling_window_entries_used": 7
         }
       }
@@ -12934,6 +12949,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "healthy",
           "mark_value": 1.0
@@ -12950,11 +12970,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -13077,6 +13092,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "healthy",
           "mark_value": 1.0
@@ -13093,11 +13113,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -13204,7 +13219,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 49,
+      "ranking_position": 48,
       "economic_score_raw": 7.522012600233032,
       "market_liquidity_score": 0.129894,
       "warzone_health_score": 0.93,
@@ -13219,6 +13234,11 @@
       "service_expected_value": 312643.85714285716,
       "current_mark_value": 1.0,
       "history_last_five_days": [
+        {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
         {
           "date": "2026-08-27",
           "mark": "healthy",
@@ -13236,11 +13256,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -13363,6 +13378,11 @@
       "current_mark_value": 1.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "healthy",
+          "mark_value": 1.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "healthy",
           "mark_value": 1.0
@@ -13379,11 +13399,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "healthy",
-          "mark_value": 1.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "healthy",
           "mark_value": 1.0
         }
@@ -13502,6 +13517,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "na",
           "mark_value": 0.0
@@ -13518,11 +13538,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
@@ -13641,6 +13656,11 @@
       "current_mark_value": 0.0,
       "history_last_five_days": [
         {
+          "date": "2026-08-28",
+          "mark": "na",
+          "mark_value": 0.0
+        },
+        {
           "date": "2026-08-27",
           "mark": "na",
           "mark_value": 0.0
@@ -13657,11 +13677,6 @@
         },
         {
           "date": "2026-08-24",
-          "mark": "na",
-          "mark_value": 0.0
-        },
-        {
-          "date": "2026-08-23",
           "mark": "na",
           "mark_value": 0.0
         }
