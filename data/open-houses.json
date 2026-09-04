@@ -884,6 +884,61 @@
     }
   },
   {
+    "id": "rasteibra-theater-avenue-7-flat-04-homelander",
+    "houseName": "Theater Avenue 7, Flat 04",
+    "ownerName": "Homelander",
+    "world": "Rasteibra",
+    "town": "Carlin",
+    "houseId": 20319,
+    "status": "open",
+    "utilities": {
+      "exerciseDummies": true,
+      "rewardShrine": false,
+      "imbuingShrine": false,
+      "mailbox": false,
+      "hirelings": [
+        {
+          "type": "Apprentice",
+          "abilities": [
+            "Sells basic furniture"
+          ]
+        },
+        {
+          "type": "Banker",
+          "abilities": [
+            "Deposit",
+            "Withdraw",
+            "Transfer"
+          ]
+        },
+        {
+          "type": "Trader",
+          "abilities": [
+            "Trader",
+            "Post clerk",
+            "Buys and sells standard goods such as runes, potions, and tools"
+          ]
+        },
+        {
+          "type": "Steward",
+          "abilities": [
+            "Provides access to Your Supply Stash"
+          ]
+        }
+      ]
+    },
+    "source": {
+      "type": "github",
+      "url": "https://github.com/nesleykent/tibia-warzones-schedule/issues/49",
+      "submitter": "nesleykent",
+      "log": "03:33:59 You see an open door. It belongs to house 'Theater Avenue 7, Flat 04'. Homelander owns this house.",
+      "notes": "_No response_",
+      "screenshotUrl": "_No response_",
+      "issueNumber": 49,
+      "issueTitle": "[Open House]: 03:33:59 You see an open door. It belongs to house 'Theater Avenue 7, Flat 04'. Homelander owns this house."
+    }
+  },
+  {
     "id": "rasteibra-the-market-4-shop-qdox",
     "houseName": "The Market 4 (Shop)",
     "ownerName": "Qdox",
