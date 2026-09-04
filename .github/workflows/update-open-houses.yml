@@ -2,6 +2,12 @@ name: Update Open Houses
 
 on:
   workflow_dispatch:
+    inputs:
+      allow_bulk_lapse:
+        description: "Confirm an unusually large batch of ownership lapses in a single run."
+        required: false
+        default: false
+        type: boolean
   issues:
     types:
       - opened
@@ -52,7 +58,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           TIBIADATA_BASE_URL: https://api.tibiadata.com
-        run: python3 scripts/update_open_houses.py
+        run: python3 scripts/update_open_houses.py ${{ inputs.allow_bulk_lapse && '--allow-bulk-lapse' || '' }}
 
       - name: Validate registry
         run: |

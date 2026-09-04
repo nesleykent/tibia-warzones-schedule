@@ -624,7 +624,7 @@ class UpdateOpenHousesHelpersTest(unittest.TestCase):
                 },
             },
         ):
-            update_open_houses.apply_maintenance_issue(records, issue)
+            update_open_houses.apply_maintenance_issue(records, issue, {}, [])
 
         updated = records["antica-castle-shop-1-betaheart"]
         self.assertTrue(updated["utilities"]["exerciseDummies"])
@@ -697,13 +697,17 @@ class UpdateOpenHousesHelpersTest(unittest.TestCase):
             },
         }
 
-        with (
-            patch.object(update_open_houses, "fetch_all_issues", return_value=issues),
-            patch.object(
-                update_open_houses, "get_character", side_effect=lambda name: characters[name]
-            ),
-        ):
-            registry = update_open_houses.build_registry()
+        with tempfile.TemporaryDirectory() as tmpdir:
+            with (
+                patch.object(
+                    update_open_houses, "OPEN_HOUSES_FILE", Path(tmpdir) / "open-houses.json"
+                ),
+                patch.object(update_open_houses, "fetch_all_issues", return_value=issues),
+                patch.object(
+                    update_open_houses, "get_character", side_effect=lambda name: characters[name]
+                ),
+            ):
+                registry = update_open_houses.build_registry()
 
         self.assertEqual(
             [(record["houseName"], record["ownerName"]) for record in registry],
@@ -713,24 +717,42 @@ class UpdateOpenHousesHelpersTest(unittest.TestCase):
     def test_build_registry_raises_when_character_lookup_fails(self) -> None:
         issues = [self._open_house_issue(48, "Castle Shop 2", "Son Kortis")]
 
-        with (
-            patch.object(update_open_houses, "fetch_all_issues", return_value=issues),
-            patch.object(
-                update_open_houses,
-                "get_character",
-                side_effect=RuntimeError("Network error for https://api.tibiadata.com"),
-            ),
-        ):
-            with self.assertRaisesRegex(RuntimeError, r"issue #48 .*Network error"):
-                update_open_houses.build_registry()
+        with tempfile.TemporaryDirectory() as tmpdir:
+            with (
+                patch.object(
+                    update_open_houses, "OPEN_HOUSES_FILE", Path(tmpdir) / "open-houses.json"
+                ),
+                patch.object(update_open_houses, "fetch_all_issues", return_value=issues),
+                patch.object(
+                    update_open_houses,
+                    "get_character",
+                    side_effect=RuntimeError("Network error for https://api.tibiadata.com"),
+                ),
+            ):
+                with self.assertRaisesRegex(RuntimeError, r"issue #48 .*Network error"):
+                    update_open_houses.build_registry()
 
     def test_main_keeps_existing_registry_when_character_payload_is_malformed(self) -> None:
         issues = [self._open_house_issue(48, "Castle Shop 2", "Son Kortis")]
         character = {"name": "Son Kortis", "world": "Luminera", "houses": "unexpected"}
+        seed = json.dumps(
+            [
+                {
+                    "id": "luminera-castle-shop-2-son-kortis",
+                    "houseName": "Castle Shop 2",
+                    "ownerName": "Son Kortis",
+                    "world": "Luminera",
+                    "town": "Edron",
+                    "houseId": 43,
+                    "status": "open",
+                    "source": {"issueNumber": 48},
+                }
+            ]
+        )
 
         with tempfile.TemporaryDirectory() as tmpdir:
             registry_path = Path(tmpdir) / "open-houses.json"
-            registry_path.write_text('[{"id": "keep-me"}]\n', encoding="utf-8")
+            registry_path.write_text(seed, encoding="utf-8")
 
             with (
                 patch.object(update_open_houses, "OPEN_HOUSES_FILE", registry_path),
@@ -738,53 +760,378 @@ class UpdateOpenHousesHelpersTest(unittest.TestCase):
                 patch.object(update_open_houses, "get_character", return_value=character),
                 patch("sys.stderr", new=io.StringIO()),
             ):
-                self.assertEqual(update_open_houses.main(), 1)
+                self.assertEqual(update_open_houses.main([]), 1)
 
-            self.assertEqual(registry_path.read_text(encoding="utf-8"), '[{"id": "keep-me"}]\n')
+            self.assertEqual(registry_path.read_text(encoding="utf-8"), seed)
 
-    def test_build_registry_raises_when_maintenance_edit_names_a_non_owner(self) -> None:
-        records_issue = self._open_house_issue(9, "Castle Shop 1", "Alphaheart")
-        maintenance_issue = {
-            "number": 50,
-            "title": "[Open House Maintenance]: Castle Shop 1",
-            "body": "\n\n".join(
-                [
-                    "### Request type",
-                    "Edit existing open house",
-                    "",
-                    "### World",
-                    "Luminera",
-                    "",
-                    "### House name",
-                    "Castle Shop 1",
-                    "",
-                    "### Updated door inspection log",
-                    "You see an open door. It belongs to house 'Castle Shop 1'. "
-                    "Betaheart owns this house.",
-                ]
-            ),
-        }
-        characters = {
-            "Alphaheart": {
-                "name": "Alphaheart",
-                "world": "Luminera",
-                "houses": [{"name": "Castle Shop 1", "town": "Edron", "houseid": 42}],
+
+class UpdateOpenHousesRegistryTest(unittest.TestCase):
+    """The hybrid model: JSON is the database, issues are requests, TibiaData is the validator."""
+
+    @staticmethod
+    def _record(issue_number, house, owner, world, town="Edron", house_id=1):
+        return {
+            "id": update_open_houses.build_record_id(world, house, owner),
+            "houseName": house,
+            "ownerName": owner,
+            "world": world,
+            "town": town,
+            "houseId": house_id,
+            "status": "open",
+            "utilities": {
+                "exerciseDummies": True,
+                "rewardShrine": False,
+                "imbuingShrine": False,
+                "mailbox": False,
+                "hirelings": [],
             },
-            "Betaheart": {"name": "Betaheart", "world": "Luminera"},
+            "source": {
+                "type": "github",
+                "url": f"https://example.com/{issue_number}",
+                "submitter": "tester",
+                "log": f"You see an open door. It belongs to house '{house}'. {owner} owns this house.",
+                "notes": "",
+                "screenshotUrl": "",
+                "issueNumber": issue_number,
+                "issueTitle": f"[Open House]: {house}",
+            },
         }
 
-        with (
-            patch.object(
-                update_open_houses,
-                "fetch_all_issues",
-                return_value=[records_issue, maintenance_issue],
+    @staticmethod
+    def _issue(number, house, owner):
+        log = f"You see an open door. It belongs to house '{house}'. {owner} owns this house."
+        return {
+            "number": number,
+            "title": f"[Open House]: {log}",
+            "body": f"### Door inspection log\n\n{log}",
+            "user": {"login": "tester"},
+        }
+
+    @staticmethod
+    def _maintenance(number, action, world, house, updated_log=None):
+        parts = [
+            "### Request type",
+            action,
+            "",
+            "### World",
+            world,
+            "",
+            "### House name",
+            house,
+        ]
+        if updated_log:
+            parts += ["", "### Updated door inspection log", updated_log]
+        return {
+            "number": number,
+            "title": f"[Open House Maintenance]: {house}",
+            "body": "\n\n".join(parts),
+            "user": {"login": "tester"},
+        }
+
+    @staticmethod
+    def _character(owner, world, houses):
+        return {"name": owner, "world": world, "houses": houses}
+
+    def _run(self, seed, issues, characters, **kwargs):
+        """Run build_registry against a seeded temp registry file."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "open-houses.json"
+            path.write_text(json.dumps(seed), encoding="utf-8")
+
+            def get_character(name):
+                if name not in characters:
+                    raise AssertionError(f"unexpected character lookup: {name}")
+                value = characters[name]
+                if isinstance(value, Exception):
+                    raise value
+                return value
+
+            with (
+                patch.object(update_open_houses, "OPEN_HOUSES_FILE", path),
+                patch.object(update_open_houses, "fetch_all_issues", return_value=issues),
+                patch.object(update_open_houses, "get_character", side_effect=get_character),
+                patch("sys.stderr", new=io.StringIO()) as stderr,
+            ):
+                result = update_open_houses.build_registry(**kwargs)
+            return result, stderr.getvalue()
+
+    @staticmethod
+    def _ids(registry):
+        return {record["id"] for record in registry}
+
+    # --- orphans: the records this model exists to protect ---------------------------------
+
+    def test_orphan_record_is_retained_while_ownership_holds(self) -> None:
+        seed = [self._record(10, "The Market 4 (Shop)", "Qdox", "Rasteibra", "Kazordoon", 30404)]
+        characters = {
+            "Qdox": self._character(
+                "Qdox", "Rasteibra", [{"name": "The Market 4 (Shop)", "town": "Kazordoon", "houseid": 30404}]
+            )
+        }
+
+        registry, _ = self._run(seed, [], characters)
+
+        self.assertEqual(len(registry), 1)
+        self.assertEqual(registry[0]["source"]["issueNumber"], 10)
+
+    def test_orphan_record_is_dropped_once_ownership_lapses(self) -> None:
+        seed = [self._record(10, "The Market 4 (Shop)", "Qdox", "Rasteibra")]
+        characters = {"Qdox": self._character("Qdox", "Rasteibra", [])}
+
+        registry, _ = self._run(seed, [], characters)
+
+        self.assertEqual(registry, [])
+
+    def test_orphan_record_is_refreshed_after_a_world_transfer(self) -> None:
+        seed = [self._record(10, "Castle Shop 1", "Qdox", "Rasteibra", "Edron", 42)]
+        characters = {
+            "Qdox": self._character(
+                "Qdox", "Venebra", [{"name": "Castle Shop 1", "town": "Thais", "houseid": 99}]
+            )
+        }
+
+        registry, _ = self._run(seed, [], characters)
+
+        self.assertEqual(len(registry), 1)
+        self.assertEqual(registry[0]["world"], "Venebra")
+        self.assertEqual(registry[0]["town"], "Thais")
+        self.assertEqual(registry[0]["houseId"], 99)
+        self.assertEqual(registry[0]["id"], "venebra-castle-shop-1-qdox")
+
+    # --- surviving issues -------------------------------------------------------------------
+
+    def test_seeded_record_is_removed_when_its_surviving_issue_fails_ownership(self) -> None:
+        seed = [self._record(9, "Castle Shop 1", "Alphaheart", "Luminera")]
+        issues = [self._issue(9, "Castle Shop 1", "Alphaheart")]
+        characters = {"Alphaheart": self._character("Alphaheart", "Luminera", [])}
+
+        registry, _ = self._run(seed, issues, characters)
+
+        self.assertEqual(registry, [], "the seeded copy must be actively deleted, not just skipped")
+
+    def test_surviving_issue_supersedes_seed_after_a_world_transfer(self) -> None:
+        seed = [self._record(9, "Castle Shop 1", "Alphaheart", "Luminera")]
+        issues = [self._issue(9, "Castle Shop 1", "Alphaheart")]
+        characters = {
+            "Alphaheart": self._character(
+                "Alphaheart", "Gladera", [{"name": "Castle Shop 1", "town": "Thais", "houseid": 7}]
+            )
+        }
+
+        registry, _ = self._run(seed, issues, characters)
+
+        self.assertEqual(len(registry), 1, "the stale id must not survive alongside the new one")
+        self.assertEqual(registry[0]["id"], "gladera-castle-shop-1-alphaheart")
+
+    # --- maintenance: remove ----------------------------------------------------------------
+
+    def test_remove_deletes_records_filed_before_the_request(self) -> None:
+        seed = [self._record(9, "Castle Shop 1", "Alphaheart", "Luminera")]
+        issues = [self._maintenance(50, "Remove existing open house", "Luminera", "Castle Shop 1")]
+        characters = {
+            "Alphaheart": self._character(
+                "Alphaheart", "Luminera", [{"name": "Castle Shop 1", "town": "Edron", "houseid": 42}]
+            )
+        }
+
+        registry, _ = self._run(seed, issues, characters)
+
+        self.assertEqual(registry, [])
+
+    def test_remove_is_an_idempotent_no_op_once_nothing_is_in_scope(self) -> None:
+        issues = [self._maintenance(50, "Remove existing open house", "Luminera", "Castle Shop 1")]
+
+        registry, stderr = self._run([], issues, {})
+
+        self.assertEqual(registry, [])
+        self.assertIn("nothing in scope matched", stderr)
+
+    def test_remove_does_not_touch_a_later_resubmission_of_the_same_house(self) -> None:
+        issues = [
+            self._maintenance(50, "Remove existing open house", "Luminera", "Castle Shop 1"),
+            self._issue(60, "Castle Shop 1", "Alphaheart"),
+        ]
+        characters = {
+            "Alphaheart": self._character(
+                "Alphaheart", "Luminera", [{"name": "Castle Shop 1", "town": "Edron", "houseid": 42}]
+            )
+        }
+
+        registry, _ = self._run([], issues, characters)
+
+        self.assertEqual(len(registry), 1)
+        self.assertEqual(registry[0]["source"]["issueNumber"], 60)
+
+    # --- maintenance: edit ------------------------------------------------------------------
+
+    def test_edit_replaces_the_matched_record_and_keeps_utilities(self) -> None:
+        seed = [self._record(9, "Castle Shop 1", "Alphaheart", "Luminera")]
+        log = "You see an open door. It belongs to house 'Castle Shop 1'. Betaheart owns this house."
+        issues = [
+            self._maintenance(50, "Edit existing open house", "Luminera", "Castle Shop 1", log)
+        ]
+        characters = {
+            "Alphaheart": self._character(
+                "Alphaheart", "Luminera", [{"name": "Castle Shop 1", "town": "Edron", "houseid": 42}]
             ),
-            patch.object(
-                update_open_houses, "get_character", side_effect=lambda name: characters[name]
+            "Betaheart": self._character(
+                "Betaheart", "Luminera", [{"name": "Castle Shop 1", "town": "Edron", "houseid": 42}]
+            )
+        }
+
+        registry, _ = self._run(seed, issues, characters)
+
+        self.assertEqual(len(registry), 1)
+        self.assertEqual(registry[0]["ownerName"], "Betaheart")
+        self.assertEqual(registry[0]["source"]["issueNumber"], 50)
+        self.assertTrue(registry[0]["utilities"]["exerciseDummies"], "utilities must carry over")
+
+    def test_edit_keeps_the_original_when_the_replacement_owner_does_not_own_it(self) -> None:
+        seed = [self._record(9, "Castle Shop 1", "Alphaheart", "Luminera")]
+        log = "You see an open door. It belongs to house 'Castle Shop 1'. Betaheart owns this house."
+        issues = [
+            self._maintenance(50, "Edit existing open house", "Luminera", "Castle Shop 1", log)
+        ]
+        characters = {
+            "Alphaheart": self._character(
+                "Alphaheart", "Luminera", [{"name": "Castle Shop 1", "town": "Edron", "houseid": 42}]
             ),
-        ):
-            with self.assertRaisesRegex(RuntimeError, r"issue #50 .*no longer owns"):
-                update_open_houses.build_registry()
+            "Betaheart": self._character("Betaheart", "Luminera", []),
+        }
+
+        registry, stderr = self._run(seed, issues, characters)
+
+        self.assertEqual(len(registry), 1, "a failed edit must not lose the original")
+        self.assertEqual(registry[0]["ownerName"], "Alphaheart")
+        self.assertIn("Existing record kept", stderr)
+
+    def test_edit_matching_nothing_never_inserts(self) -> None:
+        log = "You see an open door. It belongs to house 'Castle Shop 1'. Betaheart owns this house."
+        issues = [
+            self._maintenance(50, "Edit existing open house", "Luminera", "Castle Shop 1", log)
+        ]
+
+        registry, stderr = self._run([], issues, {})
+
+        self.assertEqual(registry, [], "an unmatched edit must never act as an add")
+        self.assertIn("nothing in scope matched", stderr)
+
+    def test_edit_does_not_re_edit_its_own_output_on_replay(self) -> None:
+        # The replacement carries the maintenance number, so it sits outside the '< M' scope.
+        seed = [self._record(50, "Castle Shop 1", "Betaheart", "Luminera")]
+        log = "You see an open door. It belongs to house 'Castle Shop 1'. Betaheart owns this house."
+        issues = [
+            self._maintenance(50, "Edit existing open house", "Luminera", "Castle Shop 1", log)
+        ]
+        characters = {
+            "Betaheart": self._character(
+                "Betaheart", "Luminera", [{"name": "Castle Shop 1", "town": "Edron", "houseid": 42}]
+            )
+        }
+
+        registry, stderr = self._run(seed, issues, characters)
+
+        self.assertEqual(len(registry), 1)
+        self.assertEqual(registry[0]["ownerName"], "Betaheart")
+        self.assertIn("nothing in scope matched", stderr)
+
+    def test_maintenance_issues_apply_in_ascending_number_order(self) -> None:
+        seed = [self._record(9, "Castle Shop 1", "Alphaheart", "Luminera")]
+        log = "You see an open door. It belongs to house 'Castle Shop 1'. Betaheart owns this house."
+        # Presented newest-first; the edit (60) must still observe the remove (50) that precedes it.
+        issues = [
+            self._maintenance(60, "Edit existing open house", "Luminera", "Castle Shop 1", log),
+            self._maintenance(50, "Remove existing open house", "Luminera", "Castle Shop 1"),
+        ]
+        characters = {
+            "Alphaheart": self._character(
+                "Alphaheart", "Luminera", [{"name": "Castle Shop 1", "town": "Edron", "houseid": 42}]
+            ),
+            "Betaheart": self._character(
+                "Betaheart", "Luminera", [{"name": "Castle Shop 1", "town": "Edron", "houseid": 42}]
+            )
+        }
+
+        registry, stderr = self._run(seed, issues, characters)
+
+        self.assertEqual(registry, [], "the remove ran first, so the edit had nothing to match")
+        self.assertIn("nothing in scope matched", stderr)
+
+    # --- write-safety guards ----------------------------------------------------------------
+
+    def test_write_is_refused_when_a_record_disappears_unattributed(self) -> None:
+        seed = [self._record(10, "Castle Shop 1", "Qdox", "Rasteibra")]
+        characters = {
+            "Qdox": self._character(
+                "Qdox", "Rasteibra", [{"name": "Castle Shop 1", "town": "Edron", "houseid": 42}]
+            )
+        }
+
+        def vanish(records, issue, departures, warnings):
+            records.clear()  # drops a record without attributing a reason
+
+        issues = [self._maintenance(50, "Remove existing open house", "Rasteibra", "Nothing")]
+        with patch.object(update_open_houses, "apply_maintenance_issue", side_effect=vanish):
+            with self.assertRaisesRegex(RuntimeError, r"without an attributed reason"):
+                self._run(seed, issues, characters)
+
+    def test_write_is_refused_when_normalization_drops_records(self) -> None:
+        # Guards the dict_values class of bug: records silently lost on the way out.
+        seed = [self._record(10, "Castle Shop 1", "Qdox", "Rasteibra")]
+        characters = {
+            "Qdox": self._character(
+                "Qdox", "Rasteibra", [{"name": "Castle Shop 1", "town": "Edron", "houseid": 42}]
+            )
+        }
+
+        with patch.object(update_open_houses, "normalize_open_houses_payload", return_value=[]):
+            with self.assertRaisesRegex(RuntimeError, r"normalization returned 0 of 1"):
+                self._run(seed, [], characters)
+
+    def test_bulk_lapse_trips_the_circuit_breaker(self) -> None:
+        seed = [self._record(i, f"House {i}", f"Owner{i}", "Luminera") for i in range(1, 11)]
+        characters = {f"Owner{i}": self._character(f"Owner{i}", "Luminera", []) for i in range(1, 11)}
+
+        with self.assertRaisesRegex(RuntimeError, r"10 ownership lapses .*exceeds the safety limit"):
+            self._run(seed, [], characters)
+
+    def test_bulk_lapse_override_permits_the_write(self) -> None:
+        seed = [self._record(i, f"House {i}", f"Owner{i}", "Luminera") for i in range(1, 11)]
+        characters = {f"Owner{i}": self._character(f"Owner{i}", "Luminera", []) for i in range(1, 11)}
+
+        registry, _ = self._run(seed, [], characters, allow_bulk_lapse=True)
+
+        self.assertEqual(registry, [])
+
+    def test_attributed_lapses_below_the_limit_are_written_normally(self) -> None:
+        seed = [self._record(i, f"House {i}", f"Owner{i}", "Luminera") for i in range(1, 11)]
+        characters = {
+            f"Owner{i}": self._character(
+                f"Owner{i}", "Luminera", [{"name": f"House {i}", "town": "Edron", "houseid": i}]
+            )
+            for i in range(1, 11)
+        }
+        characters["Owner1"] = self._character("Owner1", "Luminera", [])
+
+        registry, _ = self._run(seed, [], characters)
+
+        self.assertEqual(len(registry), 9, "a small, fully attributed lapse writes normally")
+
+    def test_api_failure_during_orphan_revalidation_still_fails_loudly(self) -> None:
+        seed = [self._record(10, "Castle Shop 1", "Qdox", "Rasteibra")]
+        characters = {"Qdox": RuntimeError("Network error for https://api.tibiadata.com")}
+
+        with self.assertRaisesRegex(RuntimeError, r"Network error"):
+            self._run(seed, [], characters)
+
+    def test_corrupt_registry_file_fails_instead_of_seeding_empty(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "open-houses.json"
+            path.write_text('{"not": "a list"}', encoding="utf-8")
+
+            with patch.object(update_open_houses, "OPEN_HOUSES_FILE", path):
+                with self.assertRaisesRegex(RuntimeError, r"must contain a list"):
+                    update_open_houses.load_existing_records()
 
 
 class MarketHelpersTest(unittest.TestCase):
