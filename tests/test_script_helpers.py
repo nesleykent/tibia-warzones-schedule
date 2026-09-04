@@ -435,6 +435,89 @@ class UpdateOpenHousesHelpersTest(unittest.TestCase):
             ("The Market 4", "Qdox"),
         )
 
+    def test_resolve_house_returns_details_while_owner_still_owns_house(self) -> None:
+        character = {
+            "name": "Alphaheart",
+            "world": "Luminera",
+            "level": 412,
+            "houses": [
+                {"name": "Harbour Promenade 1", "town": "Yalahar", "houseid": 37017},
+                {"name": "Castle Shop 1", "town": "Edron", "houseid": 42},
+            ],
+        }
+
+        with patch.object(update_open_houses, "get_character", return_value=character):
+            resolved = update_open_houses.resolve_house("Alphaheart", "Castle Shop 1")
+
+        self.assertEqual(resolved, {"world": "Luminera", "town": "Edron", "houseId": 42})
+
+    def test_resolve_house_reports_not_owned_when_owner_holds_other_houses(self) -> None:
+        character = {
+            "name": "Volverdon",
+            "world": "Venebra",
+            "houses": [{"name": "Fimbul Shelf 2", "town": "Svargrond", "houseid": 55208}],
+        }
+
+        with patch.object(update_open_houses, "get_character", return_value=character):
+            with self.assertRaises(update_open_houses.HouseNotOwnedError):
+                update_open_houses.resolve_house("Volverdon", "Mill Avenue 2 (Shop)")
+
+    def test_resolve_house_reports_not_owned_for_empty_house_list(self) -> None:
+        character = {"name": "Volverdon", "world": "Venebra", "houses": []}
+
+        with patch.object(update_open_houses, "get_character", return_value=character):
+            with self.assertRaises(update_open_houses.HouseNotOwnedError):
+                update_open_houses.resolve_house("Volverdon", "Mill Avenue 2 (Shop)")
+
+    def test_resolve_house_reports_not_owned_when_houses_key_is_absent(self) -> None:
+        # TibiaData omits "houses" entirely for characters that own none.
+        character = {
+            "name": "Alphaheart",
+            "world": "Luminera",
+            "level": 412,
+            "vocation": "Elite Knight",
+            "sex": "male",
+            "account_status": "Free Account",
+            "achievement_points": 0,
+            "residence": "Thais",
+            "last_login": "2026-08-30T21:14:03Z",
+        }
+
+        with patch.object(update_open_houses, "get_character", return_value=character):
+            with self.assertRaises(update_open_houses.HouseNotOwnedError):
+                update_open_houses.resolve_house("Alphaheart", "Castle Shop 1")
+
+    def test_resolve_house_fails_loudly_when_houses_payload_is_not_a_list(self) -> None:
+        for houses in ({}, "none", 0, None):
+            character = {"name": "Alphaheart", "world": "Luminera", "houses": houses}
+
+            with self.subTest(houses=houses):
+                with patch.object(update_open_houses, "get_character", return_value=character):
+                    with self.assertRaises(RuntimeError) as raised:
+                        update_open_houses.resolve_house("Alphaheart", "Castle Shop 1")
+
+                self.assertNotIsInstance(raised.exception, update_open_houses.HouseNotOwnedError)
+
+    def test_resolve_house_fails_loudly_for_unreadable_house_entries(self) -> None:
+        for houses in (["Castle Shop 1"], [{"town": "Edron", "houseid": 42}]):
+            character = {"name": "Alphaheart", "world": "Luminera", "houses": houses}
+
+            with self.subTest(houses=houses):
+                with patch.object(update_open_houses, "get_character", return_value=character):
+                    with self.assertRaises(RuntimeError) as raised:
+                        update_open_houses.resolve_house("Alphaheart", "Castle Shop 1")
+
+                self.assertNotIsInstance(raised.exception, update_open_houses.HouseNotOwnedError)
+
+    def test_resolve_house_fails_loudly_for_incomplete_character_payload(self) -> None:
+        for character in ({"name": "Alphaheart"}, {"world": "Luminera"}, {}):
+            with self.subTest(character=character):
+                with patch.object(update_open_houses, "get_character", return_value=character):
+                    with self.assertRaises(RuntimeError) as raised:
+                        update_open_houses.resolve_house("Alphaheart", "Castle Shop 1")
+
+                self.assertNotIsInstance(raised.exception, update_open_houses.HouseNotOwnedError)
+
     def test_normalize_open_houses_payload_sorts_by_world_town_house(self) -> None:
         payload = [
             {"world": "Zuna", "town": "Venore", "houseName": "Beta"},
@@ -584,6 +667,123 @@ class UpdateOpenHousesHelpersTest(unittest.TestCase):
             ),
         ):
             with self.assertRaisesRegex(RuntimeError, r"issue #9 .*door log mismatch"):
+                update_open_houses.build_registry()
+
+    @staticmethod
+    def _open_house_issue(number: int, house_name: str, owner_name: str) -> dict[str, object]:
+        log = (
+            f"You see an open door. It belongs to house '{house_name}'. "
+            f"{owner_name} owns this house."
+        )
+        return {
+            "number": number,
+            "title": f"[Open House]: {log}",
+            "body": f"### Door inspection log\n\n{log}",
+            "user": {"login": "tester"},
+        }
+
+    def test_build_registry_omits_reports_whose_owner_no_longer_owns_the_house(self) -> None:
+        issues = [
+            self._open_house_issue(9, "Castle Shop 1", "Alphaheart"),
+            self._open_house_issue(48, "Castle Shop 2", "Son Kortis"),
+        ]
+        characters = {
+            # Owns nothing: TibiaData omits "houses" for these characters.
+            "Alphaheart": {"name": "Alphaheart", "world": "Luminera"},
+            "Son Kortis": {
+                "name": "Son Kortis",
+                "world": "Luminera",
+                "houses": [{"name": "Castle Shop 2", "town": "Edron", "houseid": 43}],
+            },
+        }
+
+        with (
+            patch.object(update_open_houses, "fetch_all_issues", return_value=issues),
+            patch.object(
+                update_open_houses, "get_character", side_effect=lambda name: characters[name]
+            ),
+        ):
+            registry = update_open_houses.build_registry()
+
+        self.assertEqual(
+            [(record["houseName"], record["ownerName"]) for record in registry],
+            [("Castle Shop 2", "Son Kortis")],
+        )
+
+    def test_build_registry_raises_when_character_lookup_fails(self) -> None:
+        issues = [self._open_house_issue(48, "Castle Shop 2", "Son Kortis")]
+
+        with (
+            patch.object(update_open_houses, "fetch_all_issues", return_value=issues),
+            patch.object(
+                update_open_houses,
+                "get_character",
+                side_effect=RuntimeError("Network error for https://api.tibiadata.com"),
+            ),
+        ):
+            with self.assertRaisesRegex(RuntimeError, r"issue #48 .*Network error"):
+                update_open_houses.build_registry()
+
+    def test_main_keeps_existing_registry_when_character_payload_is_malformed(self) -> None:
+        issues = [self._open_house_issue(48, "Castle Shop 2", "Son Kortis")]
+        character = {"name": "Son Kortis", "world": "Luminera", "houses": "unexpected"}
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            registry_path = Path(tmpdir) / "open-houses.json"
+            registry_path.write_text('[{"id": "keep-me"}]\n', encoding="utf-8")
+
+            with (
+                patch.object(update_open_houses, "OPEN_HOUSES_FILE", registry_path),
+                patch.object(update_open_houses, "fetch_all_issues", return_value=issues),
+                patch.object(update_open_houses, "get_character", return_value=character),
+                patch("sys.stderr", new=io.StringIO()),
+            ):
+                self.assertEqual(update_open_houses.main(), 1)
+
+            self.assertEqual(registry_path.read_text(encoding="utf-8"), '[{"id": "keep-me"}]\n')
+
+    def test_build_registry_raises_when_maintenance_edit_names_a_non_owner(self) -> None:
+        records_issue = self._open_house_issue(9, "Castle Shop 1", "Alphaheart")
+        maintenance_issue = {
+            "number": 50,
+            "title": "[Open House Maintenance]: Castle Shop 1",
+            "body": "\n\n".join(
+                [
+                    "### Request type",
+                    "Edit existing open house",
+                    "",
+                    "### World",
+                    "Luminera",
+                    "",
+                    "### House name",
+                    "Castle Shop 1",
+                    "",
+                    "### Updated door inspection log",
+                    "You see an open door. It belongs to house 'Castle Shop 1'. "
+                    "Betaheart owns this house.",
+                ]
+            ),
+        }
+        characters = {
+            "Alphaheart": {
+                "name": "Alphaheart",
+                "world": "Luminera",
+                "houses": [{"name": "Castle Shop 1", "town": "Edron", "houseid": 42}],
+            },
+            "Betaheart": {"name": "Betaheart", "world": "Luminera"},
+        }
+
+        with (
+            patch.object(
+                update_open_houses,
+                "fetch_all_issues",
+                return_value=[records_issue, maintenance_issue],
+            ),
+            patch.object(
+                update_open_houses, "get_character", side_effect=lambda name: characters[name]
+            ),
+        ):
+            with self.assertRaisesRegex(RuntimeError, r"issue #50 .*no longer owns"):
                 update_open_houses.build_registry()
 
 

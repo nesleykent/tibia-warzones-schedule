@@ -28,29 +28,6 @@ OPEN_DOOR_PATTERN = re.compile(
     r"You see (?:an open|a closed) door\. It belongs to house '([^']+)'\. (.+?) owns this house\."
 )
 SECTION_PATTERN = re.compile(r"^###\s+(.+?)\n\n(.*?)(?=^###\s+|\Z)", re.MULTILINE | re.DOTALL)
-KNOWN_TOWNS = [
-    "Ab'Dendriel",
-    "Ankrahmun",
-    "Carlin",
-    "Cormaya",
-    "Darashia",
-    "Edron",
-    "Farmine",
-    "Fibula",
-    "Gray Beach",
-    "Issavi",
-    "Kazordoon",
-    "Krailos",
-    "Liberty Bay",
-    "Marapur",
-    "Port Hope",
-    "Rathleton",
-    "Roshamuul",
-    "Svargrond",
-    "Thais",
-    "Venore",
-    "Yalahar",
-]
 HIRELING_ABILITIES = {
     "Apprentice": ["Sells basic furniture"],
     "Banker": ["Deposit", "Withdraw", "Transfer"],
@@ -59,6 +36,10 @@ HIRELING_ABILITIES = {
     "Cook": ["Cook random buff food for a fee"],
 }
 HIRELING_ORDER = ["Apprentice", "Banker", "Trader", "Steward", "Cook"]
+
+
+class HouseNotOwnedError(RuntimeError):
+    """The reported owner no longer holds the reported house, so the report is stale."""
 
 
 def fetch_json(url: str, headers: dict[str, str] | None = None) -> dict[str, Any] | list[Any]:
@@ -176,39 +157,36 @@ def get_character(name: str) -> dict[str, Any]:
     raise RuntimeError(f"Unexpected TibiaData character payload for {name}.")
 
 
-def get_houses(world: str, town: str) -> list[dict[str, Any]]:
-    payload = fetch_json(f"{TIBIADATA_BASE_URL.rstrip('/')}/v4/houses/{quote(world)}/{quote(town)}")
-    houses_root = payload.get("houses", {}) if isinstance(payload, dict) else {}
-    house_list = houses_root.get("house_list", []) if isinstance(houses_root, dict) else []
-    return house_list if isinstance(house_list, list) else []
-
-
 def resolve_house(owner_name: str, house_name: str) -> dict[str, Any]:
     character = get_character(owner_name)
+    if not isinstance(character, dict):
+        raise RuntimeError(f"Unexpected TibiaData character payload for {owner_name}.")
+
+    if not str(character.get("name", "")).strip():
+        raise RuntimeError(f"TibiaData character payload for {owner_name} has no name.")
+
     world = str(character.get("world", "")).strip()
     if not world:
         raise RuntimeError(f"Could not resolve world for character {owner_name}.")
 
-    exact_houses = character.get("houses", [])
-    if isinstance(exact_houses, list):
-        for house in exact_houses:
-            if normalize_text(house.get("name")) == normalize_text(house_name):
-                return {
-                    "world": world,
-                    "town": str(house.get("town", "")).strip(),
-                    "houseId": int(house.get("houseid") or 0) or None,
-                }
+    # TibiaData omits "houses" entirely for characters that own none, so an absent key is an
+    # authoritative "owns nothing". An unreadable payload is not, and must never be mistaken for
+    # one: the registry is rebuilt from scratch, so it would silently drop every valid record.
+    owned_houses = character.get("houses", [])
+    if not isinstance(owned_houses, list):
+        raise RuntimeError(f"TibiaData returned an unexpected houses payload for {owner_name}.")
 
-    for town in KNOWN_TOWNS:
-        for house in get_houses(world, town):
-            if normalize_text(house.get("name")) == normalize_text(house_name):
-                return {
-                    "world": world,
-                    "town": town,
-                    "houseId": int(house.get("house_id") or 0) or None,
-                }
+    for house in owned_houses:
+        if not isinstance(house, dict) or not str(house.get("name", "")).strip():
+            raise RuntimeError(f"TibiaData returned an unexpected house entry for {owner_name}.")
+        if normalize_text(house.get("name")) == normalize_text(house_name):
+            return {
+                "world": world,
+                "town": str(house.get("town", "")).strip(),
+                "houseId": int(house.get("houseid") or 0) or None,
+            }
 
-    raise RuntimeError(f"Could not match house '{house_name}' for owner {owner_name}.")
+    raise HouseNotOwnedError(f"{owner_name} no longer owns house '{house_name}'.")
 
 
 def build_record_from_issue(issue: dict[str, Any]) -> dict[str, Any]:
@@ -374,6 +352,8 @@ def build_registry() -> list[dict[str, Any]]:
     for issue in iter_matching_issues(issues, OPEN_HOUSE_TITLE_PREFIX):
         try:
             record = build_record_from_issue(issue)
+        except HouseNotOwnedError:
+            continue
         except Exception as exc:
             errors.append(f"{format_issue_reference(issue)}: {exc}")
             continue
@@ -389,7 +369,7 @@ def build_registry() -> list[dict[str, Any]]:
         details = "\n".join(f"- {message}" for message in errors)
         raise RuntimeError(f"Open house rebuild failed:\n{details}")
 
-    return normalize_open_houses_payload(records.values())
+    return normalize_open_houses_payload(list(records.values()))
 
 
 def main() -> int:
