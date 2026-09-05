@@ -21,7 +21,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 4,
+      "ranking_position": 3,
       "economic_score_raw": 11.573891022112429,
       "market_liquidity_score": 0.408974,
       "warzone_health_score": 0.72,
@@ -143,15 +143,15 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "2017-08-29",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 2,
-      "Gnomevil": 2,
-      "Abyssador": 2
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 2,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -171,23 +171,25 @@
       }
     ],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 28,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 8.024347965406628,
       "market_liquidity_score": 0.910642,
-      "warzone_health_score": 0.93,
+      "warzone_health_score": 0.63,
       "final_score": 8.024348,
       "history_health_score": 0.9,
-      "current_operational_score": 1.0,
-      "expected_services": 2,
+      "current_operational_score": 0.0,
+      "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 72745.64285714286,
       "wz2_expected_value": 94740.78571428571,
       "wz3_expected_value": 168792.2142857143,
       "service_expected_value": 336278.64285714284,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
         {
           "date": "2026-09-04",
@@ -296,15 +298,15 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "2017-09-12",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 3,
-      "Gnomevil": 3,
-      "Abyssador": 3
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 3,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -329,23 +331,25 @@
       }
     ],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 54,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 6.992955206923843,
       "market_liquidity_score": 0.844043,
-      "warzone_health_score": 1.0,
+      "warzone_health_score": 0.7,
       "final_score": 6.992955,
       "history_health_score": 1.0,
-      "current_operational_score": 1.0,
-      "expected_services": 3,
+      "current_operational_score": 0.0,
+      "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 70227.92857142858,
       "wz2_expected_value": 86339.42857142858,
       "wz3_expected_value": 156469.2857142857,
       "service_expected_value": 313036.64285714284,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
         {
           "date": "2026-09-04",
@@ -764,7 +768,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 33,
+      "ranking_position": 16,
       "economic_score_raw": 7.761520726381364,
       "market_liquidity_score": 0.823825,
       "warzone_health_score": 1.0,
@@ -1025,15 +1029,15 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "2017-09-12",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 2,
-      "Gnomevil": 2,
-      "Abyssador": 2
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 2,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -1048,23 +1052,25 @@
       }
     ],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 59,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 6.577297916160716,
       "market_liquidity_score": 0.843577,
-      "warzone_health_score": 0.86,
+      "warzone_health_score": 0.56,
       "final_score": 6.577298,
       "history_health_score": 0.8,
-      "current_operational_score": 1.0,
-      "expected_services": 2,
+      "current_operational_score": 0.0,
+      "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 59130.78571428571,
       "wz2_expected_value": 78470.92857142858,
       "wz3_expected_value": 160311.35714285716,
       "service_expected_value": 297913.0714285715,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
         {
           "date": "2026-09-04",
@@ -1315,11 +1321,11 @@
     "tracks_warzone_service": true,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 2,
-      "Gnomevil": 2,
-      "Abyssador": 2
+      "Deathstrike": 1,
+      "Gnomevil": 1,
+      "Abyssador": 1
     },
-    "last_detected_services": 2,
+    "last_detected_services": 1,
     "mark": "healthy",
     "has_service_history": true,
     "warzone_executions": [
@@ -1338,14 +1344,14 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 49,
+      "ranking_position": 29,
       "economic_score_raw": 7.2335376609354505,
       "market_liquidity_score": 0.781191,
       "warzone_health_score": 1.0,
       "final_score": 7.233538,
       "history_health_score": 1.0,
       "current_operational_score": 1.0,
-      "expected_services": 2,
+      "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 69748.5,
       "wz2_expected_value": 88830.0,
@@ -1481,7 +1487,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 51,
+      "ranking_position": 31,
       "economic_score_raw": 7.151051710280106,
       "market_liquidity_score": 0.788223,
       "warzone_health_score": 1.0,
@@ -1763,7 +1769,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 26,
+      "ranking_position": 12,
       "economic_score_raw": 8.110917724192705,
       "market_liquidity_score": 0.814223,
       "warzone_health_score": 1.0,
@@ -1888,11 +1894,11 @@
     "tracks_warzone_service": true,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 3,
-      "Gnomevil": 3,
-      "Abyssador": 3
+      "Deathstrike": 2,
+      "Gnomevil": 2,
+      "Abyssador": 2
     },
-    "last_detected_services": 3,
+    "last_detected_services": 2,
     "mark": "healthy",
     "has_service_history": true,
     "warzone_executions": [
@@ -1911,14 +1917,14 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 41,
+      "ranking_position": 22,
       "economic_score_raw": 7.471870471978629,
       "market_liquidity_score": 0.896621,
       "warzone_health_score": 1.0,
       "final_score": 7.47187,
       "history_health_score": 1.0,
       "current_operational_score": 1.0,
-      "expected_services": 3,
+      "expected_services": 2,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 58498.42857142857,
       "wz2_expected_value": 81863.71428571429,
@@ -2054,7 +2060,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 13,
+      "ranking_position": 4,
       "economic_score_raw": 9.25355330385866,
       "market_liquidity_score": 0.766839,
       "warzone_health_score": 1.0,
@@ -2176,15 +2182,15 @@
     "transfer_type": "blocked",
     "battleye_protected": true,
     "battleye_date": "release",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 1,
-      "Gnomevil": 1,
-      "Abyssador": 1
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 1,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -2194,23 +2200,25 @@
       }
     ],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 10,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 9.60013863338583,
       "market_liquidity_score": 0.693168,
-      "warzone_health_score": 1.0,
+      "warzone_health_score": 0.7,
       "final_score": 9.600139,
       "history_health_score": 1.0,
-      "current_operational_score": 1.0,
+      "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 107647.78571428571,
       "wz2_expected_value": 111384.64285714286,
       "wz3_expected_value": 195468.64285714284,
       "service_expected_value": 414501.0714285714,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
         {
           "date": "2026-09-04",
@@ -2758,7 +2766,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 32,
+      "ranking_position": 15,
       "economic_score_raw": 7.777305145523601,
       "market_liquidity_score": 0.821839,
       "warzone_health_score": 1.0,
@@ -2885,10 +2893,10 @@
     "last_detected_kills": {
       "Deathstrike": 2,
       "Gnomevil": 2,
-      "Abyssador": 2
+      "Abyssador": 1
     },
-    "last_detected_services": 2,
-    "mark": "healthy",
+    "last_detected_services": 1,
+    "mark": "trolls",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -2906,20 +2914,20 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 37,
+      "ranking_position": 18,
       "economic_score_raw": 7.612210379137028,
       "market_liquidity_score": 0.891308,
-      "warzone_health_score": 1.0,
+      "warzone_health_score": 0.925,
       "final_score": 7.61221,
       "history_health_score": 1.0,
-      "current_operational_score": 1.0,
+      "current_operational_score": 0.75,
       "expected_services": 2,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 68747.85714285714,
       "wz2_expected_value": 85711.85714285714,
       "wz3_expected_value": 173753.7857142857,
       "service_expected_value": 328213.5,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
         {
           "date": "2026-09-04",
@@ -3313,11 +3321,11 @@
     "tracks_warzone_service": true,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 4,
-      "Gnomevil": 4,
-      "Abyssador": 4
+      "Deathstrike": 3,
+      "Gnomevil": 3,
+      "Abyssador": 3
     },
-    "last_detected_services": 4,
+    "last_detected_services": 3,
     "mark": "healthy",
     "has_service_history": true,
     "warzone_executions": [
@@ -3341,14 +3349,14 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 52,
+      "ranking_position": 32,
       "economic_score_raw": 7.054840279058527,
       "market_liquidity_score": 0.851959,
       "warzone_health_score": 1.0,
       "final_score": 7.05484,
       "history_health_score": 1.0,
       "current_operational_score": 1.0,
-      "expected_services": 4,
+      "expected_services": 3,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 65245.21428571429,
       "wz2_expected_value": 97393.0,
@@ -3463,35 +3471,37 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "2018-04-19",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": null,
     "last_detected_kills": {
-      "Deathstrike": 1,
-      "Gnomevil": 1,
-      "Abyssador": 1
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 1,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 57,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 6.8917575618771325,
       "market_liquidity_score": 0.493803,
-      "warzone_health_score": 0.86,
+      "warzone_health_score": 0.56,
       "final_score": 6.891758,
       "history_health_score": 0.8,
-      "current_operational_score": 1.0,
+      "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 62363.5,
       "wz2_expected_value": 81529.28571428571,
       "wz3_expected_value": 165619.0,
       "service_expected_value": 309511.7857142857,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
         {
           "date": "2026-09-04",
@@ -3760,7 +3770,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 38,
+      "ranking_position": 19,
       "economic_score_raw": 7.597176531658869,
       "market_liquidity_score": 0.834735,
       "warzone_health_score": 0.86,
@@ -3903,7 +3913,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 42,
+      "ranking_position": 23,
       "economic_score_raw": 7.3466069475020594,
       "market_liquidity_score": 0.861284,
       "warzone_health_score": 1.0,
@@ -4028,12 +4038,12 @@
     "tracks_warzone_service": true,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 3,
-      "Gnomevil": 3,
-      "Abyssador": 3
+      "Deathstrike": 1,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 3,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "inconclusive",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -4056,20 +4066,20 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 14,
+      "ranking_position": 5,
       "economic_score_raw": 8.890881021895357,
       "market_liquidity_score": 0.736416,
-      "warzone_health_score": 1.0,
+      "warzone_health_score": 0.775,
       "final_score": 8.890881,
       "history_health_score": 1.0,
-      "current_operational_score": 1.0,
-      "expected_services": 3,
+      "current_operational_score": 0.25,
+      "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 84420.14285714286,
       "wz2_expected_value": 102511.78571428571,
       "wz3_expected_value": 191112.14285714284,
       "service_expected_value": 378044.0714285714,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.5,
       "history_last_five_days": [
         {
           "date": "2026-09-04",
@@ -4734,15 +4744,15 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "2017-12-12",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 4,
-      "Gnomevil": 4,
-      "Abyssador": 4
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 4,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -4767,23 +4777,25 @@
       }
     ],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 27,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 8.074444418541917,
       "market_liquidity_score": 0.854445,
-      "warzone_health_score": 0.86,
+      "warzone_health_score": 0.56,
       "final_score": 8.074444,
       "history_health_score": 0.8,
-      "current_operational_score": 1.0,
-      "expected_services": 4,
+      "current_operational_score": 0.0,
+      "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 77401.92857142858,
       "wz2_expected_value": 97502.85714285714,
       "wz3_expected_value": 171455.42857142858,
       "service_expected_value": 346360.2142857143,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
         {
           "date": "2026-09-04",
@@ -4913,7 +4925,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 22,
+      "ranking_position": 10,
       "economic_score_raw": 8.247146821375374,
       "market_liquidity_score": 0.751608,
       "warzone_health_score": 0.86,
@@ -5035,15 +5047,15 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "release",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 2,
-      "Gnomevil": 2,
-      "Abyssador": 2
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 2,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -5058,23 +5070,25 @@
       }
     ],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 11,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 9.468144731336636,
       "market_liquidity_score": 0.837244,
-      "warzone_health_score": 1.0,
+      "warzone_health_score": 0.7,
       "final_score": 9.468145,
       "history_health_score": 1.0,
-      "current_operational_score": 1.0,
-      "expected_services": 2,
+      "current_operational_score": 0.0,
+      "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 92068.42857142858,
       "wz2_expected_value": 119292.35714285714,
       "wz3_expected_value": 189488.0,
       "service_expected_value": 400848.78571428574,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
         {
           "date": "2026-09-04",
@@ -5329,28 +5343,30 @@
     "transfer_type": "blocked",
     "battleye_protected": true,
     "battleye_date": "release",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": null,
     "last_detected_kills": {
       "Deathstrike": 0,
-      "Gnomevil": 1,
-      "Abyssador": 1
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
     "last_detected_services": 0,
-    "mark": "trolls",
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 2,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 23.016687907854767,
       "market_liquidity_score": 0.638103,
-      "warzone_health_score": 0.5,
+      "warzone_health_score": 0.35,
       "final_score": 23.016688,
       "history_health_score": 0.5,
-      "current_operational_score": 0.5,
+      "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 47873.21428571429,
@@ -5466,15 +5482,15 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "release",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 1,
-      "Gnomevil": 1,
-      "Abyssador": 1
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 1,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -5484,23 +5500,25 @@
       }
     ],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 7,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 10.191774394266014,
       "market_liquidity_score": 0.592371,
-      "warzone_health_score": 0.72,
+      "warzone_health_score": 0.42,
       "final_score": 10.191774,
       "history_health_score": 0.6,
-      "current_operational_score": 1.0,
+      "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 84102.85714285714,
       "wz2_expected_value": 109480.92857142858,
       "wz3_expected_value": 234625.07142857142,
       "service_expected_value": 428208.85714285716,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
         {
           "date": "2026-09-04",
@@ -5640,7 +5658,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 50,
+      "ranking_position": 30,
       "economic_score_raw": 7.190999169506573,
       "market_liquidity_score": 0.904946,
       "warzone_health_score": 0.93,
@@ -6040,15 +6058,15 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "release",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 1,
-      "Gnomevil": 2,
-      "Abyssador": 1
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 1,
-    "mark": "inconclusive",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -6058,23 +6076,25 @@
       }
     ],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 12,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 9.365112290702559,
       "market_liquidity_score": 0.574012,
-      "warzone_health_score": 0.5375,
+      "warzone_health_score": 0.35,
       "final_score": 9.365112,
       "history_health_score": 0.5,
-      "current_operational_score": 0.625,
-      "expected_services": 2,
+      "current_operational_score": 0.0,
+      "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 76241.42857142858,
       "wz2_expected_value": 119669.42857142858,
       "wz3_expected_value": 189459.5,
       "service_expected_value": 385370.35714285716,
-      "current_mark_value": 0.5,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
         {
           "date": "2026-09-04",
@@ -6186,11 +6206,11 @@
     "tracks_warzone_service": true,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 3,
-      "Gnomevil": 3,
-      "Abyssador": 3
+      "Deathstrike": 2,
+      "Gnomevil": 2,
+      "Abyssador": 2
     },
-    "last_detected_services": 3,
+    "last_detected_services": 2,
     "mark": "healthy",
     "has_service_history": true,
     "warzone_executions": [
@@ -6214,14 +6234,14 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 47,
+      "ranking_position": 28,
       "economic_score_raw": 7.260193584746798,
       "market_liquidity_score": 0.883894,
       "warzone_health_score": 1.0,
       "final_score": 7.260194,
       "history_health_score": 1.0,
       "current_operational_score": 1.0,
-      "expected_services": 3,
+      "expected_services": 2,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 70417.78571428571,
       "wz2_expected_value": 77757.57142857142,
@@ -6339,11 +6359,11 @@
     "tracks_warzone_service": true,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 3,
-      "Gnomevil": 3,
-      "Abyssador": 3
+      "Deathstrike": 1,
+      "Gnomevil": 1,
+      "Abyssador": 1
     },
-    "last_detected_services": 3,
+    "last_detected_services": 1,
     "mark": "healthy",
     "has_service_history": true,
     "warzone_executions": [
@@ -6367,14 +6387,14 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 45,
+      "ranking_position": 26,
       "economic_score_raw": 7.301701994033599,
       "market_liquidity_score": 0.748316,
       "warzone_health_score": 1.0,
       "final_score": 7.301702,
       "history_health_score": 1.0,
       "current_operational_score": 1.0,
-      "expected_services": 3,
+      "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 68522.64285714286,
       "wz2_expected_value": 85709.92857142858,
@@ -6628,15 +6648,15 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "release",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 1,
-      "Gnomevil": 1,
-      "Abyssador": 1
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 1,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -6646,23 +6666,25 @@
       }
     ],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 30,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 7.928846416382253,
       "market_liquidity_score": 0.629275,
-      "warzone_health_score": 1.0,
+      "warzone_health_score": 0.7,
       "final_score": 7.928846,
       "history_health_score": 1.0,
-      "current_operational_score": 1.0,
+      "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 75210.28571428571,
       "wz2_expected_value": 72801.92857142858,
       "wz3_expected_value": 183866.64285714284,
       "service_expected_value": 331878.85714285716,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
         {
           "date": "2026-09-04",
@@ -6910,15 +6932,15 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "2017-09-05",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 1,
-      "Gnomevil": 1,
-      "Abyssador": 1
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 1,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -6928,23 +6950,25 @@
       }
     ],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 53,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 7.003499687384774,
       "market_liquidity_score": 0.869474,
-      "warzone_health_score": 1.0,
+      "warzone_health_score": 0.7,
       "final_score": 7.0035,
       "history_health_score": 1.0,
-      "current_operational_score": 1.0,
+      "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 64506.857142857145,
       "wz2_expected_value": 82252.0,
       "wz3_expected_value": 165282.07142857142,
       "service_expected_value": 312040.9285714286,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
         {
           "date": "2026-09-04",
@@ -7213,7 +7237,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 29,
+      "ranking_position": 13,
       "economic_score_raw": 7.948424340524546,
       "market_liquidity_score": 0.857922,
       "warzone_health_score": 1.0,
@@ -7501,7 +7525,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 56,
+      "ranking_position": 34,
       "economic_score_raw": 6.902413439545706,
       "market_liquidity_score": 0.847791,
       "warzone_health_score": 1.0,
@@ -7623,15 +7647,15 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "release",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 1,
-      "Gnomevil": 1,
-      "Abyssador": 1
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 1,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -7641,23 +7665,25 @@
       }
     ],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 15,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 8.888519341438842,
       "market_liquidity_score": 0.856896,
-      "warzone_health_score": 1.0,
+      "warzone_health_score": 0.7,
       "final_score": 8.888519,
       "history_health_score": 1.0,
-      "current_operational_score": 1.0,
+      "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 75997.28571428571,
       "wz2_expected_value": 95431.35714285714,
       "wz3_expected_value": 196611.92857142858,
       "service_expected_value": 368040.5714285714,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
         {
           "date": "2026-09-04",
@@ -8047,11 +8073,11 @@
     "tracks_warzone_service": true,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 2,
-      "Gnomevil": 2,
-      "Abyssador": 2
+      "Deathstrike": 1,
+      "Gnomevil": 1,
+      "Abyssador": 1
     },
-    "last_detected_services": 2,
+    "last_detected_services": 1,
     "mark": "healthy",
     "has_service_history": true,
     "warzone_executions": [
@@ -8070,14 +8096,14 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 16,
+      "ranking_position": 6,
       "economic_score_raw": 8.86771921520523,
       "market_liquidity_score": 0.707459,
       "warzone_health_score": 0.86,
       "final_score": 8.867719,
       "history_health_score": 0.8,
       "current_operational_score": 1.0,
-      "expected_services": 2,
+      "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 98846.92857142858,
       "wz2_expected_value": 96322.57142857142,
@@ -8331,15 +8357,15 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "release",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 3,
-      "Gnomevil": 3,
-      "Abyssador": 3
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 3,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -8359,23 +8385,25 @@
       }
     ],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 9,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 9.899545588630103,
       "market_liquidity_score": 0.889354,
-      "warzone_health_score": 0.79,
+      "warzone_health_score": 0.49,
       "final_score": 9.899546,
       "history_health_score": 0.7,
-      "current_operational_score": 1.0,
-      "expected_services": 3,
+      "current_operational_score": 0.0,
+      "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 82754.14285714286,
       "wz2_expected_value": 144802.2857142857,
       "wz3_expected_value": 199126.7142857143,
       "service_expected_value": 426683.14285714284,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
         {
           "date": "2026-09-04",
@@ -8510,7 +8538,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 58,
+      "ranking_position": 35,
       "economic_score_raw": 6.751227205046511,
       "market_liquidity_score": 0.818672,
       "warzone_health_score": 1.0,
@@ -8632,15 +8660,15 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "2017-10-19",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 1,
-      "Gnomevil": 1,
-      "Abyssador": 1
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 1,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -8650,23 +8678,25 @@
       }
     ],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 25,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 8.193833338875402,
       "market_liquidity_score": 0.858102,
-      "warzone_health_score": 1.0,
+      "warzone_health_score": 0.7,
       "final_score": 8.193833,
       "history_health_score": 1.0,
-      "current_operational_score": 1.0,
+      "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 81107.28571428571,
       "wz2_expected_value": 96267.57142857142,
       "wz3_expected_value": 174643.92857142858,
       "service_expected_value": 352018.7857142857,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
         {
           "date": "2026-09-04",
@@ -9062,11 +9092,11 @@
     "tracks_warzone_service": true,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 3,
-      "Gnomevil": 3,
-      "Abyssador": 3
+      "Deathstrike": 2,
+      "Gnomevil": 2,
+      "Abyssador": 2
     },
-    "last_detected_services": 3,
+    "last_detected_services": 2,
     "mark": "healthy",
     "has_service_history": true,
     "warzone_executions": [
@@ -9090,14 +9120,14 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 40,
+      "ranking_position": 21,
       "economic_score_raw": 7.505375776858279,
       "market_liquidity_score": 0.845139,
       "warzone_health_score": 1.0,
       "final_score": 7.505376,
       "history_health_score": 1.0,
       "current_operational_score": 1.0,
-      "expected_services": 3,
+      "expected_services": 2,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 68815.71428571429,
       "wz2_expected_value": 86065.14285714286,
@@ -9238,7 +9268,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 18,
+      "ranking_position": 8,
       "economic_score_raw": 8.723935804252013,
       "market_liquidity_score": 0.86401,
       "warzone_health_score": 1.0,
@@ -9360,15 +9390,15 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "2017-10-19",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 2,
-      "Gnomevil": 2,
-      "Abyssador": 2
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 2,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -9383,23 +9413,25 @@
       }
     ],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 48,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 7.2458842686866145,
       "market_liquidity_score": 0.852726,
-      "warzone_health_score": 1.0,
+      "warzone_health_score": 0.7,
       "final_score": 7.245884,
       "history_health_score": 1.0,
-      "current_operational_score": 1.0,
-      "expected_services": 2,
+      "current_operational_score": 0.0,
+      "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 67107.0,
       "wz2_expected_value": 79704.21428571429,
       "wz3_expected_value": 165306.2857142857,
       "service_expected_value": 312117.5,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
         {
           "date": "2026-09-04",
@@ -9508,15 +9540,15 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "release",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 2,
-      "Gnomevil": 2,
-      "Abyssador": 2
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 2,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -9531,23 +9563,25 @@
       }
     ],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 20,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 8.31961581604038,
       "market_liquidity_score": 0.839831,
-      "warzone_health_score": 1.0,
+      "warzone_health_score": 0.7,
       "final_score": 8.319616,
       "history_health_score": 1.0,
-      "current_operational_score": 1.0,
-      "expected_services": 2,
+      "current_operational_score": 0.0,
+      "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 77491.64285714286,
       "wz2_expected_value": 97678.71428571429,
       "wz3_expected_value": 180842.64285714284,
       "service_expected_value": 356013.0,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
         {
           "date": "2026-09-04",
@@ -9677,7 +9711,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 43,
+      "ranking_position": 24,
       "economic_score_raw": 7.312703645678146,
       "market_liquidity_score": 0.834739,
       "warzone_health_score": 1.0,
@@ -9941,11 +9975,11 @@
     "tracks_warzone_service": true,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 3,
-      "Gnomevil": 3,
-      "Abyssador": 3
+      "Deathstrike": 2,
+      "Gnomevil": 2,
+      "Abyssador": 2
     },
-    "last_detected_services": 3,
+    "last_detected_services": 2,
     "mark": "healthy",
     "has_service_history": true,
     "warzone_executions": [
@@ -9969,14 +10003,14 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 46,
+      "ranking_position": 27,
       "economic_score_raw": 7.290385713249372,
       "market_liquidity_score": 0.904129,
       "warzone_health_score": 1.0,
       "final_score": 7.290386,
       "history_health_score": 1.0,
       "current_operational_score": 1.0,
-      "expected_services": 3,
+      "expected_services": 2,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 71472.5,
       "wz2_expected_value": 90955.0,
@@ -10094,11 +10128,11 @@
     "tracks_warzone_service": true,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 3,
-      "Gnomevil": 3,
-      "Abyssador": 3
+      "Deathstrike": 1,
+      "Gnomevil": 1,
+      "Abyssador": 1
     },
-    "last_detected_services": 3,
+    "last_detected_services": 1,
     "mark": "healthy",
     "has_service_history": true,
     "warzone_executions": [
@@ -10117,14 +10151,14 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 39,
+      "ranking_position": 20,
       "economic_score_raw": 7.594385309824958,
       "market_liquidity_score": 0.872143,
       "warzone_health_score": 1.0,
       "final_score": 7.594385,
       "history_health_score": 1.0,
       "current_operational_score": 1.0,
-      "expected_services": 3,
+      "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 64739.857142857145,
       "wz2_expected_value": 87193.92857142858,
@@ -10406,7 +10440,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 35,
+      "ranking_position": 17,
       "economic_score_raw": 7.649932302549102,
       "market_liquidity_score": 0.881025,
       "warzone_health_score": 1.0,
@@ -10948,11 +10982,11 @@
     "tracks_warzone_service": true,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 4,
-      "Gnomevil": 4,
-      "Abyssador": 4
+      "Deathstrike": 2,
+      "Gnomevil": 2,
+      "Abyssador": 2
     },
-    "last_detected_services": 4,
+    "last_detected_services": 2,
     "mark": "healthy",
     "has_service_history": true,
     "warzone_executions": [
@@ -10976,14 +11010,14 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 55,
+      "ranking_position": 33,
       "economic_score_raw": 6.9761484306149875,
       "market_liquidity_score": 0.79861,
       "warzone_health_score": 0.93,
       "final_score": 6.976148,
       "history_health_score": 0.9,
       "current_operational_score": 1.0,
-      "expected_services": 4,
+      "expected_services": 2,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 57403.142857142855,
       "wz2_expected_value": 82653.92857142858,
@@ -11397,7 +11431,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 31,
+      "ranking_position": 14,
       "economic_score_raw": 7.846582827172895,
       "market_liquidity_score": 0.478798,
       "warzone_health_score": 1.0,
@@ -11540,7 +11574,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 3,
+      "ranking_position": 2,
       "economic_score_raw": 11.985128741789598,
       "market_liquidity_score": 0.699987,
       "warzone_health_score": 0.86,
@@ -11662,15 +11696,15 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "release",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 1,
-      "Gnomevil": 1,
-      "Abyssador": 1
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 1,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -11680,23 +11714,25 @@
       }
     ],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 5,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 10.867819614130866,
       "market_liquidity_score": 0.70554,
-      "warzone_health_score": 0.93,
+      "warzone_health_score": 0.63,
       "final_score": 10.86782,
       "history_health_score": 0.9,
-      "current_operational_score": 1.0,
+      "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 108956.92857142857,
       "wz2_expected_value": 150158.57142857142,
       "wz3_expected_value": 209542.14285714287,
       "service_expected_value": 468657.64285714284,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
         {
           "date": "2026-09-04",
@@ -11841,7 +11877,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 23,
+      "ranking_position": 11,
       "economic_score_raw": 8.244723421742265,
       "market_liquidity_score": 0.856166,
       "warzone_health_score": 0.86,
@@ -11963,15 +11999,15 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "release",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 1,
-      "Gnomevil": 1,
-      "Abyssador": 1
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 1,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -11981,23 +12017,25 @@
       }
     ],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 34,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 7.693242601140375,
       "market_liquidity_score": 0.916254,
-      "warzone_health_score": 1.0,
+      "warzone_health_score": 0.7,
       "final_score": 7.693243,
       "history_health_score": 1.0,
-      "current_operational_score": 1.0,
+      "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 62171.92857142857,
       "wz2_expected_value": 87636.92857142858,
       "wz3_expected_value": 174010.7142857143,
       "service_expected_value": 323819.5714285715,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
         {
           "date": "2026-09-04",
@@ -12245,15 +12283,15 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "2017-10-19",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 1,
-      "Gnomevil": 1,
-      "Abyssador": 1
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 1,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -12263,23 +12301,25 @@
       }
     ],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 21,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 8.26275850368988,
       "market_liquidity_score": 0.875101,
-      "warzone_health_score": 1.0,
+      "warzone_health_score": 0.7,
       "final_score": 8.262759,
       "history_health_score": 1.0,
-      "current_operational_score": 1.0,
+      "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 76718.07142857142,
       "wz2_expected_value": 93086.28571428571,
       "wz3_expected_value": 178087.2857142857,
       "service_expected_value": 347891.64285714284,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
         {
           "date": "2026-09-04",
@@ -12537,11 +12577,11 @@
     "tracks_warzone_service": true,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 2,
-      "Gnomevil": 2,
-      "Abyssador": 2
+      "Deathstrike": 1,
+      "Gnomevil": 1,
+      "Abyssador": 1
     },
-    "last_detected_services": 2,
+    "last_detected_services": 1,
     "mark": "healthy",
     "has_service_history": true,
     "warzone_executions": [
@@ -12560,14 +12600,14 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 44,
+      "ranking_position": 25,
       "economic_score_raw": 7.305312618185747,
       "market_liquidity_score": 0.870792,
       "warzone_health_score": 1.0,
       "final_score": 7.305313,
       "history_health_score": 1.0,
       "current_operational_score": 1.0,
-      "expected_services": 2,
+      "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 59624.71428571429,
       "wz2_expected_value": 91204.57142857142,
@@ -12682,15 +12722,15 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "release",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 1,
-      "Gnomevil": 1,
-      "Abyssador": 1
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 1,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -12700,23 +12740,25 @@
       }
     ],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 8,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 10.059005336164628,
       "market_liquidity_score": 0.592316,
-      "warzone_health_score": 0.72,
+      "warzone_health_score": 0.42,
       "final_score": 10.059005,
       "history_health_score": 0.6,
-      "current_operational_score": 1.0,
+      "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 102872.35714285714,
       "wz2_expected_value": 123644.71428571429,
       "wz3_expected_value": 191697.57142857142,
       "service_expected_value": 418214.64285714284,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
         {
           "date": "2026-09-04",
@@ -12825,15 +12867,15 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "release",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 1,
-      "Gnomevil": 1,
-      "Abyssador": 1
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 1,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -12843,23 +12885,25 @@
       }
     ],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 6,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 10.825198653335915,
       "market_liquidity_score": 0.735077,
-      "warzone_health_score": 0.86,
+      "warzone_health_score": 0.56,
       "final_score": 10.825199,
       "history_health_score": 0.8,
-      "current_operational_score": 1.0,
+      "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 89928.92857142858,
       "wz2_expected_value": 125883.42857142857,
       "wz3_expected_value": 239398.07142857142,
       "service_expected_value": 455210.4285714286,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
         {
           "date": "2026-09-04",
@@ -12983,7 +13027,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 17,
+      "ranking_position": 7,
       "economic_score_raw": 8.775351896470022,
       "market_liquidity_score": 0.823796,
       "warzone_health_score": 0.86,
@@ -13126,7 +13170,7 @@
       "is_ranked": true,
       "insufficient_data": false,
       "insufficient_data_reasons": [],
-      "ranking_position": 19,
+      "ranking_position": 9,
       "economic_score_raw": 8.473523813732392,
       "market_liquidity_score": 0.808061,
       "warzone_health_score": 1.0,
@@ -13248,15 +13292,15 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "release",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 1,
-      "Gnomevil": 1,
-      "Abyssador": 1
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 1,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -13266,23 +13310,25 @@
       }
     ],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 36,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 7.612732312818341,
       "market_liquidity_score": 0.832751,
-      "warzone_health_score": 0.93,
+      "warzone_health_score": 0.63,
       "final_score": 7.612732,
       "history_health_score": 0.9,
-      "current_operational_score": 1.0,
+      "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 59416.357142857145,
       "wz2_expected_value": 83399.57142857142,
       "wz3_expected_value": 175748.64285714284,
       "service_expected_value": 318564.5714285714,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
         {
           "date": "2026-09-04",
@@ -13391,15 +13437,15 @@
     "transfer_type": "regular",
     "battleye_protected": true,
     "battleye_date": "release",
-    "tracks_warzone_service": true,
+    "tracks_warzone_service": false,
     "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
-      "Deathstrike": 1,
-      "Gnomevil": 1,
-      "Abyssador": 1
+      "Deathstrike": 0,
+      "Gnomevil": 0,
+      "Abyssador": 0
     },
-    "last_detected_services": 1,
-    "mark": "healthy",
+    "last_detected_services": 0,
+    "mark": "na",
     "has_service_history": true,
     "warzone_executions": [
       {
@@ -13409,23 +13455,25 @@
       }
     ],
     "warzone_economic_ranking": {
-      "is_ranked": true,
-      "insufficient_data": false,
-      "insufficient_data_reasons": [],
-      "ranking_position": 24,
+      "is_ranked": false,
+      "insufficient_data": true,
+      "insufficient_data_reasons": [
+        "excluded_na_world"
+      ],
+      "ranking_position": null,
       "economic_score_raw": 8.207631849466612,
       "market_liquidity_score": 0.49286,
-      "warzone_health_score": 1.0,
+      "warzone_health_score": 0.7,
       "final_score": 8.207632,
       "history_health_score": 1.0,
-      "current_operational_score": 1.0,
+      "current_operational_score": 0.0,
       "expected_services": 1,
       "rolling_window_entries_target": 7,
       "wz1_expected_value": 71096.5,
       "wz2_expected_value": 88862.85714285714,
       "wz3_expected_value": 184505.57142857142,
       "service_expected_value": 344464.9285714286,
-      "current_mark_value": 1.0,
+      "current_mark_value": 0.0,
       "history_last_five_days": [
         {
           "date": "2026-09-04",
