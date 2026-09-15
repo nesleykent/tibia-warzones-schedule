@@ -7,6 +7,11 @@ This writes directly into the project market layout:
 When an existing file is present, the script fetches only the recent overlap
 window, merges snapshots by (id, time), and keeps the canonical nested list
 shape already used in the repository.
+
+Stored snapshots are never discarded because upstream had nothing to add. When
+TibiaMarket returns an empty payload or a 404 for a world/item, the file keeps
+its existing snapshots and only records that this run brought no new
+observations. Only an explicit --replace run rewrites a file from scratch.
 """
 
 from __future__ import annotations
@@ -34,6 +39,11 @@ DEFAULT_END_DAYS_AGO = -1
 REFRESH_INTERVAL_SECONDS = 24 * 60 * 60
 DEFAULT_MAX_REQUESTS = 0
 DEFAULT_MAX_RUNTIME_SECONDS = 0
+STATUS_OK = "ok"
+STATUS_NO_DATA = "no_data"
+STATUS_NOT_FOUND = "not_found"
+# Upstream answered but added nothing, and the file already holds observations.
+STATUS_NO_NEW_DATA = "no_new_data"
 DEFAULT_BEARER_TOKEN = (
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9."
     "eyJzdWIiOiJ3ZWJzaXRlIiwiaWF0IjoxNzA2Mzc2MTM1LCJleHAiOjI0ODM5NzYxMzV9."
@@ -90,7 +100,18 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--force",
         action="store_true",
-        help="Replace existing market files instead of merging in newly fetched snapshots.",
+        help=(
+            "Ignore the freshness gate and refetch the full history window. "
+            "Stored snapshots are still merged, never discarded."
+        ),
+    )
+    parser.add_argument(
+        "--replace",
+        action="store_true",
+        help=(
+            "Discard stored snapshots and rewrite each market file from the fetched "
+            "response. Destructive; use only to repair a corrupted file."
+        ),
     )
     parser.add_argument(
         "--dry-run",
@@ -297,9 +318,27 @@ def merge_rows(existing_rows: list[dict[str, Any]], incoming_rows: list[dict[str
     return sorted(merged.values(), key=snapshot_sort_key)
 
 
-def serialize_rows(rows: list[dict[str, Any]], last_run_at: str, status: str = "ok") -> bytes:
+def latest_observation_timestamp(rows: list[dict[str, Any]]) -> float | None:
+    timestamps = [
+        value
+        for value in (
+            snapshot_sort_key(row)[0] for row in rows if isinstance(row, dict)
+        )
+        if value > 0
+    ]
+    return max(timestamps) if timestamps else None
+
+
+def serialize_rows(
+    rows: list[dict[str, Any]], last_run_at: str, status: str = STATUS_OK
+) -> bytes:
+    observed_at = latest_observation_timestamp(rows)
     payload = {
         "last_run_at": last_run_at,
+        # When TibiaMarket last observed this item, not when we last asked for it.
+        "last_observation_at": (
+            format_run_marker(observed_at) if observed_at is not None else None
+        ),
         "status": status,
         "snapshots": [rows],
     }
@@ -491,6 +530,7 @@ def run(
     retries: int = DEFAULT_RETRIES,
     token: str | None = None,
     force: bool = False,
+    replace: bool = False,
     dry_run: bool = False,
     max_requests: int = DEFAULT_MAX_REQUESTS,
     max_runtime_seconds: int = DEFAULT_MAX_RUNTIME_SECONDS,
@@ -505,7 +545,7 @@ def run(
     if reset_progress:
         clear_sync_checkpoint()
 
-    checkpoint = None if force else load_sync_checkpoint()
+    checkpoint = None if (force or replace) else load_sync_checkpoint()
     task_list = [
         (world, item)
         for world in selected_worlds
@@ -560,13 +600,13 @@ def run(
             existing_status: str | None = None
             resolved_start_days_ago = start_days_ago
 
-            if path.exists() and not force:
+            if path.exists() and not replace:
                 try:
                     file_state = read_market_file_state(path)
                     existing_rows = file_state["rows"]
                     last_run_at = file_state["last_run_at"]
                     existing_status = file_state["status"]
-                    if existing_rows:
+                    if existing_rows and not force:
                         resolved_start_days_ago = resolve_update_window_days(existing_rows, start_days_ago)
                 except Exception:
                     existing_rows = []
@@ -576,16 +616,16 @@ def run(
 
             if dry_run:
                 should_fetch, refresh_reason = describe_refresh_status(last_run_at)
-                if path.exists() and not force and not should_fetch:
+                if path.exists() and not force and not replace and not should_fetch:
                     print(f"[skip] {world} :: {item_name} ({refresh_reason}, dry-run)")
                     continue
-                mode = "update" if path.exists() and not force and existing_rows else "fetch"
+                mode = "update" if existing_rows else "fetch"
                 print(f"[{mode}] {world} :: {item_name} ({refresh_reason}, dry-run)")
                 print(f"[done] {path}")
                 continue
 
             should_fetch, refresh_reason = describe_refresh_status(last_run_at)
-            if path.exists() and not force and not should_fetch:
+            if path.exists() and not force and not replace and not should_fetch:
                 suffix = f", status={existing_status}" if existing_status else ""
                 print(f"[skip] {world} :: {item_name} ({refresh_reason}{suffix})")
                 write_sync_checkpoint(
@@ -605,7 +645,7 @@ def run(
             if elapsed < rate_limit_delay:
                 sleep_with_interrupt(rate_limit_delay - elapsed, world=world, item_name=item_name)
 
-            is_update = path.exists() and not force and bool(existing_rows)
+            is_update = bool(existing_rows)
             write_sync_checkpoint(
                 next_index=task_index,
                 total_tasks=len(task_list),
@@ -623,32 +663,53 @@ def run(
                 run_marker = format_run_marker()
                 incoming_rows = extract_rows(parse_json_payload(payload))
                 if not incoming_rows:
-                    atomic_write_bytes(path, serialize_rows([], run_marker, status="no_data"))
+                    preserved_status = (
+                        STATUS_NO_NEW_DATA if existing_rows else STATUS_NO_DATA
+                    )
+                    atomic_write_bytes(
+                        path, serialize_rows(existing_rows, run_marker, status=preserved_status)
+                    )
                     write_sync_checkpoint(
                         next_index=task_index + 1,
                         total_tasks=len(task_list),
                         phase="after_write",
-                        status="no_data",
+                        status=preserved_status,
                         world_name=world,
                         item_name=item_name,
-                        message="Fetched payload did not contain market snapshots.",
+                        message=(
+                            "Fetched payload did not contain market snapshots; kept "
+                            f"{len(existing_rows)} stored snapshots."
+                            if existing_rows
+                            else "Fetched payload did not contain market snapshots."
+                        ),
                     )
-                    print(f"[skip] {world} :: {item_name} (no data)")
+                    print(
+                        f"[keep] {world} :: {item_name} "
+                        f"(no new data, {len(existing_rows)} stored snapshots)"
+                        if existing_rows
+                        else f"[skip] {world} :: {item_name} (no data)"
+                    )
                     continue
 
                 if is_update:
                     merged_rows = merge_rows(existing_rows, incoming_rows)
-                    atomic_write_bytes(path, serialize_rows(merged_rows, run_marker, status="ok"))
+                    atomic_write_bytes(
+                        path, serialize_rows(merged_rows, run_marker, status=STATUS_OK)
+                    )
                 else:
                     atomic_write_bytes(
                         path,
-                        serialize_rows(sorted(incoming_rows, key=snapshot_sort_key), run_marker, status="ok"),
+                        serialize_rows(
+                            sorted(incoming_rows, key=snapshot_sort_key),
+                            run_marker,
+                            status=STATUS_OK,
+                        ),
                     )
                 write_sync_checkpoint(
                     next_index=task_index + 1,
                     total_tasks=len(task_list),
                     phase="after_write",
-                    status="ok",
+                    status=STATUS_OK,
                     world_name=world,
                     item_name=item_name,
                     message="saved",
@@ -657,18 +718,28 @@ def run(
             except Exception as error:  # noqa: BLE001
                 if is_ignorable_market_error(error):
                     run_marker = format_run_marker()
-                    atomic_write_bytes(path, serialize_rows([], run_marker, status="not_found"))
+                    preserved_status = (
+                        STATUS_NO_NEW_DATA if existing_rows else STATUS_NOT_FOUND
+                    )
+                    atomic_write_bytes(
+                        path, serialize_rows(existing_rows, run_marker, status=preserved_status)
+                    )
                     request_count += 1
                     write_sync_checkpoint(
                         next_index=task_index + 1,
                         total_tasks=len(task_list),
                         phase="after_write",
-                        status="not_found",
+                        status=preserved_status,
                         world_name=world,
                         item_name=item_name,
                         message=str(error),
                     )
-                    print(f"[skip] {world} :: {item_name}")
+                    print(
+                        f"[keep] {world} :: {item_name} "
+                        f"({len(existing_rows)} stored snapshots)"
+                        if existing_rows
+                        else f"[skip] {world} :: {item_name}"
+                    )
                 else:
                     failures += 1
                     write_sync_checkpoint(
@@ -716,6 +787,7 @@ def main() -> int:
         retries=args.retries,
         token=args.token,
         force=args.force,
+        replace=args.replace,
         dry_run=args.dry_run,
         max_requests=args.max_requests,
         max_runtime_seconds=args.max_runtime_seconds,

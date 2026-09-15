@@ -17,6 +17,19 @@
     language: STORAGE_KEY_LANGUAGE,
     timezone: STORAGE_KEY_TIMEZONE,
   };
+  const MARKET_SOURCE_URL = "https://tibiamarket.top/";
+  // Market files are refreshed at most once a day per world/item, so anything within
+  // two days is current, and a week without an observation is clearly behind. These
+  // are measured against the observation itself: no outage window is hard-coded.
+  const MARKET_FRESH_MAX_AGE_MS = 48 * 60 * 60 * 1000;
+  const MARKET_AGING_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
+  const MARKET_AGE_UNITS = [
+    ["year", 365 * 24 * 60 * 60 * 1000],
+    ["month", 30 * 24 * 60 * 60 * 1000],
+    ["day", 24 * 60 * 60 * 1000],
+    ["hour", 60 * 60 * 1000],
+    ["minute", 60 * 1000],
+  ];
   const WORLDS_DATA_PATH = "./data/worlds.json";
   const MANUAL_SCHEDULES_PATH = "./data/manual-schedules.json";
   const SUPPORTED_TIMEZONES = [
@@ -1432,6 +1445,75 @@
     return date.toISOString().slice(0, 10);
   }
 
+  function getMarketObservationAgeMs(observedAtSeconds, now = Date.now()) {
+    const numeric = Number(observedAtSeconds);
+    if (!Number.isFinite(numeric) || numeric <= 0) return null;
+    return Math.max(now - numeric * 1000, 0);
+  }
+
+  function getMarketFreshnessLevel(observedAtSeconds, now = Date.now()) {
+    const ageMs = getMarketObservationAgeMs(observedAtSeconds, now);
+    if (ageMs === null) return "unknown";
+    if (ageMs <= MARKET_FRESH_MAX_AGE_MS) return "fresh";
+    if (ageMs <= MARKET_AGING_MAX_AGE_MS) return "aging";
+    return "stale";
+  }
+
+  function formatMarketObservationAge(observedAtSeconds, lang, now = Date.now()) {
+    const ageMs = getMarketObservationAgeMs(observedAtSeconds, now);
+    if (ageMs === null) return "";
+
+    const [unit, unitMs] =
+      MARKET_AGE_UNITS.find(([, size]) => ageMs >= size) ||
+      MARKET_AGE_UNITS[MARKET_AGE_UNITS.length - 1];
+
+    try {
+      return new Intl.RelativeTimeFormat(lang, { numeric: "auto" }).format(
+        -Math.round(ageMs / unitMs),
+        unit
+      );
+    } catch {
+      return "";
+    }
+  }
+
+  function formatMarketObservationDate(observedAtSeconds, lang, timezone) {
+    const numeric = Number(observedAtSeconds);
+    if (!Number.isFinite(numeric) || numeric <= 0) return "";
+
+    try {
+      return new Intl.DateTimeFormat(lang, {
+        timeZone: resolveTimezoneValue(timezone),
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      }).format(new Date(numeric * 1000));
+    } catch {
+      return "";
+    }
+  }
+
+  // `body` carries a {link} placeholder so each page can keep the sentence in its
+  // own language while the TibiaMarket attribution stays in one place.
+  function renderMarketAvailabilityNotice({ title, body, linkLabel }) {
+    const link = `<a href="${MARKET_SOURCE_URL}" target="_blank" rel="noopener noreferrer" class="market-notice-link">${escapeHtml(
+      linkLabel
+    )}</a>`;
+
+    return `
+      <aside class="market-notice" role="note">
+        <span class="market-notice-icon" aria-hidden="true">i</span>
+        <div class="market-notice-body">
+          <strong class="market-notice-title">${escapeHtml(title)}</strong>
+          <p>${escapeHtml(body).replace("{link}", link)}</p>
+        </div>
+      </aside>
+    `;
+  }
+
   const multicolumnContainers = new WeakSet();
 
   function layoutMulticolumnCards(container) {
@@ -1484,6 +1566,7 @@
 
   window.TibiaTime = {
     GITHUB_ISSUES_URL,
+    MARKET_SOURCE_URL,
     WORLDS_DATA_PATH,
     MANUAL_SCHEDULES_PATH,
     SUPPORTED_TIMEZONES,
@@ -1528,6 +1611,11 @@
     buildRecurringTimeConversion,
     convertTimeBetweenTimezones,
     formatObservedKillStatisticsDate,
+    getMarketObservationAgeMs,
+    getMarketFreshnessLevel,
+    formatMarketObservationAge,
+    formatMarketObservationDate,
+    renderMarketAvailabilityNotice,
     layoutMulticolumnCards,
     initBackgroundArtwork,
     initSiteFooter,

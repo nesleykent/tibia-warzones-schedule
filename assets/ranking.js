@@ -10,8 +10,13 @@ const {
   getWorldTransferKey,
   getWorldEconomyKey,
   getWorldEconomyLabel,
+  formatMarketObservationAge,
+  formatMarketObservationDate,
+  getMarketFreshnessLevel,
   initSharedUi,
+  loadSavedTimezone,
   loadWorldsData,
+  renderMarketAvailabilityNotice,
   readJsonStorage,
   readStorage,
   renderFilterPill,
@@ -108,6 +113,7 @@ const PAGE_ELEMENT_IDS = {
   searchInput: "searchInput",
   filtersBar: "filtersBar",
   summary: "summary",
+  marketNotice: "marketDataNotice",
   tableWrap: "rankingTableWrap",
 };
 
@@ -193,6 +199,14 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     filters: "Filters",
     summary: (total, ranked) => `${ranked} ranked worlds out of ${total} total worlds.`,
     noWorlds: "No ranked worlds match the current filters.",
+    marketNoticeTitle: "Market data availability",
+    marketNoticeBody:
+      "Market data is provided by {link}. Following recent interruptions to its tracking system, availability and freshness may currently vary by world and item. Some prices may therefore be outdated — check the last observation time shown with each price.",
+    marketNoticeLink: "TibiaMarket.top",
+    marketObserved: "Last market observation",
+    marketObservedUnknown: "No market observation recorded",
+    marketScoreBasis: (oldest, latest) =>
+      `Expected Return uses market observations from ${oldest} to ${latest}.`,
     all: "All",
     expectedReturn: "Expected Return",
     rank: "Rank",
@@ -296,6 +310,14 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     filters: "Filtros",
     summary: (total, ranked) => `${ranked} mundos ranqueados de ${total} mundos totais.`,
     noWorlds: "Nenhum mundo ranqueado corresponde aos filtros atuais.",
+    marketNoticeTitle: "Disponibilidade dos dados de mercado",
+    marketNoticeBody:
+      "Os dados de mercado são fornecidos por {link}. Após interrupções recentes no seu sistema de rastreamento, a disponibilidade e a atualidade podem variar por mundo e item. Alguns preços podem estar desatualizados — verifique a última observação exibida junto de cada preço.",
+    marketNoticeLink: "TibiaMarket.top",
+    marketObserved: "Última observação de mercado",
+    marketObservedUnknown: "Nenhuma observação de mercado registrada",
+    marketScoreBasis: (oldest, latest) =>
+      `O Expected Return usa observações de mercado de ${oldest} até ${latest}.`,
     all: "Todos",
     expectedReturn: "Expected Return",
     rank: "Rank",
@@ -399,6 +421,14 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     filters: "Filtros",
     summary: (total, ranked) => `${ranked} mundos clasificados de ${total} mundos totales.`,
     noWorlds: "Ningún mundo clasificado coincide con los filtros actuales.",
+    marketNoticeTitle: "Disponibilidad de los datos del mercado",
+    marketNoticeBody:
+      "Los datos del mercado son proporcionados por {link}. Tras interrupciones recientes en su sistema de rastreo, la disponibilidad y la actualidad pueden variar según el mundo y el ítem. Algunos precios pueden estar desactualizados: revisá la última observación que se muestra junto a cada precio.",
+    marketNoticeLink: "TibiaMarket.top",
+    marketObserved: "Última observación del mercado",
+    marketObservedUnknown: "Sin observaciones de mercado registradas",
+    marketScoreBasis: (oldest, latest) =>
+      `El Expected Return usa observaciones de mercado desde ${oldest} hasta ${latest}.`,
     all: "Todos",
     expectedReturn: "Expected Return",
     rank: "Rank",
@@ -502,6 +532,14 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     filters: "Filtry",
     summary: (total, ranked) => `${ranked} sklasyfikowanych światów z ${total} wszystkich światów.`,
     noWorlds: "Żaden sklasyfikowany świat nie pasuje do aktywnych filtrów.",
+    marketNoticeTitle: "Dostępność danych rynkowych",
+    marketNoticeBody:
+      "Dane rynkowe pochodzą z {link}. Po ostatnich przerwach w działaniu systemu śledzenia dostępność i aktualność danych mogą się różnić w zależności od świata i przedmiotu. Niektóre ceny mogą być nieaktualne — sprawdź czas ostatniej obserwacji podany przy każdej cenie.",
+    marketNoticeLink: "TibiaMarket.top",
+    marketObserved: "Ostatnia obserwacja rynku",
+    marketObservedUnknown: "Brak zarejestrowanych obserwacji rynku",
+    marketScoreBasis: (oldest, latest) =>
+      `Expected Return korzysta z obserwacji rynkowych od ${oldest} do ${latest}.`,
     all: "Wszystkie",
     expectedReturn: "Expected Return",
     rank: "Rank",
@@ -528,6 +566,7 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
 };
 
 let worlds = [];
+let pageTimezone = "UTC";
 let lang = "pt-BR";
 let explanationModalKeydownHandler = null;
 let activeFilters = createEmptyFilterState();
@@ -644,6 +683,63 @@ function applyStaticLabels() {
   if (pageElements.searchInput) {
     pageElements.searchInput.placeholder = dict.searchPlaceholder;
   }
+  if (pageElements.marketNotice) {
+    setHtml(
+      pageElements.marketNotice,
+      renderMarketAvailabilityNotice({
+        title: dict.marketNoticeTitle,
+        body: dict.marketNoticeBody,
+        linkLabel: dict.marketNoticeLink,
+      })
+    );
+  }
+}
+
+function describeMarketObservation(observedAt) {
+  const dict = t();
+  const formatted = formatMarketObservationDate(observedAt, lang, pageTimezone);
+  if (!formatted) return dict.marketObservedUnknown;
+
+  const age = formatMarketObservationAge(observedAt, lang);
+  return age
+    ? `${dict.marketObserved}: ${formatted} (${age})`
+    : `${dict.marketObserved}: ${formatted}`;
+}
+
+// The dot reports the age of the observation behind the value in this cell, so a
+// world whose prices stopped refreshing reads differently from one still updating.
+function renderMarketPriceCell(price, observedAt) {
+  const level = getMarketFreshnessLevel(observedAt);
+  const age = formatMarketObservationAge(observedAt, lang);
+
+  return `
+    <td>
+      <span class="market-freshness is-${escapeHtml(level)}" title="${escapeHtml(
+        describeMarketObservation(observedAt)
+      )}">
+        <span class="market-freshness-dot" aria-hidden="true"></span>
+        <span>${escapeHtml(price)}</span>
+      </span>
+      ${age ? `<div class="market-freshness-age">${escapeHtml(age)}</div>` : ""}
+    </td>
+  `;
+}
+
+function describeScoreBasis(ranking) {
+  const dict = t();
+  const oldest = formatMarketObservationDate(
+    ranking.market_oldest_observation_time,
+    lang,
+    pageTimezone
+  );
+  const latest = formatMarketObservationDate(
+    ranking.market_latest_observation_time,
+    lang,
+    pageTimezone
+  );
+
+  if (!oldest || !latest) return dict.marketObservedUnknown;
+  return dict.marketScoreBasis(oldest, latest);
 }
 
 function updateLanguageButtons() {
@@ -907,9 +1003,14 @@ function renderTable(rows) {
                     : String(dict.notAvailable)
                 )}</td>
                 <td><a class="world-name-link" href="./world.html?name=${encodeURIComponent(world.name)}">${escapeHtml(world.name)}</a></td>
-                <td>${escapeHtml(formatRankingNumber(ranking.economic_score_raw, 2))}</td>
+                <td title="${escapeHtml(describeScoreBasis(ranking))}">${escapeHtml(
+                  formatRankingNumber(ranking.economic_score_raw, 2)
+                )}</td>
                 <td>${escapeHtml(world.pvp_type || dict.notAvailable)}</td>
-                <td>${escapeHtml(formatRankingNumber(market.tibia_coin?.rolling_window_price, 0))}</td>
+                ${renderMarketPriceCell(
+                  formatRankingNumber(market.tibia_coin?.rolling_window_price, 0),
+                  market.tibia_coin?.latest_observation_time
+                )}
                 <td>${escapeHtml(formatRankingNumber(ranking.service_expected_value, 0))}</td>
               </tr>
             `;
@@ -944,6 +1045,7 @@ function render() {
 async function init() {
   initSharedUi();
   cachePageElements();
+  pageTimezone = loadSavedTimezone();
   loadSettings();
   applyStaticLabels();
   updateLanguageButtons();

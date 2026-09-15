@@ -177,6 +177,15 @@ def rolling_window_market_price(
     return sum(daily_prices) / len(daily_prices), len(daily_prices)
 
 
+def latest_observation_time(entries: list[dict[str, Any]]) -> float | None:
+    timestamps = [
+        timestamp
+        for timestamp in (timestamp_value(entry) for entry in entries if isinstance(entry, dict))
+        if timestamp is not None
+    ]
+    return max(timestamps) if timestamps else None
+
+
 def build_price_model(
     item_name: str, item_key: str, supply_price: Any, demand_price: Any
 ) -> dict[str, Any]:
@@ -194,6 +203,9 @@ def build_price_model(
         "liquidity_factor": None,
         "adjusted_effective_price": None,
         "has_required_data": supply_numeric is not None and demand_numeric is not None,
+        # When TibiaMarket last observed this item on this world. Freshness varies per
+        # world/item, so it is recorded per price model rather than once per dataset.
+        "latest_observation_time": None,
     }
 
     if not model["has_required_data"]:
@@ -246,6 +258,7 @@ def load_market_models(data_dir: Path, world_name: str) -> tuple[dict[str, Any],
             latest_entry.get("day_average_sell"),
             latest_entry.get("day_average_buy"),
         )
+        models[item_key]["latest_observation_time"] = latest_observation_time(entries)
         rolling_window_price, rolling_window_entries_used = rolling_window_market_price(
             entries, sell_only=item_key == "tibia_coin"
         )
@@ -432,6 +445,12 @@ def compute_world_ranking_metrics(world: dict[str, Any], data_dir: Path) -> dict
 
     unique_reasons = sorted(set(reasons))
 
+    ranking_observation_times = [
+        market_models[item_key]["latest_observation_time"]
+        for _, item_key in RANKING_MARKET_ITEMS
+        if market_models[item_key]["latest_observation_time"] is not None
+    ]
+
     return {
         "is_ranked": not insufficient_data,
         "insufficient_data": insufficient_data,
@@ -450,6 +469,14 @@ def compute_world_ranking_metrics(world: dict[str, Any], data_dir: Path) -> dict
         "wz3_expected_value": raw_score(wz3_expected_value),
         "service_expected_value": raw_score(service_expected_value),
         "current_mark_value": map_mark_value(world.get("mark")),
+        # Newest and oldest observation backing this world's score, so the UI can show
+        # that a ranked world may be resting on partly older data.
+        "market_latest_observation_time": (
+            max(ranking_observation_times) if ranking_observation_times else None
+        ),
+        "market_oldest_observation_time": (
+            min(ranking_observation_times) if ranking_observation_times else None
+        ),
         "history_last_five_days": [
             {
                 "date": str(item.get("date", "")),

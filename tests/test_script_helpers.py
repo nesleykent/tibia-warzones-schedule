@@ -19,6 +19,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 import common
 import build_market_workflow_matrix
+import economic_ranking
 import fetch_item_history
 import update_data
 import update_open_houses
@@ -395,6 +396,25 @@ class WorkflowContractsTest(unittest.TestCase):
 
         self.assertIn('path: data/market/world/*/*_${{ matrix.item_slug }}.json', workflow_text)
         self.assertIn("path: data/market/world", workflow_text)
+
+    def test_update_market_workflow_commits_successful_shards_despite_failures(self) -> None:
+        workflow_text = (
+            Path(__file__).resolve().parent.parent / ".github" / "workflows" / "update-market.yml"
+        ).read_text()
+
+        self.assertIn("fail-fast: false", workflow_text)
+        self.assertIn(
+            "if: ${{ !cancelled() && needs.prepare-market-matrix.result == 'success' }}",
+            workflow_text,
+        )
+
+    def test_update_market_workflow_keeps_its_existing_schedule(self) -> None:
+        workflow_text = (
+            Path(__file__).resolve().parent.parent / ".github" / "workflows" / "update-market.yml"
+        ).read_text()
+
+        self.assertIn('- cron: "30 8-15 * * *"', workflow_text)
+        self.assertEqual(workflow_text.count("cron:"), 1)
 
     def test_update_worlds_workflow_keeps_stale_data_on_fetch_failure(self) -> None:
         workflow_text = (
@@ -1181,6 +1201,187 @@ class MarketHelpersTest(unittest.TestCase):
     def test_resolve_worlds_accepts_catalog_worlds(self) -> None:
         with patch.object(fetch_item_history, "get_tracked_worlds", return_value=["Antica", "Floribra"]):
             self.assertEqual(fetch_item_history.resolve_worlds(["floribra"]), ["Floribra"])
+
+
+class FetchItemHistoryPreservesStoredDataTest(unittest.TestCase):
+    """TibiaMarket is serving some worlds and items again and others not at all.
+
+    A run that comes back empty for one world/item must leave that file's stored
+    observations alone: no new observation does not invalidate the old ones.
+    """
+
+    @staticmethod
+    def _row(row_id: int, timestamp: float) -> dict[str, object]:
+        return {"id": row_id, "time": timestamp, "day_average_sell": 100, "day_average_buy": 90}
+
+    def _run_single_task(self, tmpdir: str, *, payload: object = None, error: Exception | None = None):
+        world_dir = Path(tmpdir) / "Antica"
+        world_dir.mkdir(parents=True)
+        path = world_dir / "antica_tibia_coins.json"
+        path.write_bytes(
+            fetch_item_history.serialize_rows(
+                [self._row(1, 1_700_000_000.0), self._row(2, 1_700_086_400.0)],
+                "2020-01-01T00:00:00Z",
+            )
+        )
+
+        def fake_fetch(*_args, **_kwargs):
+            if error is not None:
+                raise error
+            return json.dumps(payload).encode("utf-8")
+
+        with (
+            patch.object(fetch_item_history, "RAW_WORLD_DIR", Path(tmpdir)),
+            patch.object(fetch_item_history, "SYNC_STATE_PATH", Path(tmpdir) / "sync_state.json"),
+            patch.object(fetch_item_history, "fetch_bytes", fake_fetch),
+        ):
+            failures = fetch_item_history.run(
+                worlds=["Antica"],
+                items=[{"id": 22118, "name": "Tibia Coins", "slug": "tibia_coins"}],
+                rate_limit_delay=0,
+            )
+
+        return failures, json.loads(path.read_text(encoding="utf-8"))
+
+    def test_empty_payload_keeps_existing_snapshots(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            failures, stored = self._run_single_task(tmpdir, payload=[])
+
+        self.assertEqual(failures, 0)
+        self.assertEqual(stored["status"], fetch_item_history.STATUS_NO_NEW_DATA)
+        self.assertEqual([row["id"] for row in stored["snapshots"][0]], [1, 2])
+
+    def test_missing_world_response_keeps_existing_snapshots(self) -> None:
+        error = HTTPError("https://api.tibiamarket.top", 404, "Not Found", Message(), None)
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            failures, stored = self._run_single_task(tmpdir, error=error)
+
+        self.assertEqual(failures, 0)
+        self.assertEqual(stored["status"], fetch_item_history.STATUS_NO_NEW_DATA)
+        self.assertEqual([row["id"] for row in stored["snapshots"][0]], [1, 2])
+
+    def test_partial_response_merges_instead_of_truncating_history(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            _, stored = self._run_single_task(
+                tmpdir, payload=[self._row(3, 1_700_172_800.0)]
+            )
+
+        self.assertEqual(stored["status"], fetch_item_history.STATUS_OK)
+        self.assertEqual([row["id"] for row in stored["snapshots"][0]], [1, 2, 3])
+
+    def test_network_failure_leaves_the_file_untouched(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            failures, stored = self._run_single_task(
+                tmpdir, error=RuntimeError("Unexpected HTTP status: 500")
+            )
+
+        self.assertEqual(failures, 1)
+        self.assertEqual(stored["last_run_at"], "2020-01-01T00:00:00Z")
+        self.assertEqual([row["id"] for row in stored["snapshots"][0]], [1, 2])
+
+    def test_empty_payload_still_creates_a_placeholder_for_untracked_items(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            with (
+                patch.object(fetch_item_history, "RAW_WORLD_DIR", Path(tmpdir)),
+                patch.object(
+                    fetch_item_history, "SYNC_STATE_PATH", Path(tmpdir) / "sync_state.json"
+                ),
+                patch.object(fetch_item_history, "fetch_bytes", lambda *a, **k: b"[]"),
+            ):
+                fetch_item_history.run(
+                    worlds=["Jinxibra"],
+                    items=[{"id": 22118, "name": "Tibia Coins", "slug": "tibia_coins"}],
+                    rate_limit_delay=0,
+                )
+
+            stored = json.loads(
+                (Path(tmpdir) / "Jinxibra" / "jinxibra_tibia_coins.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+
+        self.assertEqual(stored["status"], fetch_item_history.STATUS_NO_DATA)
+        self.assertEqual(stored["snapshots"], [[]])
+        self.assertIsNone(stored["last_observation_at"])
+
+    def test_serialized_files_record_the_market_observation_time(self) -> None:
+        payload = json.loads(
+            fetch_item_history.serialize_rows(
+                [self._row(1, 1_700_000_000.0), self._row(2, 1_700_086_400.0)],
+                "2020-01-01T00:00:00Z",
+            )
+        )
+
+        self.assertEqual(payload["last_run_at"], "2020-01-01T00:00:00Z")
+        self.assertEqual(payload["last_observation_at"], "2023-11-15T22:13:20Z")
+
+
+class EconomicRankingFreshnessTest(unittest.TestCase):
+    def test_ranking_exposes_per_item_and_world_observation_times(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            data_dir = Path(tmpdir)
+            world_dir = data_dir / "market" / "world" / "antica"
+            world_dir.mkdir(parents=True)
+
+            observations = {
+                "tibia_coins": 1_788_000_000.0,
+                "minor_crystalline_token": 1_787_000_000.0,
+                "gill_necklace": 1_788_000_000.0,
+                "prismatic_necklace": 1_788_000_000.0,
+                "prismatic_ring": 1_788_000_000.0,
+            }
+            for slug, timestamp in observations.items():
+                (world_dir / f"antica_{slug}.json").write_text(
+                    json.dumps(
+                        {
+                            "last_run_at": "2026-09-03T00:00:00Z",
+                            "status": "ok",
+                            "snapshots": [
+                                [
+                                    {
+                                        "id": 1,
+                                        "time": timestamp - 86400,
+                                        "day_average_sell": 100,
+                                        "day_average_buy": 90,
+                                    },
+                                    {
+                                        "id": 2,
+                                        "time": timestamp,
+                                        "day_average_sell": 110,
+                                        "day_average_buy": 100,
+                                    },
+                                ]
+                            ],
+                        }
+                    ),
+                    encoding="utf-8",
+                )
+
+            metrics = economic_ranking.compute_world_ranking_metrics(
+                {"name": "Antica", "mark": "healthy"}, data_dir
+            )
+
+        self.assertEqual(
+            metrics["market"]["tibia_coin"]["latest_observation_time"], 1_788_000_000.0
+        )
+        self.assertEqual(
+            metrics["market"]["minor_crystalline_token"]["latest_observation_time"],
+            1_787_000_000.0,
+        )
+        # Freshness is granular: the world reports both ends of its observation spread.
+        self.assertEqual(metrics["market_latest_observation_time"], 1_788_000_000.0)
+        self.assertEqual(metrics["market_oldest_observation_time"], 1_787_000_000.0)
+
+    def test_missing_market_files_leave_observation_times_null(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            metrics = economic_ranking.compute_world_ranking_metrics(
+                {"name": "Jinxibra", "mark": "healthy"}, Path(tmpdir)
+            )
+
+        self.assertIsNone(metrics["market_latest_observation_time"])
+        self.assertIsNone(metrics["market_oldest_observation_time"])
+        self.assertIsNone(metrics["market"]["tibia_coin"]["latest_observation_time"])
 
 
 class RemoveOutliersTest(unittest.TestCase):

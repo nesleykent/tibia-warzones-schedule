@@ -104,6 +104,9 @@ jobs:
     needs:
       - prepare-market-matrix
       - refresh-market-shards
+    # A shard that fails must not hold back the items that refreshed successfully:
+    # TibiaMarket currently serves some worlds and items and not others.
+    if: ${{ !cancelled() && needs.prepare-market-matrix.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -132,8 +135,11 @@ jobs:
         with:
           node-version: "20"
 
+      # Missing shards leave the committed market files in place, so a partial
+      # download is a no-op rather than a data loss.
       - name: Download refreshed market shard artifacts
         uses: actions/download-artifact@v4
+        continue-on-error: true
         with:
           pattern: market-*
           path: data/market/world

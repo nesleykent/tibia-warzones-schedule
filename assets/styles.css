@@ -2067,6 +2067,114 @@ html.open-house-world-route #worldsSection {
   flex: 0 0 auto;
 }
 
+/* ══════════════════════════════════════════════
+   MARKET DATA AVAILABILITY
+   Notice + per-observation freshness indicators
+══════════════════════════════════════════════ */
+.market-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border: 1px solid var(--sep);
+  border-left: 3px solid #fcd34d;
+  border-radius: var(--r-md);
+  background: var(--fill-3);
+}
+
+.market-notice-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  margin-top: 1px;
+  border-radius: 999px;
+  background: rgba(245, 158, 11, 0.18);
+  color: #fcd34d;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.market-notice-body {
+  min-width: 0;
+}
+
+.market-notice-title {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.market-notice-body p {
+  margin: 0;
+  color: var(--text-tertiary);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.market-notice-link {
+  color: var(--text-secondary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.market-notice-link:hover {
+  color: var(--text-primary);
+}
+
+.market-freshness {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.market-freshness-dot {
+  flex: 0 0 auto;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--text-quaternary);
+}
+
+.market-freshness.is-fresh .market-freshness-dot {
+  background: #86efac;
+}
+
+.market-freshness.is-aging .market-freshness-dot {
+  background: #fcd34d;
+}
+
+.market-freshness.is-stale .market-freshness-dot {
+  background: #fca5a5;
+}
+
+.market-freshness-age {
+  color: var(--text-quaternary);
+  font-size: 11px;
+}
+
+.market-freshness.is-stale .market-freshness-age {
+  color: #fca5a5;
+}
+
+@media (max-width: 600px) {
+  .market-notice {
+    padding: 10px;
+  }
+
+  .market-freshness-age {
+    font-size: 10px;
+  }
+}
+
 .market-prices-table tbody tr {
   cursor: pointer;
   transition: background var(--t-fast) var(--ease-out),

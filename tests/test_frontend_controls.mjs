@@ -695,3 +695,92 @@ test("world card controllers share one native-link delegation contract", () => {
     /class="world-card"[\s\S]{0,180}(?:role="button"|tabindex="0")/
   );
 });
+
+test("market freshness is graded per observation, not globally", () => {
+  const { getMarketFreshnessLevel } = loadSharedExports();
+  const now = Date.UTC(2026, 8, 15, 12, 0, 0);
+  const hoursAgo = (hours) => (now - hours * 60 * 60 * 1000) / 1000;
+
+  assert.equal(getMarketFreshnessLevel(hoursAgo(3), now), "fresh");
+  assert.equal(getMarketFreshnessLevel(hoursAgo(47), now), "fresh");
+  assert.equal(getMarketFreshnessLevel(hoursAgo(72), now), "aging");
+  assert.equal(getMarketFreshnessLevel(hoursAgo(24 * 12), now), "stale");
+  // No observation is its own state: it must not be reported as fresh or as stale.
+  assert.equal(getMarketFreshnessLevel(null, now), "unknown");
+  assert.equal(getMarketFreshnessLevel(0, now), "unknown");
+  assert.equal(getMarketFreshnessLevel(undefined, now), "unknown");
+});
+
+test("market observation age is derived from the observation timestamp", () => {
+  const { formatMarketObservationAge, getMarketObservationAgeMs } =
+    loadSharedExports();
+  const now = Date.UTC(2026, 8, 15, 12, 0, 0);
+
+  assert.equal(
+    getMarketObservationAgeMs((now - 3 * 60 * 60 * 1000) / 1000, now),
+    3 * 60 * 60 * 1000
+  );
+  assert.equal(getMarketObservationAgeMs(null, now), null);
+  assert.match(
+    formatMarketObservationAge((now - 3 * 24 * 60 * 60 * 1000) / 1000, "en", now),
+    /3 days ago/
+  );
+  assert.equal(formatMarketObservationAge(null, "en", now), "");
+});
+
+test("market availability notice credits and links TibiaMarket", () => {
+  const { renderMarketAvailabilityNotice, MARKET_SOURCE_URL } =
+    loadSharedExports();
+  const markup = renderMarketAvailabilityNotice({
+    title: "Market data availability",
+    body: "Market data is provided by {link}. Freshness may vary.",
+    linkLabel: "TibiaMarket.top",
+  });
+
+  assert.equal(MARKET_SOURCE_URL, "https://tibiamarket.top/");
+  assert.match(markup, /href="https:\/\/tibiamarket\.top\/"/);
+  assert.match(markup, /rel="noopener noreferrer"/);
+  assert.match(markup, />TibiaMarket\.top</);
+  assert.match(markup, /class="market-notice"/);
+  assert.doesNotMatch(markup, /\{link\}/);
+});
+
+test("ranking rows carry the freshness of the observation behind each price", () => {
+  assert.match(rankingController, /renderMarketPriceCell\(/);
+  assert.match(
+    rankingController,
+    /market\.tibia_coin\?\.latest_observation_time/
+  );
+  assert.match(rankingController, /market-freshness is-\$\{escapeHtml\(level\)\}/);
+  // Expected Return is market-derived, so it states the observation span it rests on.
+  assert.match(rankingController, /describeScoreBasis\(ranking\)/);
+  assert.match(rankingController, /market_oldest_observation_time/);
+  for (const dictionary of ["en", "pt-BR", "es-419", "pl"]) {
+    assert.ok(
+      rankingController.includes("marketNoticeTitle"),
+      `missing market notice strings for ${dictionary}`
+    );
+  }
+  assert.equal(
+    rankingController.match(/marketNoticeTitle:/g).length,
+    4,
+    "every language needs the market availability notice"
+  );
+});
+
+test("world market card shows the notice and per-item observation age", () => {
+  assert.match(worldController, /renderMarketAvailabilityNotice\(\{/);
+  assert.match(
+    worldController,
+    /<td>\$\{renderMarketObservationCell\(row\.observedAt, row\.updated\)\}<\/td>/
+  );
+  assert.match(worldController, /observedAt: latest\.time/);
+  // The Expected Return stats name the observations they were computed from.
+  assert.match(worldController, /renderExpectedReturnBasisNote\(ranking\)/);
+  assert.match(worldController, /market_latest_observation_time/);
+  assert.equal(
+    worldController.match(/marketNoticeTitle:/g).length,
+    4,
+    "every language needs the market availability notice"
+  );
+});

@@ -82,6 +82,8 @@ REQUIRED_RANKING_FIELDS = {
     "current_mark_value",
     "history_last_five_days",
     "market",
+    "market_latest_observation_time",
+    "market_oldest_observation_time",
 }
 REQUIRED_PRICE_MODEL_FIELDS = {
     "item_name",
@@ -96,6 +98,7 @@ REQUIRED_PRICE_MODEL_FIELDS = {
     "has_required_data",
     "rolling_window_price",
     "rolling_window_entries_used",
+    "latest_observation_time",
 }
 REQUIRED_SCHEDULE_FIELDS = {"execution_id", "schedule_time", "warzone_sequence"}
 REQUIRED_HISTORY_FIELDS = {
@@ -684,6 +687,7 @@ def validate_ranking_market_model(
         "liquidity_factor",
         "adjusted_effective_price",
         "rolling_window_price",
+        "latest_observation_time",
     ):
         if not is_optional_number(payload.get(field_name)):
             report.error(
@@ -817,6 +821,8 @@ def validate_worlds_payload(payload: Any) -> ValidationReport:
             "wz3_expected_value",
             "service_expected_value",
             "current_mark_value",
+            "market_latest_observation_time",
+            "market_oldest_observation_time",
         ):
             if not is_optional_number(ranking.get(field_name)):
                 report.error(

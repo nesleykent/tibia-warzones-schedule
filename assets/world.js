@@ -28,6 +28,14 @@ const WORLD_I18N = {
     avgSpread: "Avg Spread",
     avgTransactions: "Avg Transactions",
     noMarketData: "No market data for the selected range.",
+    marketNoticeTitle: "Market data availability",
+    marketNoticeBody:
+      "Market data is provided by {link}. Following recent interruptions to its tracking system, availability and freshness may currently vary by world and item. Check the Updated column below to see when each price was last observed.",
+    marketNoticeLink: "TibiaMarket.top",
+    marketObserved: "Last market observation",
+    marketObservedUnknown: "No market observation recorded",
+    marketExpectedReturnBasis: (observed) =>
+      `Based on the last market observations available (${observed}).`,
     selectedRange: "Range",
     dataPoints: "Data points",
     history: "History",
@@ -84,6 +92,14 @@ const WORLD_I18N = {
     avgSpread: "Spread médio",
     avgTransactions: "Transações médias",
     noMarketData: "Sem dados de mercado para o período selecionado.",
+    marketNoticeTitle: "Disponibilidade dos dados de mercado",
+    marketNoticeBody:
+      "Os dados de mercado são fornecidos por {link}. Após interrupções recentes no seu sistema de rastreamento, a disponibilidade e a atualidade podem variar por mundo e item. Confira a coluna Updated abaixo para ver quando cada preço foi observado pela última vez.",
+    marketNoticeLink: "TibiaMarket.top",
+    marketObserved: "Última observação de mercado",
+    marketObservedUnknown: "Nenhuma observação de mercado registrada",
+    marketExpectedReturnBasis: (observed) =>
+      `Com base nas últimas observações de mercado disponíveis (${observed}).`,
     selectedRange: "Período",
     dataPoints: "Pontos de dados",
     history: "Histórico",
@@ -140,6 +156,14 @@ const WORLD_I18N = {
     avgSpread: "Spread medio",
     avgTransactions: "Transacciones medias",
     noMarketData: "Sin datos de mercado para el período seleccionado.",
+    marketNoticeTitle: "Disponibilidad de los datos del mercado",
+    marketNoticeBody:
+      "Los datos del mercado son proporcionados por {link}. Tras interrupciones recientes en su sistema de rastreo, la disponibilidad y la actualidad pueden variar según el mundo y el ítem. Revisá la columna Updated para ver cuándo se observó cada precio por última vez.",
+    marketNoticeLink: "TibiaMarket.top",
+    marketObserved: "Última observación del mercado",
+    marketObservedUnknown: "Sin observaciones de mercado registradas",
+    marketExpectedReturnBasis: (observed) =>
+      `Según las últimas observaciones de mercado disponibles (${observed}).`,
     selectedRange: "Período",
     dataPoints: "Puntos de datos",
     history: "Historial",
@@ -195,6 +219,14 @@ const WORLD_I18N = {
     avgSpread: "Średni spread",
     avgTransactions: "Średnia liczba transakcji",
     noMarketData: "Brak danych rynkowych dla wybranego zakresu.",
+    marketNoticeTitle: "Dostępność danych rynkowych",
+    marketNoticeBody:
+      "Dane rynkowe pochodzą z {link}. Po ostatnich przerwach w działaniu systemu śledzenia dostępność i aktualność danych mogą się różnić w zależności od świata i przedmiotu. Sprawdź kolumnę Updated poniżej, aby zobaczyć, kiedy ostatnio zaobserwowano każdą cenę.",
+    marketNoticeLink: "TibiaMarket.top",
+    marketObserved: "Ostatnia obserwacja rynku",
+    marketObservedUnknown: "Brak zarejestrowanych obserwacji rynku",
+    marketExpectedReturnBasis: (observed) =>
+      `Na podstawie ostatnich dostępnych obserwacji rynkowych (${observed}).`,
     selectedRange: "Zakres",
     dataPoints: "Punkty danych",
     history: "Historia",
@@ -249,6 +281,10 @@ const {
   buildRecurringTimeConversion,
   convertTimeBetweenTimezones: convertSharedTimeBetweenTimezones,
   formatObservedKillStatisticsDate,
+  formatMarketObservationAge,
+  formatMarketObservationDate,
+  getMarketFreshnessLevel,
+  renderMarketAvailabilityNotice,
 } = window.TibiaTime;
 
 const STORAGE_KEYS = {
@@ -444,6 +480,27 @@ function renderSummary(world) {
         dict.expectedReturnGoldCoins
       )}</span><strong>${escapeHtml(expectedReturnGoldCoins)}</strong></div>
     </div>
+    ${renderExpectedReturnBasisNote(ranking)}
+  `;
+}
+
+function renderExpectedReturnBasisNote(ranking) {
+  const dict = t();
+  const observed = formatMarketObservationDate(
+    ranking.market_latest_observation_time,
+    worldLang,
+    pageTimezone
+  );
+  if (!observed) return "";
+
+  const age = formatMarketObservationAge(
+    ranking.market_latest_observation_time,
+    worldLang
+  );
+  return `
+    <p class="world-detail-inline-note">${escapeHtml(
+      dict.marketExpectedReturnBasis(age ? `${observed}, ${age}` : observed)
+    )}</p>
   `;
 }
 
@@ -534,6 +591,34 @@ function renderSchedules(world) {
       )}</span>
     </div>
     <ul class="world-schedule-list">${items}</ul>
+  `;
+}
+
+function describeMarketObservation(observedAt) {
+  const dict = t();
+  const formatted = formatMarketObservationDate(observedAt, worldLang, pageTimezone);
+  if (!formatted) return dict.marketObservedUnknown;
+
+  const age = formatMarketObservationAge(observedAt, worldLang);
+  return age
+    ? `${dict.marketObserved}: ${formatted} (${age})`
+    : `${dict.marketObserved}: ${formatted}`;
+}
+
+// The dot ages the observation itself, so an item TibiaMarket has resumed tracking
+// reads differently from one still sitting on its last known price.
+function renderMarketObservationCell(observedAt, formattedTimestamp) {
+  const level = getMarketFreshnessLevel(observedAt);
+  const age = formatMarketObservationAge(observedAt, worldLang);
+
+  return `
+    <span class="market-freshness is-${escapeHtml(level)}" title="${escapeHtml(
+      describeMarketObservation(observedAt)
+    )}">
+      <span class="market-freshness-dot" aria-hidden="true"></span>
+      <span>${escapeHtml(formattedTimestamp)}</span>
+    </span>
+    ${age ? `<div class="market-freshness-age">${escapeHtml(age)}</div>` : ""}
   `;
 }
 
@@ -1758,9 +1843,12 @@ async function openMarketItemModal(worldName, itemName, returnFocusTarget) {
     const rangeButtons = Array.from(modalRoot.querySelectorAll("[data-range]"));
 
     if (updatedLabel) {
+      const latestAge = latest
+        ? formatMarketObservationAge(latest.time, worldLang)
+        : "";
       updatedLabel.textContent = `${dict.updated}: ${
         latest ? formatMarketTimestamp(latest.time) : "N/A"
-      }`;
+      }${latestAge ? ` (${latestAge})` : ""}`;
     }
 
     requestAnimationFrame(() => {
@@ -1862,6 +1950,7 @@ async function renderMarketPrices(worldName) {
             demand: "N/A",
             spread: "N/A",
             updated: "N/A",
+            observedAt: null,
           };
         }
 
@@ -1875,6 +1964,7 @@ async function renderMarketPrices(worldName) {
             demand: "N/A",
             spread: "N/A",
             updated: "N/A",
+            observedAt: null,
           };
         }
 
@@ -1891,6 +1981,7 @@ async function renderMarketPrices(worldName) {
           demand: formatMarketValue(latest.day_average_buy),
           spread: latestSpread,
           updated: formatMarketTimestamp(latest.time),
+          observedAt: latest.time,
         };
       } catch {
         return {
@@ -1899,6 +1990,7 @@ async function renderMarketPrices(worldName) {
           demand: NOT_AVAILABLE,
           spread: NOT_AVAILABLE,
           updated: NOT_AVAILABLE,
+          observedAt: null,
         };
       }
     })
@@ -1912,7 +2004,7 @@ async function renderMarketPrices(worldName) {
           <td>${escapeHtml(row.supply)}</td>
           <td>${escapeHtml(row.demand)}</td>
           <td>${escapeHtml(row.spread)}</td>
-          <td>${escapeHtml(row.updated)}</td>
+          <td>${renderMarketObservationCell(row.observedAt, row.updated)}</td>
         </tr>
       `
     )
@@ -1922,6 +2014,11 @@ async function renderMarketPrices(worldName) {
     <div class="world-detail-card-header">
       <h2>${escapeHtml(dict.marketPrices)}</h2>
     </div>
+    ${renderMarketAvailabilityNotice({
+      title: dict.marketNoticeTitle,
+      body: dict.marketNoticeBody,
+      linkLabel: dict.marketNoticeLink,
+    })}
     <div class="world-history-table-wrap">
       <table class="world-history-table market-prices-table">
         <thead>

@@ -487,6 +487,8 @@ class ValidateWorldsTest(unittest.TestCase):
                     "service_expected_value": None,
                     "current_mark_value": None,
                     "history_last_five_days": [],
+                    "market_latest_observation_time": None,
+                    "market_oldest_observation_time": None,
                     "market": {
                         "tibia_coin": self._price_model("tibia_coin"),
                         "minor_crystalline_token": self._price_model("minor_crystalline_token"),
@@ -531,6 +533,8 @@ class ValidateWorldsTest(unittest.TestCase):
                     "wz3_expected_value": 1.0,
                     "service_expected_value": 1.0,
                     "current_mark_value": 1.0,
+                    "market_latest_observation_time": 1788439476.0,
+                    "market_oldest_observation_time": 1788439476.0,
                     "history_last_five_days": [],
                     "market": {
                         "tibia_coin": self._price_model("tibia_coin"),
@@ -563,6 +567,7 @@ class ValidateWorldsTest(unittest.TestCase):
             "has_required_data": True,
             "rolling_window_price": 1.0,
             "rolling_window_entries_used": 1,
+            "latest_observation_time": 1788439476.0,
         }
 
 
