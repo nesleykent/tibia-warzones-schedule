@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maintainer Data Editor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&amp;family=DM+Mono:wght@400;500&amp;display=swap"
+    />
+    <link rel="stylesheet" href="./assets/styles.css" />
+  </head>
+  <body>
+    <div
+      id="bg-layer"
+      aria-hidden="true"
+      data-artworks="bg1.jpg,bg2.jpg,bg3.jpg,bg4.jpg"
+    ></div>
+
+    <nav class="topbar" aria-label="Site navigation">
+      <div class="container topbar-inner">
+        <div class="topbar-links">
+          <a href="./index.html">Home</a>
+          <span class="topbar-divider" aria-hidden="true"></span>
+          <a href="./open-houses.html">Open Houses</a>
+          <span class="topbar-divider" aria-hidden="true"></span>
+          <a href="./ranking.html">Ranking</a>
+          <span class="topbar-divider" aria-hidden="true"></span>
+          <a href="./bigfoot.html">
+            Bigfoot's Burden Quest
+          </a>
+          <span class="topbar-divider" aria-hidden="true"></span>
+          <a href="./admin.html" class="is-active" aria-current="page">Admin</a>
+        </div>
+      </div>
+    </nav>
+
+    <header class="site-header" role="banner">
+      <div class="container site-header-inner">
+        <img
+          class="header-icon"
+          src="./assets/logo/logo.png"
+          alt="Tibia Warzones logo"
+        />
+        <div class="header-text">
+          <h1>Maintainer Data Editor</h1>
+          <p class="header-subtitle">
+            Edit source data in the browser and commit durable source files straight to <code>main</code> without leaving the static site.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <main class="container admin-shell" id="main-content">
+      <section class="admin-warning" aria-label="Maintainer warning">
+        <h2>Maintainer-only page</h2>
+        <p>
+          This page is intended for repository maintainers. Your GitHub fine-grained personal access token is used only in the browser. Use the minimum repository permissions, prefer session-only storage, and clear the token when you finish.
+        </p>
+      </section>
+
+      <section class="admin-card" aria-labelledby="authTitle">
+        <div class="admin-card-header">
+          <div>
+            <h2 id="authTitle">Authentication</h2>
+            <p class="admin-card-copy">
+              The editor reads local site data anonymously, then uses the GitHub REST API only when you test the token or commit source changes to <code>main</code>.
+            </p>
+          </div>
+          <div class="admin-badge-group">
+            <span class="admin-badge">Static GitHub Pages</span>
+            <span class="admin-badge">Browser-only token usage</span>
+          </div>
+        </div>
+
+        <div class="admin-grid admin-grid--auth">
+          <label class="admin-field">
+            <span>Repository</span>
+            <input id="repoDisplay" type="text" value="nesleykent/tibia-warzones-schedule" readonly />
+          </label>
+
+          <label class="admin-field">
+            <span>Base branch</span>
+            <input id="baseBranchDisplay" type="text" value="main" readonly />
+          </label>
+
+          <label class="admin-field">
+            <span>Commit target</span>
+            <input id="writeTargetDisplay" type="text" value="main" readonly />
+          </label>
+
+          <label class="admin-field admin-field--wide">
+            <span>GitHub fine-grained personal access token</span>
+            <input
+              id="tokenInput"
+              type="password"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="github_pat_..."
+            />
+          </label>
+
+          <label class="admin-checkbox">
+            <input id="rememberTokenCheckbox" type="checkbox" />
+            <span>Keep token in <code>sessionStorage</code> for this browser tab only</span>
+          </label>
+
+          <div class="admin-actions">
+            <button id="testConnectionButton" type="button" class="admin-button">
+              Test connection
+            </button>
+            <button id="clearTokenButton" type="button" class="admin-button admin-button--ghost">
+              Clear token
+            </button>
+          </div>
+        </div>
+
+        <div id="connectionStatus" class="admin-status admin-status--muted" aria-live="polite">
+          No token tested yet.
+        </div>
+      </section>
+
+      <section class="admin-card" aria-labelledby="scheduleTitle">
+        <div class="admin-card-header">
+          <div>
+            <h2 id="scheduleTitle">Warzone schedule editor</h2>
+            <p class="admin-card-copy">
+              Edits <code>data/manual-schedules.json</code>. Source and notes fields help document the commit but are not written into the JSON contract.
+            </p>
+          </div>
+          <button id="addScheduleWorldButton" type="button" class="admin-button admin-button--secondary">
+            Add world schedule
+          </button>
+        </div>
+
+        <div class="admin-grid admin-grid--two">
+          <div class="admin-panel">
+            <label class="admin-field">
+              <span>Scheduled world</span>
+              <select id="scheduleWorldSelect"></select>
+            </label>
+
+            <label class="admin-field">
+              <span>Add world from <code>data/worlds.json</code></span>
+              <select id="scheduleWorldAddSelect"></select>
+            </label>
+
+            <button id="removeScheduleWorldButton" type="button" class="admin-button admin-button--danger">
+              Remove selected world schedule
+            </button>
+          </div>
+
+          <div class="admin-panel">
+            <label class="admin-field">
+              <span>Timezone</span>
+              <input id="scheduleTimezoneInput" list="timezoneOptions" type="text" />
+            </label>
+            <p class="admin-helper">
+              Valid orders: <code>""</code>, <code>1-2-3</code>, <code>1-3-2</code>, <code>2-1-3</code>.
+            </p>
+            <button id="addScheduleEntryButton" type="button" class="admin-button admin-button--secondary">
+              Add schedule entry
+            </button>
+          </div>
+        </div>
+
+        <div id="scheduleEntries" class="admin-stack"></div>
+        <div id="scheduleValidation" class="admin-status admin-status--muted" aria-live="polite"></div>
+      </section>
+
+      <section class="admin-card" aria-labelledby="marketTitle">
+        <div class="admin-card-header">
+          <div>
+            <h2 id="marketTitle">Tracked market item editor</h2>
+            <p class="admin-card-copy">
+              Reads <code>data/market/items/items.csv</code> and updates <code>data/market/items/tracked_items.json</code>. Category and notes are commit metadata only. Enabled controls whether the item remains in the tracked list.
+            </p>
+          </div>
+          <button id="addTrackedItemButton" type="button" class="admin-button admin-button--secondary">
+            Add tracked item
+          </button>
+        </div>
+
+        <div id="trackedItemsTable" class="admin-table-wrap"></div>
+        <div id="marketValidation" class="admin-status admin-status--muted" aria-live="polite"></div>
+      </section>
+
+      <section class="admin-card" aria-labelledby="openHouseTitle">
+        <div class="admin-card-header">
+          <div>
+            <h2 id="openHouseTitle">Open house updates</h2>
+            <p class="admin-card-copy">
+              <code>data/open-houses.json</code> is regenerated from GitHub issues by
+              <code>scripts/update_open_houses.py</code>. Browser edits are disabled here so
+              maintainers do not create changes that the rebuild workflow will overwrite.
+            </p>
+          </div>
+        </div>
+        <div class="admin-empty">
+          Submit new listings with the repository open-house issue template. Use the maintenance
+          issue template for edits or removals so the generated registry stays durable.
+        </div>
+      </section>
+
+      <section class="admin-card" aria-labelledby="commitWorkflowTitle">
+        <div class="admin-card-header">
+          <div>
+            <h2 id="commitWorkflowTitle">Direct Commit Workflow</h2>
+            <p class="admin-card-copy">
+              The editor validates source changes, writes only changed durable source files straight to <code>main</code>, and lets the existing GitHub Actions workflows regenerate public outputs afterward.
+            </p>
+          </div>
+        </div>
+
+        <label class="admin-field">
+          <span>Maintainer summary for the commit message</span>
+          <textarea
+            id="commitSummaryInput"
+            rows="4"
+            placeholder="Describe the correction, context, or follow-up actions for the commit history."
+          ></textarea>
+        </label>
+
+        <div class="admin-actions">
+          <button id="reviewChangesButton" type="button" class="admin-button admin-button--secondary">
+            Review pending file changes
+          </button>
+          <button id="commitChangesButton" type="button" class="admin-button">
+            Commit source files to main
+          </button>
+        </div>
+
+        <div id="workflowStatus" class="admin-status admin-status--muted" aria-live="polite">
+          No pending review yet.
+        </div>
+
+        <div id="pendingChanges" class="admin-stack"></div>
+      </section>
+
+      <datalist id="timezoneOptions"></datalist>
+      <datalist id="itemsCatalogOptions"></datalist>
+    </main>
+
+    <footer class="site-footer" role="contentinfo" data-site-footer></footer>
+
+    <script src="./assets/shared.js" defer></script>
+    <script src="./assets/admin.js" defer></script>
+  </body>
+</html>

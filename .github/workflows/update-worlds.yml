@@ -1,0 +1,92 @@
+name: Update Worlds
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - data/active_warzones.txt
+      - scripts/common.py
+      - scripts/economic_ranking.py
+      - scripts/enrich_worlds_with_rankings.py
+      - scripts/update_data.py
+  schedule:
+    # Primary window: 04:17–08:17 UTC (06:17–10:17 Berlin), all past the TibiaData
+    # refresh gate (04:05 Berlin). First surviving run commits; the rest no-op via
+    # git diff. Fallback window: 14:17–16:17 UTC catches any morning failure
+    # (API outage, validation error). If morning already committed, fallback is a
+    # guaranteed no-op (update_world_history deduplicates by date).
+    - cron: "17 4-8 * * *"
+    - cron: "17 14-16 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-worlds
+  cancel-in-progress: false
+
+jobs:
+  update-worlds:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Require user token
+        env:
+          OPEN_HOUSE_GITHUB_TOKEN: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
+        run: |
+          if [ -z "$OPEN_HOUSE_GITHUB_TOKEN" ]; then
+            echo "Missing required secret: OPEN_HOUSE_GITHUB_TOKEN" >&2
+            exit 1
+          fi
+
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          token: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+
+      - name: Refresh worlds data for scheduled window
+        if: github.event_name == 'schedule'
+        run: python scripts/update_data.py --scheduled --allow-stale-on-fetch-failure
+
+      - name: Refresh worlds data
+        if: github.event_name != 'schedule'
+        run: python scripts/update_data.py --allow-stale-on-fetch-failure
+
+      - name: Validate generated data
+        run: |
+          python3 -m py_compile scripts/*.py
+          python3 -m unittest discover -s tests -v
+          python3 scripts/validate_content.py
+          node --check assets/*.js
+
+      - name: Commit updated data
+        env:
+          COMMIT_AUTHOR_NAME: ${{ vars.COMMIT_AUTHOR_NAME || github.repository_owner }}
+          COMMIT_AUTHOR_EMAIL: ${{ vars.COMMIT_AUTHOR_EMAIL || format('{0}@users.noreply.github.com', github.repository_owner) }}
+          OPEN_HOUSE_GITHUB_TOKEN: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
+        run: |
+          if git diff --quiet -- data/worlds.json data/history; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git config user.name "$COMMIT_AUTHOR_NAME"
+          git config user.email "$COMMIT_AUTHOR_EMAIL"
+          git remote set-url origin "https://x-access-token:${OPEN_HOUSE_GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git add data/worlds.json data/history
+          git commit -m "chore: refresh worlds and history data"
+          git pull --rebase origin main
+          git push

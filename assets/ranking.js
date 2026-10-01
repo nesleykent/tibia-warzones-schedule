@@ -1,0 +1,1066 @@
+const {
+  SHARED_STORAGE_KEYS,
+  escapeHtml,
+  formatTransferType,
+  getWorldBattleyeKey,
+  getInitialLanguage: getSharedInitialLanguage,
+  bindLanguageButtons: bindSharedLanguageButtons,
+  getWorldPvpKey,
+  getWorldRegionKey,
+  getWorldTransferKey,
+  getWorldEconomyKey,
+  getWorldEconomyLabel,
+  formatMarketObservationAge,
+  formatMarketObservationDate,
+  getMarketFreshnessLevel,
+  initSharedUi,
+  loadSavedTimezone,
+  loadWorldsData,
+  renderMarketAvailabilityNotice,
+  readJsonStorage,
+  readStorage,
+  renderFilterPill,
+  setHtml,
+  setTextContent,
+  updateLanguageButtons: updateSharedLanguageButtons,
+  writeJsonStorage,
+  writeStorage,
+} = window.TibiaTime;
+
+const STORAGE_KEYS = {
+  activeFilters: "activeFilters",
+  legacyActiveFilters: "rankingActiveFilters",
+  lang: SHARED_STORAGE_KEYS.language,
+  sort: "rankingSort",
+};
+const RANKING_COLUMNS = [
+  {
+    key: "rank",
+    labelKey: "rank",
+    type: "number",
+    defaultDirection: "asc",
+    getValue: (world) => getRanking(world)?.ranking_position,
+  },
+  {
+    key: "world",
+    labelKey: "world",
+    type: "text",
+    defaultDirection: "asc",
+    getValue: (world) => world?.name,
+  },
+  {
+    key: "expectedReturn",
+    labelKey: "expectedReturnXtc",
+    type: "number",
+    defaultDirection: "desc",
+    getValue: (world) => getRanking(world)?.economic_score_raw,
+  },
+  {
+    key: "pvp",
+    labelKey: "pvpType",
+    type: "text",
+    defaultDirection: "asc",
+    getValue: (world) => world?.pvp_type,
+  },
+  {
+    key: "tibiaCoin",
+    labelKey: "tibiaCoin",
+    type: "number",
+    defaultDirection: "desc",
+    getValue: (world) =>
+      getRanking(world)?.market?.tibia_coin?.rolling_window_price,
+  },
+  {
+    key: "serviceExpectedValue",
+    labelKey: "serviceExpectedValue",
+    type: "number",
+    defaultDirection: "desc",
+    getValue: (world) => getRanking(world)?.service_expected_value,
+  },
+];
+const RANKING_COLUMNS_BY_KEY = Object.fromEntries(
+  RANKING_COLUMNS.map((column) => [column.key, column])
+);
+const DEFAULT_SORT = { key: "rank", direction: "asc" };
+const FILTER_CONFIGS = [
+  { group: "region", getValue: getRegionKey, format: (value) => value },
+  { group: "pvp", getValue: getPvpKey, format: (value) => value },
+  {
+    group: "battleye",
+    getValue: getBattleyeKey,
+    format: getBattleyeDisplayLabel,
+  },
+  {
+    group: "transfer",
+    getValue: getTransferKey,
+    format: (value) => formatTransferType(value, value),
+  },
+  {
+    group: "economy",
+    getValue: getEconomyKey,
+    format: getEconomyDisplayLabel,
+  },
+];
+const FILTER_GROUPS = FILTER_CONFIGS.map(({ group }) => group);
+const FILTER_CONFIGS_BY_GROUP = Object.fromEntries(
+  FILTER_CONFIGS.map((config) => [config.group, config])
+);
+const PAGE_ELEMENT_IDS = {
+  title: "rankingTitle",
+  subtitle: "rankingSubtitle",
+  searchLabel: "searchLabel",
+  filtersLabel: "filtersLabel",
+  searchInput: "searchInput",
+  filtersBar: "filtersBar",
+  summary: "summary",
+  marketNotice: "marketDataNotice",
+  tableWrap: "rankingTableWrap",
+};
+
+const I18N = {
+  en: {
+    pageTitle: "Warzones Ranking",
+    title: "Warzones Ranking",
+    subtitle: "Ranking based on expected return only.",
+    explanationTitle: "Understanding the calculation",
+    explanationIntro:
+      "The ranking normalizes each world's service value by the Tibia Coins price, so worlds can be compared on the same scale.",
+    explanationRankingFormulaTitle: "Ranking formula",
+    explanationRankingFormula:
+      String.raw`\[
+\mathrm{ER}_{xTC} = \frac{\mathrm{ServiceEV}_{gold}}{P_{TC}}
+\]`,
+    explanationRankingFormulaText:
+      "This converts the expected service value from gold coins into a Tibia-Coin-denominated value.",
+    explanationServiceFormulaTitle: "Service EV formula",
+    explanationServiceFormula:
+      String.raw`\[
+\mathrm{ServiceEV}_{gold} = EV_{WZ1} + EV_{WZ2} + EV_{WZ3}
+\]`,
+    explanationServiceFormulaText:
+      "The service EV is the total expected gold value produced by completing the three Bigfoot's Burden warzones.",
+    explanationComponentsTitle: "Warzone expected values",
+    explanationComponentsIntro:
+      "Each warzone EV is computed from the fixed gold reward plus the market value of its item drops.",
+    explanationComponentsFormulas:
+      [
+        String.raw`\[
+EV_{WZ1} = 30000 + 0.5 \cdot P_{GCS} + P_{GN}
+\]`,
+        String.raw`\[
+EV_{WZ2} = 40000 + P_{BCS} + P_{PN}
+\]`,
+        String.raw`\[
+EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
+\]`,
+      ],
+    explanationVariablesTitle: "Variables",
+    explanationVariables: [
+      {
+        term: String.raw`\(\mathrm{ER}_{xTC}\)`,
+        description: "expected return expressed in Tibia Coins.",
+      },
+      {
+        term: String.raw`\(\mathrm{ServiceEV}_{gold}\)`,
+        description: "expected return expressed in gold coins.",
+      },
+      {
+        term: String.raw`\(P_{TC}\)`,
+        description: "average Tibia Coins price from the last 7 market entries for that world.",
+      },
+      {
+        term: String.raw`\(P_{GCS}, P_{BCS}, P_{VCS}\)`,
+        description:
+          "market prices for the green, blue, and violet crystal shard components used in the model.",
+      },
+      {
+        term: String.raw`\(P_{GN}\)`,
+        description: "market price of Gill Necklace.",
+      },
+      {
+        term: String.raw`\(P_{PN}\)`,
+        description: "market price of Prismatic Necklace.",
+      },
+      {
+        term: String.raw`\(P_{PR}\)`,
+        description: "market price of Prismatic Ring.",
+      },
+    ],
+    explanationNotesTitle: "Notes",
+    explanationNotes: [
+      "Gold values alone are not directly comparable between worlds with very different Tibia Coins prices.",
+      "The Tibia Coins price uses the rolling market value stored in the ranking dataset.",
+      "ER (xGold) on the world page is the raw Service EV, while ER (xTC) is the normalized ranking value.",
+    ],
+    explanationLink: "Understanding the calculation",
+    close: "Close",
+    search: "Search world",
+    searchPlaceholder: "World name…",
+    filters: "Filters",
+    summary: (total, ranked) => `${ranked} ranked worlds out of ${total} total worlds.`,
+    noWorlds: "No ranked worlds match the current filters.",
+    marketNoticeTitle: "Market data availability",
+    marketNoticeBody:
+      "Market data is provided by {link}. Following recent interruptions to its tracking system, availability and freshness may currently vary by world and item. Some prices may therefore be outdated — check the last observation time shown with each price.",
+    marketNoticeLink: "TibiaMarket.top",
+    marketObserved: "Last market observation",
+    marketObservedUnknown: "No market observation recorded",
+    marketScoreBasis: (oldest, latest) =>
+      `Expected Return uses market observations from ${oldest} to ${latest}.`,
+    all: "All",
+    expectedReturn: "Expected Return",
+    rank: "Rank",
+    tibiaCoin: "Tibia Coins Price",
+    pvpType: "PvP Type",
+    serviceExpectedValue: "Service EV",
+    expectedReturnXtc: "Expected Return",
+    world: "World",
+    services: "Services completed",
+    mark: "Current mark",
+    healthy: "Healthy",
+    inconclusive: "Inconclusive",
+    trolls: "Trolls",
+    bgeLabel: "Green BattlEye",
+    ybeLabel: "Yellow BattlEye",
+    noneLabel: "None",
+    sortAscending: "Sort ascending",
+    sortDescending: "Sort descending",
+    economyDeveloped: "Developed Economy",
+    economyEmerging: "Emerging Economy",
+    economyUnclassified: "Unclassified Economy",
+    notAvailable: "N/A",
+  },
+  "pt-BR": {
+    pageTitle: "Warzones Ranking",
+    title: "Warzones Ranking",
+    subtitle: "Ranking baseado apenas em expected return.",
+    explanationTitle: "Understanding the calculation",
+    explanationIntro:
+      "O ranking normaliza o valor esperado do service pelo preço da Tibia Coins, para que os mundos possam ser comparados na mesma escala.",
+    explanationRankingFormulaTitle: "Fórmula do ranking",
+    explanationRankingFormula:
+      String.raw`\[
+\mathrm{ER}_{xTC} = \frac{\mathrm{ServiceEV}_{gold}}{P_{TC}}
+\]`,
+    explanationRankingFormulaText:
+      "Isso converte o valor esperado do service, em gold coins, para uma unidade baseada em Tibia Coins.",
+    explanationServiceFormulaTitle: "Fórmula do Service EV",
+    explanationServiceFormula:
+      String.raw`\[
+\mathrm{ServiceEV}_{gold} = EV_{WZ1} + EV_{WZ2} + EV_{WZ3}
+\]`,
+    explanationServiceFormulaText:
+      "O Service EV é o valor total esperado, em gold, ao completar as três warzones de Bigfoot's Burden.",
+    explanationComponentsTitle: "Valores esperados por warzone",
+    explanationComponentsIntro:
+      "O EV de cada warzone é calculado a partir da recompensa fixa em gold e do valor de mercado dos drops.",
+    explanationComponentsFormulas: [
+      String.raw`\[
+EV_{WZ1} = 30000 + 0.5 \cdot P_{GCS} + P_{GN}
+\]`,
+      String.raw`\[
+EV_{WZ2} = 40000 + P_{BCS} + P_{PN}
+\]`,
+      String.raw`\[
+EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
+\]`,
+    ],
+    explanationVariablesTitle: "Variáveis",
+    explanationVariables: [
+      {
+        term: String.raw`\(\mathrm{ER}_{xTC}\)`,
+        description: "expected return expresso em Tibia Coins.",
+      },
+      {
+        term: String.raw`\(\mathrm{ServiceEV}_{gold}\)`,
+        description: "expected return expresso em gold coins.",
+      },
+      {
+        term: String.raw`\(P_{TC}\)`,
+        description: "preço rolling de 7 dias da Tibia Coins naquele mundo.",
+      },
+      {
+        term: String.raw`\(P_{GCS}, P_{BCS}, P_{VCS}\)`,
+        description:
+          "preços de mercado dos componentes green, blue e violet crystal shard usados no modelo.",
+      },
+      {
+        term: String.raw`\(P_{GN}\)`,
+        description: "preço de mercado de Gill Necklace.",
+      },
+      {
+        term: String.raw`\(P_{PN}\)`,
+        description: "preço de mercado de Prismatic Necklace.",
+      },
+      {
+        term: String.raw`\(P_{PR}\)`,
+        description: "preço de mercado de Prismatic Ring.",
+      },
+    ],
+    explanationNotesTitle: "Notas",
+    explanationNotes: [
+      "Valores em gold puro não são diretamente comparáveis entre mundos com preços muito diferentes de Tibia Coins.",
+      "O preço da Tibia Coins usa o valor rolling salvo no dataset do ranking.",
+      "ER (xGold) na world page é o Service EV bruto, enquanto ER (xTC) é o valor normalizado do ranking.",
+    ],
+    explanationLink: "Understanding the calculation",
+    close: "Fechar",
+    search: "Buscar mundo",
+    searchPlaceholder: "Nome do mundo…",
+    filters: "Filtros",
+    summary: (total, ranked) => `${ranked} mundos ranqueados de ${total} mundos totais.`,
+    noWorlds: "Nenhum mundo ranqueado corresponde aos filtros atuais.",
+    marketNoticeTitle: "Disponibilidade dos dados de mercado",
+    marketNoticeBody:
+      "Os dados de mercado são fornecidos por {link}. Após interrupções recentes no seu sistema de rastreamento, a disponibilidade e a atualidade podem variar por mundo e item. Alguns preços podem estar desatualizados — verifique a última observação exibida junto de cada preço.",
+    marketNoticeLink: "TibiaMarket.top",
+    marketObserved: "Última observação de mercado",
+    marketObservedUnknown: "Nenhuma observação de mercado registrada",
+    marketScoreBasis: (oldest, latest) =>
+      `O Expected Return usa observações de mercado de ${oldest} até ${latest}.`,
+    all: "Todos",
+    expectedReturn: "Expected Return",
+    rank: "Rank",
+    tibiaCoin: "Tibia Coins Price",
+    pvpType: "Tipo PvP",
+    serviceExpectedValue: "Service EV",
+    expectedReturnXtc: "Expected Return",
+    world: "Mundo",
+    services: "Services concluídos",
+    mark: "Marca atual",
+    healthy: "Healthy",
+    inconclusive: "Inconclusivo",
+    trolls: "Trolls",
+    bgeLabel: "BattlEye verde",
+    ybeLabel: "BattlEye amarelo",
+    noneLabel: "Nenhum",
+    sortAscending: "Ordenar crescente",
+    sortDescending: "Ordenar decrescente",
+    economyDeveloped: "Economia desenvolvida",
+    economyEmerging: "Economia emergente",
+    economyUnclassified: "Economia não classificada",
+    notAvailable: "N/D",
+  },
+  "es-419": {
+    pageTitle: "Warzones Ranking",
+    title: "Warzones Ranking",
+    subtitle: "Ranking basado solo en expected return.",
+    explanationTitle: "Understanding the calculation",
+    explanationIntro:
+      "El ranking normaliza el valor esperado del service por el precio de Tibia Coins, para comparar mundos en la misma escala.",
+    explanationRankingFormulaTitle: "Fórmula del ranking",
+    explanationRankingFormula:
+      String.raw`\[
+\mathrm{ER}_{xTC} = \frac{\mathrm{ServiceEV}_{gold}}{P_{TC}}
+\]`,
+    explanationRankingFormulaText:
+      "Esto convierte el valor esperado del service desde gold coins a una unidad basada en Tibia Coins.",
+    explanationServiceFormulaTitle: "Fórmula del Service EV",
+    explanationServiceFormula:
+      String.raw`\[
+\mathrm{ServiceEV}_{gold} = EV_{WZ1} + EV_{WZ2} + EV_{WZ3}
+\]`,
+    explanationServiceFormulaText:
+      "El Service EV es el valor total esperado, en gold, al completar las tres warzones de Bigfoot's Burden.",
+    explanationComponentsTitle: "Valores esperados por warzone",
+    explanationComponentsIntro:
+      "El EV de cada warzone se calcula con la recompensa fija en gold y el valor de mercado de sus drops.",
+    explanationComponentsFormulas: [
+      String.raw`\[
+EV_{WZ1} = 30000 + 0.5 \cdot P_{GCS} + P_{GN}
+\]`,
+      String.raw`\[
+EV_{WZ2} = 40000 + P_{BCS} + P_{PN}
+\]`,
+      String.raw`\[
+EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
+\]`,
+    ],
+    explanationVariablesTitle: "Variables",
+    explanationVariables: [
+      {
+        term: String.raw`\(\mathrm{ER}_{xTC}\)`,
+        description: "expected return expresado en Tibia Coins.",
+      },
+      {
+        term: String.raw`\(\mathrm{ServiceEV}_{gold}\)`,
+        description: "expected return expresado en gold coins.",
+      },
+      {
+        term: String.raw`\(P_{TC}\)`,
+        description: "precio rolling de 7 días de Tibia Coins en ese mundo.",
+      },
+      {
+        term: String.raw`\(P_{GCS}, P_{BCS}, P_{VCS}\)`,
+        description:
+          "precios de mercado de los componentes green, blue y violet crystal shard usados en el modelo.",
+      },
+      {
+        term: String.raw`\(P_{GN}\)`,
+        description: "precio de mercado de Gill Necklace.",
+      },
+      {
+        term: String.raw`\(P_{PN}\)`,
+        description: "precio de mercado de Prismatic Necklace.",
+      },
+      {
+        term: String.raw`\(P_{PR}\)`,
+        description: "precio de mercado de Prismatic Ring.",
+      },
+    ],
+    explanationNotesTitle: "Notas",
+    explanationNotes: [
+      "Los valores brutos en gold no son directamente comparables entre mundos con precios muy distintos de Tibia Coins.",
+      "El precio de Tibia Coins usa el valor rolling guardado en el dataset del ranking.",
+      "ER (xGold) en la world page es el Service EV bruto, mientras ER (xTC) es el valor normalizado del ranking.",
+    ],
+    explanationLink: "Understanding the calculation",
+    close: "Cerrar",
+    search: "Buscar mundo",
+    searchPlaceholder: "Nombre del mundo…",
+    filters: "Filtros",
+    summary: (total, ranked) => `${ranked} mundos clasificados de ${total} mundos totales.`,
+    noWorlds: "Ningún mundo clasificado coincide con los filtros actuales.",
+    marketNoticeTitle: "Disponibilidad de los datos del mercado",
+    marketNoticeBody:
+      "Los datos del mercado son proporcionados por {link}. Tras interrupciones recientes en su sistema de rastreo, la disponibilidad y la actualidad pueden variar según el mundo y el ítem. Algunos precios pueden estar desactualizados: revisá la última observación que se muestra junto a cada precio.",
+    marketNoticeLink: "TibiaMarket.top",
+    marketObserved: "Última observación del mercado",
+    marketObservedUnknown: "Sin observaciones de mercado registradas",
+    marketScoreBasis: (oldest, latest) =>
+      `El Expected Return usa observaciones de mercado desde ${oldest} hasta ${latest}.`,
+    all: "Todos",
+    expectedReturn: "Expected Return",
+    rank: "Rank",
+    tibiaCoin: "Tibia Coins Price",
+    pvpType: "Tipo PvP",
+    serviceExpectedValue: "Service EV",
+    expectedReturnXtc: "Expected Return",
+    world: "Mundo",
+    services: "Servicios completados",
+    mark: "Marca actual",
+    healthy: "Healthy",
+    inconclusive: "Inconclusivo",
+    trolls: "Trolls",
+    bgeLabel: "BattlEye verde",
+    ybeLabel: "BattlEye amarillo",
+    noneLabel: "Ninguno",
+    sortAscending: "Ordenar ascendente",
+    sortDescending: "Ordenar descendente",
+    economyDeveloped: "Economía desarrollada",
+    economyEmerging: "Economía emergente",
+    economyUnclassified: "Economía sin clasificar",
+    notAvailable: "N/D",
+  },
+  pl: {
+    pageTitle: "Warzones Ranking",
+    title: "Warzones Ranking",
+    subtitle: "Ranking oparty wyłącznie na expected return.",
+    explanationTitle: "Understanding the calculation",
+    explanationIntro:
+      "Ranking normalizuje oczekiwaną wartość service przez cenę Tibia Coins, aby porównywać światy na tej samej skali.",
+    explanationRankingFormulaTitle: "Wzór rankingu",
+    explanationRankingFormula:
+      String.raw`\[
+\mathrm{ER}_{xTC} = \frac{\mathrm{ServiceEV}_{gold}}{P_{TC}}
+\]`,
+    explanationRankingFormulaText:
+      "To przelicza oczekiwaną wartość service z gold coins na jednostkę opartą o Tibia Coins.",
+    explanationServiceFormulaTitle: "Wzór Service EV",
+    explanationServiceFormula:
+      String.raw`\[
+\mathrm{ServiceEV}_{gold} = EV_{WZ1} + EV_{WZ2} + EV_{WZ3}
+\]`,
+    explanationServiceFormulaText:
+      "Service EV to całkowita oczekiwana wartość w gold po ukończeniu trzech warzones z Bigfoot's Burden.",
+    explanationComponentsTitle: "Oczekiwane wartości warzones",
+    explanationComponentsIntro:
+      "EV każdej warzone liczy się z gwarantowanej nagrody w gold oraz wartości rynkowej dropów.",
+    explanationComponentsFormulas: [
+      String.raw`\[
+EV_{WZ1} = 30000 + 0.5 \cdot P_{GCS} + P_{GN}
+\]`,
+      String.raw`\[
+EV_{WZ2} = 40000 + P_{BCS} + P_{PN}
+\]`,
+      String.raw`\[
+EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
+\]`,
+    ],
+    explanationVariablesTitle: "Zmienne",
+    explanationVariables: [
+      {
+        term: String.raw`\(\mathrm{ER}_{xTC}\)`,
+        description: "expected return wyrażony w Tibia Coins.",
+      },
+      {
+        term: String.raw`\(\mathrm{ServiceEV}_{gold}\)`,
+        description: "expected return wyrażony w gold coins.",
+      },
+      {
+        term: String.raw`\(P_{TC}\)`,
+        description: "7-dniowa rolling price Tibia Coins dla danego świata.",
+      },
+      {
+        term: String.raw`\(P_{GCS}, P_{BCS}, P_{VCS}\)`,
+        description:
+          "ceny rynkowe komponentów green, blue i violet crystal shard używanych w modelu.",
+      },
+      {
+        term: String.raw`\(P_{GN}\)`,
+        description: "cena rynkowa Gill Necklace.",
+      },
+      {
+        term: String.raw`\(P_{PN}\)`,
+        description: "cena rynkowa Prismatic Necklace.",
+      },
+      {
+        term: String.raw`\(P_{PR}\)`,
+        description: "cena rynkowa Prismatic Ring.",
+      },
+    ],
+    explanationNotesTitle: "Uwagi",
+    explanationNotes: [
+      "Surowe wartości w gold nie są bezpośrednio porównywalne między światami z bardzo różnymi cenami Tibia Coins.",
+      "Cena Tibia Coins używa rolling value zapisanego w dataset rankingu.",
+      "ER (xGold) na world page to surowy Service EV, a ER (xTC) to znormalizowana wartość rankingowa.",
+    ],
+    explanationLink: "Understanding the calculation",
+    close: "Zamknij",
+    search: "Szukaj świata",
+    searchPlaceholder: "Nazwa świata…",
+    filters: "Filtry",
+    summary: (total, ranked) => `${ranked} sklasyfikowanych światów z ${total} wszystkich światów.`,
+    noWorlds: "Żaden sklasyfikowany świat nie pasuje do aktywnych filtrów.",
+    marketNoticeTitle: "Dostępność danych rynkowych",
+    marketNoticeBody:
+      "Dane rynkowe pochodzą z {link}. Po ostatnich przerwach w działaniu systemu śledzenia dostępność i aktualność danych mogą się różnić w zależności od świata i przedmiotu. Niektóre ceny mogą być nieaktualne — sprawdź czas ostatniej obserwacji podany przy każdej cenie.",
+    marketNoticeLink: "TibiaMarket.top",
+    marketObserved: "Ostatnia obserwacja rynku",
+    marketObservedUnknown: "Brak zarejestrowanych obserwacji rynku",
+    marketScoreBasis: (oldest, latest) =>
+      `Expected Return korzysta z obserwacji rynkowych od ${oldest} do ${latest}.`,
+    all: "Wszystkie",
+    expectedReturn: "Expected Return",
+    rank: "Rank",
+    tibiaCoin: "Tibia Coins Price",
+    pvpType: "Typ PvP",
+    serviceExpectedValue: "Service EV",
+    expectedReturnXtc: "Expected Return",
+    world: "Świat",
+    services: "Ukończone usługi",
+    mark: "Bieżące oznaczenie",
+    healthy: "Healthy",
+    inconclusive: "Niejednoznaczne",
+    trolls: "Trolls",
+    bgeLabel: "Zielony BattlEye",
+    ybeLabel: "Żółty BattlEye",
+    noneLabel: "Brak",
+    sortAscending: "Sortuj rosnąco",
+    sortDescending: "Sortuj malejąco",
+    economyDeveloped: "Gospodarka rozwinięta",
+    economyEmerging: "Gospodarka wschodząca",
+    economyUnclassified: "Gospodarka niesklasyfikowana",
+    notAvailable: "Brak",
+  },
+};
+
+let worlds = [];
+let pageTimezone = "UTC";
+let lang = "pt-BR";
+let explanationModalKeydownHandler = null;
+let activeFilters = createEmptyFilterState();
+let activeSort = { ...DEFAULT_SORT };
+const pageElements = {};
+
+function createEmptyFilterState() {
+  return Object.fromEntries(FILTER_GROUPS.map((group) => [group, new Set()]));
+}
+
+function cachePageElements() {
+  Object.entries(PAGE_ELEMENT_IDS).forEach(([key, id]) => {
+    pageElements[key] = document.getElementById(id);
+  });
+}
+
+function t() {
+  return I18N[lang] || I18N["pt-BR"];
+}
+
+
+function getRegionKey(world) {
+  return getWorldRegionKey(world);
+}
+
+function getPvpKey(world) {
+  return getWorldPvpKey(world);
+}
+
+function getBattleyeKey(world) {
+  return getWorldBattleyeKey(world);
+}
+
+function getBattleyeDisplayLabel(key) {
+  const dict = t();
+  if (key === "GBE") return dict.bgeLabel;
+  if (key === "YBE") return dict.ybeLabel;
+  return dict.noneLabel;
+}
+
+function getTransferKey(world) {
+  return getWorldTransferKey(world);
+}
+
+function getEconomyKey(world) {
+  return getWorldEconomyKey(world);
+}
+
+function getEconomyDisplayLabel(key) {
+  const dict = t();
+  return getWorldEconomyLabel(key, {
+    developed: dict.economyDeveloped,
+    emerging: dict.economyEmerging,
+    unclassified: dict.economyUnclassified,
+  });
+}
+
+function hasActiveFilters() {
+  return FILTER_GROUPS.some((group) => activeFilters[group].size > 0);
+}
+
+function worldPassesFilters(world) {
+  return FILTER_CONFIGS.every(({ group, getValue }) => {
+    const values = activeFilters[group];
+    return values.size === 0 || values.has(getValue(world));
+  });
+}
+
+function loadSettings() {
+  lang = getSharedInitialLanguage(I18N);
+  const savedFilters = readJsonStorage(
+    STORAGE_KEYS.activeFilters,
+    readJsonStorage(STORAGE_KEYS.legacyActiveFilters, {})
+  );
+
+  FILTER_GROUPS.forEach((group) => {
+    if (Array.isArray(savedFilters[group])) {
+      activeFilters[group] = new Set(savedFilters[group]);
+    }
+  });
+
+  loadSort();
+}
+
+function saveFilters() {
+  writeJsonStorage(
+    STORAGE_KEYS.activeFilters,
+    Object.fromEntries(
+      FILTER_GROUPS.map((group) => [group, [...activeFilters[group]]])
+    )
+  );
+}
+
+function toggleFilter(group, value) {
+  if (activeFilters[group].has(value)) activeFilters[group].delete(value);
+  else activeFilters[group].add(value);
+  saveFilters();
+  render();
+}
+
+function clearFilters() {
+  FILTER_GROUPS.forEach((group) => activeFilters[group].clear());
+  saveFilters();
+  render();
+}
+
+function applyStaticLabels() {
+  const dict = t();
+  document.title = dict.pageTitle;
+  setTextContent(pageElements.title, dict.title);
+  setTextContent(pageElements.subtitle, dict.subtitle);
+  setTextContent(pageElements.searchLabel, dict.search);
+  setTextContent(pageElements.filtersLabel, dict.filters);
+  if (pageElements.searchInput) {
+    pageElements.searchInput.placeholder = dict.searchPlaceholder;
+  }
+  if (pageElements.marketNotice) {
+    setHtml(
+      pageElements.marketNotice,
+      renderMarketAvailabilityNotice({
+        title: dict.marketNoticeTitle,
+        body: dict.marketNoticeBody,
+        linkLabel: dict.marketNoticeLink,
+      })
+    );
+  }
+}
+
+function describeMarketObservation(observedAt) {
+  const dict = t();
+  const formatted = formatMarketObservationDate(observedAt, lang, pageTimezone);
+  if (!formatted) return dict.marketObservedUnknown;
+
+  const age = formatMarketObservationAge(observedAt, lang);
+  return age
+    ? `${dict.marketObserved}: ${formatted} (${age})`
+    : `${dict.marketObserved}: ${formatted}`;
+}
+
+// The dot reports the age of the observation behind the value in this cell, so a
+// world whose prices stopped refreshing reads differently from one still updating.
+function renderMarketPriceCell(price, observedAt) {
+  const level = getMarketFreshnessLevel(observedAt);
+  const age = formatMarketObservationAge(observedAt, lang);
+
+  return `
+    <td>
+      <span class="market-freshness is-${escapeHtml(level)}" title="${escapeHtml(
+        describeMarketObservation(observedAt)
+      )}">
+        <span class="market-freshness-dot" aria-hidden="true"></span>
+        <span>${escapeHtml(price)}</span>
+      </span>
+      ${age ? `<div class="market-freshness-age">${escapeHtml(age)}</div>` : ""}
+    </td>
+  `;
+}
+
+function describeScoreBasis(ranking) {
+  const dict = t();
+  const oldest = formatMarketObservationDate(
+    ranking.market_oldest_observation_time,
+    lang,
+    pageTimezone
+  );
+  const latest = formatMarketObservationDate(
+    ranking.market_latest_observation_time,
+    lang,
+    pageTimezone
+  );
+
+  if (!oldest || !latest) return dict.marketObservedUnknown;
+  return dict.marketScoreBasis(oldest, latest);
+}
+
+function updateLanguageButtons() {
+  updateSharedLanguageButtons(lang);
+}
+
+function bindLanguageButtons() {
+  bindSharedLanguageButtons((nextLang) => {
+    lang = nextLang;
+    writeStorage(STORAGE_KEYS.lang, lang);
+    closeExplanationModal();
+    applyStaticLabels();
+    updateLanguageButtons();
+    render();
+  });
+}
+
+function formatRankingNumber(value, maximumFractionDigits = 3) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return t().notAvailable;
+  return new Intl.NumberFormat(lang, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits,
+  }).format(numeric);
+}
+
+function getRanking(world) {
+  return world?.warzone_economic_ranking || null;
+}
+
+function compareByRankingPosition(a, b) {
+  return (
+    (getRanking(a)?.ranking_position || Number.MAX_SAFE_INTEGER) -
+    (getRanking(b)?.ranking_position || Number.MAX_SAFE_INTEGER)
+  );
+}
+
+function normalizeSort(sort) {
+  const key = RANKING_COLUMNS_BY_KEY[sort?.key] ? sort.key : DEFAULT_SORT.key;
+  const direction = sort?.direction === "desc" ? "desc" : "asc";
+  return { key, direction };
+}
+
+function toSortableNumber(value) {
+  // null, undefined, and "" all coerce to 0 through Number(), which would sort
+  // missing data as a real zero instead of pushing it to the bottom.
+  if (value === null || value === undefined || value === "") return Number.NaN;
+  return Number(value);
+}
+
+function compareColumnValues(column, a, b) {
+  const left = column.getValue(a);
+  const right = column.getValue(b);
+
+  if (column.type === "number") {
+    const leftNumber = toSortableNumber(left);
+    const rightNumber = toSortableNumber(right);
+    const leftValid = Number.isFinite(leftNumber);
+    const rightValid = Number.isFinite(rightNumber);
+    // Missing values always sink to the bottom, in both directions.
+    if (!leftValid && !rightValid) return 0;
+    if (!leftValid) return Number.POSITIVE_INFINITY;
+    if (!rightValid) return Number.NEGATIVE_INFINITY;
+    return leftNumber - rightNumber;
+  }
+
+  const leftText = String(left ?? "").trim();
+  const rightText = String(right ?? "").trim();
+  if (!leftText && !rightText) return 0;
+  if (!leftText) return Number.POSITIVE_INFINITY;
+  if (!rightText) return Number.NEGATIVE_INFINITY;
+  return leftText.localeCompare(rightText, lang);
+}
+
+function buildComparator(sort) {
+  const { key, direction } = normalizeSort(sort);
+  const column = RANKING_COLUMNS_BY_KEY[key];
+  const sign = direction === "desc" ? -1 : 1;
+
+  return (a, b) => {
+    const result = compareColumnValues(column, a, b);
+    // Absent values were flagged with infinities so they ignore the direction.
+    if (!Number.isFinite(result)) return result > 0 ? 1 : -1;
+    if (result !== 0) return sign * (result > 0 ? 1 : -1);
+    // Ranking position is the stable tie-breaker for every column.
+    return compareByRankingPosition(a, b);
+  };
+}
+
+function loadSort() {
+  activeSort = normalizeSort(readJsonStorage(STORAGE_KEYS.sort, DEFAULT_SORT));
+}
+
+function saveSort() {
+  writeJsonStorage(STORAGE_KEYS.sort, activeSort);
+}
+
+function toggleSort(key) {
+  const column = RANKING_COLUMNS_BY_KEY[key];
+  if (!column) return;
+
+  activeSort =
+    activeSort.key === key
+      ? { key, direction: activeSort.direction === "asc" ? "desc" : "asc" }
+      : { key, direction: column.defaultDirection };
+  saveSort();
+  render();
+}
+
+function renderFilters() {
+  const dict = t();
+  const filterBar = pageElements.filtersBar;
+  if (!filterBar) return;
+  if (worlds.length === 0) {
+    filterBar.replaceChildren();
+    return;
+  }
+
+  function pills(group, values, format) {
+    return [...values]
+      .sort()
+      .map((value) => {
+        const active = activeFilters[group].has(value);
+        return renderFilterPill({
+          active,
+          group,
+          label: format(value),
+          value,
+        });
+      })
+      .join("");
+  }
+
+  const allPill = renderFilterPill({
+    active: !hasActiveFilters(),
+    group: "__all__",
+    isAll: true,
+    label: dict.all,
+    value: "__all__",
+  });
+  filterBar.innerHTML = `<div class="filter-pills-row">${
+    allPill +
+    FILTER_CONFIGS
+      .map(({ group, format }) =>
+        pills(
+          group,
+          new Set(worlds.map((world) => FILTER_CONFIGS_BY_GROUP[group].getValue(world))),
+          format
+        )
+      )
+      .join("")
+  }</div>`;
+}
+
+function bindFilterBar() {
+  const filterBar = pageElements.filtersBar;
+  if (!filterBar) return;
+  filterBar.addEventListener("click", (event) => {
+    const button = event.target.closest(".filter-pill");
+    if (!button) return;
+    const group = button.dataset.filterGroup;
+    const value = button.dataset.filterValue;
+    if (group === "__all__") {
+      clearFilters();
+      return;
+    }
+    if (group && value) toggleFilter(group, value);
+  });
+}
+
+function bindRankingTable() {
+  const wrap = pageElements.tableWrap;
+  if (!wrap) return;
+
+  wrap.addEventListener("click", (event) => {
+    if (!(event.target instanceof Element)) return;
+
+    const sortButton = event.target.closest(".ranking-sort");
+    if (sortButton) {
+      toggleSort(sortButton.dataset.sortKey);
+      return;
+    }
+
+    if (event.target.closest("a, button")) return;
+    event.target
+      .closest(".ranking-table-row")
+      ?.querySelector(".world-name-link")
+      ?.click();
+  });
+}
+
+function renderEmptyState(container, message) {
+  if (!container) return;
+  container.innerHTML = `<div class="empty-state">${escapeHtml(
+    message
+  )}</div>`;
+}
+
+function renderSortableHeader(column) {
+  const dict = t();
+  const label = dict[column.labelKey];
+  const isActive = activeSort.key === column.key;
+  const ariaSort = isActive
+    ? activeSort.direction === "asc"
+      ? "ascending"
+      : "descending"
+    : "none";
+  const nextDirection = isActive
+    ? activeSort.direction === "asc"
+      ? "desc"
+      : "asc"
+    : column.defaultDirection;
+  const indicator = isActive
+    ? activeSort.direction === "asc"
+      ? "▲"
+      : "▼"
+    : "";
+
+  return `
+    <th scope="col" aria-sort="${ariaSort}">
+      <button
+        type="button"
+        class="ranking-sort${isActive ? " is-active" : ""}"
+        data-sort-key="${escapeHtml(column.key)}"
+        title="${escapeHtml(
+          nextDirection === "asc" ? dict.sortAscending : dict.sortDescending
+        )}"
+      >
+        <span class="ranking-sort-label">${escapeHtml(label)}</span>
+        <span class="ranking-sort-indicator" aria-hidden="true">${indicator}</span>
+      </button>
+    </th>
+  `;
+}
+
+function renderTable(rows) {
+  const dict = t();
+  const wrap = pageElements.tableWrap;
+  if (!wrap) return;
+
+  if (rows.length === 0) {
+    renderEmptyState(wrap, dict.noWorlds);
+    return;
+  }
+
+  wrap.innerHTML = `
+    <table class="ranking-table">
+      <thead>
+        <tr>${RANKING_COLUMNS.map(renderSortableHeader).join("")}</tr>
+      </thead>
+      <tbody>
+        ${rows
+          .map((world) => {
+            const ranking = getRanking(world);
+            const market = ranking.market || {};
+            return `
+              <tr class="ranking-table-row">
+                <td>${escapeHtml(
+                  ranking.ranking_position
+                    ? `#${String(ranking.ranking_position)}`
+                    : String(dict.notAvailable)
+                )}</td>
+                <td><a class="world-name-link" href="./world.html?name=${encodeURIComponent(world.name)}">${escapeHtml(world.name)}</a></td>
+                <td title="${escapeHtml(describeScoreBasis(ranking))}">${escapeHtml(
+                  formatRankingNumber(ranking.economic_score_raw, 2)
+                )}</td>
+                <td>${escapeHtml(world.pvp_type || dict.notAvailable)}</td>
+                ${renderMarketPriceCell(
+                  formatRankingNumber(market.tibia_coin?.rolling_window_price, 0),
+                  market.tibia_coin?.latest_observation_time
+                )}
+                <td>${escapeHtml(formatRankingNumber(ranking.service_expected_value, 0))}</td>
+              </tr>
+            `;
+          })
+          .join("")}
+      </tbody>
+    </table>
+  `;
+}
+
+function render() {
+  const query = String(pageElements.searchInput?.value || "")
+    .trim()
+    .toLowerCase();
+  const rows = worlds
+    .filter((world) => getRanking(world)?.is_ranked)
+    .filter((world) => worldPassesFilters(world))
+    .filter((world) => String(world.name || "").toLowerCase().includes(query))
+    .sort(buildComparator(activeSort));
+  if (pageElements.summary) {
+    setHtml(
+      pageElements.summary,
+      `<span class="summary-text">${escapeHtml(
+        t().summary(worlds.length, rows.length)
+      )}</span>`
+    );
+  }
+  renderFilters();
+  renderTable(rows);
+}
+
+async function init() {
+  initSharedUi();
+  cachePageElements();
+  pageTimezone = loadSavedTimezone();
+  loadSettings();
+  applyStaticLabels();
+  updateLanguageButtons();
+  bindLanguageButtons();
+  bindFilterBar();
+  bindRankingTable();
+
+  const searchInput = pageElements.searchInput;
+  if (searchInput) searchInput.addEventListener("input", render);
+
+  const worldsData = await loadWorldsData();
+  worlds = Array.isArray(worldsData) ? worldsData : [];
+  render();
+}
+
+init().catch((error) => {
+  renderEmptyState(pageElements.tableWrap, error.message);
+});

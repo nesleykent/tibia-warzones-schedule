@@ -1,0 +1,582 @@
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import sys
+import time
+from datetime import UTC, datetime
+from email.utils import parsedate_to_datetime
+from pathlib import Path
+from typing import Any
+from urllib.error import HTTPError, URLError
+from urllib.request import urlopen
+from zoneinfo import ZoneInfo
+
+from common import (
+    is_known_schedule_time,
+    is_unknown_friendly_schedule_time,
+    normalize_manual_schedule_payload,
+    normalize_manual_schedules_payload,
+    normalize_worlds_payload,
+)
+from economic_ranking import attach_ranking_metrics
+
+BASE_URL = "https://api.tibiadata.com/v4"
+BOSSES = ("Deathstrike", "Gnomevil", "Abyssador")
+ROOT_DIR = Path(__file__).resolve().parent.parent
+DATA_DIR = ROOT_DIR / "data"
+OUTPUT_FILE = DATA_DIR / "worlds.json"
+MANUAL_SCHEDULE_FILE = DATA_DIR / "manual-schedules.json"
+HISTORY_DIR = DATA_DIR / "history"
+DEFAULT_MANUAL_SCHEDULE = {"timezone": None, "warzone_executions": []}
+HISTORY_REFRESH_SOURCE_TIMEZONE = "Europe/Berlin"
+HISTORY_REFRESH_READY_HOUR = 4
+HISTORY_REFRESH_READY_MINUTE = 5
+RETRYABLE_HTTP_STATUS_CODES = {429, 500, 502, 503, 504}
+FETCH_RETRY_ATTEMPTS = 4
+FETCH_RETRY_BASE_DELAY_SECONDS = 1.0
+FETCH_RETRY_MAX_DELAY_SECONDS = 4.0
+
+
+def format_fetch_error(url: str, error: HTTPError | URLError) -> str:
+    if isinstance(error, HTTPError):
+        return f"HTTP {error.code} for {url}"
+    return f"Network error for {url}: {error.reason}"
+
+
+def is_retryable_fetch_error(error: HTTPError | URLError) -> bool:
+    if isinstance(error, HTTPError):
+        return error.code in RETRYABLE_HTTP_STATUS_CODES
+    return True
+
+
+def retry_after_seconds(error: HTTPError) -> float | None:
+    retry_after = error.headers.get("retry-after") if error.headers else None
+    if not retry_after:
+        return None
+
+    try:
+        return max(float(retry_after), 0.0)
+    except ValueError:
+        pass
+
+    try:
+        parsed_retry_at = parsedate_to_datetime(retry_after)
+    except (TypeError, ValueError):
+        return None
+
+    if parsed_retry_at.tzinfo is None:
+        parsed_retry_at = parsed_retry_at.replace(tzinfo=UTC)
+
+    return max(parsed_retry_at.timestamp() - time.time(), 0.0)
+
+
+def fetch_retry_delay(error: HTTPError | URLError, attempt: int) -> float:
+    if isinstance(error, HTTPError):
+        header_delay = retry_after_seconds(error)
+        if header_delay is not None:
+            return min(header_delay, FETCH_RETRY_MAX_DELAY_SECONDS)
+
+    backoff_delay = FETCH_RETRY_BASE_DELAY_SECONDS * (2 ** max(attempt - 1, 0))
+    return min(backoff_delay, FETCH_RETRY_MAX_DELAY_SECONDS)
+
+
+def fetch_json(url: str, attempts: int = FETCH_RETRY_ATTEMPTS) -> dict[str, Any]:
+    total_attempts = max(attempts, 1)
+    last_error: HTTPError | URLError | None = None
+
+    for attempt in range(1, total_attempts + 1):
+        try:
+            with urlopen(url, timeout=30) as response:
+                return json.load(response)
+        except HTTPError as exc:
+            exc.close()
+            last_error = exc
+        except URLError as exc:
+            last_error = exc
+
+        if (
+            attempt >= total_attempts
+            or last_error is None
+            or not is_retryable_fetch_error(last_error)
+        ):
+            break
+
+        delay_seconds = fetch_retry_delay(last_error, attempt)
+        print(
+            "WARN retrying TibiaData request after "
+            f"{format_fetch_error(url, last_error)} "
+            f"(attempt {attempt}/{total_attempts}, sleeping {delay_seconds:.1f}s).",
+            file=sys.stderr,
+        )
+        if delay_seconds > 0:
+            time.sleep(delay_seconds)
+
+    if last_error is not None:
+        raise RuntimeError(format_fetch_error(url, last_error)) from last_error
+
+    raise RuntimeError(f"Request failed without an explicit error for {url}")
+
+
+def save_json(path: Path, payload: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as file:
+        json.dump(payload, file, ensure_ascii=False, indent=2)
+
+
+def get_worlds() -> list[dict[str, Any]]:
+    payload = fetch_json(f"{BASE_URL}/worlds")
+    worlds_section = payload.get("worlds", {})
+    regular_worlds = worlds_section.get("regular_worlds", [])
+
+    if isinstance(regular_worlds, list):
+        return regular_worlds
+
+    raise RuntimeError("Falha ao buscar lista de servidores.")
+
+
+def get_kill_statistics(world_name: str) -> dict[str, Any]:
+    return fetch_json(f"{BASE_URL}/killstatistics/{world_name}")
+
+
+def to_int(value: Any) -> int:
+    if isinstance(value, int):
+        return value
+    if isinstance(value, str):
+        digits = "".join(ch for ch in value if ch.isdigit())
+        if digits:
+            return int(digits)
+    return 0
+
+
+def extract_boss_kills(payload: dict[str, Any]) -> dict[str, int]:
+    killstatistics = payload.get("killstatistics", {})
+    entries = killstatistics.get("entries", [])
+    kills = {boss: 0 for boss in BOSSES}
+
+    if not isinstance(entries, list):
+        return kills
+
+    for entry in entries:
+        if not isinstance(entry, dict):
+            continue
+
+        race = str(entry.get("race", "")).strip()
+        if race in kills:
+            kills[race] = to_int(entry.get("last_day_killed", 0))
+
+    return kills
+
+
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Refresh Tibia world metadata, kill statistics, and history."
+    )
+    parser.add_argument(
+        "--scheduled",
+        action="store_true",
+        help=(
+            "Exit successfully until the TibiaData refresh window has opened in "
+            f"{HISTORY_REFRESH_SOURCE_TIMEZONE}."
+        ),
+    )
+    parser.add_argument(
+        "--allow-stale-on-fetch-failure",
+        action="store_true",
+        help=(
+            "Exit successfully without writing generated data when a TibiaData "
+            "fetch failure leaves the refresh incomplete."
+        ),
+    )
+    return parser.parse_args(argv)
+
+
+def compute_services_and_mark(
+    deathstrike: int, gnomevil: int, abyssador: int
+) -> dict[str, Any]:
+    services_completed = min(deathstrike, gnomevil, abyssador)
+
+    if deathstrike == 0 and gnomevil == 0 and abyssador == 0:
+        mark = "na"
+    elif deathstrike == gnomevil == abyssador:
+        mark = "healthy"
+    elif (
+        (deathstrike == gnomevil and abyssador < deathstrike)
+        or (deathstrike == abyssador and gnomevil < deathstrike)
+        or (gnomevil == abyssador and deathstrike < gnomevil)
+    ):
+        mark = "trolls"
+    else:
+        mark = "inconclusive"
+
+    return {
+        "services_completed": services_completed,
+        "mark": mark,
+    }
+
+
+def history_slug(world_name: str) -> str:
+    slug = re.sub(r"[^a-z0-9]+", "-", world_name.strip().lower()).strip("-")
+    return slug or "unknown-world"
+
+
+def history_path(world_name: str) -> Path:
+    return HISTORY_DIR / f"{history_slug(world_name)}.json"
+
+
+def normalize_execution(execution: dict[str, Any], execution_id: int) -> dict[str, Any]:
+    return {
+        "execution_id": execution_id,
+        "schedule_time": str(execution.get("schedule_time", "")).strip(),
+        "warzone_sequence": str(execution.get("warzone_sequence", "")).strip(),
+    }
+
+
+def normalize_manual_schedule(schedule_data: dict[str, Any]) -> dict[str, Any]:
+    return normalize_manual_schedule_payload(schedule_data)
+
+
+def load_manual_schedules() -> dict[str, dict[str, Any]]:
+    if not MANUAL_SCHEDULE_FILE.exists():
+        return {}
+
+    with MANUAL_SCHEDULE_FILE.open("r", encoding="utf-8") as file:
+        payload = json.load(file)
+
+    if not isinstance(payload, dict):
+        return {}
+
+    normalized: dict[str, dict[str, Any]] = {}
+
+    for world_name, schedule_data in payload.items():
+        if not isinstance(schedule_data, dict):
+            continue
+        normalized[str(world_name).strip()] = normalize_manual_schedule(schedule_data)
+
+    return normalize_manual_schedules_payload(normalized)
+
+
+def load_world_history(world_name: str, timezone_name: str | None) -> dict[str, Any]:
+    path = history_path(world_name)
+
+    if path.exists():
+        with path.open("r", encoding="utf-8") as file:
+            payload = json.load(file)
+
+        if isinstance(payload, dict):
+            history_items = payload.get("history", [])
+            return {
+                "world": payload.get("world") or world_name,
+                "timezone": payload.get("timezone") or timezone_name,
+                "history": history_items if isinstance(history_items, list) else [],
+            }
+
+    return {
+        "world": world_name,
+        "timezone": timezone_name,
+        "history": [],
+    }
+
+
+def update_world_history(
+    world_name: str, timezone_name: str | None, daily_record: dict[str, Any]
+) -> dict[str, Any]:
+    history_data = load_world_history(world_name, timezone_name)
+    history = [
+        item
+        for item in history_data["history"]
+        if isinstance(item, dict) and item.get("date") != daily_record["date"]
+    ]
+    history.append(daily_record)
+    history.sort(key=lambda item: str(item.get("date", "")), reverse=True)
+
+    history_data["world"] = world_name
+    history_data["timezone"] = timezone_name
+    history_data["history"] = history
+    return history_data
+
+
+def save_world_history(world_name: str, history_data: dict[str, Any]) -> None:
+    save_json(history_path(world_name), history_data)
+
+
+def has_service_history(history_data: dict[str, Any]) -> bool:
+    history_items = history_data.get("history", [])
+    if not isinstance(history_items, list):
+        return False
+
+    return any(
+        isinstance(item, dict) and int(item.get("services_completed", 0) or 0) > 0
+        for item in history_items
+    )
+
+
+def build_daily_record(
+    date_value: str, boss_kills: dict[str, int], computed_data: dict[str, Any]
+) -> dict[str, Any]:
+    return {
+        "date": date_value,
+        "deathstrike_kills": boss_kills["Deathstrike"],
+        "gnomevil_kills": boss_kills["Gnomevil"],
+        "abyssador_kills": boss_kills["Abyssador"],
+        "services_completed": computed_data["services_completed"],
+        "mark": computed_data["mark"],
+    }
+
+
+def build_world_summary(
+    world: dict[str, Any],
+    manual_schedule: dict[str, Any],
+    boss_kills: dict[str, int],
+    computed_data: dict[str, Any],
+    has_service_history_value: bool,
+) -> dict[str, Any]:
+    services_completed = computed_data["services_completed"]
+    tracks_warzone_service = any(count > 0 for count in boss_kills.values())
+
+    return {
+        "name": str(world.get("name", "")).strip(),
+        "location": world.get("location"),
+        "pvp_type": world.get("pvp_type"),
+        "transfer_type": world.get("transfer_type"),
+        "battleye_protected": world.get("battleye_protected"),
+        "battleye_date": world.get("battleye_date"),
+        "tracks_warzone_service": tracks_warzone_service,
+        "timezone": manual_schedule.get("timezone"),
+        "last_detected_kills": boss_kills,
+        "last_detected_services": services_completed,
+        "mark": computed_data["mark"],
+        "has_service_history": has_service_history_value,
+        "warzone_executions": manual_schedule.get("warzone_executions", []),
+    }
+
+
+def build_error_world_summary(
+    world: dict[str, Any], world_name: str, manual_schedule: dict[str, Any], error: Exception
+) -> dict[str, Any]:
+    timezone_name = manual_schedule.get("timezone")
+    history_data = load_world_history(world_name, timezone_name)
+    return {
+        "name": world_name,
+        "location": world.get("location"),
+        "pvp_type": world.get("pvp_type"),
+        "transfer_type": world.get("transfer_type"),
+        "battleye_protected": world.get("battleye_protected"),
+        "battleye_date": world.get("battleye_date"),
+        "tracks_warzone_service": False,
+        "timezone": timezone_name,
+        "last_detected_kills": {boss: 0 for boss in BOSSES},
+        "last_detected_services": 0,
+        "mark": "na",
+        "has_service_history": has_service_history(history_data),
+        "warzone_executions": manual_schedule.get("warzone_executions", []),
+        "error": str(error),
+    }
+
+
+def validate_world_record(record: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+
+    if not isinstance(record.get("name"), str) or not record["name"].strip():
+        errors.append("name inválido")
+
+    if not isinstance(record.get("tracks_warzone_service"), bool):
+        errors.append("tracks_warzone_service inválido")
+
+    if not isinstance(record.get("last_detected_services"), int):
+        errors.append("last_detected_services inválido")
+
+    if record.get("mark") not in {"healthy", "inconclusive", "trolls", "na"}:
+        errors.append("mark inválido")
+
+    if not isinstance(record.get("has_service_history"), bool):
+        errors.append("has_service_history inválido")
+
+    last_detected_kills = record.get("last_detected_kills")
+    if not isinstance(last_detected_kills, dict):
+        errors.append("last_detected_kills inválido")
+    else:
+        for boss in BOSSES:
+            if not isinstance(last_detected_kills.get(boss), int):
+                errors.append(f"kill count inválido para {boss}")
+
+    executions = record.get("warzone_executions")
+    if not isinstance(executions, list):
+        errors.append("warzone_executions inválido")
+        return errors
+
+    for index, execution in enumerate(executions, start=1):
+        if not isinstance(execution, dict):
+            errors.append(f"warzone_executions[{index}] inválido")
+            continue
+
+        if not isinstance(execution.get("execution_id"), int):
+            errors.append(f"execution_id inválido em warzone_executions[{index}]")
+
+        schedule_time = execution.get("schedule_time")
+        if not (
+            is_known_schedule_time(schedule_time)
+            or is_unknown_friendly_schedule_time(schedule_time)
+        ):
+            errors.append(f"schedule_time inválido em warzone_executions[{index}]")
+
+        if not isinstance(execution.get("warzone_sequence"), str):
+            errors.append(f"warzone_sequence inválido em warzone_executions[{index}]")
+
+    return errors
+
+
+def validate_worlds(worlds: list[dict[str, Any]]) -> None:
+    all_errors: list[str] = []
+
+    for world in worlds:
+        errors = validate_world_record(world)
+        if errors:
+            all_errors.append(f"Servidor {world.get('name', '<sem nome>')}:")
+            all_errors.extend(f"  - {error}" for error in errors)
+
+    if all_errors:
+        raise ValueError("\n".join(all_errors))
+
+
+def utc_now() -> datetime:
+    return datetime.now(UTC)
+
+
+def normalize_utc_datetime(value: datetime | None = None) -> datetime:
+    current = value or utc_now()
+    if current.tzinfo is None:
+        return current.replace(tzinfo=UTC)
+    return current.astimezone(UTC)
+
+
+def today_iso_date(now: datetime | None = None) -> str:
+    return normalize_utc_datetime(now).date().isoformat()
+
+
+def get_scheduled_refresh_gate(
+    now: datetime | None = None,
+) -> tuple[bool, datetime, datetime]:
+    current_utc = normalize_utc_datetime(now)
+    source_now = current_utc.astimezone(ZoneInfo(HISTORY_REFRESH_SOURCE_TIMEZONE))
+    refresh_ready_at = source_now.replace(
+        hour=HISTORY_REFRESH_READY_HOUR,
+        minute=HISTORY_REFRESH_READY_MINUTE,
+        second=0,
+        microsecond=0,
+    )
+    return source_now >= refresh_ready_at, source_now, refresh_ready_at
+
+
+def should_skip_scheduled_refresh(now: datetime | None = None) -> bool:
+    refresh_window_open, source_now, refresh_ready_at = get_scheduled_refresh_gate(now)
+
+    if refresh_window_open:
+        return False
+
+    print(
+        "Skipping scheduled refresh: "
+        f"TibiaData refresh window opens at "
+        f"{refresh_ready_at.strftime('%Y-%m-%d %H:%M %Z')} "
+        f"(current source time {source_now.strftime('%Y-%m-%d %H:%M %Z')})."
+    )
+    return True
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(argv if argv is not None else [])
+
+    if args.scheduled and should_skip_scheduled_refresh():
+        return 0
+
+    worlds = get_worlds()
+
+    if not worlds:
+        print("Nenhum servidor retornado pela API.")
+        return 1
+
+    manual_schedules = load_manual_schedules()
+    output: list[dict[str, Any]] = []
+    pending_history_updates: list[tuple[str, dict[str, Any]]] = []
+    failed_worlds: list[tuple[str, str]] = []
+    current_date = today_iso_date()
+
+    for world in worlds:
+        world_name = str(world.get("name", "")).strip()
+        manual_schedule = manual_schedules.get(world_name, DEFAULT_MANUAL_SCHEDULE)
+
+        try:
+            kill_statistics = get_kill_statistics(world_name)
+            boss_kills = extract_boss_kills(kill_statistics)
+            computed_data = compute_services_and_mark(
+                boss_kills["Deathstrike"],
+                boss_kills["Gnomevil"],
+                boss_kills["Abyssador"],
+            )
+            daily_record = build_daily_record(current_date, boss_kills, computed_data)
+            history_data = update_world_history(
+                world_name,
+                manual_schedule.get("timezone"),
+                daily_record,
+            )
+            pending_history_updates.append((world_name, history_data))
+            record = build_world_summary(
+                world,
+                manual_schedule,
+                boss_kills,
+                computed_data,
+                has_service_history(history_data),
+            )
+            output.append(record)
+            print(
+                "OK   "
+                f"{world_name} "
+                f"DS={boss_kills['Deathstrike']} "
+                f"GV={boss_kills['Gnomevil']} "
+                f"AB={boss_kills['Abyssador']} "
+                f"SVC={computed_data['services_completed']} "
+                f"MARK={computed_data['mark']}"
+            )
+        except Exception as exc:
+            print(f"ERRO {world_name}: {exc}", file=sys.stderr)
+            failed_worlds.append((world_name, str(exc)))
+
+    if failed_worlds:
+        print(
+            f"Falha ao atualizar worlds.json. {len(failed_worlds)} servidor(es) não puderam ser processados:",
+            file=sys.stderr,
+        )
+        for world_name, error_message in failed_worlds:
+            print(f"- {world_name}: {error_message}", file=sys.stderr)
+        if args.allow_stale_on_fetch_failure:
+            print(
+                "Refresh incomplete; keeping existing worlds.json and history files unchanged.",
+                file=sys.stderr,
+            )
+            return 0
+        return 1
+
+    output = normalize_worlds_payload(output)
+    output = attach_ranking_metrics(output, DATA_DIR)
+    output = normalize_worlds_payload(output)
+    validate_worlds(output)
+
+    for world_name, history_data in pending_history_updates:
+        save_world_history(world_name, history_data)
+
+    save_json(OUTPUT_FILE, output)
+
+    tracked_worlds = sum(1 for world in output if world["tracks_warzone_service"])
+
+    print()
+    print(f"Total de servidores processados: {len(output)}")
+    print(f"Servidores com atividade detectada: {tracked_worlds}")
+    print(f"Arquivo gerado: {OUTPUT_FILE}")
+    print(f"Histórico salvo em: {HISTORY_DIR}")
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv[1:]))

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tibia Warzones Schedule</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&amp;family=DM+Mono:wght@400;500&amp;display=swap"
+    />
+    <link rel="stylesheet" href="./assets/styles.css" />
+  </head>
+  <body>
+    <!-- Background artwork layer — image picked randomly by JS below -->
+    <div
+      id="bg-layer"
+      aria-hidden="true"
+      data-artworks="bg1.jpg,bg2.jpg,bg3.jpg,bg4.jpg"
+    ></div>
+
+    <nav class="topbar" aria-label="Site navigation">
+      <div class="container topbar-inner">
+        <div class="topbar-links">
+          <a href="./index.html" class="is-active" aria-current="page">
+            Home
+          </a>
+          <span class="topbar-divider" aria-hidden="true"></span>
+          <a href="./open-houses.html">
+            Open Houses
+          </a>
+          <span class="topbar-divider" aria-hidden="true"></span>
+          <a href="./ranking.html">
+            Ranking
+          </a>
+          <span class="topbar-divider" aria-hidden="true"></span>
+          <a href="./bigfoot.html">
+            Bigfoot's Burden Quest
+          </a>
+        </div>
+        <div class="topbar-actions">
+          <a
+            href="https://github.com/nesleykent/tibia-warzones-schedule"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="topbar-icon-link"
+            aria-label="Open GitHub repository"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+            </svg>
+          </a>
+          <div class="lang-dropdown" id="langDropdown">
+            <button type="button" class="lang-menu-btn" id="langMenuBtn"
+              aria-haspopup="true" aria-expanded="false" aria-controls="langMenu" aria-label="Select language">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="2" y1="12" x2="22" y2="12"/>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+              </svg>
+            </button>
+            <div class="lang-menu" id="langMenu" role="menu" aria-label="Language selector">
+              <button type="button" class="lang-flag" data-lang="en"     role="menuitemradio">🇺🇸 <span>English</span></button>
+              <button type="button" class="lang-flag" data-lang="pt-BR"  role="menuitemradio">🇧🇷 <span>Português</span></button>
+              <button type="button" class="lang-flag" data-lang="es-419" role="menuitemradio">🇦🇷 <span>Español</span></button>
+              <button type="button" class="lang-flag" data-lang="pl"     role="menuitemradio">🇵🇱 <span>Polski</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <header class="site-header" role="banner">
+      <div class="container site-header-inner">
+        <img
+          class="header-icon"
+          src="./assets/logo/logo.png"
+          alt="Tibia Warzones logo"
+        />
+        <div class="header-text">
+          <h1 id="heroTitle">Tibia Warzones</h1>
+          <p class="header-subtitle" id="heroSubtitle">
+            Services de Warzone inferidos pelas kills de Deathstrike, Gnomevil e Abyssador.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <main class="container" id="main-content">
+      <section class="controls" aria-label="Filters and options">
+        <div class="control-group">
+          <label for="searchInput" id="searchLabel">Search world</label>
+          <div class="input-wrapper">
+            <span class="input-icon" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <input
+              type="search"
+              id="searchInput"
+              placeholder="World name…"
+              autocomplete="off"
+              aria-label="Search world"
+            />
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label for="timezoneSelect" id="timezoneLabel">Timezone</label>
+          <div class="select-wrapper">
+            <select id="timezoneSelect" aria-label="Select timezone"></select>
+            <span class="select-chevron" aria-hidden="true">
+              <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+
+        <div class="control-group control-group--filters" id="filtersControlGroup">
+          <div id="filtersLabel">Filters</div>
+          <div id="filtersBar" aria-labelledby="filtersLabel"></div>
+        </div>
+
+      </section>
+
+      <section aria-labelledby="warzonePlannerLabel">
+        <div class="planner-section-heading">
+          <h2 class="section-label" id="warzonePlannerLabel">Warzone Planner</h2>
+          <div class="planner-heading-actions">
+            <button
+              type="button"
+              class="section-label planner-print-trigger"
+              id="dailySummaryTrigger"
+            >
+              Daily Summary
+            </button>
+            <button
+              type="button"
+              class="section-label planner-print-trigger"
+              id="printListTrigger"
+            >
+              Print List
+            </button>
+          </div>
+        </div>
+        <div id="nextWarzoneBar" style="display:none" aria-live="polite" aria-label="Next warzone"></div>
+
+        <section
+          id="schedulePanel"
+          class="schedule-panel"
+          aria-label="Selected schedule"
+          aria-live="polite"
+        ></section>
+      </section>
+
+      <section
+        class="summary"
+        id="summary"
+        aria-live="polite"
+        aria-label="Server summary"
+      ></section>
+
+      <section
+        id="worldsList"
+        class="worlds-list"
+        aria-label="Server list"
+      ></section>
+    </main>
+
+    <footer class="site-footer" role="contentinfo" data-site-footer></footer>
+
+    <div
+      class="print-list-modal-backdrop"
+      id="printListModalBackdrop"
+      hidden
+    >
+      <div
+        class="print-list-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="printListModalTitle"
+        aria-describedby="printListStatus"
+      >
+        <div class="print-list-modal-header">
+          <div class="print-list-modal-heading">
+            <h2 id="printListModalTitle">Print List</h2>
+            <p class="print-list-modal-status" id="printListStatus" aria-live="polite"></p>
+          </div>
+          <button
+            type="button"
+            class="print-list-modal-close"
+            id="printListCloseBtn"
+            aria-label="Close"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <textarea
+          class="print-list-textarea"
+          id="printListTextarea"
+          aria-labelledby="printListModalTitle"
+          spellcheck="false"
+        ></textarea>
+        <div class="print-list-modal-actions">
+          <button type="button" class="schedule-btn print-list-modal-btn" id="printListCopyBtn">Copy</button>
+          <button type="button" class="schedule-btn print-list-modal-btn" id="printListPrintBtn">Print</button>
+          <button type="button" class="schedule-btn print-list-modal-btn" id="printListCloseActionBtn">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="./assets/shared.js" defer></script>
+    <script src="./assets/app.js" defer></script>
+  </body>
+</html>

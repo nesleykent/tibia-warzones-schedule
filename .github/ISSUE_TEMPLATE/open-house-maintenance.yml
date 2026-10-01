@@ -1,0 +1,52 @@
+name: Edit or Remove Open House
+description: Request an edit or removal for an existing open house entry.
+title: "[Open House Maintenance]: "
+labels:
+  - open-house
+  - maintenance
+body:
+  - type: dropdown
+    id: action
+    attributes:
+      label: Request type
+      options:
+        - Edit existing open house
+        - Remove existing open house
+    validations:
+      required: true
+  - type: input
+    id: world
+    attributes:
+      label: World
+      placeholder: Gentebra
+    validations:
+      required: true
+  - type: input
+    id: house_name
+    attributes:
+      label: House name
+      placeholder: Mill Avenue 1 (Shop)
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: Reason
+      placeholder: Explain what needs to change or why the house should be removed.
+    validations:
+      required: true
+  - type: textarea
+    id: replacement_log
+    attributes:
+      label: Updated door inspection log
+      description: Required when you are correcting the owner or house match.
+      placeholder: "You see an open door. It belongs to house '...'. ... owns this house."
+    validations:
+      required: false
+  - type: input
+    id: supporting_link
+    attributes:
+      label: Supporting link
+      placeholder: https://...
+    validations:
+      required: false

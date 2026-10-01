@@ -1,0 +1,99 @@
+name: Deploy Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  schedule:
+    - cron: "30 9 * * *"
+    - cron: "0 1 * * *"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Validate Python scripts
+        run: python3 -m py_compile scripts/*.py
+
+      - name: Run tests
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Validate repository content
+        run: python3 scripts/validate_content.py
+
+      - name: Validate static site assets
+        run: node --check assets/*.js
+
+      - name: Validate required site files
+        run: |
+          test -f admin.html
+          test -f index.html
+          test -f open-houses.html
+          test -f ranking.html
+          test -f bigfoot.html
+          test -f world.html
+          test -f assets/styles.css
+          test -f data/worlds.json
+          test -f data/open-houses.json
+
+      - name: Prepare Pages artifact
+        run: |
+          mkdir -p _site
+          cp -R assets data admin.html index.html open-houses.html ranking.html bigfoot.html world.html LICENSE README.md _site/
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    needs: validate
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment_retry.outputs.page_url || steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Pages
+        uses: actions/configure-pages@v6
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
+        continue-on-error: true
+
+      - name: Wait before retrying Pages deployment
+        if: steps.deployment.outcome == 'failure'
+        run: sleep 60
+
+      - name: Retry GitHub Pages deployment
+        if: steps.deployment.outcome == 'failure'
+        id: deployment_retry
+        uses: actions/deploy-pages@v5

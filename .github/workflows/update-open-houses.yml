@@ -1,0 +1,150 @@
+name: Update Open Houses
+
+on:
+  workflow_dispatch:
+    inputs:
+      allow_bulk_lapse:
+        description: "Confirm an unusually large batch of ownership lapses in a single run."
+        required: false
+        default: false
+        type: boolean
+  issues:
+    types:
+      - opened
+      - edited
+      - reopened
+      - closed
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: update-open-houses
+  cancel-in-progress: false
+
+jobs:
+  update-open-houses:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Require user token
+        env:
+          OPEN_HOUSE_GITHUB_TOKEN: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
+        run: |
+          if [ -z "$OPEN_HOUSE_GITHUB_TOKEN" ]; then
+            echo "Missing required secret: OPEN_HOUSE_GITHUB_TOKEN" >&2
+            exit 1
+          fi
+
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Rebuild open houses registry
+        env:
+          GITHUB_TOKEN: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          TIBIADATA_BASE_URL: https://api.tibiadata.com
+        run: python3 scripts/update_open_houses.py ${{ inputs.allow_bulk_lapse && '--allow-bulk-lapse' || '' }}
+
+      - name: Validate registry
+        run: |
+          python3 -m py_compile scripts/*.py
+          python3 -m unittest discover -s tests -v
+          python3 scripts/validate_content.py
+          node --check assets/*.js
+
+      - name: Commit updated registry
+        env:
+          COMMIT_AUTHOR_NAME: ${{ vars.COMMIT_AUTHOR_NAME || github.repository_owner }}
+          COMMIT_AUTHOR_EMAIL: ${{ vars.COMMIT_AUTHOR_EMAIL || format('{0}@users.noreply.github.com', github.repository_owner) }}
+          OPEN_HOUSE_GITHUB_TOKEN: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
+        run: |
+          if git diff --quiet -- data/open-houses.json; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git config user.name "$COMMIT_AUTHOR_NAME"
+          git config user.email "$COMMIT_AUTHOR_EMAIL"
+          git remote set-url origin "https://x-access-token:${OPEN_HOUSE_GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git add data/open-houses.json
+          git commit -m "chore: refresh open houses data"
+          git pull --rebase origin main
+          git push
+
+      - name: Resolve open house issue
+        if: github.event_name == 'issues' && startsWith(github.event.issue.title, '[Open House]:') && github.event.action != 'closed'
+        id: resolve_issue
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          issue_number = int(os.environ["ISSUE_NUMBER"])
+          records = json.loads(Path("data/open-houses.json").read_text(encoding="utf-8"))
+          match = next(
+              (
+                  record
+                  for record in records
+                  if int(record.get("source", {}).get("issueNumber", 0) or 0) == issue_number
+              ),
+              None,
+          )
+
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as fh:
+              if not match:
+                  fh.write("found=false\n")
+              else:
+                  fh.write("found=true\n")
+                  fh.write(f"house_name={match.get('houseName', '')}\n")
+                  fh.write(f"owner_name={match.get('ownerName', '')}\n")
+                  fh.write(f"world={match.get('world', '')}\n")
+                  fh.write(f"town={match.get('town', '')}\n")
+          PY
+
+      - name: Comment on accepted issue
+        if: steps.resolve_issue.outputs.found == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          HOUSE_NAME: ${{ steps.resolve_issue.outputs.house_name }}
+          OWNER_NAME: ${{ steps.resolve_issue.outputs.owner_name }}
+          WORLD_NAME: ${{ steps.resolve_issue.outputs.world }}
+          TOWN_NAME: ${{ steps.resolve_issue.outputs.town }}
+        run: |
+          cat > comment.txt <<EOF
+          Open House added to the registry.
+
+          House: ${HOUSE_NAME}
+          Owner: ${OWNER_NAME}
+          World: ${WORLD_NAME}
+          Town: ${TOWN_NAME}
+
+          This issue is being closed because the report is now recorded in the database.
+          EOF
+          gh issue comment "${ISSUE_NUMBER}" --body-file comment.txt
+
+      - name: Close accepted issue
+        if: steps.resolve_issue.outputs.found == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue close "${ISSUE_NUMBER}"
