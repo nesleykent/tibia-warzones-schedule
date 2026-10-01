@@ -25,6 +25,7 @@ on:
     - cron: "30 8-15 * * *"
 
 permissions:
+  actions: write
   contents: write
 
 concurrency:
@@ -39,19 +40,8 @@ jobs:
       matrix: ${{ steps.matrix.outputs.matrix }}
 
     steps:
-      - name: Require user token
-        env:
-          OPEN_HOUSE_GITHUB_TOKEN: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
-        run: |
-          if [ -z "$OPEN_HOUSE_GITHUB_TOKEN" ]; then
-            echo "Missing required secret: OPEN_HOUSE_GITHUB_TOKEN" >&2
-            exit 1
-          fi
-
       - name: Check out repository
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -111,19 +101,8 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - name: Require user token
-        env:
-          OPEN_HOUSE_GITHUB_TOKEN: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
-        run: |
-          if [ -z "$OPEN_HOUSE_GITHUB_TOKEN" ]; then
-            echo "Missing required secret: OPEN_HOUSE_GITHUB_TOKEN" >&2
-            exit 1
-          fi
-
       - name: Check out repository
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -159,7 +138,9 @@ jobs:
         env:
           COMMIT_AUTHOR_NAME: ${{ vars.COMMIT_AUTHOR_NAME || github.repository_owner }}
           COMMIT_AUTHOR_EMAIL: ${{ vars.COMMIT_AUTHOR_EMAIL || format('{0}@users.noreply.github.com', github.repository_owner) }}
-          OPEN_HOUSE_GITHUB_TOKEN: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
+          # Pushes made with the built-in token do not trigger push workflows,
+          # so the Pages deploy is dispatched explicitly after a successful push.
+          GH_TOKEN: ${{ github.token }}
         run: |
           if git diff --quiet -- data/market/world data/worlds.json; then
             echo "No changes to commit."
@@ -168,8 +149,8 @@ jobs:
 
           git config user.name "$COMMIT_AUTHOR_NAME"
           git config user.email "$COMMIT_AUTHOR_EMAIL"
-          git remote set-url origin "https://x-access-token:${OPEN_HOUSE_GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git add data/market/world data/worlds.json
           git commit -m "update market"
           git pull --rebase origin main
           git push
+          gh workflow run deploy-pages.yml --ref main

@@ -389,7 +389,7 @@ Evidence:
 
 - `scripts/fetch_item_history.py:37-41` contains a hardcoded bearer-token fallback.
 - `admin.html` is publicly deployed, and `assets/admin.js` accepts a repo-write GitHub token in the browser and stores it in `sessionStorage`.
-- The scheduled update workflows share a single repo-write secret name, `OPEN_HOUSE_GITHUB_TOKEN`, across different automation concerns.
+- The scheduled update workflows use the built-in `GITHUB_TOKEN` (no personal token secret). Because pushes made with it do not trigger push workflows, each data workflow dispatches `deploy-pages.yml` after a successful push (requires `actions: write`).
 
 ## Performance Concerns
 

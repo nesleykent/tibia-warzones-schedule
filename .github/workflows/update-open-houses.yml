@@ -16,6 +16,7 @@ on:
       - closed
 
 permissions:
+  actions: write
   contents: write
   issues: write
 
@@ -29,19 +30,8 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - name: Require user token
-        env:
-          OPEN_HOUSE_GITHUB_TOKEN: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
-        run: |
-          if [ -z "$OPEN_HOUSE_GITHUB_TOKEN" ]; then
-            echo "Missing required secret: OPEN_HOUSE_GITHUB_TOKEN" >&2
-            exit 1
-          fi
-
       - name: Check out repository
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -55,7 +45,7 @@ jobs:
 
       - name: Rebuild open houses registry
         env:
-          GITHUB_TOKEN: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           TIBIADATA_BASE_URL: https://api.tibiadata.com
         run: python3 scripts/update_open_houses.py ${{ inputs.allow_bulk_lapse && '--allow-bulk-lapse' || '' }}
@@ -71,7 +61,9 @@ jobs:
         env:
           COMMIT_AUTHOR_NAME: ${{ vars.COMMIT_AUTHOR_NAME || github.repository_owner }}
           COMMIT_AUTHOR_EMAIL: ${{ vars.COMMIT_AUTHOR_EMAIL || format('{0}@users.noreply.github.com', github.repository_owner) }}
-          OPEN_HOUSE_GITHUB_TOKEN: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
+          # Pushes made with the built-in token do not trigger push workflows,
+          # so the Pages deploy is dispatched explicitly after a successful push.
+          GH_TOKEN: ${{ github.token }}
         run: |
           if git diff --quiet -- data/open-houses.json; then
             echo "No changes to commit."
@@ -80,11 +72,11 @@ jobs:
 
           git config user.name "$COMMIT_AUTHOR_NAME"
           git config user.email "$COMMIT_AUTHOR_EMAIL"
-          git remote set-url origin "https://x-access-token:${OPEN_HOUSE_GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git add data/open-houses.json
           git commit -m "chore: refresh open houses data"
           git pull --rebase origin main
           git push
+          gh workflow run deploy-pages.yml --ref main
 
       - name: Resolve open house issue
         if: github.event_name == 'issues' && startsWith(github.event.issue.title, '[Open House]:') && github.event.action != 'closed'
@@ -122,7 +114,7 @@ jobs:
       - name: Comment on accepted issue
         if: steps.resolve_issue.outputs.found == 'true'
         env:
-          GH_TOKEN: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           HOUSE_NAME: ${{ steps.resolve_issue.outputs.house_name }}
           OWNER_NAME: ${{ steps.resolve_issue.outputs.owner_name }}
@@ -144,7 +136,7 @@ jobs:
       - name: Close accepted issue
         if: steps.resolve_issue.outputs.found == 'true'
         env:
-          GH_TOKEN: ${{ secrets.OPEN_HOUSE_GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           gh issue close "${ISSUE_NUMBER}"
