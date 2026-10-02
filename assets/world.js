@@ -12,6 +12,8 @@ const WORLD_I18N = {
     battleye: "BattlEye",
     rankingPosition: "Ranking Position",
     expectedReturnTcs: "ER (xTC)",
+    tibiaCoinPrice: "Tibia Coin price",
+    marketSourceTibinance: "via Tibinance (TibiaMarket data unavailable or stale)",
     expectedReturnGoldCoins: "ER (xGold)",
     schedules: "Manual schedule",
     findWzCharacter: "Find WZ Character",
@@ -76,6 +78,8 @@ const WORLD_I18N = {
     battleye: "BattlEye",
     rankingPosition: "Ranking Position",
     expectedReturnTcs: "ER (xTC)",
+    tibiaCoinPrice: "Preço do Tibia Coin",
+    marketSourceTibinance: "via Tibinance (dados do TibiaMarket indisponíveis ou desatualizados)",
     expectedReturnGoldCoins: "ER (xGold)",
     schedules: "Horários manuais",
     findWzCharacter: "Find WZ Character",
@@ -140,6 +144,8 @@ const WORLD_I18N = {
     battleye: "BattlEye",
     rankingPosition: "Ranking Position",
     expectedReturnTcs: "ER (xTC)",
+    tibiaCoinPrice: "Precio de Tibia Coin",
+    marketSourceTibinance: "vía Tibinance (datos de TibiaMarket no disponibles o desactualizados)",
     expectedReturnGoldCoins: "ER (xGold)",
     schedules: "Horario manual",
     findWzCharacter: "Find WZ Character",
@@ -203,6 +209,8 @@ const WORLD_I18N = {
     battleye: "BattlEye",
     rankingPosition: "Ranking Position",
     expectedReturnTcs: "ER (xTC)",
+    tibiaCoinPrice: "Cena Tibia Coin",
+    marketSourceTibinance: "przez Tibinance (dane TibiaMarket niedostępne lub nieaktualne)",
     expectedReturnGoldCoins: "ER (xGold)",
     schedules: "Ręczny harmonogram",
     findWzCharacter: "Find WZ Character",
@@ -264,7 +272,8 @@ const {
   SHARED_STORAGE_KEYS,
   bindLanguageButtons: bindSharedLanguageButtons,
   initSharedUi,
-  loadWorldsData,
+  loadRuntimeRankedWorlds,
+  MARKET_SOURCE_TIBINANCE,
   loadSavedTimezone,
   setHtml,
   setTextContent,
@@ -449,6 +458,18 @@ function renderSummary(world) {
     ranking.service_expected_value == null
       ? dict.notAvailable
       : formatGoldCoins(ranking.service_expected_value);
+  // Same effective quote (and provenance) the ranking page uses.
+  const tibiaCoinQuote = ranking.effective_tibia_coin || null;
+  const tibiaCoinPrice =
+    tibiaCoinQuote?.price > 0
+      ? formatGoldCoins(tibiaCoinQuote.price)
+      : dict.notAvailable;
+  const tibiaCoinSourceNote =
+    tibiaCoinQuote?.source === MARKET_SOURCE_TIBINANCE
+      ? `<div class="market-source-note" data-market-source="${escapeHtml(
+          tibiaCoinQuote.source
+        )}">${escapeHtml(dict.marketSourceTibinance)}</div>`
+      : "";
 
   return `
     <div class="world-detail-card-header">
@@ -479,6 +500,11 @@ function renderSummary(world) {
       <div class="world-detail-stat"><span>${escapeHtml(
         dict.expectedReturnGoldCoins
       )}</span><strong>${escapeHtml(expectedReturnGoldCoins)}</strong></div>
+      <div class="world-detail-stat" data-effective-tibia-coin-source="${escapeHtml(
+        tibiaCoinQuote?.source || ""
+      )}"><span>${escapeHtml(
+        dict.tibiaCoinPrice
+      )}</span><strong>${escapeHtml(tibiaCoinPrice)}</strong>${tibiaCoinSourceNote}</div>
     </div>
     ${renderExpectedReturnBasisNote(ranking)}
   `;
@@ -2147,7 +2173,9 @@ async function loadWorldPage() {
   };
 
   try {
-    const worlds = await loadWorldsData();
+    // Runtime ranking (TibiaMarket, or transient Tibinance Tibia Coin
+    // fallback) so position, ER and TC price match the ranking page.
+    const worlds = await loadRuntimeRankedWorlds();
     const world = Array.isArray(worlds)
       ? worlds.find((item) => item && item.name === worldName)
       : null;

@@ -74,7 +74,9 @@ def schedule_time_sort_key(value: Any) -> tuple[int, int, int, str]:
 # (assets/shared.js) and must never be written here: Tibinance consumes
 # Warzones data, so persisting its values would create circular provenance.
 PERSISTED_MARKET_SOURCE = "tibiamarket"
-TRANSIENT_MARKET_SOURCE_MARKERS = ("tibinance",)
+# "effective_tibia_coin" marks runtime-ranking records built in the browser
+# (assets/shared.js buildRuntimeRanking); they must never be persisted either.
+TRANSIENT_MARKET_SOURCE_MARKERS = ("tibinance", "effective_tibia_coin")
 
 
 class TransientMarketDataError(ValueError):

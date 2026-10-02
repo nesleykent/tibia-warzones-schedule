@@ -749,7 +749,7 @@ test("ranking rows carry the freshness of the observation behind each price", ()
   assert.match(rankingController, /renderMarketPriceCell\(/);
   // The Tibia Coin cell shows the observation behind the displayed quote,
   // which is TibiaMarket or, when that is stale, the transient Tibinance quote.
-  assert.match(rankingController, /market\?\.tibia_coin/);
+  assert.match(rankingController, /effective_tibia_coin/);
   assert.match(rankingController, /tibiaCoinQuote\?\.observedAt/);
   assert.match(rankingController, /tibiaCoinQuote\?\.source/);
   assert.match(rankingController, /market-freshness is-\$\{escapeHtml\(level\)\}/);

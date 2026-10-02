@@ -15,9 +15,8 @@ const {
   getMarketFreshnessLevel,
   initSharedUi,
   loadSavedTimezone,
-  loadWorldsData,
-  loadTibinanceTibiaCoinQuotes,
-  selectTibiaCoinQuote,
+  loadRuntimeRankedWorlds,
+  resolveEffectiveTibiaCoin,
   MARKET_SOURCE_TIBINANCE,
   renderMarketAvailabilityNotice,
   readJsonStorage,
@@ -714,15 +713,11 @@ function describeMarketObservation(observedAt) {
 
 // The dot reports the age of the observation behind the value in this cell, so a
 // world whose prices stopped refreshing reads differently from one still updating.
-// Transient, in-memory Tibinance Tibia Coin quotes (never persisted).
-let tibinanceQuotes = new Map();
-
+// Effective Tibia Coin quote resolved by buildRuntimeRanking (TibiaMarket, or
+// the transient Tibinance fallback). Scores and positions on the same world
+// object were computed from this same quote.
 function getTibiaCoinQuote(world) {
-  return selectTibiaCoinQuote(
-    world?.name,
-    getRanking(world)?.market?.tibia_coin,
-    tibinanceQuotes
-  );
+  return getRanking(world)?.effective_tibia_coin || resolveEffectiveTibiaCoin(world, null);
 }
 
 function renderMarketPriceCell(price, observedAt, source) {
@@ -1082,14 +1077,11 @@ async function init() {
   const searchInput = pageElements.searchInput;
   if (searchInput) searchInput.addEventListener("input", render);
 
-  const worldsData = await loadWorldsData();
-  worlds = Array.isArray(worldsData) ? worldsData : [];
+  // Render once, after the Tibinance fetch settles, so the displayed Tibia
+  // Coin price, economic score and position share one effective data state.
+  // Runtime ranking values live in memory only and are never persisted.
+  worlds = await loadRuntimeRankedWorlds();
   render();
-
-  // Tibia Coin fallback: re-render once Tibinance quotes arrive. Failures
-  // resolve to an empty map, leaving TibiaMarket values in place.
-  tibinanceQuotes = await loadTibinanceTibiaCoinQuotes();
-  if (tibinanceQuotes.size) render();
 }
 
 init().catch((error) => {

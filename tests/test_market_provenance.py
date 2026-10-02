@@ -4,6 +4,7 @@ import json
 import sys
 import tempfile
 import unittest
+import unittest.mock
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -60,6 +61,35 @@ class MarketProvenanceTest(unittest.TestCase):
         report = validate_content.ValidationReport()
         validate_content.validate_ranking_market_model(report, "Antica", "tibia_coin", model)
         self.assertTrue(any("only 'tibiamarket'" in e for e in report.errors))
+
+    def test_runtime_ranking_records_are_never_persistable(self) -> None:
+        runtime_record = {"warzone_economic_ranking": {"effective_tibia_coin": {"source": "tibiamarket"}}}
+        with self.assertRaises(common.TransientMarketDataError):
+            common.assert_persistable_market_payload([runtime_record], "worlds.json")
+        with tempfile.TemporaryDirectory() as tmpdir:
+            data_dir = Path(tmpdir) / "data"
+            data_dir.mkdir()
+            (data_dir / "worlds.json").write_text(json.dumps([runtime_record]), encoding="utf-8")
+            self.assertEqual(len(validate_content.validate_no_transient_market_data(data_dir).errors), 1)
+
+    def test_service_expected_value_is_independent_of_tibia_coin(self) -> None:
+        # The browser recomputes only economic_score_raw = service_expected_value / TC,
+        # so service_expected_value must be persisted even when the TC price is missing.
+        def model(key: str, price: float | None) -> dict:
+            built = economic_ranking.build_price_model(key, key, price, price)
+            built.update({"rolling_window_price": price, "rolling_window_entries_used": 7})
+            return built
+
+        models = {key: model(key, 30000.0) for _, key in economic_ranking.RANKING_MARKET_ITEMS}
+        models["tibia_coin"] = model("tibia_coin", None)
+        world = {"name": "Testera", "mark": "healthy", "last_detected_kills": {}}
+        with unittest.mock.patch.object(economic_ranking, "load_market_models", return_value=(models, [])), \
+             unittest.mock.patch.object(economic_ranking, "load_recent_history_marks", return_value=([], [])):
+            metrics = economic_ranking.compute_world_ranking_metrics(world, Path("."))
+        self.assertIsNotNone(metrics["service_expected_value"])
+        self.assertIsNone(metrics["economic_score_raw"])
+        self.assertFalse(metrics["is_ranked"])
+        self.assertIn("missing_economic_inputs", metrics["insufficient_data_reasons"])
 
     def test_python_pipelines_never_fetch_tibinance(self) -> None:
         # Tibinance is a browser-only fallback; no pipeline may reference its URL.

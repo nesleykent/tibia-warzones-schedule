@@ -397,16 +397,15 @@ def compute_world_ranking_metrics(world: dict[str, Any], data_dir: Path) -> dict
         market_models["prismatic_ring"]["demand_price"],
     )
 
+    # service_expected_value depends only on Warzone item prices, so it is
+    # stored even when the Tibia Coin price is missing. The browser then needs
+    # only the Tibia Coin price to recompute economic_score_raw when it applies
+    # the transient Tibinance fallback (assets/shared.js buildRuntimeRanking).
     if (
-        tibia_coin_price is None
-        or gill_necklace_price is None
-        or prismatic_necklace_price is None
-        or prismatic_ring_price is None
+        gill_necklace_price is not None
+        and prismatic_necklace_price is not None
+        and prismatic_ring_price is not None
     ):
-        reasons.append("missing_economic_inputs")
-    elif tibia_coin_price <= 0:
-        reasons.append("non_positive_economic_denominator")
-    else:
         wz1_expected_value = (
             WZ1_FIXED_GOLD
             + (WZ1_GREEN_CRYSTAL_SHARD_VALUE * GREEN_CRYSTAL_SHARD_REWARD_PROBABILITY)
@@ -421,6 +420,12 @@ def compute_world_ranking_metrics(world: dict[str, Any], data_dir: Path) -> dict
         service_expected_value = (
             wz1_expected_value + wz2_expected_value + wz3_expected_value
         )
+
+    if tibia_coin_price is None or service_expected_value is None:
+        reasons.append("missing_economic_inputs")
+    elif tibia_coin_price <= 0:
+        reasons.append("non_positive_economic_denominator")
+    else:
         economic_score_raw = service_expected_value / tibia_coin_price
 
     liquidity_values = [

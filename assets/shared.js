@@ -1624,19 +1624,47 @@
   }
 
   let tibinanceTibiaCoinQuotesPromise = null;
+  const TIBINANCE_FETCH_TIMEOUT_MS = 5000;
 
   // Fetches Tibinance Tibia Coin quotes once per page load, kept in memory
-  // only (no localStorage / IndexedDB). Failures resolve to an empty map so
-  // TibiaMarket data keeps rendering.
-  function loadTibinanceTibiaCoinQuotes(fetchImpl = globalThis.fetch) {
+  // only (no localStorage / IndexedDB). Failures, malformed data and slow
+  // responses (timeout) resolve to an empty map, which means the pages render
+  // the persisted TibiaMarket-only values and ranking.
+  function loadTibinanceTibiaCoinQuotes(
+    fetchImpl = globalThis.fetch,
+    timeoutMs = TIBINANCE_FETCH_TIMEOUT_MS
+  ) {
     if (!tibinanceTibiaCoinQuotesPromise) {
-      tibinanceTibiaCoinQuotesPromise = Promise.resolve()
+      const request = Promise.resolve()
         .then(() => fetchImpl(TIBINANCE_TIBIA_COIN_URL, { cache: "no-cache" }))
         .then((response) => (response?.ok ? response.text() : ""))
-        .then(parseTibinanceTibiaCoinQuotes)
-        .catch(() => new Map());
+        .then(parseTibinanceTibiaCoinQuotes);
+      let timer = null;
+      const timeout = new Promise((resolve) => {
+        timer = setTimeout(() => resolve(new Map()), timeoutMs);
+      });
+      tibinanceTibiaCoinQuotesPromise = Promise.race([request, timeout])
+        .catch(() => new Map())
+        .finally(() => clearTimeout(timer));
     }
     return tibinanceTibiaCoinQuotesPromise;
+  }
+
+  // Same fallback order as tibia_coin_price in scripts/economic_ranking.py.
+  const TIBIA_COIN_PRICE_FIELDS = [
+    "rolling_window_price",
+    "adjusted_effective_price",
+    "mid_price",
+    "supply_price",
+    "demand_price",
+  ];
+
+  function getPersistedTibiaCoinPrice(model) {
+    for (const field of TIBIA_COIN_PRICE_FIELDS) {
+      const value = Number(model?.[field]);
+      if (value > 0) return value;
+    }
+    return null;
   }
 
   // Chooses the Tibia Coin price to display for a world. TibiaMarket is the
@@ -1650,7 +1678,7 @@
     tibinanceQuotes,
     now = Date.now()
   ) {
-    const primaryPrice = Number(tibiaMarketModel?.rolling_window_price);
+    const primaryPrice = getPersistedTibiaCoinPrice(tibiaMarketModel);
     const primaryObservedAt = Number(tibiaMarketModel?.latest_observation_time) || null;
     const primary =
       primaryPrice > 0
@@ -1680,6 +1708,98 @@
       };
     }
     return primary;
+  }
+
+  // The single resolver both the ranking and world pages use, so they always
+  // agree on a world's effective Tibia Coin price and its provenance.
+  function resolveEffectiveTibiaCoin(world, tibinanceQuotes, now = Date.now()) {
+    return selectTibiaCoinQuote(
+      world?.name,
+      world?.warzone_economic_ranking?.market?.tibia_coin,
+      tibinanceQuotes,
+      now
+    );
+  }
+
+  const ECONOMIC_INPUT_REASONS = new Set([
+    "missing_economic_inputs",
+    "non_positive_economic_denominator",
+  ]);
+
+  // Python round_score(): round(value, 6).
+  function roundScore(value) {
+    return value == null ? null : Math.round(value * 1e6) / 1e6;
+  }
+
+  // Applies the effective Tibia Coin price to the persisted (TibiaMarket)
+  // ranking, in memory only. Mirrors scripts/economic_ranking.py without a
+  // separate formula: only the Tibia Coin input changes, so for worlds using a
+  // Tibinance quote economic_score_raw = service_expected_value / price,
+  // final_score = round(score, 6), is_ranked follows the same insufficiency
+  // rules, and ranking_position is reassigned for every world with the same
+  // sort (score descending, then lowercase name). Worlds on TibiaMarket keep
+  // their persisted metrics. Input objects are never mutated.
+  function buildRuntimeRanking(worlds, tibinanceQuotes, now = Date.now()) {
+    if (!Array.isArray(worlds)) return [];
+    const runtime = worlds.map((world) => {
+      const persisted = world?.warzone_economic_ranking;
+      if (!persisted || typeof persisted !== "object") return world;
+
+      const quote = resolveEffectiveTibiaCoin(world, tibinanceQuotes, now);
+      const ranking = { ...persisted, effective_tibia_coin: quote };
+
+      if (quote?.source === MARKET_SOURCE_TIBINANCE) {
+        const serviceExpectedValue = Number(persisted.service_expected_value);
+        const score =
+          persisted.service_expected_value != null && Number.isFinite(serviceExpectedValue)
+            ? serviceExpectedValue / quote.price
+            : null;
+        const reasons = (persisted.insufficient_data_reasons || []).filter(
+          (reason) => !ECONOMIC_INPUT_REASONS.has(reason)
+        );
+        if (score == null) reasons.push("missing_economic_inputs");
+        const excluded =
+          !String(world?.name || "").trim() ||
+          String(world?.mark || "").trim().toLowerCase() === "na";
+
+        ranking.economic_score_raw = score;
+        ranking.final_score = roundScore(score);
+        ranking.insufficient_data = score == null || excluded;
+        ranking.is_ranked = !ranking.insufficient_data;
+        ranking.insufficient_data_reasons = [...new Set(reasons)].sort();
+      }
+      return { ...world, warzone_economic_ranking: ranking };
+    });
+
+    const ranked = runtime
+      .filter((world) => world?.warzone_economic_ranking?.is_ranked)
+      .sort((a, b) => {
+        const scoreDiff =
+          Number(b.warzone_economic_ranking.economic_score_raw) -
+          Number(a.warzone_economic_ranking.economic_score_raw);
+        if (scoreDiff) return scoreDiff;
+        const nameA = String(a.name || "").toLowerCase();
+        const nameB = String(b.name || "").toLowerCase();
+        return nameA < nameB ? -1 : nameA > nameB ? 1 : 0;
+      });
+    runtime.forEach((world) => {
+      if (world?.warzone_economic_ranking) world.warzone_economic_ranking.ranking_position = null;
+    });
+    ranked.forEach((world, index) => {
+      world.warzone_economic_ranking.ranking_position = index + 1;
+    });
+    return runtime;
+  }
+
+  // Loads worlds and Tibinance quotes together so pages render a single,
+  // internally consistent state (price, score and position from the same
+  // effective data) instead of a TibiaMarket-then-Tibinance flash.
+  async function loadRuntimeRankedWorlds() {
+    const [worlds, quotes] = await Promise.all([
+      loadWorldsData(),
+      loadTibinanceTibiaCoinQuotes(),
+    ]);
+    return buildRuntimeRanking(Array.isArray(worlds) ? worlds : [], quotes);
   }
 
   function renderMarketAvailabilityNotice({ title, body, linkLabel }) {
@@ -1800,6 +1920,10 @@
     parseTibinanceTibiaCoinQuotes,
     loadTibinanceTibiaCoinQuotes,
     selectTibiaCoinQuote,
+    getPersistedTibiaCoinPrice,
+    resolveEffectiveTibiaCoin,
+    buildRuntimeRanking,
+    loadRuntimeRankedWorlds,
     SCHEDULE_TIMEZONES_DATA_PATH,
     getTimezoneOffsetMinutes,
     wallClockToInstant,
