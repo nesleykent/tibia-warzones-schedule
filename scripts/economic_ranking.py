@@ -5,6 +5,8 @@ import re
 from pathlib import Path
 from typing import Any
 
+from common import PERSISTED_MARKET_SOURCE
+
 RANKING_MARKET_ITEMS = [
     ("Tibia Coins", "tibia_coin"),
     ("Minor Crystalline Token", "minor_crystalline_token"),
@@ -203,6 +205,8 @@ def build_price_model(
         "liquidity_factor": None,
         "adjusted_effective_price": None,
         "has_required_data": supply_numeric is not None and demand_numeric is not None,
+        # Provenance: persisted market models only ever come from TibiaMarket.
+        "source": PERSISTED_MARKET_SOURCE,
         # When TibiaMarket last observed this item on this world. Freshness varies per
         # world/item, so it is recorded per price model rather than once per dataset.
         "latest_observation_time": None,

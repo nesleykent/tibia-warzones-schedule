@@ -19,7 +19,7 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
-from common import BASE_DIR, canonicalize_manual_schedule, normalize_manual_schedules_payload
+from common import BASE_DIR, assert_persistable_market_payload, canonicalize_manual_schedule, normalize_manual_schedules_payload
 
 MANUAL_SCHEDULES_PATH = BASE_DIR / "data" / "manual-schedules.json"
 WORLDS_PATH = BASE_DIR / "data" / "worlds.json"
@@ -86,6 +86,7 @@ def main() -> None:
     MANUAL_SCHEDULES_PATH.write_text(stringify_manual_schedules(canonical), encoding="utf-8")
 
     sync_worlds_with_manual(worlds, canonical)
+    assert_persistable_market_payload(worlds, str(WORLDS_PATH))
     with WORLDS_PATH.open("w", encoding="utf-8") as file:
         json.dump(worlds, file, ensure_ascii=False, indent=2)
         file.write("\n")

@@ -16,6 +16,9 @@ const {
   initSharedUi,
   loadSavedTimezone,
   loadWorldsData,
+  loadTibinanceTibiaCoinQuotes,
+  selectTibiaCoinQuote,
+  MARKET_SOURCE_TIBINANCE,
   renderMarketAvailabilityNotice,
   readJsonStorage,
   readStorage,
@@ -67,8 +70,7 @@ const RANKING_COLUMNS = [
     labelKey: "tibiaCoin",
     type: "number",
     defaultDirection: "desc",
-    getValue: (world) =>
-      getRanking(world)?.market?.tibia_coin?.rolling_window_price,
+    getValue: (world) => getTibiaCoinQuote(world)?.price,
   },
   {
     key: "serviceExpectedValue",
@@ -205,6 +207,7 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     marketNoticeLink: "TibiaMarket.top",
     marketObserved: "Last market observation",
     marketObservedUnknown: "No market observation recorded",
+    marketSourceTibinance: "via Tibinance (TibiaMarket data unavailable or stale)",
     marketScoreBasis: (oldest, latest) =>
       `Expected Return uses market observations from ${oldest} to ${latest}.`,
     all: "All",
@@ -316,6 +319,7 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     marketNoticeLink: "TibiaMarket.top",
     marketObserved: "Última observação de mercado",
     marketObservedUnknown: "Nenhuma observação de mercado registrada",
+    marketSourceTibinance: "via Tibinance (dados do TibiaMarket indisponíveis ou desatualizados)",
     marketScoreBasis: (oldest, latest) =>
       `O Expected Return usa observações de mercado de ${oldest} até ${latest}.`,
     all: "Todos",
@@ -427,6 +431,7 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     marketNoticeLink: "TibiaMarket.top",
     marketObserved: "Última observación del mercado",
     marketObservedUnknown: "Sin observaciones de mercado registradas",
+    marketSourceTibinance: "vía Tibinance (datos de TibiaMarket no disponibles o desactualizados)",
     marketScoreBasis: (oldest, latest) =>
       `El Expected Return usa observaciones de mercado desde ${oldest} hasta ${latest}.`,
     all: "Todos",
@@ -538,6 +543,7 @@ EV_{WZ3} = 50000 + P_{VCS} + P_{PR}
     marketNoticeLink: "TibiaMarket.top",
     marketObserved: "Ostatnia obserwacja rynku",
     marketObservedUnknown: "Brak zarejestrowanych obserwacji rynku",
+    marketSourceTibinance: "przez Tibinance (dane TibiaMarket niedostępne lub nieaktualne)",
     marketScoreBasis: (oldest, latest) =>
       `Expected Return korzysta z obserwacji rynkowych od ${oldest} do ${latest}.`,
     all: "Wszystkie",
@@ -708,9 +714,27 @@ function describeMarketObservation(observedAt) {
 
 // The dot reports the age of the observation behind the value in this cell, so a
 // world whose prices stopped refreshing reads differently from one still updating.
-function renderMarketPriceCell(price, observedAt) {
+// Transient, in-memory Tibinance Tibia Coin quotes (never persisted).
+let tibinanceQuotes = new Map();
+
+function getTibiaCoinQuote(world) {
+  return selectTibiaCoinQuote(
+    world?.name,
+    getRanking(world)?.market?.tibia_coin,
+    tibinanceQuotes
+  );
+}
+
+function renderMarketPriceCell(price, observedAt, source) {
+  const dict = t();
   const level = getMarketFreshnessLevel(observedAt);
   const age = formatMarketObservationAge(observedAt, lang);
+  const sourceNote =
+    source === MARKET_SOURCE_TIBINANCE
+      ? `<div class="market-source-note" data-market-source="${escapeHtml(source)}">${escapeHtml(
+          dict.marketSourceTibinance
+        )}</div>`
+      : "";
 
   return `
     <td>
@@ -721,6 +745,7 @@ function renderMarketPriceCell(price, observedAt) {
         <span>${escapeHtml(price)}</span>
       </span>
       ${age ? `<div class="market-freshness-age">${escapeHtml(age)}</div>` : ""}
+      ${sourceNote}
     </td>
   `;
 }
@@ -994,7 +1019,7 @@ function renderTable(rows) {
         ${rows
           .map((world) => {
             const ranking = getRanking(world);
-            const market = ranking.market || {};
+            const tibiaCoinQuote = getTibiaCoinQuote(world);
             return `
               <tr class="ranking-table-row">
                 <td>${escapeHtml(
@@ -1008,8 +1033,9 @@ function renderTable(rows) {
                 )}</td>
                 <td>${escapeHtml(world.pvp_type || dict.notAvailable)}</td>
                 ${renderMarketPriceCell(
-                  formatRankingNumber(market.tibia_coin?.rolling_window_price, 0),
-                  market.tibia_coin?.latest_observation_time
+                  formatRankingNumber(tibiaCoinQuote?.price, 0),
+                  tibiaCoinQuote?.observedAt,
+                  tibiaCoinQuote?.source
                 )}
                 <td>${escapeHtml(formatRankingNumber(ranking.service_expected_value, 0))}</td>
               </tr>
@@ -1059,6 +1085,11 @@ async function init() {
   const worldsData = await loadWorldsData();
   worlds = Array.isArray(worldsData) ? worldsData : [];
   render();
+
+  // Tibia Coin fallback: re-render once Tibinance quotes arrive. Failures
+  // resolve to an empty map, leaving TibiaMarket values in place.
+  tibinanceQuotes = await loadTibinanceTibiaCoinQuotes();
+  if (tibinanceQuotes.size) render();
 }
 
 init().catch((error) => {

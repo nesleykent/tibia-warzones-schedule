@@ -11,6 +11,8 @@ from typing import Any
 
 from common import (
     CANONICAL_TIMEZONE_BY_LOCATION,
+    PERSISTED_MARKET_SOURCE,
+    TRANSIENT_MARKET_SOURCE_MARKERS,
     normalize_manual_schedules_payload,
     UNKNOWN_SCHEDULE_PLACEHOLDER,
     is_known_schedule_time,
@@ -101,6 +103,7 @@ REQUIRED_PRICE_MODEL_FIELDS = {
     "rolling_window_price",
     "rolling_window_entries_used",
     "latest_observation_time",
+    "source",
 }
 REQUIRED_SCHEDULE_FIELDS = {"execution_id", "schedule_time", "warzone_sequence"}
 REQUIRED_HISTORY_FIELDS = {
@@ -680,6 +683,11 @@ def validate_ranking_market_model(
         report.error(
             f"worlds.json: {world_name} ranking market {item_key!r} has mismatched item_key {payload.get('item_key')!r}"
         )
+    if payload.get("source") != PERSISTED_MARKET_SOURCE:
+        report.error(
+            f"worlds.json: {world_name} ranking market {item_key!r} has source "
+            f"{payload.get('source')!r}; only {PERSISTED_MARKET_SOURCE!r} may be persisted"
+        )
     for field_name in (
         "supply_price",
         "demand_price",
@@ -1123,7 +1131,9 @@ def validate_repository(repo_root: Path = REPO_ROOT) -> ValidationReport:
             validate_schedule_timezones_payload(schedule_timezones_payload, worlds_payload),
         )
     manual_report = merge_reports(
-        manual_report, validate_world_economy_coverage(repo_root, worlds_payload)
+        manual_report,
+        validate_world_economy_coverage(repo_root, worlds_payload),
+        validate_no_transient_market_data(repo_root / "data"),
     )
 
     try:
@@ -1243,6 +1253,29 @@ def validate_world_economy_coverage(repo_root: Path, worlds_payload: Any) -> Val
             report.warn(
                 f"assets/shared.js: {name} is missing from WORLD_ECONOMY_CLASSES; "
                 "classify it as developed or emerging"
+            )
+    return report
+
+
+PERSISTED_DATA_SUFFIXES = {".json", ".csv", ".txt"}
+
+
+def validate_no_transient_market_data(data_dir: Path) -> ValidationReport:
+    """Fail if any repository data file contains transient Tibinance values.
+
+    Tibinance is a browser-only Tibia Coin fallback; persisting it would create
+    circular provenance because Tibinance consumes Warzones data.
+    """
+    report = ValidationReport()
+    markers = tuple(m.encode() for m in TRANSIENT_MARKET_SOURCE_MARKERS)
+    for path in sorted(data_dir.rglob("*")):
+        if not path.is_file() or path.suffix.lower() not in PERSISTED_DATA_SUFFIXES:
+            continue
+        lowered = path.read_bytes().lower()
+        if any(marker in lowered for marker in markers):
+            report.error(
+                f"{path.relative_to(data_dir.parent)}: contains transient Tibinance market "
+                "data; Tibinance values must never be persisted"
             )
     return report
 

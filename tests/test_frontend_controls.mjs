@@ -747,10 +747,11 @@ test("market availability notice credits and links TibiaMarket", () => {
 
 test("ranking rows carry the freshness of the observation behind each price", () => {
   assert.match(rankingController, /renderMarketPriceCell\(/);
-  assert.match(
-    rankingController,
-    /market\.tibia_coin\?\.latest_observation_time/
-  );
+  // The Tibia Coin cell shows the observation behind the displayed quote,
+  // which is TibiaMarket or, when that is stale, the transient Tibinance quote.
+  assert.match(rankingController, /market\?\.tibia_coin/);
+  assert.match(rankingController, /tibiaCoinQuote\?\.observedAt/);
+  assert.match(rankingController, /tibiaCoinQuote\?\.source/);
   assert.match(rankingController, /market-freshness is-\$\{escapeHtml\(level\)\}/);
   // Expected Return is market-derived, so it states the observation span it rests on.
   assert.match(rankingController, /describeScoreBasis\(ranking\)/);

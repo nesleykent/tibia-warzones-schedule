@@ -18,6 +18,15 @@
     timezone: STORAGE_KEY_TIMEZONE,
   };
   const MARKET_SOURCE_URL = "https://tibiamarket.top/";
+  // Tibinance is a transient, Tibia Coin-only fallback read at runtime in the
+  // browser. It is never fetched by the Python pipelines and its values are
+  // never written to repository data (Tibinance consumes Warzones data, so
+  // persisting it here would create circular provenance).
+  const TIBINANCE_TIBIA_COIN_URL =
+    "https://nesleykent.github.io/Tibinance/data/observations.csv";
+  const TIBINANCE_SOURCE_URL = "https://nesleykent.github.io/Tibinance/";
+  const MARKET_SOURCE_TIBIAMARKET = "tibiamarket";
+  const MARKET_SOURCE_TIBINANCE = "tibinance";
   // Market files are refreshed at most once a day per world/item, so anything within
   // two days is current, and a week without an observation is clearly behind. These
   // are measured against the observation itself: no outage window is hard-coded.
@@ -1550,6 +1559,129 @@
 
   // `body` carries a {link} placeholder so each page can keep the sentence in its
   // own language while the TibiaMarket attribution stays in one place.
+  function parseQuotedCsvLine(line) {
+    const values = [];
+    let current = "";
+    let quoted = false;
+    for (let index = 0; index < line.length; index += 1) {
+      const char = line[index];
+      if (quoted) {
+        if (char === '"' && line[index + 1] === '"') {
+          current += '"';
+          index += 1;
+        } else if (char === '"') {
+          quoted = false;
+        } else {
+          current += char;
+        }
+      } else if (char === '"') {
+        quoted = true;
+      } else if (char === ",") {
+        values.push(current);
+        current = "";
+      } else {
+        current += char;
+      }
+    }
+    values.push(current);
+    return values;
+  }
+
+  // Parses Tibinance observations.csv into the latest Tibia Coin offers quote
+  // per world: Map<lowercase world, { price, buyPrice, observedAt (s) }>.
+  // price is the sell-offer price, matching the sell-only TibiaMarket Tibia
+  // Coin model built by scripts/economic_ranking.py.
+  function parseTibinanceTibiaCoinQuotes(csvText) {
+    const quotes = new Map();
+    const lines = String(csvText || "").split(/\r?\n/).filter((line) => line.trim());
+    if (lines.length < 2) return quotes;
+    const header = parseQuotedCsvLine(lines[0]);
+    const column = (name) => header.indexOf(name);
+    const worldIndex = column("world");
+    const viewIndex = column("viewType");
+    const sellIndex = column("sell");
+    const buyIndex = column("buy");
+    const capturedIndex = column("capturedAtUtc");
+    if ([worldIndex, sellIndex, capturedIndex].some((index) => index < 0)) return quotes;
+
+    for (const line of lines.slice(1)) {
+      const row = parseQuotedCsvLine(line);
+      if (viewIndex >= 0 && row[viewIndex] !== "offers") continue;
+      const world = String(row[worldIndex] || "").trim().toLowerCase();
+      const price = Number(row[sellIndex]);
+      const observedMs = Date.parse(row[capturedIndex]);
+      if (!world || !(price > 0) || !Number.isFinite(observedMs)) continue;
+      const observedAt = observedMs / 1000;
+      if ((quotes.get(world)?.observedAt || 0) >= observedAt) continue;
+      const buyPrice = Number(row[buyIndex]);
+      quotes.set(world, {
+        price,
+        buyPrice: buyPrice > 0 ? buyPrice : null,
+        observedAt,
+      });
+    }
+    return quotes;
+  }
+
+  let tibinanceTibiaCoinQuotesPromise = null;
+
+  // Fetches Tibinance Tibia Coin quotes once per page load, kept in memory
+  // only (no localStorage / IndexedDB). Failures resolve to an empty map so
+  // TibiaMarket data keeps rendering.
+  function loadTibinanceTibiaCoinQuotes(fetchImpl = globalThis.fetch) {
+    if (!tibinanceTibiaCoinQuotesPromise) {
+      tibinanceTibiaCoinQuotesPromise = Promise.resolve()
+        .then(() => fetchImpl(TIBINANCE_TIBIA_COIN_URL, { cache: "no-cache" }))
+        .then((response) => (response?.ok ? response.text() : ""))
+        .then(parseTibinanceTibiaCoinQuotes)
+        .catch(() => new Map());
+    }
+    return tibinanceTibiaCoinQuotesPromise;
+  }
+
+  // Chooses the Tibia Coin price to display for a world. TibiaMarket is the
+  // primary source; Tibinance is used only when TibiaMarket has no price or
+  // its observation is not fresh, and only if the Tibinance quote is fresher.
+  // Tibia Coins only: there is deliberately no generic per-item variant,
+  // because Tibinance does not collect Warzone item prices.
+  function selectTibiaCoinQuote(
+    worldName,
+    tibiaMarketModel,
+    tibinanceQuotes,
+    now = Date.now()
+  ) {
+    const primaryPrice = Number(tibiaMarketModel?.rolling_window_price);
+    const primaryObservedAt = Number(tibiaMarketModel?.latest_observation_time) || null;
+    const primary =
+      primaryPrice > 0
+        ? {
+            price: primaryPrice,
+            observedAt: primaryObservedAt,
+            source: MARKET_SOURCE_TIBIAMARKET,
+          }
+        : null;
+
+    if (primary && getMarketFreshnessLevel(primaryObservedAt, now) === "fresh") {
+      return primary;
+    }
+
+    const fallback = tibinanceQuotes?.get?.(String(worldName || "").trim().toLowerCase());
+    const fallbackUsable =
+      fallback &&
+      fallback.price > 0 &&
+      getMarketFreshnessLevel(fallback.observedAt, now) === "fresh" &&
+      (!primary || !primary.observedAt || fallback.observedAt > primary.observedAt);
+
+    if (fallbackUsable) {
+      return {
+        price: fallback.price,
+        observedAt: fallback.observedAt,
+        source: MARKET_SOURCE_TIBINANCE,
+      };
+    }
+    return primary;
+  }
+
   function renderMarketAvailabilityNotice({ title, body, linkLabel }) {
     const link = `<a href="${MARKET_SOURCE_URL}" target="_blank" rel="noopener noreferrer" class="market-notice-link">${escapeHtml(
       linkLabel
@@ -1661,6 +1793,13 @@
     formatDailyWarzoneSummaryText,
     formatNaturalLanguageList,
     buildRecurringTimeConversion,
+    TIBINANCE_TIBIA_COIN_URL,
+    TIBINANCE_SOURCE_URL,
+    MARKET_SOURCE_TIBIAMARKET,
+    MARKET_SOURCE_TIBINANCE,
+    parseTibinanceTibiaCoinQuotes,
+    loadTibinanceTibiaCoinQuotes,
+    selectTibiaCoinQuote,
     SCHEDULE_TIMEZONES_DATA_PATH,
     getTimezoneOffsetMinutes,
     wallClockToInstant,

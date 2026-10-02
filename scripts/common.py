@@ -69,6 +69,47 @@ def schedule_time_sort_key(value: Any) -> tuple[int, int, int, str]:
     return (1, 99, 99, str(value or "").strip().casefold())
 
 
+# Market data provenance. TibiaMarket is the only source persisted to
+# repository data. Tibinance is a transient, browser-only Tibia Coin fallback
+# (assets/shared.js) and must never be written here: Tibinance consumes
+# Warzones data, so persisting its values would create circular provenance.
+PERSISTED_MARKET_SOURCE = "tibiamarket"
+TRANSIENT_MARKET_SOURCE_MARKERS = ("tibinance",)
+
+
+class TransientMarketDataError(ValueError):
+    """Raised when a payload about to be persisted carries transient provenance."""
+
+
+def find_transient_market_marker(payload: Any, path: str = "$") -> str | None:
+    """Return the JSON path of the first transient (Tibinance) marker, if any."""
+    if isinstance(payload, str):
+        lowered = payload.casefold()
+        return path if any(m in lowered for m in TRANSIENT_MARKET_SOURCE_MARKERS) else None
+    if isinstance(payload, dict):
+        for key, value in payload.items():
+            found = find_transient_market_marker(str(key), f"{path}.{key}") or (
+                find_transient_market_marker(value, f"{path}.{key}")
+            )
+            if found:
+                return found
+    elif isinstance(payload, (list, tuple)):
+        for index, value in enumerate(payload):
+            found = find_transient_market_marker(value, f"{path}[{index}]")
+            if found:
+                return found
+    return None
+
+
+def assert_persistable_market_payload(payload: Any, label: str) -> None:
+    """Guard every repository data write against transient fallback values."""
+    found = find_transient_market_marker(payload)
+    if found:
+        raise TransientMarketDataError(
+            f"Refusing to persist {label}: transient Tibinance market data at {found}"
+        )
+
+
 def resolve_timezone_name(timezone_name: str) -> str:
     """Strip display variants such as ``America/Sao_Paulo#Curitiba`` to an IANA name."""
     return str(timezone_name).split("#", 1)[0].strip()

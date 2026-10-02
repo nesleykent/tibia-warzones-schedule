@@ -14,6 +14,7 @@ from urllib.request import urlopen
 from zoneinfo import ZoneInfo
 
 from common import (
+    assert_persistable_market_payload,
     is_known_schedule_time,
     is_unknown_friendly_schedule_time,
     normalize_manual_schedule_payload,
@@ -120,6 +121,7 @@ def fetch_json(url: str, attempts: int = FETCH_RETRY_ATTEMPTS) -> dict[str, Any]
 
 
 def save_json(path: Path, payload: Any) -> None:
+    assert_persistable_market_payload(payload, str(path))
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as file:
         json.dump(payload, file, ensure_ascii=False, indent=2)

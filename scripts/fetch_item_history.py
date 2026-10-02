@@ -28,7 +28,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
-from common import RAW_WORLD_DIR, discover_tracked_items, get_tracked_worlds, slugify
+from common import RAW_WORLD_DIR, assert_persistable_market_payload, discover_tracked_items, get_tracked_worlds, slugify
 
 BASE_URL = "https://api.tibiamarket.top/item_history"
 SYNC_STATE_PATH = RAW_WORLD_DIR.parent / "sync_state.json"
@@ -342,6 +342,7 @@ def serialize_rows(
         "status": status,
         "snapshots": [rows],
     }
+    assert_persistable_market_payload(payload, "TibiaMarket snapshot")
     return json.dumps(payload, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
 
 

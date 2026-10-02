@@ -8,7 +8,7 @@ from typing import Any
 
 import numpy as np
 
-from common import RAW_WORLD_DIR
+from common import RAW_WORLD_DIR, assert_persistable_market_payload
 
 PRICE_KEYS = (
     "buy_offer",
@@ -295,6 +295,7 @@ def process_file(path: Path, *, write_changes: bool = DEFAULT_WRITE_CHANGES) -> 
         rejected_fingerprints=rejected_fingerprints,
     )
 
+    assert_persistable_market_payload(updated_payload, str(path))
     path.write_text(
         json.dumps(updated_payload, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",

@@ -110,3 +110,9 @@ GITHUB_TOKEN=... GITHUB_REPOSITORY=owner/repo python3 scripts/update_open_houses
 - Open-house input: GitHub issues matching the open-house templates
 - Open-house materialized output: `data/open-houses.json`
 - Deployment artifact: committed repository state on `main`
+
+## Market data sources
+
+- TibiaMarket is the primary and only persisted source for all market data. Persisted price models in `data/worlds.json` carry `"source": "tibiamarket"`.
+- Tibia Coins only: when the TibiaMarket Tibia Coin observation is missing or older than 48 hours, the ranking page reads a fresher Tibia Coin quote from [Tibinance](https://nesleykent.github.io/Tibinance/) (`data/observations.csv`, latest `offers` sell price per world) at runtime in the browser and labels it "via Tibinance". Warzone items and every other item never fall back to Tibinance, which does not collect them. The economic score and ranking order stay based on persisted TibiaMarket data.
+- Tibinance values are transient: they are held in memory only and are never written to repository data, caches, or history, because Tibinance consumes Warzones data and persisting them would create circular provenance. Every Python data writer calls `assert_persistable_market_payload` (`scripts/common.py`), and `scripts/validate_content.py` fails if any file under `data/` contains Tibinance data or a price model with a source other than `tibiamarket`.
