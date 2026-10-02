@@ -182,3 +182,43 @@ test("getTriggeredWorkflowNames maps source files to downstream automation", asy
     ["Update Market", "Deploy Pages"]
   );
 });
+
+test("buildManualSchedulesPayload stores European schedules in Europe/Berlin", async () => {
+  const repoRoot = process.cwd();
+  const sandbox = {
+    window: {},
+    document: {
+      addEventListener() {},
+      getElementById() { return null; },
+      querySelector() { return null; },
+      querySelectorAll() { return []; },
+    },
+    localStorage: { getItem() { return null; }, setItem() {}, removeItem() {} },
+    sessionStorage: { getItem() { return null; }, setItem() {}, removeItem() {} },
+    Image: class {},
+    URL,
+    fetch: async () => { throw new Error("no fetch"); },
+    console,
+    TextEncoder,
+    setTimeout,
+    clearTimeout,
+  };
+  for (const file of ["assets/shared.js", "assets/admin.js"]) {
+    vm.runInNewContext(await readFile(path.join(repoRoot, file), "utf8"), sandbox, { filename: file });
+  }
+  const admin = sandbox.window.TibiaAdmin;
+  admin.state.worlds = [
+    { name: "Antica", location: "Europe" },
+    { name: "Lobera", location: "South America" },
+  ];
+  admin.state.scheduleOrder = ["Antica", "Lobera"];
+  admin.state.schedules = {
+    Antica: { timezone: "America/Sao_Paulo", entries: [{ time: "12:55", order: "" }] },
+    Lobera: { timezone: "America/Sao_Paulo#Curitiba", entries: [{ time: "20:30", order: "1-2-3" }] },
+  };
+  const payload = admin.buildManualSchedulesPayload(new Date("2026-10-02T12:00:00Z"));
+  assert.equal(payload.Antica.timezone, "Europe/Berlin");
+  assert.equal(payload.Antica.warzone_executions[0].schedule_time, "17:55");
+  assert.equal(payload.Lobera.timezone, "America/Sao_Paulo#Curitiba");
+  assert.equal(payload.Lobera.warzone_executions[0].schedule_time, "20:30");
+});

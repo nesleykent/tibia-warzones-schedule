@@ -4,6 +4,7 @@
     DEFAULT_TIMEZONE = "America/Sao_Paulo",
     SUPPORTED_TIMEZONES = [],
     WORLDS_DATA_PATH = "./data/worlds.json",
+    canonicalizeScheduleEntries = (entries, timezone) => ({ timezone, entries }),
     escapeHtml = (value) => String(value ?? ""),
     initSharedUi = () => {},
     setHtml = (element, markup) => {
@@ -1319,12 +1320,25 @@
     return { errors, files };
   }
 
-  function buildManualSchedulesPayload() {
+  function getWorldLocation(worldName) {
+    return state.worlds.find((world) => String(world?.name || "").trim() === worldName)
+      ?.location;
+  }
+
+  function buildManualSchedulesPayload(referenceDate = new Date()) {
     const payload = {};
     for (const worldName of [...state.scheduleOrder].sort(compareNormalizedText)) {
       const draft = state.schedules[worldName];
       if (!draft) continue;
-      const sortedEntries = [...draft.entries]
+      // Persist in the world's canonical regional timezone (e.g. Europe/Berlin
+      // for European worlds), converting entries typed in another timezone.
+      const canonical = canonicalizeScheduleEntries(
+        draft.entries,
+        String(draft.timezone || DEFAULT_TIMEZONE).trim() || DEFAULT_TIMEZONE,
+        getWorldLocation(worldName),
+        referenceDate
+      );
+      const sortedEntries = [...canonical.entries]
         .sort(compareScheduleEntries)
         .map((entry, index) => ({
           execution_id: index + 1,
@@ -1332,7 +1346,7 @@
           warzone_sequence: String(entry.order || "").trim(),
         }));
       payload[worldName] = {
-        timezone: String(draft.timezone || DEFAULT_TIMEZONE).trim() || DEFAULT_TIMEZONE,
+        timezone: canonical.timezone,
         warzone_executions: sortedEntries,
       };
     }
@@ -1891,6 +1905,8 @@
     buildDirectCommitSubject,
     buildGitTreeEntries,
     buildCommitUrl,
+    buildManualSchedulesPayload,
+    state,
     commitFilesToBaseBranch,
     getTriggeredWorkflowNames,
   };

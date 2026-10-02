@@ -3,8 +3,10 @@ from __future__ import annotations
 import csv
 import json
 import re
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 LOGS_DIR = BASE_DIR / "logs"
@@ -18,6 +20,12 @@ TRACKED_ITEMS_JSON_CANDIDATES = [
 ]
 KNOWN_TIME_PATTERN = re.compile(r"^\d{2}:\d{2}$")
 UNKNOWN_SCHEDULE_PLACEHOLDER = "??:00"
+
+# Canonical schedule timezone per world location. schedule_time values are
+# wall-clock times in the schedule's timezone, so a European world stored in
+# Europe/Berlin keeps a fixed local time while CET/CEST shifts other displays.
+# Locations without an entry keep whatever timezone the maintainer entered.
+CANONICAL_TIMEZONE_BY_LOCATION = {"Europe": "Europe/Berlin"}
 
 
 def slugify(value: str) -> str:
@@ -46,6 +54,73 @@ def schedule_time_sort_key(value: Any) -> tuple[int, int, int, str]:
         return (0, int(value[:2]), int(value[3:]), str(value))
 
     return (1, 99, 99, str(value or "").strip().casefold())
+
+
+def resolve_timezone_name(timezone_name: str) -> str:
+    """Strip display variants such as ``America/Sao_Paulo#Curitiba`` to an IANA name."""
+    return str(timezone_name).split("#", 1)[0].strip()
+
+
+def canonical_timezone_for_location(location: Any) -> str | None:
+    return CANONICAL_TIMEZONE_BY_LOCATION.get(str(location or "").strip())
+
+
+def convert_schedule_time(
+    schedule_time: str, source_timezone: str, target_timezone: str, reference_date: date
+) -> str:
+    """Convert an HH:MM wall-clock time between timezones on ``reference_date``.
+
+    The reference date is required because UTC offsets depend on DST. Unknown
+    placeholders such as ``??:00`` are returned unchanged.
+    """
+    if not is_known_schedule_time(schedule_time):
+        return schedule_time
+    source = ZoneInfo(resolve_timezone_name(source_timezone))
+    target = ZoneInfo(resolve_timezone_name(target_timezone))
+    if source.key == target.key:
+        return schedule_time
+    local = datetime(
+        reference_date.year,
+        reference_date.month,
+        reference_date.day,
+        int(schedule_time[:2]),
+        int(schedule_time[3:]),
+        tzinfo=source,
+    )
+    # Round-trip through UTC so nonexistent wall times (spring-forward gaps)
+    # resolve to the real instant instead of an impossible local time.
+    instant = local.astimezone(ZoneInfo("UTC"))
+    return instant.astimezone(target).strftime("%H:%M")
+
+
+def canonicalize_manual_schedule(
+    schedule_data: dict[str, Any], location: Any, reference_date: date
+) -> dict[str, Any]:
+    """Return the schedule stored in its world's canonical timezone.
+
+    Idempotent: schedules already in the canonical timezone (or in a location
+    with no canonical timezone) are returned unchanged, so conversion is never
+    applied twice.
+    """
+    normalized = normalize_manual_schedule_payload(schedule_data)
+    canonical = canonical_timezone_for_location(location)
+    current = normalized.get("timezone")
+    if canonical is None or current == canonical:
+        return normalized
+    if current:
+        normalized["warzone_executions"] = normalize_schedule_executions(
+            [
+                {
+                    **execution,
+                    "schedule_time": convert_schedule_time(
+                        execution["schedule_time"], current, canonical, reference_date
+                    ),
+                }
+                for execution in normalized["warzone_executions"]
+            ]
+        )
+    normalized["timezone"] = canonical
+    return normalized
 
 
 def normalize_schedule_executions(executions: Any) -> list[dict[str, Any]]:

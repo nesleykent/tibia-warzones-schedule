@@ -383,3 +383,46 @@ test("daily Warzone summary labels the observed day, not the UTC collection day"
 
   assert.equal(model.date, "2026-07-16");
 });
+
+test("canonicalizeScheduleEntries converts Sao Paulo input to Berlin wall time", async () => {
+  const shared = await loadSharedExports();
+  const summer = new Date("2026-10-02T12:00:00Z");
+  const result = shared.canonicalizeScheduleEntries(
+    [{ time: "12:55", order: "" }, { time: "??:00", order: "" }],
+    "America/Sao_Paulo",
+    "Europe",
+    summer
+  );
+  assert.equal(result.timezone, "Europe/Berlin");
+  assert.deepEqual(result.entries.map((entry) => entry.time), ["17:55", "??:00"]);
+  const winter = shared.canonicalizeScheduleEntries(
+    [{ time: "15:00" }],
+    "America/Sao_Paulo#Curitiba",
+    "Europe",
+    new Date("2026-12-01T12:00:00Z")
+  );
+  assert.equal(winter.entries[0].time, "19:00");
+});
+
+test("canonicalizeScheduleEntries leaves canonical and non-European schedules unchanged", async () => {
+  const shared = await loadSharedExports();
+  const entries = [{ time: "18:00" }];
+  const canonical = shared.canonicalizeScheduleEntries(entries, "Europe/Berlin", "Europe");
+  assert.equal(canonical.timezone, "Europe/Berlin");
+  assert.equal(canonical.entries[0].time, "18:00");
+  const brazil = shared.canonicalizeScheduleEntries(entries, "America/Sao_Paulo#Curitiba", "South America");
+  assert.equal(brazil.timezone, "America/Sao_Paulo#Curitiba");
+  assert.equal(brazil.entries[0].time, "18:00");
+});
+
+test("Brazilian display of a fixed Berlin schedule follows European DST", async () => {
+  const shared = await loadSharedExports();
+  const show = (iso) =>
+    shared.convertTimeBetweenTimezones("18:00", "Europe/Berlin", "America/Sao_Paulo", "en", {
+      referenceDate: new Date(iso),
+    });
+  assert.equal(show("2026-10-24T12:00:00Z"), "13:00"); // CEST
+  assert.equal(show("2026-10-26T12:00:00Z"), "14:00"); // CET
+  assert.equal(show("2027-03-27T12:00:00Z"), "14:00"); // CET
+  assert.equal(show("2027-03-29T12:00:00Z"), "13:00"); // CEST
+});

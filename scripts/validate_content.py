@@ -10,6 +10,8 @@ from pathlib import Path
 from typing import Any
 
 from common import (
+    canonical_timezone_for_location,
+    normalize_manual_schedules_payload,
     UNKNOWN_SCHEDULE_PLACEHOLDER,
     is_known_schedule_time,
     is_unknown_friendly_schedule_time,
@@ -1106,7 +1108,10 @@ def validate_repository(repo_root: Path = REPO_ROOT) -> ValidationReport:
     if manual_payload is None:
         manual_report = ValidationReport()
     else:
-        manual_report = validate_manual_schedules_payload(manual_payload, valid_world_names)
+        manual_report = merge_reports(
+            validate_manual_schedules_payload(manual_payload, valid_world_names),
+            validate_manual_schedule_consistency(manual_payload, worlds_payload),
+        )
 
     try:
         open_houses_payload = load_json(repo_root / "data" / "open-houses.json")
@@ -1166,6 +1171,48 @@ def validate_repository(repo_root: Path = REPO_ROOT) -> ValidationReport:
         market_history_report,
         frontend_report,
     )
+
+
+def validate_manual_schedule_consistency(
+    manual_payload: Any, worlds_payload: Any
+) -> ValidationReport:
+    """Enforce canonical regional timezones and manual -> worlds.json sync."""
+    report = ValidationReport()
+    if not isinstance(manual_payload, dict) or not isinstance(worlds_payload, list):
+        return report
+
+    manual = normalize_manual_schedules_payload(manual_payload)
+    for world in worlds_payload:
+        if not isinstance(world, dict):
+            continue
+        name = world.get("name")
+        schedule = manual.get(name)
+        if schedule is None:
+            continue
+        canonical = canonical_timezone_for_location(world.get("location"))
+        if canonical and schedule["timezone"] != canonical:
+            report.error(
+                f"manual-schedules.json: {name} ({world.get('location')}) must be stored in "
+                f"{canonical}, found {schedule['timezone']!r}; run "
+                "scripts/canonicalize_manual_schedules.py --reference-date YYYY-MM-DD"
+            )
+        if world.get("timezone") != schedule["timezone"]:
+            report.error(
+                f"worlds.json: {name} timezone {world.get('timezone')!r} does not match "
+                f"manual-schedules.json {schedule['timezone']!r}"
+            )
+        world_times = [
+            e.get("schedule_time")
+            for e in world.get("warzone_executions") or []
+            if isinstance(e, dict)
+        ]
+        manual_times = [e["schedule_time"] for e in schedule["warzone_executions"]]
+        if world_times != manual_times:
+            report.error(
+                f"worlds.json: {name} schedule times {world_times} do not match "
+                f"manual-schedules.json {manual_times}"
+            )
+    return report
 
 
 def main() -> int:

@@ -1396,6 +1396,41 @@
     };
   }
 
+  // Mirrors CANONICAL_TIMEZONE_BY_LOCATION in scripts/common.py. Schedules for
+  // these locations are persisted as wall-clock times in the regional zone.
+  const CANONICAL_TIMEZONE_BY_LOCATION = Object.freeze({ Europe: "Europe/Berlin" });
+
+  function getCanonicalScheduleTimezone(location) {
+    return CANONICAL_TIMEZONE_BY_LOCATION[String(location || "").trim()] || null;
+  }
+
+  // Converts schedule entries entered in another timezone into the world's
+  // canonical timezone, using referenceDate for the UTC offsets. Schedules
+  // already in the canonical timezone are returned unchanged (no double shift).
+  function canonicalizeScheduleEntries(
+    entries,
+    timezone,
+    location,
+    referenceDate = new Date()
+  ) {
+    const canonical = getCanonicalScheduleTimezone(location);
+    if (!canonical || timezone === canonical) {
+      return { timezone, entries };
+    }
+    return {
+      timezone: canonical,
+      entries: entries.map((entry) => {
+        const conversion = buildRecurringTimeConversion(
+          entry.time,
+          timezone,
+          canonical,
+          referenceDate
+        );
+        return conversion ? { ...entry, time: conversion.targetTime } : entry;
+      }),
+    };
+  }
+
   function convertTimeBetweenTimezones(
     scheduleTime,
     sourceTimezone,
@@ -1609,6 +1644,9 @@
     formatDailyWarzoneSummaryText,
     formatNaturalLanguageList,
     buildRecurringTimeConversion,
+    CANONICAL_TIMEZONE_BY_LOCATION,
+    getCanonicalScheduleTimezone,
+    canonicalizeScheduleEntries,
     convertTimeBetweenTimezones,
     formatObservedKillStatisticsDate,
     getMarketObservationAgeMs,
