@@ -384,6 +384,46 @@ test("daily Warzone summary labels the observed day, not the UTC collection day"
   assert.equal(model.date, "2026-07-16");
 });
 
+const CANONICAL = JSON.parse(
+  await readFile(path.join(process.cwd(), "data/schedule-timezones.json"), "utf8")
+);
+const DST_CASES = JSON.parse(
+  await readFile(path.join(process.cwd(), "tests/fixtures/dst_cases.json"), "utf8")
+).cases;
+
+test("wallClockToInstant matches the shared Python DST cases", async () => {
+  const shared = await loadSharedExports();
+  for (const entry of DST_CASES) {
+    const [year, month, day] = entry.date.split("-").map(Number);
+    const [hour, minute] = entry.time.split(":").map(Number);
+    const instant = shared.wallClockToInstant(
+      { year, month, day, hour, minute },
+      shared.resolveTimezoneValue(entry.timezone)
+    );
+    assert.equal(instant.toISOString().slice(0, 16), entry.utc, entry.label);
+  }
+});
+
+test("buildRecurringTimeConversion agrees with Python at the spring-forward gap", async () => {
+  const shared = await loadSharedExports();
+  const gap = shared.buildRecurringTimeConversion(
+    "02:30", "Europe/Berlin", "UTC", new Date("2027-03-28T12:00:00Z")
+  );
+  assert.equal(gap.targetTime, "01:30");
+  assert.equal(gap.sourceTime, "03:30");
+  const before = shared.buildRecurringTimeConversion(
+    "01:30", "Europe/Berlin", "UTC", new Date("2027-03-28T12:00:00Z")
+  );
+  assert.equal(before.targetTime, "00:30");
+});
+
+test("canonicalizeScheduleEntries without a timezone map changes nothing", async () => {
+  const shared = await loadSharedExports();
+  const result = shared.canonicalizeScheduleEntries([{ time: "12:55" }], "America/Sao_Paulo", "Europe");
+  assert.equal(result.timezone, "America/Sao_Paulo");
+  assert.equal(result.entries[0].time, "12:55");
+});
+
 test("canonicalizeScheduleEntries converts Sao Paulo input to Berlin wall time", async () => {
   const shared = await loadSharedExports();
   const summer = new Date("2026-10-02T12:00:00Z");
@@ -391,7 +431,8 @@ test("canonicalizeScheduleEntries converts Sao Paulo input to Berlin wall time",
     [{ time: "12:55", order: "" }, { time: "??:00", order: "" }],
     "America/Sao_Paulo",
     "Europe",
-    summer
+    summer,
+    CANONICAL
   );
   assert.equal(result.timezone, "Europe/Berlin");
   assert.deepEqual(result.entries.map((entry) => entry.time), ["17:55", "??:00"]);
@@ -399,7 +440,8 @@ test("canonicalizeScheduleEntries converts Sao Paulo input to Berlin wall time",
     [{ time: "15:00" }],
     "America/Sao_Paulo#Curitiba",
     "Europe",
-    new Date("2026-12-01T12:00:00Z")
+    new Date("2026-12-01T12:00:00Z"),
+    CANONICAL
   );
   assert.equal(winter.entries[0].time, "19:00");
 });
@@ -407,10 +449,10 @@ test("canonicalizeScheduleEntries converts Sao Paulo input to Berlin wall time",
 test("canonicalizeScheduleEntries leaves canonical and non-European schedules unchanged", async () => {
   const shared = await loadSharedExports();
   const entries = [{ time: "18:00" }];
-  const canonical = shared.canonicalizeScheduleEntries(entries, "Europe/Berlin", "Europe");
+  const canonical = shared.canonicalizeScheduleEntries(entries, "Europe/Berlin", "Europe", new Date(), CANONICAL);
   assert.equal(canonical.timezone, "Europe/Berlin");
   assert.equal(canonical.entries[0].time, "18:00");
-  const brazil = shared.canonicalizeScheduleEntries(entries, "America/Sao_Paulo#Curitiba", "South America");
+  const brazil = shared.canonicalizeScheduleEntries(entries, "America/Sao_Paulo#Curitiba", "South America", new Date(), CANONICAL);
   assert.equal(brazil.timezone, "America/Sao_Paulo#Curitiba");
   assert.equal(brazil.entries[0].time, "18:00");
 });

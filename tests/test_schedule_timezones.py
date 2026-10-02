@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import sys
 import unittest
 from datetime import UTC, date, datetime
@@ -33,7 +34,48 @@ def schedule(tz: str, *times: str) -> dict:
     }
 
 
+DST_CASES = json.loads(
+    (Path(__file__).resolve().parent / "fixtures" / "dst_cases.json").read_text(encoding="utf-8")
+)["cases"]
+
+
 class ScheduleTimezoneTest(unittest.TestCase):
+    def test_shared_dst_cases_match_javascript_contract(self) -> None:
+        for case in DST_CASES:
+            with self.subTest(case["label"]):
+                day = date.fromisoformat(case["date"])
+                self.assertEqual(
+                    instant(day, case["time"], case["timezone"]).strftime("%Y-%m-%dT%H:%M"),
+                    case["utc"],
+                )
+                self.assertEqual(
+                    common.convert_schedule_time(case["time"], case["timezone"], "UTC", day),
+                    case["utc"][11:],
+                )
+
+    def test_canonical_timezones_come_from_data_file(self) -> None:
+        on_disk = json.loads(common.SCHEDULE_TIMEZONES_JSON.read_text(encoding="utf-8"))
+        self.assertEqual(common.CANONICAL_TIMEZONE_BY_LOCATION, on_disk)
+        self.assertEqual(on_disk["Europe"], "Europe/Berlin")
+
+    def test_validator_warns_on_unclassified_world(self) -> None:
+        repo_root = Path(__file__).resolve().parent.parent
+        report = validate_content.validate_world_economy_coverage(
+            repo_root, [{"name": "Antica"}, {"name": "Brandnewia"}]
+        )
+        self.assertEqual(report.errors, [])
+        self.assertEqual(len(report.warnings), 1)
+        self.assertIn("Brandnewia", report.warnings[0])
+
+    def test_validator_rejects_bad_schedule_timezones(self) -> None:
+        worlds = [{"name": "Antica", "location": "Europe"}]
+        ok = validate_content.validate_schedule_timezones_payload({"Europe": "Europe/Berlin"}, worlds)
+        self.assertEqual(ok.errors, [])
+        bad = validate_content.validate_schedule_timezones_payload(
+            {"Europe": "Mars/Olympus", "Atlantis": "UTC"}, worlds
+        )
+        self.assertEqual(len(bad.errors), 2)
+
     def test_european_migration_preserves_instant(self) -> None:
         source = schedule("America/Sao_Paulo", "12:55", "13:20", "13:55")
         migrated = common.canonicalize_manual_schedule(source, "Europe", SUMMER)

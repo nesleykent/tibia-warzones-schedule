@@ -59,6 +59,7 @@ jobs:
           test -f assets/styles.css
           test -f data/worlds.json
           test -f data/open-houses.json
+          test -f data/schedule-timezones.json
 
       - name: Prepare Pages artifact
         run: |

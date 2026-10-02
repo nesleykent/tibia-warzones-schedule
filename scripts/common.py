@@ -21,11 +21,24 @@ TRACKED_ITEMS_JSON_CANDIDATES = [
 KNOWN_TIME_PATTERN = re.compile(r"^\d{2}:\d{2}$")
 UNKNOWN_SCHEDULE_PLACEHOLDER = "??:00"
 
-# Canonical schedule timezone per world location. schedule_time values are
-# wall-clock times in the schedule's timezone, so a European world stored in
-# Europe/Berlin keeps a fixed local time while CET/CEST shifts other displays.
-# Locations without an entry keep whatever timezone the maintainer entered.
-CANONICAL_TIMEZONE_BY_LOCATION = {"Europe": "Europe/Berlin"}
+# Canonical schedule timezone per world location. data/schedule-timezones.json
+# is the single source of truth, read here and by assets/admin.js. schedule_time
+# values are wall-clock times in the schedule's timezone, so a European world
+# stored in Europe/Berlin keeps a fixed local time while CET/CEST shifts other
+# displays. Locations without an entry keep whatever timezone was entered.
+SCHEDULE_TIMEZONES_JSON = BASE_DIR / "data" / "schedule-timezones.json"
+
+
+def load_canonical_timezones(path: Path = SCHEDULE_TIMEZONES_JSON) -> dict[str, str]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict) or not all(
+        isinstance(k, str) and isinstance(v, str) for k, v in payload.items()
+    ):
+        raise ValueError(f"{path.name} must map location names to IANA timezone names")
+    return payload
+
+
+CANONICAL_TIMEZONE_BY_LOCATION = load_canonical_timezones()
 
 
 def slugify(value: str) -> str:

@@ -2,7 +2,7 @@
 
 data/manual-schedules.json is the authoritative manual schedule source. This
 script converts any schedule whose timezone differs from its world's canonical
-timezone (see ``CANONICAL_TIMEZONE_BY_LOCATION`` in common.py), preserving the
+timezone (see data/schedule-timezones.json), preserving the
 real-world instant on ``--reference-date``, then mirrors the timezone and
 executions into data/worlds.json so generated data stays consistent.
 

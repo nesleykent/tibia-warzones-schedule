@@ -1,0 +1,14 @@
+{
+  "description": "Wall-clock -> UTC cases shared by tests/test_schedule_timezones.py and tests/test_frontend_dates.mjs so Python and JavaScript resolve DST transitions identically (PEP 495 fold=0).",
+  "cases": [
+    { "label": "CEST regular", "date": "2026-10-02", "time": "18:00", "timezone": "Europe/Berlin", "utc": "2026-10-02T16:00" },
+    { "label": "CET regular", "date": "2026-12-01", "time": "18:00", "timezone": "Europe/Berlin", "utc": "2026-12-01T17:00" },
+    { "label": "fall-back ambiguous takes first (CEST) occurrence", "date": "2026-10-25", "time": "02:30", "timezone": "Europe/Berlin", "utc": "2026-10-25T00:30" },
+    { "label": "just after fall-back", "date": "2026-10-25", "time": "03:30", "timezone": "Europe/Berlin", "utc": "2026-10-25T02:30" },
+    { "label": "just before spring-forward gap", "date": "2027-03-28", "time": "01:30", "timezone": "Europe/Berlin", "utc": "2027-03-28T00:30" },
+    { "label": "nonexistent spring-forward time shifts forward", "date": "2027-03-28", "time": "02:30", "timezone": "Europe/Berlin", "utc": "2027-03-28T01:30" },
+    { "label": "just after spring-forward gap", "date": "2027-03-28", "time": "03:30", "timezone": "Europe/Berlin", "utc": "2027-03-28T01:30" },
+    { "label": "Sao Paulo has no DST", "date": "2027-03-28", "time": "02:30", "timezone": "America/Sao_Paulo", "utc": "2027-03-28T05:30" },
+    { "label": "Curitiba display variant", "date": "2026-10-02", "time": "15:00", "timezone": "America/Sao_Paulo#Curitiba", "utc": "2026-10-02T18:00" }
+  ]
+}

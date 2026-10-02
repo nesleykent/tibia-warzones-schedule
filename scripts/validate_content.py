@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from common import (
-    canonical_timezone_for_location,
+    CANONICAL_TIMEZONE_BY_LOCATION,
     normalize_manual_schedules_payload,
     UNKNOWN_SCHEDULE_PLACEHOLDER,
     is_known_schedule_time,
@@ -1112,6 +1112,19 @@ def validate_repository(repo_root: Path = REPO_ROOT) -> ValidationReport:
             validate_manual_schedules_payload(manual_payload, valid_world_names),
             validate_manual_schedule_consistency(manual_payload, worlds_payload),
         )
+    try:
+        schedule_timezones_payload = load_json(repo_root / "data" / "schedule-timezones.json")
+    except ValueError as exc:
+        initial_report.error(str(exc))
+        schedule_timezones_payload = None
+    if schedule_timezones_payload is not None:
+        manual_report = merge_reports(
+            manual_report,
+            validate_schedule_timezones_payload(schedule_timezones_payload, worlds_payload),
+        )
+    manual_report = merge_reports(
+        manual_report, validate_world_economy_coverage(repo_root, worlds_payload)
+    )
 
     try:
         open_houses_payload = load_json(repo_root / "data" / "open-houses.json")
@@ -1173,14 +1186,79 @@ def validate_repository(repo_root: Path = REPO_ROOT) -> ValidationReport:
     )
 
 
+def validate_schedule_timezones_payload(
+    payload: Any, worlds_payload: Any
+) -> ValidationReport:
+    """data/schedule-timezones.json: location -> valid IANA timezone."""
+    from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
+
+    report = ValidationReport()
+    if not isinstance(payload, dict):
+        report.error("schedule-timezones.json: root value must be an object")
+        return report
+    locations = {
+        w.get("location") for w in worlds_payload or [] if isinstance(w, dict)
+    }
+    for location, timezone_name in payload.items():
+        if location not in locations:
+            report.error(f"schedule-timezones.json: unknown location {location!r}")
+        if not isinstance(timezone_name, str) or "#" in timezone_name:
+            report.error(
+                f"schedule-timezones.json: {location} must map to a plain IANA timezone"
+            )
+            continue
+        try:
+            ZoneInfo(timezone_name)
+        except (ZoneInfoNotFoundError, ValueError):
+            report.error(
+                f"schedule-timezones.json: {location} has unknown timezone {timezone_name!r}"
+            )
+    return report
+
+
+WORLD_ECONOMY_BLOCK_PATTERN = re.compile(
+    r"const WORLD_ECONOMY_CLASSES = \{(.*?)\n  \};", re.DOTALL
+)
+
+
+def validate_world_economy_coverage(repo_root: Path, worlds_payload: Any) -> ValidationReport:
+    """Warn when the hand-curated economy map in assets/shared.js misses a world.
+
+    Data refreshes add new worlds automatically but cannot edit shared.js, so a
+    warning (not an error) surfaces the gap without blocking data workflows.
+    """
+    report = ValidationReport()
+    try:
+        source = (repo_root / "assets" / "shared.js").read_text(encoding="utf-8")
+    except OSError:
+        return report
+    match = WORLD_ECONOMY_BLOCK_PATTERN.search(source)
+    if not match:
+        report.error("assets/shared.js: WORLD_ECONOMY_CLASSES block not found")
+        return report
+    classified = {name.casefold() for name in re.findall(r'"([^"]+)"', match.group(1))}
+    for world in worlds_payload or []:
+        name = world.get("name") if isinstance(world, dict) else None
+        if isinstance(name, str) and name.casefold() not in classified:
+            report.warn(
+                f"assets/shared.js: {name} is missing from WORLD_ECONOMY_CLASSES; "
+                "classify it as developed or emerging"
+            )
+    return report
+
+
 def validate_manual_schedule_consistency(
-    manual_payload: Any, worlds_payload: Any
+    manual_payload: Any,
+    worlds_payload: Any,
+    canonical_timezones: dict[str, str] | None = None,
 ) -> ValidationReport:
     """Enforce canonical regional timezones and manual -> worlds.json sync."""
     report = ValidationReport()
     if not isinstance(manual_payload, dict) or not isinstance(worlds_payload, list):
         return report
 
+    if canonical_timezones is None:
+        canonical_timezones = CANONICAL_TIMEZONE_BY_LOCATION
     manual = normalize_manual_schedules_payload(manual_payload)
     for world in worlds_payload:
         if not isinstance(world, dict):
@@ -1189,7 +1267,7 @@ def validate_manual_schedule_consistency(
         schedule = manual.get(name)
         if schedule is None:
             continue
-        canonical = canonical_timezone_for_location(world.get("location"))
+        canonical = canonical_timezones.get(str(world.get("location") or "").strip())
         if canonical and schedule["timezone"] != canonical:
             report.error(
                 f"manual-schedules.json: {name} ({world.get('location')}) must be stored in "

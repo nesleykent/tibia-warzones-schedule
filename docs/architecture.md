@@ -88,6 +88,8 @@ launches, merges, or closes a world.
   the `economy` filter group next to `region`, `pvp`, `battleye`, and `transfer`
 - `tests/test_frontend_controls.mjs` fails if any world in `data/worlds.json`
   is missing from the map, or if the map names a world that no longer exists
+- `scripts/validate_content.py` warns (without failing data workflows) when a
+  refreshed `data/worlds.json` contains a world the map does not classify
 
 ## Data Model
 

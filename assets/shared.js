@@ -582,9 +582,9 @@
     ],
     emerging: [
       "Escura", "Floribra", "Gladibra", "Hostera", "Idyllia", "Ignibra",
-      "Ignitera", "Junera", "Kalimera", "Kanda", "Maligna", "Mystera",
-      "Noctalia", "Opulera", "Penumbra", "Sombra", "Sonira", "Stralis",
-      "Tempestera", "Victoris",
+      "Ignitera", "Jinxibra", "Junera", "Kalimera", "Kanda", "Maligna",
+      "Mystera", "Noctalia", "Opulera", "Penumbra", "Sinistra", "Sombra",
+      "Sonira", "Stralis", "Tempestera", "Victoris", "Wickera",
     ],
   };
 
@@ -1311,6 +1311,37 @@
     initTopbarNavigation();
   }
 
+  function getTimezoneOffsetMinutes(date, timeZone) {
+    const offsetText =
+      new Intl.DateTimeFormat("en", { timeZone, timeZoneName: "longOffset" })
+        .formatToParts(date)
+        .find((part) => part.type === "timeZoneName")?.value || "GMT+00:00";
+    const match = offsetText.replace("GMT", "").match(/^([+-])(\d{2}):(\d{2})$/);
+    if (!match) return 0;
+    const sign = match[1] === "-" ? -1 : 1;
+    return sign * (Number(match[2]) * 60 + Number(match[3]));
+  }
+
+  // Resolves a local wall-clock time to an instant with the same semantics as
+  // Python zoneinfo (PEP 495, fold=0), so scripts/common.py and the browser
+  // agree at DST transitions: an ambiguous time (fall-back) maps to its first
+  // occurrence, and a nonexistent time (spring-forward gap) uses the offset in
+  // effect before the transition, e.g. 02:30 Berlin -> 03:30 CEST.
+  function wallClockToInstant({ year, month, day, hour, minute }, timeZone) {
+    const wallUtc = Date.UTC(year, month - 1, day, hour, minute, 0);
+    const dayMs = 86400000;
+    const offsetBefore = getTimezoneOffsetMinutes(new Date(wallUtc - dayMs), timeZone);
+    const offsetAfter = getTimezoneOffsetMinutes(new Date(wallUtc + dayMs), timeZone);
+    const matchesWall = (instantMs) =>
+      instantMs + getTimezoneOffsetMinutes(new Date(instantMs), timeZone) * 60000 === wallUtc;
+    const beforeCandidate = wallUtc - offsetBefore * 60000;
+    const afterCandidate = wallUtc - offsetAfter * 60000;
+    if (matchesWall(beforeCandidate) || !matchesWall(afterCandidate)) {
+      return new Date(beforeCandidate);
+    }
+    return new Date(afterCandidate);
+  }
+
   function buildRecurringTimeConversion(
     scheduleTime,
     sourceTimezone,
@@ -1336,31 +1367,16 @@
         hourCycle: "h23",
       })
     );
-    const sourceWallClockUtc = Date.UTC(
-      Number(sourceReferenceParts.year),
-      Number(sourceReferenceParts.month) - 1,
-      Number(sourceReferenceParts.day),
-      hour,
-      minute,
-      0
+    const actualDate = wallClockToInstant(
+      {
+        year: Number(sourceReferenceParts.year),
+        month: Number(sourceReferenceParts.month),
+        day: Number(sourceReferenceParts.day),
+        hour,
+        minute,
+      },
+      resolvedSourceTimezone
     );
-    const probeDate = new Date(sourceWallClockUtc);
-    const offsetText =
-      new Intl.DateTimeFormat("en", {
-        timeZone: resolvedSourceTimezone,
-        timeZoneName: "longOffset",
-      })
-        .formatToParts(probeDate)
-        .find((part) => part.type === "timeZoneName")?.value || "GMT+00:00";
-    const normalized = offsetText.replace("GMT", "");
-    const match = normalized.match(/^([+-])(\d{2}):(\d{2})$/);
-    let offMin = 0;
-    if (match) {
-      const sign = match[1] === "-" ? -1 : 1;
-      offMin = sign * (Number(match[2]) * 60 + Number(match[3]));
-    }
-
-    const actualDate = new Date(sourceWallClockUtc - offMin * 60 * 1000);
     const sourceParts = getPartsMap(
       getDateTimeParts(actualDate, resolvedSourceTimezone, {
         hour: "2-digit",
@@ -1396,12 +1412,12 @@
     };
   }
 
-  // Mirrors CANONICAL_TIMEZONE_BY_LOCATION in scripts/common.py. Schedules for
-  // these locations are persisted as wall-clock times in the regional zone.
-  const CANONICAL_TIMEZONE_BY_LOCATION = Object.freeze({ Europe: "Europe/Berlin" });
+  // Path of the canonical schedule timezone map, the single source of truth
+  // shared with scripts/common.py (location name -> IANA timezone).
+  const SCHEDULE_TIMEZONES_DATA_PATH = "./data/schedule-timezones.json";
 
-  function getCanonicalScheduleTimezone(location) {
-    return CANONICAL_TIMEZONE_BY_LOCATION[String(location || "").trim()] || null;
+  function getCanonicalScheduleTimezone(location, canonicalTimezones = {}) {
+    return canonicalTimezones?.[String(location || "").trim()] || null;
   }
 
   // Converts schedule entries entered in another timezone into the world's
@@ -1411,9 +1427,10 @@
     entries,
     timezone,
     location,
-    referenceDate = new Date()
+    referenceDate = new Date(),
+    canonicalTimezones = {}
   ) {
-    const canonical = getCanonicalScheduleTimezone(location);
+    const canonical = getCanonicalScheduleTimezone(location, canonicalTimezones);
     if (!canonical || timezone === canonical) {
       return { timezone, entries };
     }
@@ -1644,7 +1661,9 @@
     formatDailyWarzoneSummaryText,
     formatNaturalLanguageList,
     buildRecurringTimeConversion,
-    CANONICAL_TIMEZONE_BY_LOCATION,
+    SCHEDULE_TIMEZONES_DATA_PATH,
+    getTimezoneOffsetMinutes,
+    wallClockToInstant,
     getCanonicalScheduleTimezone,
     canonicalizeScheduleEntries,
     convertTimeBetweenTimezones,

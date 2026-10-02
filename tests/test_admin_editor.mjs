@@ -207,6 +207,9 @@ test("buildManualSchedulesPayload stores European schedules in Europe/Berlin", a
     vm.runInNewContext(await readFile(path.join(repoRoot, file), "utf8"), sandbox, { filename: file });
   }
   const admin = sandbox.window.TibiaAdmin;
+  admin.state.canonicalTimezones = JSON.parse(
+    await readFile(path.join(repoRoot, "data/schedule-timezones.json"), "utf8")
+  );
   admin.state.worlds = [
     { name: "Antica", location: "Europe" },
     { name: "Lobera", location: "South America" },
@@ -221,4 +224,16 @@ test("buildManualSchedulesPayload stores European schedules in Europe/Berlin", a
   assert.equal(payload.Antica.warzone_executions[0].schedule_time, "17:55");
   assert.equal(payload.Lobera.timezone, "America/Sao_Paulo#Curitiba");
   assert.equal(payload.Lobera.warzone_executions[0].schedule_time, "20:30");
+
+  // After commit the editor drafts reflect the canonical stored values.
+  admin.state.selectedScheduleWorld = "Antica";
+  admin.syncCommittedFiles([
+    { path: "data/manual-schedules.json", content: admin.stringifyManualSchedules(payload) },
+  ]);
+  assert.equal(admin.state.schedules.Antica.timezone, "Europe/Berlin");
+  assert.equal(admin.state.schedules.Antica.entries[0].time, "17:55");
+  assert.equal(admin.state.selectedScheduleWorld, "Antica");
+  // Re-saving canonical drafts is a no-op (no double conversion).
+  const again = admin.buildManualSchedulesPayload(new Date("2026-12-01T12:00:00Z"));
+  assert.equal(again.Antica.warzone_executions[0].schedule_time, "17:55");
 });

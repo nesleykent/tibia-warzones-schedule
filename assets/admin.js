@@ -4,6 +4,7 @@
     DEFAULT_TIMEZONE = "America/Sao_Paulo",
     SUPPORTED_TIMEZONES = [],
     WORLDS_DATA_PATH = "./data/worlds.json",
+    SCHEDULE_TIMEZONES_DATA_PATH = "./data/schedule-timezones.json",
     canonicalizeScheduleEntries = (entries, timezone) => ({ timezone, entries }),
     escapeHtml = (value) => String(value ?? ""),
     initSharedUi = () => {},
@@ -36,6 +37,7 @@
     schedules: {},
     selectedScheduleWorld: "",
     worlds: [],
+    canonicalTimezones: {},
     validWorldNames: new Set(),
     trackedItems: [],
     itemsCatalog: [],
@@ -221,14 +223,18 @@
       trackedItemsText,
       openHousesText,
       itemsCatalogText,
+      canonicalTimezones,
     ] = await Promise.all([
       fetchJson(WORLDS_DATA_PATH),
       fetchText(FILE_PATHS.schedules),
       fetchText(FILE_PATHS.trackedItems),
       fetchText(FILE_PATHS.openHouses),
       fetchText(FILE_PATHS.itemsCatalog),
+      fetchJson(SCHEDULE_TIMEZONES_DATA_PATH),
     ]);
 
+    state.canonicalTimezones =
+      canonicalTimezones && typeof canonicalTimezones === "object" ? canonicalTimezones : {};
     state.worlds = Array.isArray(worlds) ? worlds : [];
     state.validWorldNames = new Set(state.worlds.map((world) => String(world?.name || "").trim()).filter(Boolean));
 
@@ -1336,7 +1342,8 @@
         draft.entries,
         String(draft.timezone || DEFAULT_TIMEZONE).trim() || DEFAULT_TIMEZONE,
         getWorldLocation(worldName),
-        referenceDate
+        referenceDate,
+        state.canonicalTimezones
       );
       const sortedEntries = [...canonical.entries]
         .sort(compareScheduleEntries)
@@ -1640,12 +1647,29 @@
     files.forEach((file) => {
       if (file.path === FILE_PATHS.schedules) {
         state.originalFiles.schedules = file.content;
+        applyCommittedSchedules(file.content);
       } else if (file.path === FILE_PATHS.trackedItems) {
         state.originalFiles.trackedItems = file.content;
       } else if (file.path === FILE_PATHS.openHouses) {
         state.originalFiles.openHouses = file.content;
       }
     });
+  }
+
+  // Replace the schedule drafts with the committed (canonicalized) payload so
+  // the editor immediately shows the stored timezone and wall-clock times.
+  function applyCommittedSchedules(scheduleText) {
+    const payload = tryParseJson(scheduleText);
+    if (!payload || typeof payload !== "object") return;
+    state.schedules = buildScheduleDrafts(payload);
+    state.scheduleOrder = Object.keys(payload).sort(compareNormalizedText);
+    if (!state.schedules[state.selectedScheduleWorld]) {
+      state.selectedScheduleWorld = state.scheduleOrder[0] || "";
+    }
+    if (elements.scheduleTimezoneInput) {
+      renderScheduleWorldSelects();
+      renderScheduleEditor();
+    }
   }
 
   function buildCommitUrl(sha) {
@@ -1906,6 +1930,8 @@
     buildGitTreeEntries,
     buildCommitUrl,
     buildManualSchedulesPayload,
+    stringifyManualSchedules,
+    syncCommittedFiles,
     state,
     commitFilesToBaseBranch,
     getTriggeredWorkflowNames,
