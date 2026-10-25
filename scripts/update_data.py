@@ -23,7 +23,7 @@ from common import (
 )
 from economic_ranking import attach_ranking_metrics
 
-BASE_URL = "https://api.tibiadata.com/v4"
+BASE_URL = "https://api.tibiadata.com/v5"
 BOSSES = ("Deathstrike", "Gnomevil", "Abyssador")
 ROOT_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT_DIR / "data"

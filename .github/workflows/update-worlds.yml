@@ -7,6 +7,7 @@ on:
       - main
     paths:
       - data/active_warzones.txt
+      - data/retired_worlds.json
       - scripts/common.py
       - scripts/economic_ranking.py
       - scripts/enrich_worlds_with_rankings.py

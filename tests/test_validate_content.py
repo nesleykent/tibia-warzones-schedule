@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import sys
 import tempfile
 import unittest
@@ -569,6 +570,133 @@ class ValidateWorldsTest(unittest.TestCase):
             "rolling_window_entries_used": 1,
             "latest_observation_time": 1788439476.0,
         }
+
+
+class ValidateRetiredWorldsTest(unittest.TestCase):
+    """A world merge must not wedge the refresh: preserved records stay valid."""
+
+    SOURCE = "https://www.tibia.com/news/?subtopic=newsarchive&id=8968"
+
+    def setUp(self) -> None:
+        self.live = {"Antica", "Deslumbra"}
+        self.retired = {
+            "Luzibra": {"merged_into": "Deslumbra", "retired_on": "2026-10-22", "source": self.SOURCE}
+        }
+
+    def write_history(self, history_dir: Path, world: str) -> None:
+        history_dir.mkdir(parents=True, exist_ok=True)
+        (history_dir / f"{world.lower()}.json").write_text(
+            json.dumps(
+                {
+                    "world": world,
+                    "timezone": None,
+                    "history": [
+                        {
+                            "date": "2026-10-21",
+                            "deathstrike_kills": 1,
+                            "gnomevil_kills": 1,
+                            "abyssador_kills": 1,
+                            "services_completed": 1,
+                            "mark": "healthy",
+                        }
+                    ],
+                }
+            ),
+            encoding="utf-8",
+        )
+
+    def test_valid_registry_has_no_findings(self) -> None:
+        report = validate_content.validate_retired_worlds_payload(self.retired, self.live)
+
+        self.assertEqual(report.errors, [])
+        self.assertEqual(report.warnings, [])
+
+    def test_registry_rejects_malformed_entries(self) -> None:
+        payload = {
+            "Luzibra": {"merged_into": "", "retired_on": "22/10/2026", "source": "http://x"},
+            "Yubra": {"merged_into": "Luzibra", "retired_on": "2026-10-22", "source": self.SOURCE},
+        }
+
+        report = validate_content.validate_retired_worlds_payload(payload, self.live)
+
+        self.assertTrue(any("merged_into must be" in message for message in report.errors))
+        self.assertTrue(any("ISO date" in message for message in report.errors))
+        self.assertTrue(any("https URL" in message for message in report.errors))
+        self.assertTrue(any("is itself retired" in message for message in report.errors))
+
+    def test_pending_merge_is_a_warning_not_an_error(self) -> None:
+        # Recorded from the announcement before the refresh drops the old world.
+        report = validate_content.validate_retired_worlds_payload(self.retired, {"Antica", "Luzibra"})
+
+        self.assertEqual(report.errors, [])
+        self.assertEqual(len(report.warnings), 2)
+
+    def test_retired_history_file_is_kept_and_still_validated(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            history_dir = Path(tmpdir) / "history"
+            for world in ("Antica", "Deslumbra", "Luzibra"):
+                self.write_history(history_dir, world)
+            worlds = [{"name": "Antica"}, {"name": "Deslumbra"}]
+
+            without_registry = validate_content.validate_history_files(worlds, history_dir)
+            with_registry = validate_content.validate_history_files(worlds, history_dir, self.retired)
+
+            (history_dir / "luzibra.json").write_text('{"world": "Luzibra", "history": "x"}', encoding="utf-8")
+            corrupted = validate_content.validate_history_files(worlds, history_dir, self.retired)
+
+        self.assertTrue(any("luzibra.json" in message for message in without_registry.errors))
+        self.assertEqual(with_registry.errors, [])
+        self.assertTrue(any("luzibra.json: history must be a list" in m for m in corrupted.errors))
+
+    def test_retired_manual_schedule_is_preserved_with_a_warning(self) -> None:
+        payload = {"Luzibra": {"timezone": None, "warzone_executions": []}}
+
+        report = validate_content.validate_manual_schedules_payload(payload, self.live, self.retired)
+        unknown = validate_content.validate_manual_schedules_payload(
+            {"Nowhere": {"timezone": None, "warzone_executions": []}}, self.live, self.retired
+        )
+
+        self.assertEqual(report.errors, [])
+        self.assertTrue(any("retired world 'Luzibra'" in message for message in report.warnings))
+        self.assertTrue(any("unknown world 'Nowhere'" in message for message in unknown.errors))
+
+    def test_retired_open_house_world_is_a_warning(self) -> None:
+        record = {
+            "id": "one",
+            "houseId": 100,
+            "houseName": "House A",
+            "ownerName": "Owner A",
+            "world": "Luzibra",
+            "town": "Thais",
+            "status": "open",
+            "utilities": {},
+            "source": {},
+        }
+
+        report = validate_content.validate_open_houses_payload([record], self.live, self.retired)
+
+        self.assertFalse(any("Luzibra" in message for message in report.errors))
+        self.assertTrue(any("retired world 'Luzibra'" in message for message in report.warnings))
+
+    def test_repository_registry_matches_official_merge_announcement(self) -> None:
+        registry = json.loads(validate_content.RETIRED_WORLDS_PATH.read_text(encoding="utf-8"))
+        merges: dict[str, set[str]] = {}
+        for name, entry in registry.items():
+            merges.setdefault(entry["merged_into"], set()).add(name)
+
+        # tibia.com news #8968 (2026-09-21), merges completed 2026-10-22 (ticker #9001).
+        self.assertEqual(
+            merges,
+            {
+                "Jambra": {"Xybra", "Cantabra"},
+                "Deslumbra": {"Luzibra", "Yubra", "Etebra"},
+                "Mortabra": {"Sombra", "Gladibra"},
+                "Nociva": {"Noctalia", "Citra"},
+                "Ulmyra": {"Sonira", "Bravoria"},
+                "Westera": {"Ignitera", "Aethera", "Xymera"},
+                "Faunera": {"Kalimera", "Blumera"},
+            },
+        )
 
 
 if __name__ == "__main__":

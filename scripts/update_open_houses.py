@@ -187,7 +187,7 @@ def build_hireling_payload(names: list[str]) -> list[dict[str, Any]]:
 
 
 def get_character(name: str) -> dict[str, Any]:
-    payload = fetch_json(f"{TIBIADATA_BASE_URL.rstrip('/')}/v4/character/{quote(name)}")
+    payload = fetch_json(f"{TIBIADATA_BASE_URL.rstrip('/')}/v5/character/{quote(name)}")
     character_root = payload.get("character", {}) if isinstance(payload, dict) else {}
     if isinstance(character_root, dict) and isinstance(character_root.get("character"), dict):
         return character_root["character"]
