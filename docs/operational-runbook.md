@@ -284,6 +284,11 @@ Fix:
 Do not delete the retired world's history file or manual schedule: they are the
 only record of that world and stay valid through the retired list.
 
+Houses are not carried over: CipSoft vacates every house on the merged worlds and
+moves their items to the depot inbox. An open-house record on a retired world is
+therefore stale; run `Update Open Houses` (workflow_dispatch) and it drops the
+record as an ownership lapse. Never re-point such a record to the successor world.
+
 ### `update_data.py` returns success but some worlds look empty
 
 Check:

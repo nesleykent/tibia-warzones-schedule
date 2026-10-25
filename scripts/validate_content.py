@@ -580,12 +580,13 @@ def validate_open_houses_payload(
             report.error(f"open-houses.json: record #{index} has invalid world")
         elif world_name not in valid_world_names:
             if retired_worlds and world_name in retired_worlds:
-                # The Update Open Houses workflow re-resolves the owner's current world on
-                # its next run, so a record left behind by a merge is stale, not invalid.
+                # A merge vacates every house on the merged worlds (items go to the depot
+                # inbox), so such a record is stale: the next Update Open Houses run finds the
+                # owner no longer holds the house and drops it. It is never moved.
                 report.warn(
                     f"open-houses.json: record #{index} references retired world {world_name!r} "
-                    f"({describe_retirement(retired_worlds[world_name])}); "
-                    "the next Update Open Houses run re-resolves it"
+                    f"({describe_retirement(retired_worlds[world_name])}); merges vacate all houses, "
+                    "so the next Update Open Houses run drops it"
                 )
             else:
                 report.error(
