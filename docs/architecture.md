@@ -25,7 +25,10 @@ There is no backend server, database, bundler, or JavaScript package build step.
 - Controller: `assets/world.js`
 - Shared runtime: `assets/shared.js`
 - Purpose: one-world summary, schedules, market tables and charts, history table, and external links
-- Evidence: `assets/world.js:loadWorldPage()`, `renderMarketPrices()`, `renderHistory()`
+- Merged worlds: a world that absorbed retired worlds (`data/retired_worlds.json`) also shows each
+  predecessor's archived history as its own collapsed table, never summed into the successor's rows.
+  `world.html?name=<retired world>` shows a merge notice linking to the successor plus that archive.
+- Evidence: `assets/world.js:loadWorldPage()`, `renderMarketPrices()`, `renderHistory()`, `renderPredecessorHistories()`
 
 ### `ranking.html`
 
@@ -121,7 +124,7 @@ One file per world. Each file stores dated kill counts, service counts, and mark
 
 Consumed by:
 
-- `assets/world.js`
+- `assets/world.js` (also loads the files of a world's predecessors)
 - `scripts/economic_ranking.py`
 
 Produced by:

@@ -63,6 +63,11 @@ const WORLD_I18N = {
     healthy: "Healthy",
     inconclusive: "Inconclusive",
     trolls: "Trolls",
+    predecessorHistory: "{world} history (before the merge)",
+    predecessorNote:
+      "{world} was merged into {successor} on {date}. Its records are kept here as history.",
+    retiredWorld: "{world} was merged into {successor} on {date}.",
+    openSuccessor: "Open {successor}",
   },
   "pt-BR": {
     pageTitle: "Histórico de Warzones",
@@ -129,6 +134,11 @@ const WORLD_I18N = {
     healthy: "Healthy",
     inconclusive: "Inconclusivo",
     trolls: "Trolls",
+    predecessorHistory: "Histórico de {world} (antes da fusão)",
+    predecessorNote:
+      "{world} foi fundido em {successor} em {date}. Os registros dele ficam aqui como histórico.",
+    retiredWorld: "{world} foi fundido em {successor} em {date}.",
+    openSuccessor: "Abrir {successor}",
   },
   "es-419": {
     pageTitle: "Historial de Warzones",
@@ -195,6 +205,11 @@ const WORLD_I18N = {
     healthy: "Healthy",
     inconclusive: "Inconcluso",
     trolls: "Trolls",
+    predecessorHistory: "Historial de {world} (antes de la fusión)",
+    predecessorNote:
+      "{world} se fusionó con {successor} el {date}. Sus registros se conservan aquí como historial.",
+    retiredWorld: "{world} se fusionó con {successor} el {date}.",
+    openSuccessor: "Abrir {successor}",
   },
   pl: {
     pageTitle: "Historia Warzones",
@@ -260,6 +275,11 @@ const WORLD_I18N = {
     healthy: "Healthy",
     inconclusive: "Niejednoznaczne",
     trolls: "Trolls",
+    predecessorHistory: "Historia {world} (przed połączeniem)",
+    predecessorNote:
+      "{world} został połączony z {successor} dnia {date}. Jego dane zachowano tu jako historię.",
+    retiredWorld: "{world} został połączony z {successor} dnia {date}.",
+    openSuccessor: "Otwórz {successor}",
   },
 };
 
@@ -2062,14 +2082,8 @@ async function renderMarketPrices(worldName) {
   `;
 }
 
-function renderHistory(historyData) {
+function renderHistoryTable(items) {
   const dict = t();
-  const items = Array.isArray(historyData?.history) ? historyData.history : [];
-
-  if (items.length === 0) {
-    return renderEmptyCard(dict.history, dict.noHistory);
-  }
-
   const rows = items
     .map(
       (item) => `
@@ -2092,6 +2106,37 @@ function renderHistory(historyData) {
       `
     )
     .join("");
+
+  return `
+    <div class="world-history-table-wrap">
+      <table class="world-history-table">
+        <thead>
+          <tr>
+            <th scope="col">${escapeHtml(dict.date)}</th>
+            <th scope="col">${escapeHtml(dict.deathstrike)}</th>
+            <th scope="col">${escapeHtml(dict.gnomevil)}</th>
+            <th scope="col">${escapeHtml(dict.abyssador)}</th>
+            <th scope="col">${escapeHtml(dict.servicesCompleted)}</th>
+            <th scope="col">${escapeHtml(dict.mark)}</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+function historyItems(historyData) {
+  return Array.isArray(historyData?.history) ? historyData.history : [];
+}
+
+function renderHistory(historyData) {
+  const dict = t();
+  const items = historyItems(historyData);
+
+  if (items.length === 0) {
+    return renderEmptyCard(dict.history, dict.noHistory);
+  }
 
   const refreshConversion = buildRecurringTimeConversion(
     HISTORY_REFRESH_SOURCE_TIME,
@@ -2124,21 +2169,90 @@ function renderHistory(historyData) {
       <h2>${escapeHtml(dict.history)}</h2>
     </div>
     <p class="world-history-note">${escapeHtml(historyDateNote)}</p>
-    <div class="world-history-table-wrap">
-      <table class="world-history-table">
-        <thead>
-          <tr>
-            <th scope="col">${escapeHtml(dict.date)}</th>
-            <th scope="col">${escapeHtml(dict.deathstrike)}</th>
-            <th scope="col">${escapeHtml(dict.gnomevil)}</th>
-            <th scope="col">${escapeHtml(dict.abyssador)}</th>
-            <th scope="col">${escapeHtml(dict.servicesCompleted)}</th>
-            <th scope="col">${escapeHtml(dict.mark)}</th>
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>
-    </div>
+    ${renderHistoryTable(items)}
+  `;
+}
+
+// Retired (merged or closed) worlds come from data/retired_worlds.json. Their
+// history files are never rewritten, so they are shown as an archive on the
+// world they were merged into, each world kept separate (kills are per world).
+async function loadRetiredWorlds() {
+  try {
+    const payload = await fetchJson("./data/retired_worlds.json");
+    return payload && typeof payload === "object" && !Array.isArray(payload)
+      ? payload
+      : {};
+  } catch {
+    return {};
+  }
+}
+
+async function loadWorldHistory(worldName) {
+  try {
+    return await fetchJson(
+      "./data/history/" + slugifyWorldName(worldName) + ".json"
+    );
+  } catch {
+    return { history: [] };
+  }
+}
+
+function formatRetirementDate(isoDate) {
+  const parsed = new Date(`${isoDate}T12:00:00Z`);
+  if (Number.isNaN(parsed.getTime())) return String(isoDate || NOT_AVAILABLE);
+  return parsed.toLocaleDateString(worldLang, {
+    timeZone: "UTC",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+function fillRetirementText(template, worldName, entry) {
+  return String(template || "")
+    .replaceAll("{world}", worldName)
+    .replaceAll("{successor}", String(entry?.merged_into || NOT_AVAILABLE))
+    .replaceAll("{date}", formatRetirementDate(entry?.retired_on));
+}
+
+function renderSuccessorLink(entry) {
+  const successor = entry?.merged_into;
+  if (!successor) return "";
+  return `<a class="world-name-link" href="./world.html?name=${encodeURIComponent(successor)}">${escapeHtml(
+    fillRetirementText(t().openSuccessor, "", entry)
+  )}</a>`;
+}
+
+function renderPredecessorHistory(worldName, entry, historyData, { open = false } = {}) {
+  const dict = t();
+  const items = historyItems(historyData);
+  return `
+    <details class="world-history-predecessor"${open ? " open" : ""}>
+      <summary>${escapeHtml(fillRetirementText(dict.predecessorHistory, worldName, entry))}</summary>
+      <p class="world-history-note">${escapeHtml(fillRetirementText(dict.predecessorNote, worldName, entry))}</p>
+      ${items.length ? renderHistoryTable(items) : `<p class="world-detail-empty">${escapeHtml(dict.noHistory)}</p>`}
+    </details>
+  `;
+}
+
+async function renderPredecessorHistories(worldName, retiredWorlds) {
+  const predecessors = Object.entries(retiredWorlds)
+    .filter(([, entry]) => entry && entry.merged_into === worldName)
+    .sort(([a], [b]) => a.localeCompare(b));
+  const histories = await Promise.all(
+    predecessors.map(([name]) => loadWorldHistory(name))
+  );
+  return predecessors
+    .map(([name, entry], index) => renderPredecessorHistory(name, entry, histories[index]))
+    .join("");
+}
+
+function renderRetiredWorldSummary(worldName, entry) {
+  const dict = t();
+  return `
+    ${renderCardHeader(dict.summary)}
+    <p class="world-detail-empty">${escapeHtml(fillRetirementText(dict.retiredWorld, worldName, entry))}</p>
+    <p>${renderSuccessorLink(entry)}</p>
   `;
 }
 
@@ -2179,10 +2293,23 @@ async function loadWorldPage() {
     const world = Array.isArray(worlds)
       ? worlds.find((item) => item && item.name === worldName)
       : null;
+    const retiredWorlds = await loadRetiredWorlds();
 
     if (!world) {
-      setHtml(summaryCard, renderEmptyCard(dict.summary, dict.worldNotFound));
+      const retired = retiredWorlds[worldName];
       clearSecondaryCards();
+      if (!retired) {
+        setHtml(summaryCard, renderEmptyCard(dict.summary, dict.worldNotFound));
+        return;
+      }
+      setTextContent(document.getElementById("worldTitle"), worldName);
+      // A retired world has no live schedule, bazaar or market to show.
+      for (const card of [schedulesCard, bazaarCard, marketCard]) card.hidden = true;
+      setHtml(summaryCard, renderRetiredWorldSummary(worldName, retired));
+      setHtml(
+        historyCard,
+        renderPredecessorHistory(worldName, retired, await loadWorldHistory(worldName), { open: true })
+      );
       return;
     }
 
@@ -2195,15 +2322,12 @@ async function loadWorldPage() {
     setHtml(marketCard, await renderMarketPrices(world.name));
     bindMarketPricesTableInteractions(marketCard, world.name);
 
-    let historyData = { history: [] };
-    try {
-      historyData = await fetchJson(
-        "./data/history/" + slugifyWorldName(world.name) + ".json"
-      );
-    } catch {
-      historyData = { history: [] };
-    }
-    setHtml(historyCard, renderHistory(historyData));
+    const historyData = await loadWorldHistory(world.name);
+    setHtml(
+      historyCard,
+      renderHistory(historyData) +
+        (await renderPredecessorHistories(world.name, retiredWorlds))
+    );
   } catch {
     setHtml(summaryCard, renderEmptyCard(dict.summary, dict.loadError));
     clearSecondaryCards();

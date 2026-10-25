@@ -1437,7 +1437,7 @@
     "battleye_protected": true,
     "battleye_date": "release",
     "tracks_warzone_service": true,
-    "timezone": null,
+    "timezone": "America/Sao_Paulo",
     "last_detected_kills": {
       "Deathstrike": 2,
       "Gnomevil": 2,
@@ -1446,7 +1446,18 @@
     "last_detected_services": 2,
     "mark": "healthy",
     "has_service_history": true,
-    "warzone_executions": [],
+    "warzone_executions": [
+      {
+        "execution_id": 1,
+        "schedule_time": "20:00",
+        "warzone_sequence": ""
+      },
+      {
+        "execution_id": 2,
+        "schedule_time": "21:30",
+        "warzone_sequence": ""
+      }
+    ],
     "warzone_economic_ranking": {
       "is_ranked": false,
       "insufficient_data": true,

@@ -1998,6 +1998,26 @@ html.open-house-world-route #worldsSection {
   line-height: 1.5;
 }
 
+.world-history-predecessor {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--sep-md);
+}
+
+.world-history-predecessor:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.world-history-predecessor summary {
+  cursor: pointer;
+  margin-bottom: 12px;
+  color: var(--text-secondary);
+  font-size: 15px;
+  font-weight: 600;
+}
+
 .world-history-table {
   width: 100%;
   border-collapse: collapse;
