@@ -27,7 +27,7 @@ import update_open_houses
 
 class UpdateDataHelpersTest(unittest.TestCase):
     def test_fetch_json_retries_retryable_http_errors(self) -> None:
-        url = "https://api.tibiadata.com/v4/killstatistics/Antica"
+        url = "https://api.tibiadata.com/v5/killstatistics/Antica"
         response = io.BytesIO(b'{"ok": true}')
         error = HTTPError(url, 503, "Service Unavailable", {}, None)
 
@@ -41,7 +41,7 @@ class UpdateDataHelpersTest(unittest.TestCase):
         sleep.assert_called_once_with(1.0)
 
     def test_fetch_json_honors_retry_after_for_retryable_http_errors(self) -> None:
-        url = "https://api.tibiadata.com/v4/worlds"
+        url = "https://api.tibiadata.com/v5/worlds"
         response = io.BytesIO(b'{"worlds": {"regular_worlds": []}}')
         headers = Message()
         headers["Retry-After"] = "3"
@@ -56,7 +56,7 @@ class UpdateDataHelpersTest(unittest.TestCase):
         sleep.assert_called_once_with(3.0)
 
     def test_fetch_json_does_not_retry_non_retryable_http_errors(self) -> None:
-        url = "https://api.tibiadata.com/v4/killstatistics/Unknown"
+        url = "https://api.tibiadata.com/v5/killstatistics/Unknown"
         error = HTTPError(url, 404, "Not Found", {}, None)
 
         with (

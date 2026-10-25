@@ -266,6 +266,24 @@ Those refreshes are owned by the separate scheduled workflows.
 
 ## Troubleshooting
 
+### Update Worlds fails after a world merge or closure
+
+Symptom: `validate_content.py` reports `unknown world` in `manual-schedules.json` or
+`open-houses.json`, or `unexpected extra history file`, for worlds that no longer
+appear in the TibiaData world list.
+
+Fix:
+
+1. read the official tibia.com announcement for the merge or closure
+2. add one entry per retired world to `data/retired_worlds.json` with
+   `merged_into`, `retired_on`, and `source`
+3. classify each new world in `WORLD_ECONOMY_CLASSES` (`assets/shared.js`) and
+   remove the retired names from it
+4. run the baseline checks
+
+Do not delete the retired world's history file or manual schedule: they are the
+only record of that world and stay valid through the retired list.
+
 ### `update_data.py` returns success but some worlds look empty
 
 Check:

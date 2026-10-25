@@ -128,6 +128,23 @@ Produced by:
 
 - `scripts/update_data.py`
 
+Files of retired worlds (see `data/retired_worlds.json`) are a permanent archive:
+the refresh no longer writes them, nothing deletes them, and the validator keeps
+checking their structure.
+
+### `data/retired_worlds.json`
+
+Hand-curated record of worlds that CipSoft merged or closed. Each key is the old
+world name and maps to `merged_into` (the live successor, or `null` for a closure),
+`retired_on` (ISO date), and `source` (the tibia.com announcement). It is durable
+source input; no script writes it.
+
+`scripts/validate_content.py` uses it so a merge does not block the data refresh:
+preserved history files, manual schedules, and open-house records that name a
+retired world become warnings instead of errors. A world named here that is still
+live, or a successor that is not live yet, is only a warning, so an announced merge
+can be recorded ahead of time.
+
 ### `data/market/world/<World>/<world>_<item>.json`
 
 One file per world and tracked item. Files store `last_run_at`, `status`, and `snapshots`.
@@ -251,6 +268,7 @@ Repository contract validator for:
 
 - schedules
 - world records
+- retired worlds and the archives they keep valid
 - ranking blocks
 - market files
 - open-house payloads
@@ -287,6 +305,11 @@ Deployment does not rebuild data. It publishes whatever is already committed.
 ## External Services
 
 ### TibiaData
+
+API v5 (`https://api.tibiadata.com/v5`, released 2026-10-23). v5 keeps the v4
+endpoints and JSON fields; it answers a missing world or character with
+`404 Not Found` (v4 used `400`) and an upstream failure with `502 Bad Gateway`.
+`scripts/update_data.py` retries `502` and treats `404` as final.
 
 Used for:
 

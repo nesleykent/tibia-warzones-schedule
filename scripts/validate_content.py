@@ -26,6 +26,7 @@ DATA_DIR = REPO_ROOT / "data"
 WORLDS_PATH = DATA_DIR / "worlds.json"
 MANUAL_SCHEDULES_PATH = DATA_DIR / "manual-schedules.json"
 OPEN_HOUSES_PATH = DATA_DIR / "open-houses.json"
+RETIRED_WORLDS_PATH = DATA_DIR / "retired_worlds.json"
 ITEMS_CSV_PATH = DATA_DIR / "market" / "items" / "items.csv"
 TRACKED_ITEMS_PATH = DATA_DIR / "market" / "items" / "tracked_items.json"
 HISTORY_DIR = DATA_DIR / "history"
@@ -368,7 +369,9 @@ def validate_schedule_list(
 
 
 def validate_manual_schedules_payload(
-    payload: Any, valid_world_names: set[str]
+    payload: Any,
+    valid_world_names: set[str],
+    retired_worlds: dict[str, dict[str, Any]] | None = None,
 ) -> ValidationReport:
     report = ValidationReport()
 
@@ -389,9 +392,15 @@ def validate_manual_schedules_payload(
             report.error("manual-schedules.json: world keys must be non-empty strings")
             continue
         if world_name not in valid_world_names:
-            report.error(
-                f"manual-schedules.json: unknown world {world_name!r}; use a name from data/worlds.json"
-            )
+            if retired_worlds and world_name in retired_worlds:
+                report.warn(
+                    f"manual-schedules.json: keeping preserved schedule for retired world {world_name!r} "
+                    f"({describe_retirement(retired_worlds[world_name])})"
+                )
+            else:
+                report.error(
+                    f"manual-schedules.json: unknown world {world_name!r}; use a name from data/worlds.json"
+                )
         if not isinstance(schedule_data, dict):
             report.error(f"manual-schedules.json: {world_name} must map to an object")
             continue
@@ -523,7 +532,11 @@ def validate_tracked_items_payload(
     return report
 
 
-def validate_open_houses_payload(payload: Any, valid_world_names: set[str]) -> ValidationReport:
+def validate_open_houses_payload(
+    payload: Any,
+    valid_world_names: set[str],
+    retired_worlds: dict[str, dict[str, Any]] | None = None,
+) -> ValidationReport:
     report = ValidationReport()
 
     if not isinstance(payload, list):
@@ -566,9 +579,18 @@ def validate_open_houses_payload(payload: Any, valid_world_names: set[str]) -> V
         if not isinstance(world_name, str) or not world_name.strip():
             report.error(f"open-houses.json: record #{index} has invalid world")
         elif world_name not in valid_world_names:
-            report.error(
-                f"open-houses.json: record #{index} references unknown world {world_name!r}"
-            )
+            if retired_worlds and world_name in retired_worlds:
+                # The Update Open Houses workflow re-resolves the owner's current world on
+                # its next run, so a record left behind by a merge is stale, not invalid.
+                report.warn(
+                    f"open-houses.json: record #{index} references retired world {world_name!r} "
+                    f"({describe_retirement(retired_worlds[world_name])}); "
+                    "the next Update Open Houses run re-resolves it"
+                )
+            else:
+                report.error(
+                    f"open-houses.json: record #{index} references unknown world {world_name!r}"
+                )
 
         for key in ("id", "houseName", "ownerName", "town", "status"):
             if not isinstance(record.get(key), str) or not str(record.get(key)).strip():
@@ -887,14 +909,82 @@ def validate_worlds_payload(payload: Any) -> ValidationReport:
     return report
 
 
+def describe_retirement(entry: dict[str, Any]) -> str:
+    return f"merged into {entry.get('merged_into')} on {entry.get('retired_on')}"
+
+
+def validate_retired_worlds_payload(
+    payload: Any, live_world_names: set[str]
+) -> ValidationReport:
+    """Check data/retired_worlds.json, the curated record of merged or closed worlds.
+
+    Each entry names a world that left the TibiaData world list, the live world it
+    was merged into (or null for a closure), the official retirement date, and the
+    tibia.com announcement it was taken from.
+    """
+    report = ValidationReport()
+    if not isinstance(payload, dict):
+        report.error("retired_worlds.json: root value must be an object")
+        return report
+
+    names = list(payload)
+    out_of_order = find_first_out_of_order_pair(names, normalize_sort_text)
+    if out_of_order is not None:
+        report.warn(
+            "retired_worlds.json: world keys are out of order; "
+            f"{out_of_order[0]!r} appears before {out_of_order[1]!r}"
+        )
+
+    for name, entry in payload.items():
+        if not isinstance(name, str) or not name.strip():
+            report.error("retired_worlds.json: world keys must be non-empty strings")
+            continue
+        # A merge is announced weeks ahead, so an entry may be recorded before the
+        # refresh drops the world; that is pending, not wrong.
+        if name in live_world_names:
+            report.warn(
+                f"retired_worlds.json: {name} is still listed in data/worlds.json; "
+                "it is treated as live until a refresh drops it"
+            )
+        if not isinstance(entry, dict):
+            report.error(f"retired_worlds.json: {name} must map to an object")
+            continue
+        merged_into = entry.get("merged_into")
+        if merged_into is not None and (not isinstance(merged_into, str) or not merged_into.strip()):
+            report.error(f"retired_worlds.json: {name} merged_into must be a world name or null")
+        elif merged_into is not None and merged_into not in live_world_names:
+            report.warn(
+                f"retired_worlds.json: {name} merged_into {merged_into!r} is not yet in data/worlds.json"
+            )
+        if merged_into is not None and merged_into in payload:
+            report.error(f"retired_worlds.json: {name} merged_into {merged_into!r} is itself retired")
+        retired_on = entry.get("retired_on")
+        if not isinstance(retired_on, str) or not parse_iso_date(retired_on):
+            report.error(f"retired_worlds.json: {name} retired_on must be an ISO date")
+        source = entry.get("source")
+        if not isinstance(source, str) or not source.startswith("https://"):
+            report.error(f"retired_worlds.json: {name} source must be an https URL")
+
+    return report
+
+
 def validate_history_files(
-    worlds_payload: list[dict[str, Any]], history_dir: Path
+    worlds_payload: list[dict[str, Any]],
+    history_dir: Path,
+    retired_worlds: dict[str, dict[str, Any]] | None = None,
 ) -> ValidationReport:
     report = ValidationReport()
     expected_files = {
         slugify_world_name(world["name"]): world["name"]
         for world in worlds_payload
         if isinstance(world, dict) and isinstance(world.get("name"), str)
+    }
+    # History of a retired world is a permanent archive: the refresh no longer writes
+    # it, but it is still validated so the preserved record stays readable.
+    retired_files = {
+        slugify_world_name(name): name
+        for name in (retired_worlds or {})
+        if slugify_world_name(name) not in expected_files
     }
     actual_files = {path.stem: path for path in history_dir.glob("*.json")}
 
@@ -903,7 +993,7 @@ def validate_history_files(
             report.error(f"history: missing history file for world {world_name!r}")
 
     for slug in sorted(actual_files):
-        if slug not in expected_files:
+        if slug not in expected_files and slug not in retired_files:
             report.error(f"history: unexpected extra history file {actual_files[slug].name!r}")
 
     for slug, path in sorted(actual_files.items()):
@@ -922,7 +1012,7 @@ def validate_history_files(
             report.error(f"{path.name}: history must be a list")
             continue
 
-        world_name = expected_files.get(slug, payload.get("world", path.stem))
+        world_name = expected_files.get(slug) or retired_files.get(slug) or payload.get("world", path.stem)
         previous_date: str | None = None
         for index, item in enumerate(history_items, start=1):
             if not isinstance(item, dict):
@@ -1108,6 +1198,19 @@ def validate_repository(repo_root: Path = REPO_ROOT) -> ValidationReport:
         if isinstance(world, dict) and isinstance(world.get("name"), str)
     }
 
+    retired_path = repo_root / "data" / "retired_worlds.json"
+    retired_worlds: dict[str, dict[str, Any]] = {}
+    retired_report = ValidationReport()
+    if retired_path.exists():
+        try:
+            retired_payload = load_json(retired_path)
+        except ValueError as exc:
+            initial_report.error(str(exc))
+        else:
+            retired_report = validate_retired_worlds_payload(retired_payload, valid_world_names)
+            if retired_report.ok:
+                retired_worlds = retired_payload
+
     try:
         manual_payload = load_json(repo_root / "data" / "manual-schedules.json")
     except ValueError as exc:
@@ -1117,7 +1220,7 @@ def validate_repository(repo_root: Path = REPO_ROOT) -> ValidationReport:
         manual_report = ValidationReport()
     else:
         manual_report = merge_reports(
-            validate_manual_schedules_payload(manual_payload, valid_world_names),
+            validate_manual_schedules_payload(manual_payload, valid_world_names, retired_worlds),
             validate_manual_schedule_consistency(manual_payload, worlds_payload),
         )
     try:
@@ -1145,7 +1248,7 @@ def validate_repository(repo_root: Path = REPO_ROOT) -> ValidationReport:
         open_houses_report = ValidationReport()
     else:
         open_houses_report = validate_open_houses_payload(
-            open_houses_payload, valid_world_names
+            open_houses_payload, valid_world_names, retired_worlds
         )
 
     catalog_rows, catalog_read_report = read_items_catalog(
@@ -1175,7 +1278,7 @@ def validate_repository(repo_root: Path = REPO_ROOT) -> ValidationReport:
         )
 
     history_report = validate_history_files(
-        worlds_payload, repo_root / "data" / "history"
+        worlds_payload, repo_root / "data" / "history", retired_worlds
     )
     market_history_report = validate_market_history_files(
         repo_root / "data" / "market" / "world"
@@ -1184,6 +1287,7 @@ def validate_repository(repo_root: Path = REPO_ROOT) -> ValidationReport:
     return merge_reports(
         initial_report,
         worlds_report,
+        retired_report,
         manual_report,
         open_houses_report,
         catalog_read_report,
