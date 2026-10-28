@@ -2384,12 +2384,12 @@
         "excluded_na_world",
         "missing_adjusted_effective_prices",
         "missing_economic_inputs",
-        "missing_history_file",
-        "missing_market_file:gill_necklace",
-        "missing_market_file:minor_crystalline_token",
-        "missing_market_file:prismatic_necklace",
-        "missing_market_file:prismatic_ring",
-        "missing_market_file:tibia_coin"
+        "missing_history_days",
+        "missing_market_snapshot:gill_necklace",
+        "missing_market_snapshot:minor_crystalline_token",
+        "missing_market_snapshot:prismatic_necklace",
+        "missing_market_snapshot:prismatic_ring",
+        "missing_market_snapshot:tibia_coin"
       ],
       "ranking_position": null,
       "economic_score_raw": null,
@@ -2407,7 +2407,13 @@
       "current_mark_value": 0.0,
       "market_latest_observation_time": null,
       "market_oldest_observation_time": null,
-      "history_last_five_days": [],
+      "history_last_five_days": [
+        {
+          "date": "2026-10-28",
+          "mark": "na",
+          "mark_value": 0.0
+        }
+      ],
       "market": {
         "tibia_coin": {
           "item_name": "Tibia Coins",
@@ -7352,12 +7358,12 @@
         "excluded_na_world",
         "missing_adjusted_effective_prices",
         "missing_economic_inputs",
-        "missing_history_file",
-        "missing_market_file:gill_necklace",
-        "missing_market_file:minor_crystalline_token",
-        "missing_market_file:prismatic_necklace",
-        "missing_market_file:prismatic_ring",
-        "missing_market_file:tibia_coin"
+        "missing_history_days",
+        "missing_market_snapshot:gill_necklace",
+        "missing_market_snapshot:minor_crystalline_token",
+        "missing_market_snapshot:prismatic_necklace",
+        "missing_market_snapshot:prismatic_ring",
+        "missing_market_snapshot:tibia_coin"
       ],
       "ranking_position": null,
       "economic_score_raw": null,
@@ -7375,7 +7381,13 @@
       "current_mark_value": 0.0,
       "market_latest_observation_time": null,
       "market_oldest_observation_time": null,
-      "history_last_five_days": [],
+      "history_last_five_days": [
+        {
+          "date": "2026-10-28",
+          "mark": "na",
+          "mark_value": 0.0
+        }
+      ],
       "market": {
         "tibia_coin": {
           "item_name": "Tibia Coins",
@@ -9685,12 +9697,12 @@
         "excluded_na_world",
         "missing_adjusted_effective_prices",
         "missing_economic_inputs",
-        "missing_history_file",
-        "missing_market_file:gill_necklace",
-        "missing_market_file:minor_crystalline_token",
-        "missing_market_file:prismatic_necklace",
-        "missing_market_file:prismatic_ring",
-        "missing_market_file:tibia_coin"
+        "missing_history_days",
+        "missing_market_snapshot:gill_necklace",
+        "missing_market_snapshot:minor_crystalline_token",
+        "missing_market_snapshot:prismatic_necklace",
+        "missing_market_snapshot:prismatic_ring",
+        "missing_market_snapshot:tibia_coin"
       ],
       "ranking_position": null,
       "economic_score_raw": null,
@@ -9708,7 +9720,13 @@
       "current_mark_value": 0.0,
       "market_latest_observation_time": null,
       "market_oldest_observation_time": null,
-      "history_last_five_days": [],
+      "history_last_five_days": [
+        {
+          "date": "2026-10-28",
+          "mark": "na",
+          "mark_value": 0.0
+        }
+      ],
       "market": {
         "tibia_coin": {
           "item_name": "Tibia Coins",
